@@ -1,1 +1,1 @@
-# ProjectOmaha
+# ProjectOmaha - Senior Design
