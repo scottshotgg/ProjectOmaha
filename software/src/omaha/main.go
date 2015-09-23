@@ -1,15 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+	"omaha/handlers"
 )
 
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, world!")
-}
-
 func main() {
-	http.HandleFunc("/", IndexHandler)
+	http.HandleFunc("/", handlers.IndexHandler)
+	http.Handle("/css/", handlers.CssHandler)
 	http.ListenAndServe(":8080", nil)
 }
