@@ -13,7 +13,7 @@ func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
 		BaudRate:        9600,
 		DataBits:        8,
 		StopBits:        1,
-		MinimumReadSize: 4,
+		MinimumReadSize: 1,
 	}
 
 	fmt.Println("Hello " + options.PortName)
@@ -64,7 +64,7 @@ func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 		BaudRate:        9600,
 		DataBits:        8,
 		StopBits:        1,
-		MinimumReadSize: 4,
+		MinimumReadSize: 1,
 	}
 
 	fmt.Println("Hello " + options.PortName)
