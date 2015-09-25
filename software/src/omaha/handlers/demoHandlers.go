@@ -45,12 +45,12 @@ func DemoWriteHandler(w http.ResponseWriter, r *http.Request) {
 	var _ = n
 	fmt.Println("Wrote: ", a)
 
-	// n, err = port.Read(b)
+	n, err = port.Read(b)
 
 	// //var bSize = len(b)
 
-	// s := string(b[:len(b)])
+	s := string(b[:len(b)])
 	// fmt.Println("Read:  ", s)
-	fmt.Fprint(w, "Started")
+	fmt.Fprint(w, s)
 	defer port.Close()
 }
