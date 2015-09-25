@@ -1,5 +1,12 @@
 function startDemo() {
-	$.post("/demo/write", function(data) {
+	$.post("/demo/start", function(data) {
+		console.log(data);
+	})
+}
+
+function stopDemo() {
+
+	$.post("/demo/stop", function(data) {
 		console.log(data);
 	})
 }
