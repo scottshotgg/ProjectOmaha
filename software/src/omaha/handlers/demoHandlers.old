@@ -13,7 +13,7 @@ func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
 		BaudRate:        9600,
 		DataBits:        8,
 		StopBits:        1,
-		MinimumReadSize: 1,
+		MinimumReadSize: 4,
 	}
 
 	fmt.Println("Hello " + options.PortName)
@@ -27,11 +27,11 @@ func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
 	// Make sure to close it later.
 
 	// Write 4 bytes to the port.
-//	var a = "a"
+	var a = "a"
 	b := []byte{0x01} //, 0x01, 0x02, 0x03}
 	//stop := []byte(0x00)
 	//i, err := strconv.Atoi("a")
-	port.Write(b)
+	n, err := port.Write(b)
 	if err != nil {
 		log.Fatalf("port.Write: %v", err)
 		fmt.Fprint(w, "An error occurred on write")
@@ -40,9 +40,11 @@ func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
 	//write("a", port)
 
 	// := []byte("k")
-	fmt.Println("Wrote: ", b)
 
-	_ , err = port.Read(b)
+	var _ = n
+	fmt.Println("Wrote: ", a)
+
+	n, err = port.Read(b)
 
 	if err != nil {
 		log.Fatalf("port.Read: %v", err)
@@ -51,7 +53,7 @@ func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s := string(b[:len(b)])
-	fmt.Println("Read:  ", b)
+	// fmt.Println("Read:  ", s)
 	fmt.Fprint(w, s)
 	defer port.Close()
 }
@@ -62,7 +64,7 @@ func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 		BaudRate:        9600,
 		DataBits:        8,
 		StopBits:        1,
-		MinimumReadSize: 1,
+		MinimumReadSize: 4,
 	}
 
 	fmt.Println("Hello " + options.PortName)
@@ -76,11 +78,11 @@ func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 	// Make sure to close it later.
 
 	// Write 4 bytes to the port.
-	//var a = "a"
+	var a = "a"
 	b := []byte{0x00} //, 0x01, 0x02, 0x03}
 	//stop := []byte(0x00)
 	//i, err := strconv.Atoi("a")
-	port.Write(b)
+	n, err := port.Write(b)
 	if err != nil {
 		log.Fatalf("port.Write: %v", err)
 		fmt.Fprint(w, "An error occurred on write")
@@ -90,9 +92,10 @@ func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 
 	// := []byte("k")
 
-	fmt.Println("Wrote: ", b)
+	var _ = n
+	fmt.Println("Wrote: ", a)
 
-	_ , err = port.Read(b)
+	n, err = port.Read(b)
 
 	if err != nil {
 		log.Fatalf("port.Read: %v", err)
@@ -101,7 +104,7 @@ func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s := string(b[:len(b)])
-	fmt.Println("Read:  ", b)
+	// fmt.Println("Read:  ", s)
 	fmt.Fprint(w, s)
 	defer port.Close()
 }
