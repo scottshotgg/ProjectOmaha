@@ -106,12 +106,12 @@ func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 	defer port.Close()
 }
 
-func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
+func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
 	options := serial.OpenOptions{
 		PortName:        "/dev/ttyUSB0",
 		BaudRate:        9600,
 		DataBits:        8,
-		StopBits:        1,
+		StopBits:        1,s
 		MinimumReadSize: 1,
 	}
 
