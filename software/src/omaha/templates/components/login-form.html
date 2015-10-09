@@ -1,0 +1,45 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+
+<dom-module id="login-form">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .form-title {
+        margin-bottom: 20px;
+      }
+      
+      .company {
+        color: #3367d6;
+        font-size: 20px;
+        font-weight: 500;
+      }
+      
+      paper-button {
+        background-color: #4285f4;
+        color: #fff;
+        margin-top: 50px;
+        width: 100%;
+      }
+    </style>
+    <div class="horizontal layout center form-title">
+      <div class="flex company">Project Omaha</div>
+    </div>
+    <form is="iron-form" id="form"  method="post" action="/checkout">
+      <paper-input name="username" label="Username" required></paper-input>
+      <paper-input name="password" label="Password" type="password" required></paper-input>
+      <a href="/app/"><paper-button raised on-click="_submit">Login</paper-button></a>
+    </form>
+  </template>
+  <script>
+    Polymer({
+      is: 'login-form'
+    });
+  </script>
+</dom-module>

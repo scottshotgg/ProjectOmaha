@@ -1,0 +1,31 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="/bower_components/paper-header-panel/paper-header-panel.html">
+
+
+<link rel="import" href="/components/omaha-navbar.html">
+<link rel="import" href="/components/audio-controller.html">
+
+<dom-module id="omaha-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+      }
+    </style>
+    
+    <paper-header-panel class="flex" mode="seamed">
+      <omaha-navbar class="paper-header"></omaha-navbar>
+      <audio-controller id="test" volume="21" class="fit layout horizontal"></audio-controller>
+
+    </paper-header-panel>
+  </template>
+  <script>
+    Polymer({
+      is: 'omaha-app'
+    });
+  </script>
+</dom-module>
