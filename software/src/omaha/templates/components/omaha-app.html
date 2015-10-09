@@ -15,11 +15,22 @@
         display: block;
         height: 100%;
       }
+      @media (min-width: 500px) {
+        audio-controller {
+          @apply(--layout-horizontal)
+        }
+      }
+
+      @media (max-width: 499px) {
+        audio-controller {
+          @apply(--layout-vertical)
+        }
+      }
     </style>
     
     <paper-header-panel class="flex" mode="seamed">
       <omaha-navbar class="paper-header"></omaha-navbar>
-      <audio-controller id="test" volume="21" class="fit layout horizontal"></audio-controller>
+      <audio-controller id="test" volume="21" class="fit"></audio-controller>
 
     </paper-header-panel>
   </template>

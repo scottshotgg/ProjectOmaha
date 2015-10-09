@@ -27,13 +27,48 @@
       }
       
       volume-selector {
-        width: 30%;
+        width: 40%;
       }
+
+      @media (min-width: 500px) {
+        paper-radio-group {
+          @apply(--layout-vertical);
+        }
+
+        paper-radio-button {
+          @apply(--layout-horizontal);
+          @apply(--layout-center);
+        }
+
+        #radio-container {
+          @apply(--layout-horizontal)
+        }
+      }
+
+      @media (max-width: 499px) {
+        paper-radio-group {
+          @apply(--layout-horizontal)
+        }
+        paper-radio-button {
+          @apply(--layout-vertical);
+          @apply(--layout-center);
+        }
+
+        #radio-container {
+          @apply(--layout-vertical)
+        }
+
+        volume-selector {
+          margin-top: 20px;
+          min-width: 300px;
+        }
+      }
+
     </style>
-    <div class="layout horizontal">
-      <paper-radio-group class="vertical layout" selected="master">
-        <paper-radio-button name="master" class="flex  layout horizontal center">Master</paper-radio-button>
-        <paper-radio-button name="section" class="flex layout horizontal center">Zone</paper-radio-button>
+    <div id="radio-container" class="layout horizontal">
+      <paper-radio-group selected="master">
+        <paper-radio-button name="master" class="flex">Master</paper-radio-button>
+        <paper-radio-button name="section" class="flex">Zone</paper-radio-button>
       </paper-radio-group>
     </div>
     <div class="container layout horizontal center">
