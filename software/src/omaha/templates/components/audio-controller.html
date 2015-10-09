@@ -9,7 +9,7 @@
 
 <link rel="import" href="/components/test-controller.html">
 <link rel="import" href="/components/volume-selector.html">
-
+<link rel="import" href="/components/light-controller.html">
 
 <dom-module id="audio-controller">
   <template>
@@ -28,6 +28,7 @@
       
       volume-selector {
         width: 40%;
+        min-width: 300px;
       }
 
       @media (min-width: 500px) {
@@ -60,15 +61,14 @@
 
         volume-selector {
           margin-top: 20px;
-          min-width: 300px;
         }
       }
 
     </style>
     <div id="radio-container" class="layout horizontal">
-      <paper-radio-group selected="master">
-        <paper-radio-button name="master" class="flex">Master</paper-radio-button>
-        <paper-radio-button name="section" class="flex">Zone</paper-radio-button>
+      <paper-radio-group id="mode" selected="volume">
+        <paper-radio-button name="volume" class="flex">Volume</paper-radio-button>
+        <paper-radio-button name="light" class="flex">LED</paper-radio-button>
       </paper-radio-group>
     </div>
     <div class="container layout horizontal center">
@@ -77,13 +77,30 @@
           <neon-animatable><div style="height: 100px;"></div></neon-animatable>
           <neon-animatable>2</neon-animatable>
         </neon-animated-pages>-->
-        <volume-selector volume="21"></volume-selector>
+        <!-- <volume-selector volume="21"></volume-selector>-->
+        <light-controller style="display: none;" id="light"></light-controller>
+        <volume-selector id="volume" volume="21"></volume-selector>
       </div>
     </div>
   </template>
   <script>
     Polymer({
-      is: 'audio-controller'
+      is: 'audio-controller',
+
+      listeners: {
+        "iron-select": "_selectionChanged"
+      },
+
+      _selectionChanged: function(event) {
+        var selected = this.$.mode.selected;
+        if(selected === "volume") {
+          this.$.light.style.display = "none";
+          this.$.volume.style.display = "block";
+        } else {
+          this.$.light.style.display = "block";
+          this.$.volume.style.display = "none";
+        }
+      }
     });
   </script>
 </dom-module>

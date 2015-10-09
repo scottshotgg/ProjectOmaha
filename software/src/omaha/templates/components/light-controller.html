@@ -1,0 +1,98 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/image-icons.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+<dom-module id="light-controller">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      
+      paper-card {
+        width: 100%
+      }
+     
+      paper-slider {
+        width: 100%;
+      }
+      
+      paper-button {
+        background-color: #4285f4;
+        color: #fff;
+        margin-top: 10px;
+      }
+
+      #on {
+        background-color: var(--google-yellow-300);
+      }
+
+      #off {
+        background-color: var(--google-grey-700);
+      }
+
+      iron-icon {
+        --iron-icon-width: 32px;
+        --iron-icon-height: 32px;
+      }
+
+      #day {
+        color: var(--google-yellow-300);
+      }
+
+      #night {
+        color: var(--google-grey-700);
+      }
+
+
+    </style>
+   <paper-card heading="LED" elevation="4">
+      <div class="card-content">
+        <div class="layout vertical center">
+          <iron-icon id="day" icon="image:brightness-7"></iron-icon>
+          <iron-icon id="night" style="display: none;" icon="image:brightness-3"></iron-icon>
+        </div>
+      </div>
+      <div class="card-actions">
+        <paper-button id="on" on-click="_onPressed">on</paper-button>
+        <paper-button id="off" on-click="_offPressed">off</paper-button>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    $.post("/demo/status", function(data) {
+      if(data == 1) {
+        this._onPressed();
+      } else {
+        this._offPressed();
+      }
+      console.log(data);
+    })
+    Polymer({
+      is: 'light-controller',
+
+      _onPressed: function (){
+        this.$.day.style.display = "block";
+        this.$.night.style.display = "none";
+
+        $.post("/demo/start", function(data) {
+          console.log(data);
+        });
+      },
+
+      _offPressed: function() {
+        this.$.day.style.display = "none";
+        this.$.night.style.display = "block";
+        $.post("/demo/stop", function(data) {
+          console.log(data);
+        });
+      }
+
+    });
+  </script>
+</dom-module>
