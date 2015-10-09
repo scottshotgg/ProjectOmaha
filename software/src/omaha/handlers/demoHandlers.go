@@ -27,7 +27,7 @@ func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
 	// Make sure to close it later.
 
 	// Write 4 bytes to the port.
-//	var a = "a"
+	//	var a = "a"
 	b := []byte{0x01} //, 0x01, 0x02, 0x03}
 	//stop := []byte(0x00)
 	//i, err := strconv.Atoi("a")
@@ -42,7 +42,7 @@ func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
 	// := []byte("k")
 	fmt.Println("Wrote: ", b)
 
-	_ , err = port.Read(b)
+	_, err = port.Read(b)
 
 	if err != nil {
 		log.Fatalf("port.Read: %v", err)
@@ -92,7 +92,7 @@ func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Wrote: ", b)
 
-	_ , err = port.Read(b)
+	_, err = port.Read(b)
 
 	if err != nil {
 		log.Fatalf("port.Read: %v", err)
@@ -111,7 +111,7 @@ func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
 		PortName:        "/dev/ttyUSB0",
 		BaudRate:        9600,
 		DataBits:        8,
-		StopBits:        1,s
+		StopBits:        1,
 		MinimumReadSize: 1,
 	}
 
@@ -142,7 +142,7 @@ func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Wrote: ", b)
 
-	_ , err = port.Read(b)
+	_, err = port.Read(b)
 
 	if err != nil {
 		log.Fatalf("port.Read: %v", err)
@@ -155,4 +155,3 @@ func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, s)
 	defer port.Close()
 }
-
