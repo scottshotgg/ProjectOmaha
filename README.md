@@ -10,4 +10,4 @@
 #### Linux / OS X
 Just execute `scripts/run`
 ### Debug Mode
-Run the server in debug mode by executing `scripts/run -d 1`. Running in debug mode will cut out the microcontroller. All changes in state are just made in memory. If you're on windows, `go run main.go -d 1`.
+Run the server in debug mode by executing `scripts/run -d 1`. If you're on windows, the command is `go run main.go -d 1`. Running in debug mode will cut out the microcontroller. All changes in state are just made in memory.
