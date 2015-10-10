@@ -2,6 +2,10 @@
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
 
 
 <dom-module id="omaha-navbar">
@@ -9,13 +13,26 @@
     <style>
     </style>
       <paper-toolbar>
-        <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+        <paper-menu-button>
+          <paper-icon-button class="dropdown-trigger" icon="menu"></paper-icon-button>
+          <paper-menu class="dropdown-content" selected="{{selected}}">
+            <paper-item>Controllers</paper-item>
+            <paper-item>Map</paper-item>
+          </paper-menu>
+        </paper-menu-button>
         <div>Project Omaha</div>
       </paper-toolbar>
   </template>
   <script>
     Polymer({
-      is: 'omaha-navbar'
+      is: 'omaha-navbar',
+
+      properties: {
+        selected: {
+          type: Number,
+          notify: true
+        }
+      }
     });
   </script>
 </dom-module>
