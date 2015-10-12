@@ -12,6 +12,10 @@ func main() {
 	var debug = flag.Bool("d", false, "help me!!!")
 	flag.Parse()
 	system.InitializeSystemStatus(*debug)
+	if !(*debug) {
+		status := system.GetSystemStatus()
+		defer status.Port.Close()
+	}
 	http.HandleFunc("/", handlers.LoginHandler)
 	http.HandleFunc("/app/", handlers.AppHandler)
 	http.HandleFunc("/demo/start/", handlers.DemoStartHandler)

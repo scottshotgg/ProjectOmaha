@@ -2,8 +2,6 @@ package system
 
 import (
 	"fmt"
-	"github.com/jacobsa/go-serial/serial"
-	"log"
 )
 
 func (status *SystemStatus) TurnLEDOn() error {
@@ -11,49 +9,14 @@ func (status *SystemStatus) TurnLEDOn() error {
 		status.ledOn = true
 		return nil
 	}
-	options := serial.OpenOptions{
-		PortName:        "/dev/ttyUSB0",
-		BaudRate:        9600,
-		DataBits:        8,
-		StopBits:        1,
-		MinimumReadSize: 1,
-	}
 
-	fmt.Println("Hello " + options.PortName)
-
-	// Open the port.
-	port, err := serial.Open(options)
-	if err != nil {
-		log.Fatalf("serial.Open: %v", err)
-	}
-
-	// Make sure to close it later.
-
-	// Write 4 bytes to the port.
-	//	var a = "a"
 	b := []byte{0x01} //, 0x01, 0x02, 0x03}
-	//stop := []byte(0x00)
-	//i, err := strconv.Atoi("a")
-	port.Write(b)
-	if err != nil {
-		log.Fatalf("port.Write: %v", err)
-		panic("Error in write")
-	}
-	//write("a", port)
+	status.SendData(b)
 
-	// := []byte("k")
-	fmt.Println("Wrote: ", b)
-
-	_, err = port.Read(b)
-
-	if err != nil {
-		log.Fatalf("port.Read: %v", err)
-		panic("Error in read")
-	}
+	status.ReadData(b)
 
 	s := string(b[:len(b)])
 	fmt.Println("Read:  ", b)
-	defer port.Close()
 
 	if s == "1" {
 		return nil
@@ -68,50 +31,14 @@ func (status *SystemStatus) TurnLEDOff() error {
 		status.ledOn = false
 		return nil
 	}
-	options := serial.OpenOptions{
-		PortName:        "/dev/ttyUSB0",
-		BaudRate:        9600,
-		DataBits:        8,
-		StopBits:        1,
-		MinimumReadSize: 1,
-	}
 
-	fmt.Println("Hello " + options.PortName)
-
-	// Open the port.
-	port, err := serial.Open(options)
-	if err != nil {
-		log.Fatalf("serial.Open: %v", err)
-	}
-
-	// Make sure to close it later.
-
-	// Write 4 bytes to the port.
-	//var a = "a"
 	b := []byte{0x00} //, 0x01, 0x02, 0x03}
-	//stop := []byte(0x00)
-	//i, err := strconv.Atoi("a")
-	port.Write(b)
-	if err != nil {
-		log.Fatalf("port.Write: %v", err)
-		panic("Failed in write")
-	}
-	//write("a", port)
+	status.SendData(b)
 
-	// := []byte("k")
-
-	fmt.Println("Wrote: ", b)
-
-	_, err = port.Read(b)
-
-	if err != nil {
-		log.Fatalf("port.Read: %v", err)
-		panic("Failed in read")
-	}
+	status.ReadData(b)
 
 	s := string(b[:len(b)])
 	fmt.Println("Read:  ", b)
-	defer port.Close()
 	if s == "1" {
 		return nil
 	} else {
@@ -121,55 +48,17 @@ func (status *SystemStatus) TurnLEDOff() error {
 }
 
 func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
-	if status.debug {
-		status.ledOn = true
-		return true, nil
-	}
-	options := serial.OpenOptions{
-		PortName:        "/dev/ttyUSB0",
-		BaudRate:        9600,
-		DataBits:        8,
-		StopBits:        1,
-		MinimumReadSize: 1,
-	}
-
-	fmt.Println("Hello " + options.PortName)
-
-	// Open the port.
-	port, err := serial.Open(options)
-	if err != nil {
-		fmt.Println("Unable to communicate with the microcontroller. You may want to try running in debug mode (run with parameters -d 1)")
-		log.Fatalf("serial.Open: %v", err)
-	}
-
 	// Make sure to close it later.
 
 	// Write 4 bytes to the port.
 	//var a = "a"
 	b := []byte{0x6c} //, 0x01, 0x02, 0x03}
-	//stop := []byte(0x00)
-	//i, err := strconv.Atoi("a")
-	port.Write(b)
-	if err != nil {
-		log.Fatalf("port.Write: %v", err)
-		panic("Failed on write")
-	}
-	//write("a", port)
+	status.SendData(b)
 
-	// := []byte("k")
-
-	fmt.Println("Wrote: ", b)
-
-	_, err = port.Read(b)
-
-	if err != nil {
-		log.Fatalf("port.Read: %v", err)
-		panic("Failed on read")
-	}
+	status.ReadData(b)
 
 	s := string(b[:len(b)])
 	fmt.Println("Read:  ", b)
-	defer port.Close()
 	if s == "1" {
 		return true, nil
 	} else {

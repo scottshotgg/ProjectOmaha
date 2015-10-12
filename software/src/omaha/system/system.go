@@ -1,10 +1,15 @@
 package system
 
+import (
+	"io"
+)
+
 var status SystemStatus
 
 type SystemStatus struct {
 	ledOn bool
 	debug bool
+	Port  io.ReadWriteCloser
 }
 
 func (status *SystemStatus) IsLEDOn() bool {
@@ -20,6 +25,7 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 		status.ledOn = true
 		status.debug = true
 	} else {
+		status.InitializePort()
 		status.ledOn, _ = status.GetLEDStatusFromController()
 	}
 	return &status
