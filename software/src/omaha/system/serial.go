@@ -7,7 +7,7 @@ import (
 )
 
 func (status *SystemStatus) SendMessageHeader(size int) {
-	status.SendData([]byte{0x6C})
+	status.SendData([]byte{0x6B})
 	status.SendData([]byte{0x01})
 }
 
