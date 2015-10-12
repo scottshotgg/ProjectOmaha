@@ -138,6 +138,7 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 	// Open the port.
 	port, err := serial.Open(options)
 	if err != nil {
+		fmt.Println("Unable to communicate with the microcontroller. You may want to try running in debug mode (run with parameters -d 1)")
 		log.Fatalf("serial.Open: %v", err)
 	}
 

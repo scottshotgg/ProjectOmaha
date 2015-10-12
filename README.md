@@ -2,10 +2,8 @@
 ## Software
 ### How to run the server
 #### Windows
-1. Set environment variables
- * SOFTWARE_DIR - full path to the software directory in the repo
- * GOPATH - same as SOFTWARE_DIR
-2. Execute `go run main.go`
+1. run `scripts/windows/run.bat`
+2. If running for the first time, restart the command line and run again. (environment variables need to be refreshed)
 
 #### Linux / OS X
 Just execute `scripts/run`
