@@ -1,0 +1,57 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="/bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="/bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="/components/omaha-navbar.html">
+<link rel="import" href="/components/audio-controller.html">
+<link rel="import" href="/components/map-controller.html">
+
+<dom-module id="omaha-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+      }
+      @media (min-width: 500px) {
+        audio-controller {
+          @apply(--layout-horizontal)
+        }
+      }
+
+      @media (max-width: 499px) {
+        audio-controller {
+          @apply(--layout-vertical)
+        }
+      }
+    </style>
+        <paper-header-panel class="flex" mode="seamed">
+          <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
+          <iron-pages id="app-pages" selected="{{selected}}">
+            <audio-controller id="test" volume="21" class="fit"></audio-controller>
+            <map-controller class="fit"></map-controller>
+          </iron-pages>
+          <!-- <audio-controller id="test" volume="21" class="fit"></audio-controller> -->
+        </paper-header-panel>
+  </template>
+  <script>
+    Polymer({
+      is: 'omaha-app',
+
+      listeners: {
+        "nav.iron-select": "_test"
+      },
+
+      _test: function(x,y,z) {
+        console.log(x);
+        console.log(y);
+        console.log(z);
+        console.log("just testing");
+      }
+    });
+  </script>
+</dom-module>

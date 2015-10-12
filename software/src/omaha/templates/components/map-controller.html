@@ -1,0 +1,95 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/image-icons.html">
+<link rel="import" href="/bower_components/iron-icons/av-icons.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+
+<iron-icon id="day" icon="image:brightness-7"></iron-icon>
+
+<dom-module id="map-controller">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .block {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        color: var(--google-grey-700);
+      }
+
+      .container {
+        width: 100%;
+      }
+
+      .container-height {
+        height: 100%;
+      }
+    </style>
+    <div class="container-height layout horizontal center">
+      <div class="container layout vertical center">
+       <div id="cont" style="position: relative;">
+         <img id="map" on-click="test" src="/css/map.jpg">
+       </div>
+      </div>
+    </div>
+  </template>
+  <script>
+    var locations = [
+      {
+        x: 300,
+        y: 200
+      },
+      {
+        x: 150,
+        y: 100
+      },
+      {
+        x: 50,
+        y: 2
+      },
+      {
+        x: 0,
+        y: 0
+      }];
+    
+    Polymer({
+      is: 'map-controller',
+
+      test: function(event) {
+        var rect = this.$.map.getBoundingClientRect();
+        var parentX = rect.left;
+        var eventX = event.pageX;
+        var x = Math.round(Math.min(Math.max(eventX-parentX-15, 0),370));
+        var parentY = rect.top;
+        var eventY = event.pageY;
+        var y = Math.round(Math.min(Math.max(eventY-parentY-15, 0), 370));
+        var div = document.createElement("iron-icon");
+        div.icon = "av:surround-sound";
+        div.className = "block";
+        div.style.left = x.toString() + "px";
+        div.style.top = y.toString() + "px";
+        Polymer.dom(this.$.cont).appendChild(div);
+      },
+      
+      ready: function () {
+        for(i = 0; i < locations.length; i++) {
+          var loc = locations[i];
+          var div = document.createElement("iron-icon");
+          div.icon = "av:surround-sound";
+          div.className = "block";
+          div.style.left = loc.x.toString() + "px";
+          div.style.top = loc.y.toString() + "px";
+          Polymer.dom(this.$.cont).appendChild(div);
+        }
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,114 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="/components/test-controller.html">
+<link rel="import" href="/components/volume-selector.html">
+<link rel="import" href="/components/light-controller.html">
+<!--<link rel="import" href="/components/map-controller.html">-->
+<dom-module id="audio-controller">
+  <template>
+    <style>
+     :host {
+        display: block;
+      }
+     
+      .container {
+        width: 100%;
+      }
+      
+      .container-height {
+        height: 100%;
+      }
+      
+      volume-selector {
+        width: 40%;
+        min-width: 300px;
+      }
+
+      @media (min-width: 500px) {
+        paper-radio-group {
+          @apply(--layout-vertical);
+        }
+
+        paper-radio-button {
+          @apply(--layout-horizontal);
+          @apply(--layout-center);
+        }
+
+        #radio-container {
+          @apply(--layout-horizontal)
+        }
+      }
+
+      @media (max-width: 499px) {
+        paper-radio-group {
+          @apply(--layout-horizontal)
+        }
+        paper-radio-button {
+          @apply(--layout-vertical);
+          @apply(--layout-center);
+        }
+
+        #radio-container {
+          @apply(--layout-vertical)
+        }
+
+        volume-selector, light-controller {
+          margin-top: 20px;
+        }
+
+      }
+
+    </style>
+    <div id="radio-container" class="layout horizontal">
+      <paper-radio-group id="mode">
+        <paper-radio-button name="volume" class="flex">Volume</paper-radio-button>
+        <paper-radio-button name="light" class="flex">LED</paper-radio-button>
+      </paper-radio-group>
+    </div>
+    <div class="container layout horizontal center">
+      <div class="container layout vertical center">
+        <!-- <neon-animated-pages id="pages" selected="0" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+          <neon-animatable><div style="height: 100px;"></div></neon-animatable>
+          <neon-animatable>2</neon-animatable>
+        </neon-animated-pages>-->
+        <!-- <volume-selector volume="21"></volume-selector>-->
+        <iron-pages id="pages">
+          <light-controller id="light"></light-controller>
+          <volume-selector id="volume" volume="21"></volume-selector>
+        </iron-pages>
+        <!-- <map-controller></map-controller>-->
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'audio-controller',
+
+      listeners: {
+         "mode.iron-select": "_selectionChanged"
+      },
+
+      _selectionChanged: function(event) {
+        var selected = this.$.mode.selected;
+        if(selected === "volume") {
+          this.$.pages.select(1);
+        } else {
+          this.$.pages.select(0);
+        }
+      },
+
+      ready: function() {
+        this.$.mode.selected = "volume";
+        this.$.pages.selected = "1"
+      }
+    });
+  </script>
+</dom-module>
