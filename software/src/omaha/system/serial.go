@@ -6,6 +6,11 @@ import (
 	"log"
 )
 
+func (status *SystemStatus) SendMessageHeader(size int) {
+	status.SendData([]byte{0x6C})
+	status.SendData([]byte{0x01})
+}
+
 func (status *SystemStatus) SendData(data []byte) {
 	_, err := status.Port.Write(data)
 	if err != nil {

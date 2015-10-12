@@ -9,8 +9,8 @@ func (status *SystemStatus) TurnLEDOn() error {
 		status.ledOn = true
 		return nil
 	}
-
-	b := []byte{0x01} //, 0x01, 0x02, 0x03}
+	status.SendMessageHeader(1)
+	b := []byte{0x56} //, 0x01, 0x02, 0x03}
 	status.SendData(b)
 
 	status.ReadData(b)
@@ -23,6 +23,7 @@ func (status *SystemStatus) TurnLEDOn() error {
 	} else {
 		return nil
 	}
+	return nil
 
 }
 
@@ -31,8 +32,8 @@ func (status *SystemStatus) TurnLEDOff() error {
 		status.ledOn = false
 		return nil
 	}
-
-	b := []byte{0x00} //, 0x01, 0x02, 0x03}
+	status.SendMessageHeader(1)
+	b := []byte{0x76} //, 0x01, 0x02, 0x03}
 	status.SendData(b)
 
 	status.ReadData(b)
@@ -44,7 +45,7 @@ func (status *SystemStatus) TurnLEDOff() error {
 	} else {
 		return nil
 	}
-
+	return nil
 }
 
 func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
@@ -52,6 +53,7 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 
 	// Write 4 bytes to the port.
 	//var a = "a"
+	status.SendMessageHeader(1)
 	b := []byte{0x6c} //, 0x01, 0x02, 0x03}
 	status.SendData(b)
 
@@ -60,8 +62,9 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 	s := string(b[:len(b)])
 	fmt.Println("Read:  ", b)
 	if s == "1" {
-		return true, nil
-	} else {
 		return false, nil
+	} else {
+		return true, nil
 	}
+	return true, nil
 }
