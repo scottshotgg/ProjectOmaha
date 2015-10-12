@@ -12,17 +12,6 @@ func (status *SystemStatus) TurnLEDOn() error {
 	status.SendMessageHeader(1)
 	b := []byte{0x56} //, 0x01, 0x02, 0x03}
 	status.SendData(b)
-
-	status.ReadData(b)
-
-	s := string(b[:len(b)])
-	fmt.Println("Read:  ", b)
-
-	if s == "1" {
-		return nil
-	} else {
-		return nil
-	}
 	return nil
 
 }
@@ -35,16 +24,6 @@ func (status *SystemStatus) TurnLEDOff() error {
 	status.SendMessageHeader(1)
 	b := []byte{0x76} //, 0x01, 0x02, 0x03}
 	status.SendData(b)
-
-	status.ReadData(b)
-
-	s := string(b[:len(b)])
-	fmt.Println("Read:  ", b)
-	if s == "1" {
-		return nil
-	} else {
-		return nil
-	}
 	return nil
 }
 
