@@ -89,13 +89,13 @@
       is: 'light-controller',
 
       _onPressed: function(){
-        _showDay();
+        this._showDay();
 
         this.$.ledOnAjax.generateRequest();
       },
 
       _offPressed: function() {
-        _showNight();
+        this._showNight();
         this.$.ledOffAjax.generateRequest();
       },
 
