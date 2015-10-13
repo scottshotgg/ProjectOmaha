@@ -34,7 +34,7 @@ func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Print("LED status handler called")
+	fmt.Println("LED status handler called")
 	status := system.GetSystemStatus()
 	if status.IsLEDOn() {
 		fmt.Fprint(w, "1")

@@ -1,6 +1,7 @@
 package system
 
 import (
+	"fmt"
 	"io"
 )
 
@@ -26,7 +27,11 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 		status.debug = true
 	} else {
 		status.InitializePort()
-		status.ledOn, _ = status.GetLEDStatusFromController()
+		var err error
+		status.ledOn, err = status.GetLEDStatusFromController()
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 	return &status
 }

@@ -12,6 +12,7 @@ func (status *SystemStatus) SendMessageHeader(size int) {
 }
 
 func (status *SystemStatus) SendData(data []byte) {
+	fmt.Printf("port.Write: %v\n", data)
 	_, err := status.Port.Write(data)
 	if err != nil {
 		log.Fatalf("port.Write: %v", err)
@@ -21,7 +22,7 @@ func (status *SystemStatus) SendData(data []byte) {
 
 func (status *SystemStatus) ReadData(buffer []byte) {
 	_, err := status.Port.Read(buffer)
-
+	fmt.Printf("port.Read: %v\n", buffer)
 	if err != nil {
 		log.Fatalf("port.Read: %v", err)
 		panic("Failed on read")
