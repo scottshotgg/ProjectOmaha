@@ -3,10 +3,6 @@
 <link rel="import" href="/bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="/bower_components/neon-animation/neon-animated-pages.html">
-<link rel="import" href="/bower_components/neon-animation/neon-animatable.html">
-<link rel="import" href="/bower_components/neon-animation/neon-animations.html">
-<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="/components/test-controller.html">
 <link rel="import" href="/components/volume-selector.html">
@@ -68,12 +64,12 @@
 
     </style>
     <div id="radio-container" class="layout horizontal">
-      <paper-radio-group id="mode">
+      <paper-radio-group selected="{{mode}}" id="mode">
         <paper-radio-button name="volume" class="flex">Volume</paper-radio-button>
         <paper-radio-button name="light" class="flex">LED</paper-radio-button>
       </paper-radio-group>
     </div>
-    <neon-animated-pages id="pages" class="flex">
+    <neon-animated-pages selected="[[page]]" id="pages" class="flex">
       <neon-animatable class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
       <div class="container layout horizontal center">
         <div class="container layout vertical center">
@@ -113,22 +109,26 @@
     Polymer({
       is: 'audio-controller',
 
-      listeners: {
-         "mode.iron-select": "_selectionChanged"
-      },
-
-      _selectionChanged: function(event) {
-        var selected = this.$.mode.selected;
-        if(selected === "volume") {
-          this.$.pages.select(1);
-        } else {
-          this.$.pages.select(0);
+      properties: {
+        mode: {
+          type: String,
+          value: "light",
+          observer: "_selectionChanged"
+        },
+        page: {
+          type: String,
+          value: 0
         }
       },
 
-      ready: function() {
-        this.$.mode.selected = "light";
-        this.$.pages.selected = "0"
+      _selectionChanged: function(event) {
+        
+        var selected = this.mode;
+        if(selected === "volume") {
+          this.page = 1;
+        } else {
+          this.page = 0;
+        }
       }
     });
   </script>
