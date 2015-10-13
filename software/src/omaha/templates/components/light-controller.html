@@ -88,17 +88,25 @@
     Polymer({
       is: 'light-controller',
 
-      _onPressed: function (){
-        this.$.day.style.display = "block";
-        this.$.night.style.display = "none";
+      _onPressed: function(){
+        _showDay();
 
         this.$.ledOnAjax.generateRequest();
       },
 
       _offPressed: function() {
+        _showNight();
+        this.$.ledOffAjax.generateRequest();
+      },
+
+      _showDay: function() {
+        this.$.day.style.display = "block";
+        this.$.night.style.display = "none";
+      },
+
+      _showNight: function() {
         this.$.day.style.display = "none";
         this.$.night.style.display = "block";
-        this.$.ledOffAjax.generateRequest();
       },
 
       _logResponse: function(event, data) {
@@ -108,9 +116,9 @@
       _initializeStatus: function(event, data) {
         console.log(data.response)
         if(data.response == 1) {
-          this._onPressed();
+          this._showDay();
         } else {
-          this._offPressed();
+          this._showNight();
         }
       },
 
