@@ -1,9 +1,5 @@
 package system
 
-import (
-	"fmt"
-)
-
 func (status *SystemStatus) TurnLEDOn() error {
 	status.ledOn = true
 	if status.debug {
@@ -38,10 +34,7 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 
 	status.ReadData(b)
 
-	s := string(b[:len(b)])
-	fmt.Println("Read:  ", s)
-
-	if s == "1" {
+	if b[0] == 0x01 {
 		return false, nil
 	} else {
 		return true, nil
