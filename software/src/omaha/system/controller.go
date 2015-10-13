@@ -5,8 +5,8 @@ import (
 )
 
 func (status *SystemStatus) TurnLEDOn() error {
+	status.ledOn = true
 	if status.debug {
-		status.ledOn = true
 		return nil
 	}
 	status.SendMessageHeader(1)
@@ -17,8 +17,8 @@ func (status *SystemStatus) TurnLEDOn() error {
 }
 
 func (status *SystemStatus) TurnLEDOff() error {
+	status.ledOn = false
 	if status.debug {
-		status.ledOn = false
 		return nil
 	}
 	status.SendMessageHeader(1)
@@ -39,7 +39,8 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 	status.ReadData(b)
 
 	s := string(b[:len(b)])
-	fmt.Println("Read:  ", b)
+	fmt.Println("Read:  ", s)
+
 	if s == "1" {
 		return false, nil
 	} else {
