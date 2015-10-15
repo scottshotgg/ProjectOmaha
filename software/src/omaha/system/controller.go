@@ -49,3 +49,21 @@ func (status *SystemStatus) VolumeUp error {
 	
 	return nil
 }
+
+func (status *SystemStatus) VolumeDown error {
+	status.SendMessageHeader(1)
+	b := []byte{0x76}
+	status.sendData(b)
+	
+	return nil
+}
+
+/*func (status *SystemStatus) VolumeVariable error {
+	status.SendMessageHeader(2)
+	b := []byte{0x6D}
+	status.sendData(b)
+	b :=				// We need to get the volume level integer and send that
+	status.sendData()
+	
+	return nil
+}*/
