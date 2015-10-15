@@ -22,7 +22,7 @@ func (status *SystemStatus) IsDebug() bool {
 	return status.debug
 }
 
-func (status *SystemStatus) GetVolumeLevel() bool {
+func (status *SystemStatus) GetVolumeLevel() int {
 	return status.volumeLevel
 }
 

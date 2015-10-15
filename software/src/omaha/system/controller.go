@@ -42,7 +42,7 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 	return true, nil
 }
 
-func (status *SystemStatus) VolumeUp error {
+func (status *SystemStatus) VolumeUp() error {
 	status.SendMessageHeader(1)
 	b := []byte{0x56}
 	status.SendData(b)
@@ -50,7 +50,7 @@ func (status *SystemStatus) VolumeUp error {
 	return nil
 }
 
-func (status *SystemStatus) VolumeDown error {
+func (status *SystemStatus) VolumeDown() error {
 	status.SendMessageHeader(1)
 	b := []byte{0x76}
 	status.SendData(b)
@@ -58,7 +58,7 @@ func (status *SystemStatus) VolumeDown error {
 	return nil
 }
 
-/*func (status *SystemStatus) VolumeVariable error {
+/*func (status *SystemStatus) VolumeVariable() error {
 	status.SendMessageHeader(2)
 	b := []byte{0x6D}
 	status.SendData(b)
