@@ -1,14 +1,22 @@
+<<<<<<< HEAD
 .DS_Store
 .AppleDouble
 .LSOverride
 
 # Icon must end with two \r
+=======
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
+>>>>>>> ff71dd4ce86b21a9e283803070a202446d6c3329
 Icon
 
 
 # Thumbnails
 ._*
 
+<<<<<<< HEAD
 # Files that might appear in the root of a volume
 .DocumentRevisions-V100
 .fseventsd
@@ -23,3 +31,8 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+=======
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+>>>>>>> ff71dd4ce86b21a9e283803070a202446d6c3329

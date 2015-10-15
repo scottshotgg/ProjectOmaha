@@ -8,7 +8,9 @@ import (
 
 func (status *SystemStatus) SendMessageHeader(size int) {
 	status.SendData([]byte{0x6B})
-	status.SendData(byte{int8(size)})
+
+	fmt.Printf("%d", []byte{byte(int8(size))}) // We only need to send the first one, second will always be blank
+	status.SendData([]byte{byte(int8(size))})  // This needs to be changed
 }
 
 func (status *SystemStatus) SendData(data []byte) {
