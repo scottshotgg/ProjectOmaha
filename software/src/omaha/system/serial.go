@@ -8,7 +8,10 @@ import (
 
 func (status *SystemStatus) SendMessageHeader(size int) {
 	status.SendData([]byte{0x6B})
-	status.SendData([]byte{0x01})		// This needs to be changed
+	b := [2]byte{}
+	n := binary.LittleEndian.PutUint16(size, uint16(size))
+	fmt.Printf("%d", b[1])
+	status.SendData(b[1])		// This needs to be changed
 }
 
 func (status *SystemStatus) SendData(data []byte) {
