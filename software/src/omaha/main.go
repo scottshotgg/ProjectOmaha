@@ -21,6 +21,7 @@ func main() {
 	http.HandleFunc("/demo/start/", handlers.DemoStartHandler)
 	http.HandleFunc("/demo/stop/", handlers.DemoStopHandler)
 	http.HandleFunc("/demo/status/", handlers.DemoLEDHandler)
+	http.HandleFunc("/scott/test/", handlers.DemoVolumeUpHandler)
 
 	// file handlers
 	http.Handle("/css/", handlers.CssHandler)

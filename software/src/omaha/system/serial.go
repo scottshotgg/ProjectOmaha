@@ -8,11 +8,11 @@ import (
 
 func (status *SystemStatus) SendMessageHeader(size int) {
 	status.SendData([]byte{0x6B})
-	
-	b := [2]byte{}			// You can only go down to a 16-bit size so it split [8-bits][8-bits] 
-	n := binary.LittleEndian.PutUint16(b[:], uint16(size))
-	fmt.Printf("%d", b[1])		// We only need to send the first one, second will always be blank
-	status.SendData(b[1])		// This needs to be changed
+
+	b := []byte{0x01} // You can only go down to a 16-bit size so it split [8-bits][8-bits]
+	// n := binary.LittleEndian.PutUint16(b[:], uint16(size))
+	// fmt.Printf("%d", b[1])		// We only need to send the first one, second will always be blank
+	status.SendData(b) // This needs to be changed
 }
 
 func (status *SystemStatus) SendData(data []byte) {
