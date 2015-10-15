@@ -44,15 +44,17 @@ func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DemoVolumeUpHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	fmt.Println(r.PostForm["test"])
 	fmt.Println("VOLUME UP")
-	status := system.GetSystemStatus()
-	if status.GetVolumeLevel() < 100 {
-		fmt.Println("Telling the controller to turn up on a Tuesday")	// Print volume level
-		status.VolumeUp()
-		if status.IsDebug() {
-			fmt.Println("Turned the volume up")	// Print out volume level too
-		}
-	}
+	// status := system.GetSystemStatus()
+	// if status.GetVolumeLevel() < 100 {
+	// 	fmt.Println("Telling the controller to turn up on a Tuesday") // Print volume level
+	// 	status.VolumeUp()
+	// 	if status.IsDebug() {
+	// 		fmt.Println("Turned the volume up") // Print out volume level too
+	// 	}
+	// }
 	fmt.Fprint(w, "1")
 }
 
@@ -60,10 +62,10 @@ func DemoVolumeDownHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("VOLUME DOWN")
 	status := system.GetSystemStatus()
 	if status.GetVolumeLevel() > 0 {
-		fmt.Println("Telling the controller to turn down for what")	// Print volume level
+		fmt.Println("Telling the controller to turn down for what") // Print volume level
 		status.VolumeDown()
 		if status.IsDebug() {
-			fmt.Println("Turned the volume down")	// Print out volume level too
+			fmt.Println("Turned the volume down") // Print out volume level too
 		}
 	}
 	fmt.Fprint(w, "1")
