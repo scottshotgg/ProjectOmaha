@@ -92,5 +92,6 @@ func DemoVolumeVariableHandler(w http.ResponseWriter, r *http.Request) {
 		if status.IsDebug() {
 			fmt.Println("Turned the volume to", volumeLevel) // Print out volume level too
 		}
+	}
 	fmt.Fprint(w, "1")
 }
