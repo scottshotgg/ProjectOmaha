@@ -44,9 +44,6 @@ func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DemoVolumeUpHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	fmt.Println(r.PostForm["test"])
-	fmt.Println("VOLUME UP")
 	// status := system.GetSystemStatus()
 	// if status.GetVolumeLevel() < 100 {
 	// 	fmt.Println("Telling the controller to turn up on a Tuesday") // Print volume level
@@ -72,14 +69,14 @@ func DemoVolumeDownHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DemoVolumeVariableHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	var volumeLevel = r.PostForm["test"][0]	// This is a string for some reason
 	fmt.Println("VOLUME VARIABLE")			// Print volume variable too
 	status := system.GetSystemStatus()
-	if status.GetVolumeLevel() > 0 {		// Change to comapre incoming volume variable, also > 100
-		fmt.Println("Telling the controller to turn to whatever I want")	// Print volume level
-		status.VolumeVariable(// Volume variable here)
+		fmt.Println("Telling the controller to turn to whatever I want: " + volumeLevel)	// Print volume level
+		status.VolumeVariable(volumeLevel)	// Doesn't compile right now, need int value not string
 		if status.IsDebug() {
-			fmt.Println("Turned the volume to")	// Print out volume level too
+			fmt.Println("Turned the volume to " + volumeLevel)	// Print out volume level too
 		}
-	}
 	fmt.Fprint(w, "1")
 }

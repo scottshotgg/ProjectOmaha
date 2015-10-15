@@ -8,7 +8,7 @@ import (
 
 func (status *SystemStatus) SendMessageHeader(size int) {
 	status.SendData([]byte{0x6B})
-	status.SendData(byte{int8(size)})
+	status.SendData([]byte{byte(int8(size))})
 }
 
 func (status *SystemStatus) SendData(data []byte) {
