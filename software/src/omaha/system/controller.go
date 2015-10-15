@@ -6,7 +6,7 @@ func (status *SystemStatus) TurnLEDOn() error {
 		return nil
 	}
 	status.SendMessageHeader(1)
-	b := []byte{0x56} //, 0x01, 0x02, 0x03}
+	b := []byte{0x56} //, 0x01, 0x02, 0x03}		// Using V and v fro volume now
 	status.SendData(b)
 	return nil
 
@@ -18,7 +18,7 @@ func (status *SystemStatus) TurnLEDOff() error {
 		return nil
 	}
 	status.SendMessageHeader(1)
-	b := []byte{0x76} //, 0x01, 0x02, 0x03}
+	b := []byte{0x76} //, 0x01, 0x02, 0x03}		// Change this
 	status.SendData(b)
 	return nil
 }
@@ -40,4 +40,12 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 		return true, nil
 	}
 	return true, nil
+}
+
+func (status *SystemStatus) VolumeUp error {
+	status.SendMessageHeader(1)
+	b := []byte{0x56}
+	status.sendData(b)
+	
+	return nil
 }
