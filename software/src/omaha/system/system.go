@@ -27,6 +27,13 @@ func (status *SystemStatus) GetVolumeLevel() int {
 }
 
 func InitializeSystemStatus(isDebug bool) *SystemStatus {
+	
+	if isDebug {
+		status.ledOn = true
+		status.debug = true
+	} else {
+		status.InitializePort()
+	}
 	var err error
 	status.debug = isDebug
 	status.ledOn, err = status.GetLEDStatusFromController()

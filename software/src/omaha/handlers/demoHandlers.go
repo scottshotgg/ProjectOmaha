@@ -79,10 +79,10 @@ func DemoVolumeVariableHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "0")
 	}
 	status := system.GetSystemStatus()
-		fmt.Println("Telling the controller to turn to whatever I want: " + volumeLevel)	// Print volume level
-		status.VolumeVariable(1)	// need int value not string, hardcoded as 1 for now
+		//fmt.Println("Telling the controller to turn to whatever I want: ", volumeLevel)	// Print volume level
+		//status.VolumeVariable(volumeLevel)	// need int value not string, hardcoded as 1 for now
 	if status.GetVolumeLevel() > 0 { // Change to comapre incoming volume variable, also > 100
-		fmt.Println("Telling the controller to turn to whatever I want") // Print volume level
+		fmt.Println("Telling the controller to turn to whatever I want", volumeLevel) // Print volume level
 		status.SetVolume(volumeLevel)                                    // Volume variable here)
 		if status.IsDebug() {
 			fmt.Println("Turned the volume to", volumeLevel) // Print out volume level too
