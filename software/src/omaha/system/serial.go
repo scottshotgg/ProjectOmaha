@@ -6,9 +6,10 @@ import (
 	"log"
 )
 
-func (status *SystemStatus) SendMessageHeader(size int) {
-	status.SendData([]byte{0x6B})
-	status.SendData([]byte{byte(int8(size))})
+func (status *SystemStatus) SendMessageHeader() {
+	status.SendData([]byte{0x00})	// This needs to be changed to the section ID
+	status.SendData([]byte{0x6B})	// This needs to be changed to the actual ID
+	//status.SendData([]byte{byte(int8(size))})
 }
 
 func (status *SystemStatus) SendData(data []byte) {
