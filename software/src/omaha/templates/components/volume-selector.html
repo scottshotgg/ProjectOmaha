@@ -38,13 +38,19 @@
         </div>
       </div>
       <div class="card-actions">
-        <paper-button on-click="showToast">set volume</paper-button>
+        <paper-button on-click="_setVolumeClicked">set volume</paper-button>
+
+
         <iron-ajax
-          id="ledOnAjax"
+          id="setVolumeAjax"
           url="/scott/test"
+          method="POST"
+          contentType="application/json"
           handle-as="json"
           on-response="_logResponse"
           debounce-duration="300"></iron-ajax>
+
+
       </div>
     </paper-card>
     <paper-toast id="toast">Volume set to <span>{{volume}}</span></paper-toast>
@@ -57,13 +63,15 @@
         volume: Number
       },
       
-      showToast: function() {
-        document.querySelector("#toast").show();
+        _setVolumeClicked: function() {
+        this.$.toast.show();
+        this.$.setVolumeAjax.body = {volume: this.volume};
+        this.$.setVolumeAjax.generateRequest();
       },
       
       decrementVolume: function() {
-        document.querySelector("#volume2").decrement();
-        document.querySelector("#volume2")._expandKnob();
+        this.$.volume2.decrement();
+        this.$.volume2._expandKnob();
         if(this.prevTimeout != 0) {
           window.clearTimeout(this.prevTimeout)
         }
@@ -75,8 +83,8 @@
       },
       
       incrementVolume: function() {
-        document.querySelector("#volume2").increment();
-        document.querySelector("#volume2")._expandKnob();
+        this.$.volume2.increment();
+        this.$.volume2._expandKnob();
         if(this.prevTimeout != 0) {
           window.clearTimeout(this.prevTimeout)
         }
@@ -89,7 +97,11 @@
       
       resetKnob: function(elem) {
         elem.prevTimeout = 0;
-        document.querySelector("#volume2")._resetKnob();
+        this.$.volume2._resetKnob();
+      },
+
+      _logResponse: function(event, data) {
+        console.log(data.response);
       }
     });
   </script>
