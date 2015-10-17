@@ -39,6 +39,12 @@
       </div>
       <div class="card-actions">
         <paper-button on-click="showToast">set volume</paper-button>
+        <iron-ajax
+          id="ledOnAjax"
+          url="/scott/test"
+          handle-as="json"
+          on-response="_logResponse"
+          debounce-duration="300"></iron-ajax>
       </div>
     </paper-card>
     <paper-toast id="toast">Volume set to <span>{{volume}}</span></paper-toast>
