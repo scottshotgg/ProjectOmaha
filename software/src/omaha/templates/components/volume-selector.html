@@ -39,33 +39,29 @@
       </div>
       <div class="card-actions">
         <paper-button on-click="_setVolumeClicked">set volume</paper-button>
-
-
-        <iron-ajax
-          id="setVolumeAjax"
-          url="/scott/test"
-          method="POST"
-          contentType="application/json"
-          handle-as="json"
-          on-response="_logResponse"
-          debounce-duration="300"></iron-ajax>
-
-
       </div>
     </paper-card>
     <paper-toast id="toast">Volume set to <span>{{volume}}</span></paper-toast>
+    <iron-ajax
+          id="setVolumeAjax"
+          url="/scott/test/"
+          method="POST"
+          content-type="application/json"
+          handle-as="json"
+          on-response="_logResponse"
+          debounce-duration="300"></iron-ajax>
   </template>
   <script>
     Polymer({
       is: 'volume-selector',
       
       properties: {
-        volume: Number
+        volume: Number,
       },
       
         _setVolumeClicked: function() {
         this.$.toast.show();
-        this.$.setVolumeAjax.body = {volume: this.volume};
+        this.$.setVolumeAjax.body = {"Volume": 20};
         this.$.setVolumeAjax.generateRequest();
       },
       
