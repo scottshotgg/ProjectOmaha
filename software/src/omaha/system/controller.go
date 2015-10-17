@@ -24,8 +24,9 @@ func (status *SystemStatus) TurnLEDOff() error {
 }
 
 func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
-	// Make sure to close it later.
-
+	if status.debug {
+		return true, nil
+	}
 	// Write 4 bytes to the port.
 	//var a = "a"
 	status.SendMessageHeader()
@@ -45,6 +46,10 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 
 /*func (status *SystemStatus) VolumeUp() error {			// These won't be used
 	status.volumeLevel++
+	if status.debug {
+		return nil
+	}
+
 	status.SendMessageHeader(1)
 	status.SendData([]byte{0x56})
 
@@ -53,17 +58,32 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 
 func (status *SystemStatus) VolumeDown() error {		// These won't be used
 	status.volumeLevel--
+	if status.debug {
+		return nil
+	}
+
 	status.SendMessageHeader(1)
 	status.SendData([]byte{0x76})
 
 	return nil
 }*/
 
-func (status *SystemStatus) VolumeVariable(volumeLevel int) error {
+func (status *SystemStatus) SetVolume(volumeLevel int) error {
 	status.volumeLevel = volumeLevel
+	if status.debug {
+		return nil
+	}
 	status.SendMessageHeader()
 	status.SendData([]byte{0x6D})
 	status.SendData([]byte{byte(int8(volumeLevel))})
 
 	return nil
+}
+
+func (status *SystemStatus) GetVolumeFromController() (int, error) {
+	if status.debug {
+		return 0, nil
+	}
+
+	return 0, nil
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"omaha/system"
+	"strconv"
 )
 
 func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +43,6 @@ func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "0")
 	}
 }
-
 /*func DemoVolumeUpHandler(w http.ResponseWriter, r *http.Request) {
 	// status := system.GetSystemStatus()
 	// if status.GetVolumeLevel() < 100 {
@@ -52,8 +52,7 @@ func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
 	// 		fmt.Println("Turned the volume up") // Print out volume level too
 	// 	}
 	// }
-	fmt.Fprint(w, "1")
-}
+
 
 func DemoVolumeDownHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("VOLUME DOWN")
@@ -68,15 +67,26 @@ func DemoVolumeDownHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "1")
 }*/
 
+/*
+	Sets the volume of the control. Expects a post request with variables:
+	- volume (integer)
+*/
 func DemoVolumeVariableHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("VOLUME VARIABLE")
 	r.ParseForm()
-	var volumeLevel = r.PostForm["test"][0]	// This is a string for some reason
-	fmt.Println("VOLUME VARIABLE")			// Print volume variable too
+	volumeLevel, err := strconv.Atoi(r.PostForm["volume"][0])
+	if err != nil {
+		fmt.Fprint(w, "0")
+	}
 	status := system.GetSystemStatus()
 		fmt.Println("Telling the controller to turn to whatever I want: " + volumeLevel)	// Print volume level
 		status.VolumeVariable(1)	// need int value not string, hardcoded as 1 for now
+	if status.GetVolumeLevel() > 0 { // Change to comapre incoming volume variable, also > 100
+		fmt.Println("Telling the controller to turn to whatever I want") // Print volume level
+		status.SetVolume(volumeLevel)                                    // Volume variable here)
 		if status.IsDebug() {
-			fmt.Println("Turned the volume to " + volumeLevel)	// Print out volume level too
+			fmt.Println("Turned the volume to", volumeLevel) // Print out volume level too
 		}
+	}
 	fmt.Fprint(w, "1")
 }

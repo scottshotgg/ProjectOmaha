@@ -8,9 +8,9 @@ import (
 var status SystemStatus
 
 type SystemStatus struct {
-	ledOn bool
-	debug bool
-	Port  io.ReadWriteCloser
+	ledOn       bool
+	debug       bool
+	Port        io.ReadWriteCloser
 	volumeLevel int
 }
 
@@ -27,20 +27,17 @@ func (status *SystemStatus) GetVolumeLevel() int {
 }
 
 func InitializeSystemStatus(isDebug bool) *SystemStatus {
-	if isDebug {
-		status.ledOn = true
-		status.debug = true
-		status.volumeLevel = 0
-	} else {
-		status.InitializePort()
-		var err error
-		status.ledOn, err = status.GetLEDStatusFromController()
-		//status.volumeLevel = status.GetVolumeFromController()	// Commented until implemented
-		status.volumeLevel = 0
-		if err != nil {
-			fmt.Println(err)
-		}
+	var err error
+	status.debug = isDebug
+	status.ledOn, err = status.GetLEDStatusFromController()
+	if err != nil {
+		fmt.Println(err)
 	}
+	status.volumeLevel, err = status.GetVolumeFromController()
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	return &status
 }
 
