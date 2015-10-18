@@ -26,6 +26,8 @@
 #include "math.h"
 #include "examples_setup.h"
 
+this is a main.c file
+
 uint32_t     			lfsr1 									= 0xF8621234;
 uint32_t     			lfsr2 									= 0x12784321;
 uint32_t				lfsr3 									= 0x57621465;
