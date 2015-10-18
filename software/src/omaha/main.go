@@ -16,6 +16,8 @@ func main() {
 		status := system.GetSystemStatus()
 		defer status.Port.Close()
 	}
+	go system.HandleControllerMessages()
+
 	http.HandleFunc("/", handlers.LoginHandler)
 	http.HandleFunc("/app/", handlers.AppHandler)
 	http.HandleFunc("/demo/start/", handlers.DemoStartHandler)
