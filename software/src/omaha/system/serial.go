@@ -6,10 +6,32 @@ import (
 	"log"
 )
 
-func (status *SystemStatus) SendMessageHeader() {
-	status.SendData(0x00) // This needs to be changed to the section ID
-	status.SendData(0x6B) // This needs to be changed to the actual ID
-	//status.SendData([]byte{byte(int8(size))})
+var MessageChan chan *ControllerRequest = make(chan *ControllerRequest, 100)
+
+type ControllerRequest struct {
+	Data       []byte
+	OnWrite    func() interface{}
+	ResultChan chan interface{}
+}
+
+func HandleControllerMessages() {
+	for {
+		req := <-MessageChan
+		status := GetSystemStatus()
+		if !status.IsDebug() {
+			status.Port.Write(req.Data)
+		}
+		if req.OnWrite != nil {
+			req.ResultChan <- req.OnWrite()
+		}
+	}
+}
+
+func (status *SystemStatus) GetMessageHeader() []byte {
+	header := make([]byte, 4)
+	header[0] = 0x00 // section ID
+	header[1] = 0x6B // speaker ID
+	return header
 }
 
 func (status *SystemStatus) SendData(data byte) {

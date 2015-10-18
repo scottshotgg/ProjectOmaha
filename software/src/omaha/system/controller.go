@@ -17,10 +17,13 @@ func (status *SystemStatus) TurnLEDOn() error {
 	if status.debug {
 		return nil
 	}
-	status.SendMessageHeader()
+	data := status.GetMessageHeader()
+	data[2] = TurnLEDOnID
+	data[3] = 0x00
 
-	status.SendData(TurnLEDOnID) // This is the command, outdated though
-	status.SendData(0x00)        // This is the "data" for the command
+	req := &ControllerRequest{Data: data}
+	MessageChan <- req
+
 	return nil
 
 }
@@ -30,28 +33,41 @@ func (status *SystemStatus) TurnLEDOff() error {
 	if status.debug {
 		return nil
 	}
-	status.SendMessageHeader()
-	status.SendData(TurnLEDOffID)
-	status.SendData(0x00)
+	data := status.GetMessageHeader()
+	data[2] = TurnLEDOffID
+	data[3] = 0x00
+
+	req := &ControllerRequest{Data: data}
+	MessageChan <- req
+
 	return nil
+}
+
+type LEDStatusResponse struct {
+	ledOn bool
 }
 
 func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 	if status.debug {
 		return true, nil
 	}
-	status.SendMessageHeader()
-	status.SendData(GetLEDStatusID)
-	status.SendData(0x00)
-	var b []byte
-	status.ReadData(b)
 
-	if b[0] == 0x01 {
-		return false, nil
-	} else {
-		return true, nil
-	}
-	return true, nil
+	data := status.GetMessageHeader()
+	data[2] = GetLEDStatusID
+	data[3] = 0x00
+
+	ch := make(chan interface{})
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		var b []byte
+		status.ReadData(b)
+		response := &LEDStatusResponse{}
+		response.ledOn = b[0] != 0x01
+		return response
+	}}
+	MessageChan <- req
+	response := (<-ch).(*LEDStatusResponse)
+
+	return response.ledOn, nil
 }
 
 func (status *SystemStatus) SetVolume(volumeLevel int8) error {
@@ -59,9 +75,12 @@ func (status *SystemStatus) SetVolume(volumeLevel int8) error {
 	if status.debug {
 		return nil
 	}
-	status.SendMessageHeader()         // Later we will want to put the zone AND unit ID into this I think
-	status.SendData(SetVolumeID)       // Uppercase V sets the volume
-	status.SendData(byte(volumeLevel)) // If compile fails, put back byte()
+	data := status.GetMessageHeader()
+	data[2] = SetVolumeID
+	data[3] = byte(volumeLevel)
+
+	req := &ControllerRequest{Data: data}
+	MessageChan <- req
 	return nil
 }
 
@@ -70,8 +89,10 @@ func (status *SystemStatus) GetVolumeFromController() (int8, error) {
 		return 0, nil
 	}
 
-	status.SendMessageHeader()
-	status.SendData(0x41)
+	data := status.GetMessageHeader()
+	data[2] = 0x41
+	data[3] = 0x00
+
 	// status.SendData(filter) commented out until filter is created
 
 	return 0, nil
@@ -82,9 +103,11 @@ func (status *SystemStatus) ResetFIFO() (int, error) { // This function resets t
 		return 0, nil
 	}
 
-	for i := 0; i < 8; i++ {
-		status.SendData(0x00) // Send all zeros, this will reset their FIFO, [0][0][command][data] could also mean that everyone listens
-	}
+	//data := make([]byte, 8)
+
+	// for i := 0; i < 8; i++ {
+	// 	status.SendData(0x00) // Send all zeros, this will reset their FIFO, [0][0][command][data] could also mean that everyone listens
+	// }
 
 	return 0, nil
 }
@@ -94,9 +117,9 @@ func (status *SystemStatus) ResetMicrocontroller() (int, error) {
 		return 0, nil
 	}
 
-	status.SendMessageHeader()
-	status.SendData(0x00)
-	status.SendData(0x00)
+	data := status.GetMessageHeader()
+	data[2] = 0x00
+	data[3] = 0x00
 
 	return 0, nil
 
@@ -111,9 +134,9 @@ func (status *SystemStatus) GetAveragingFilter(filter int) (int, error) {
 		return 0, nil
 	}
 
-	status.SendMessageHeader()
-	status.SendData(0x61)
-	status.SendData(0x00)
+	data := status.GetMessageHeader()
+	data[2] = 0x61
+	data[3] = 0x00
 
 	b := []byte{0x00}
 	status.ReadData(b)
@@ -127,8 +150,8 @@ func (status *SystemStatus) SendCoefficientInformation(equalizedGain int8, decib
 		return 0, nil
 	}
 
-	status.SendData(byte(decibal))
-	status.SendData(byte(equalizedGain))
+	// status.SendData(byte(decibal))
+	// status.SendData(byte(equalizedGain))
 
 	return 0, nil
 }
@@ -143,9 +166,9 @@ func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) { /
 	for i := 1; i <= len(n); i++ { // This should have something passed to it that tells it what IDs are still
 		// available, maybe the map itself and we can get the length of the map
 
-		status.SendMessageHeader() // i would go here
-		status.SendData(0x52)
-		status.SendData(0x00)
+		// status.SendMessageHeader() // i would go here
+		// status.SendData(0x52)
+		// status.SendData(0x00)
 
 		b := []byte{0x00}
 		alive := status.ReadData(b)
