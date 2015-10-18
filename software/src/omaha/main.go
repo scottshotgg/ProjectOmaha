@@ -20,9 +20,9 @@ func main() {
 	http.HandleFunc("/app/", handlers.AppHandler)
 	http.HandleFunc("/demo/start/", handlers.DemoStartHandler)
 	http.HandleFunc("/demo/stop/", handlers.DemoStopHandler)
-	http.HandleFunc("/demo/status/", handlers.DemoLEDHandler)
-	//http.HandleFunc("/scott/test/", handlers.DemoVolumeUpHandler)
-	http.HandleFunc("/scott/test/", handlers.DemoSetVolumeHandler)
+
+	http.HandleFunc("/system/status/", handlers.SystemStatusHandler)
+	http.HandleFunc("/system/volume/set/", handlers.SetVolumeHandler)
 
 	// file handlers
 	http.Handle("/css/", handlers.CssHandler)

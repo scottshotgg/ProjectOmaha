@@ -7,14 +7,14 @@ import (
 )
 
 func (status *SystemStatus) SendMessageHeader() {
-	status.SendData(0x00)	// This needs to be changed to the section ID
-	status.SendData(0x6B)	// This needs to be changed to the actual ID
+	status.SendData(0x00) // This needs to be changed to the section ID
+	status.SendData(0x6B) // This needs to be changed to the actual ID
 	//status.SendData([]byte{byte(int8(size))})
 }
 
-func (status *SystemStatus) SendData(data int) {
-	fmt.Printf("port.Write: %v\n", byte(data))
-	_, err := status.Port.Write([]byte{byte(data)})
+func (status *SystemStatus) SendData(data byte) {
+	fmt.Printf("port.Write: %v\n", data)
+	_, err := status.Port.Write([]byte{data})
 	if err != nil {
 		log.Fatalf("port.Write: %v", err)
 		panic("Failed on write")
@@ -32,7 +32,7 @@ func (status *SystemStatus) SendData(data int) {
 	}
 }*/
 
-func (status *SystemStatus) ReadData(buffer []byte) (bool) {
+func (status *SystemStatus) ReadData(buffer []byte) bool {
 	_, err := status.Port.Read(buffer)
 	fmt.Printf("port.Read: %v\n", buffer)
 	if err != nil {

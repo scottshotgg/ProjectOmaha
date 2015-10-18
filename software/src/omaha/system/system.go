@@ -8,40 +8,33 @@ import (
 var status SystemStatus
 
 type SystemStatus struct {
-	ledOn       bool
-	debug       bool
-	Port        io.ReadWriteCloser
-	volumeLevel int
+	LEDOn         bool               `json:"ledOn"`
+	debug         bool               `json:"-"`
+	Port          io.ReadWriteCloser `json:"-"`
+	VolumeLevel   int8               `json:"volumeLevel"`
 	numberOfNodes int
 }
 
 func (status *SystemStatus) IsLEDOn() bool {
-	return status.ledOn
+	return status.LEDOn
 }
 
 func (status *SystemStatus) IsDebug() bool {
 	return status.debug
 }
 
-func (status *SystemStatus) GetVolumeLevel() int {
-	return status.volumeLevel
+func (status *SystemStatus) GetVolumeLevel() int8 {
+	return status.VolumeLevel
 }
 
 func InitializeSystemStatus(isDebug bool) *SystemStatus {
-	
-	if isDebug {
-		status.ledOn = true
-		status.debug = true
-	} else {
-		status.InitializePort()
-	}
 	var err error
 	status.debug = isDebug
-	status.ledOn, err = status.GetLEDStatusFromController()
+	status.LEDOn, err = status.GetLEDStatusFromController()
 	if err != nil {
 		fmt.Println(err)
 	}
-	status.volumeLevel, err = status.GetVolume()
+	status.VolumeLevel, err = status.GetVolumeFromController()
 	if err != nil {
 		fmt.Println(err)
 	}
