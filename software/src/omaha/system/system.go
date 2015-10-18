@@ -40,7 +40,7 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 	if err != nil {
 		fmt.Println(err)
 	}
-	status.volumeLevel, err = status.GetVolumeFromController()
+	status.volumeLevel, err = status.GetVolume()
 	if err != nil {
 		fmt.Println(err)
 	}

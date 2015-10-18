@@ -6,8 +6,8 @@ func (status *SystemStatus) TurnLEDOn() error {
 		return nil
 	}
 	status.SendMessageHeader()
-	status.SendData([]byte{0x56})	// This is the command, outdated though
-	status.SendData([]byte{0x00})	// This is the "data" for the command
+	status.SendData(0x56)	// This is the command, outdated though
+	status.SendData(0x00)	// This is the "data" for the command
 	return nil
 
 }
@@ -18,8 +18,8 @@ func (status *SystemStatus) TurnLEDOff() error {
 		return nil
 	}
 	status.SendMessageHeader()
-	status.SendData([]byte{0x76})
-	status.SendData([]byte{0x00})
+	status.SendData(0x76)
+	status.SendData(0x00)
 	return nil
 }
 
@@ -27,13 +27,11 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 	if status.debug {
 		return true, nil
 	}
-	// Write 4 bytes to the port.
-	//var a = "a"
 	status.SendMessageHeader()
+	status.SendData(0x6C)
+	status.SendData(0x00)
 
-	b := []byte{0x6c} //, 0x01, 0x02, 0x03}
-	status.SendData(b)
-
+	b := []byte{0x6c}
 	status.ReadData(b)
 
 	if b[0] == 0x01 {
@@ -74,61 +72,89 @@ func (status *SystemStatus) SetVolume(volumeLevel int) error {
 		return nil
 	}
 	status.SendMessageHeader()		// Later we will want to put the zone AND unit ID into this I think
-	status.SendData([]byte{0x76})	// Uppercase V sets the volume
-	status.SendData([]byte{int8(volumeLevel)})		// If compile fails, put back byte()
+	status.SendData(0x56)	// Uppercase V sets the volume
+	status.SendData(volumeLevel)		// If compile fails, put back byte()
 
 	return nil
 }
 
-func (status *SystemStatus) GetVolumeFromController() (int, error) {
+func (status *SystemStatus) GetVolume() (int, error) {
 	if status.debug {
 		return 0, nil
 	}
 
 	status.SendMessageHeader()
-	status.SendData([]byte{0x56})		// lowercase v gets the volume
-	status.SendData([]byte{0x00})
+	status.SendData(0x76)		// lowercase v gets the volume
+	status.SendData(0x00)
+
+	b := []byte{0x00}
+	status.ReadData(b)		// need to do something with this
+
+	return 0, nil
+}
+
+func (status *SystemStatus) ResetFIFO() (int, error) { 		// This function resets the FIFO on the micrcontrollers if one ever gets stuck
+	if status.debug {
+		return 0, nil
+	}
+
+	for i := 0; i < 8; i++ {
+		status.SendData(0x00)			// Send all zeros, this will reset their FIFO, [0][0][command][data] could also mean that everyone listens
+	}
+
+	return 0, nil;
+}
+
+func (status *SystemStatus) ResetMicrocontroller() (int, error) {
+	if status.debug {
+		return 0, nil
+	}
+	
+	status.SendMessageHeader()
+	status.SendData(0x00)
+	status.SendData(0x00)
+	
+	return 0, nil
+	
+}
+
+func (status *SystemStatus) ChangeAveragingFilter(filter int) (int, error) {
+	if status.debug {
+		return 0, nil
+	}
+	
+	status.SendMessageHeader()
+	status.SendData(0x41)
+	status.SendData(filter)
+	
+	return 0, nil
+}
+
+func (status *SystemStatus) GetAveragingFilter(filter int) (int, error) {
+	if status.debug {
+		return 0, nil
+	}
+
+	status.SendMessageHeader()
+	status.SendData(0x61)
+	status.SendData(0x00)
 
 	b := []byte{0x00}
 	status.ReadData(b)
 
-	return nil
+	return 0, nil
+
 }
 
-func (status *SystemStatus) ResetFIFO() { 		// This function resets the FIFO on the micrcontrollers if one ever gets stuck
+func (status *SystemStatus) SendCoefficientInformation(equalizedGain int, decibal int) (int, error) {		// Equalized gain or just raw gain and equalization can be done in here
 	if status.debug {
 		return 0, nil
 	}
 
-	for i := 0; i < 8; i++{
-		status.SendData([]byte{0x00})			// Send all zeros, this will reset their FIFO, [0][0][command][data] could also mean that everyone listens
-	}
+	//status.SendData([]byte{byte(equalizedGain)})
+	//status.SendData([]byte{byte(decibal)})
+	status.SendData(equalizedGain)
 
-	return nil;
+	return 0, nil
 }
 
-func (status *SystemStatus) ResetMicrocontroller() {
-	if status.debug {
-		return 0, nil
-	}
-	
-	status.SendMessageHeader()
-	status.SendData([]byte{0x00})
-	status.SendData([]byte{0x00})
-	
-	return nil
-	
-}
-
-func (status *SystemStatus) ChangeAveragingFilter(filter int) {
-	if status.debug {
-		return 0, nil
-	}ssssssssss
-	
-	status.SendMessageHeader()
-	 
-	
-	
-	
-	return nil
-}
