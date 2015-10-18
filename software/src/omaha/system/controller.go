@@ -17,7 +17,7 @@ func (status *SystemStatus) TurnLEDOn() error {
 	if status.debug {
 		return nil
 	}
-	data := status.GetMessageHeader()
+	data := status.GetMessageHeader(4)
 	data[2] = TurnLEDOnID
 	data[3] = 0x00
 
@@ -33,7 +33,7 @@ func (status *SystemStatus) TurnLEDOff() error {
 	if status.debug {
 		return nil
 	}
-	data := status.GetMessageHeader()
+	data := status.GetMessageHeader(4)
 	data[2] = TurnLEDOffID
 	data[3] = 0x00
 
@@ -52,7 +52,7 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 		return true, nil
 	}
 
-	data := status.GetMessageHeader()
+	data := status.GetMessageHeader(4)
 	data[2] = GetLEDStatusID
 	data[3] = 0x00
 
@@ -75,7 +75,7 @@ func (status *SystemStatus) SetVolume(volumeLevel int8) error {
 	if status.debug {
 		return nil
 	}
-	data := status.GetMessageHeader()
+	data := status.GetMessageHeader(4)
 	data[2] = SetVolumeID
 	data[3] = byte(volumeLevel)
 
@@ -89,7 +89,7 @@ func (status *SystemStatus) GetVolumeFromController() (int8, error) {
 		return 0, nil
 	}
 
-	data := status.GetMessageHeader()
+	data := status.GetMessageHeader(4)
 	data[2] = 0x41
 	data[3] = 0x00
 
@@ -117,7 +117,7 @@ func (status *SystemStatus) ResetMicrocontroller() (int, error) {
 		return 0, nil
 	}
 
-	data := status.GetMessageHeader()
+	data := status.GetMessageHeader(4)
 	data[2] = 0x00
 	data[3] = 0x00
 
@@ -134,7 +134,7 @@ func (status *SystemStatus) GetAveragingFilter(filter int) (int, error) {
 		return 0, nil
 	}
 
-	data := status.GetMessageHeader()
+	data := status.GetMessageHeader(4)
 	data[2] = 0x61
 	data[3] = 0x00
 

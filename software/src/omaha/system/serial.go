@@ -27,8 +27,8 @@ func HandleControllerMessages() {
 	}
 }
 
-func (status *SystemStatus) GetMessageHeader() []byte {
-	header := make([]byte, 4)
+func (status *SystemStatus) GetMessageHeader(size int) []byte {
+	header := make([]byte, size)
 	header[0] = 0x00 // section ID
 	header[1] = 0x6B // speaker ID
 	return header
