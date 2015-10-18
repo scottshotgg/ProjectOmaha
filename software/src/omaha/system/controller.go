@@ -1,5 +1,17 @@
 package system
 
+import (
+	"strconv"
+	//"fmt"
+)
+
+func Btoi (b bool) int {
+	if b {
+		return 1
+	}
+	return 0
+}
+
 func (status *SystemStatus) TurnLEDOn() error {
 	status.ledOn = true
 	if status.debug {
@@ -157,28 +169,35 @@ func (status *SystemStatus) SendCoefficientInformation(equalizedGain int, deciba
 	return 0, nil
 }
 
-func (status *SystemStatus) AreYouAlive(numberOfNodes int) (m map[int]bool) {		// Equalized gain or just raw gain and equalization can be done in here
+func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) {		// Equalized gain or just raw gain and equalization can be done in here
 	if status.debug {
 		return m
 	}
 
-	for i := 1; i <= numberOfNodes; i++ {
-		var m map[int]bool
-		m = make(map[int]bool)
+	var m map[int]string
+	m = make(map[int]string)
 
+	for i := 1; i <= len(n); i++ {		// This should have something passed to it that tells it what IDs are still
+										// available, maybe the map itself and we can get the length of the map
+					
+	
 		status.SendMessageHeader()	// i would go here
 		status.SendData(0x52)
 		status.SendData(0x00)
 
 		b := []byte{0x00}
-		error := status.ReadData(b)
+		alive := status.ReadData(b)
 
-		if error == true && b[0] == 0x72 {
-			m[i] = error		// Map error to key [i]
-		} 
+		if alive != true || b[0] != 0x72 {			// This currently does the opposite of what we want it to do. Also include the data send back if we can
+			m[i] =  strconv.Itoa(Btoi(alive)) + strconv.Itoa(int(b[0]))		// This should map the string consisting of 0l where 0 is the bool representing alive and 
+								// l is the variable recieved by the master controller if we need to send
+								// maybe we should print thing to make sure its working
+		} /*else if alive == true{
+
+		}*/
+			// Return the map with the microcontrollers that failed in it and maybe why they failed
 	}
 
-	return m		// Return the map with the microcontrollers that failed in it and maybe why they failed
-
+	return m
 }
 
