@@ -22,7 +22,7 @@ func main() {
 	http.HandleFunc("/demo/stop/", handlers.DemoStopHandler)
 	http.HandleFunc("/demo/status/", handlers.DemoLEDHandler)
 	//http.HandleFunc("/scott/test/", handlers.DemoVolumeUpHandler)
-	http.HandleFunc("/scott/test/", handlers.DemoVolumeVariableHandler)
+	http.HandleFunc("/scott/test/", handlers.DemoSetVolumeHandler)
 
 	// file handlers
 	http.Handle("/css/", handlers.CssHandler)

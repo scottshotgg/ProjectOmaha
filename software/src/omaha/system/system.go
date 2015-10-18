@@ -12,6 +12,7 @@ type SystemStatus struct {
 	debug       bool
 	Port        io.ReadWriteCloser
 	volumeLevel int
+	numberOfNodes int
 }
 
 func (status *SystemStatus) IsLEDOn() bool {

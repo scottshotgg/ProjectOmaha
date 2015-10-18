@@ -151,10 +151,34 @@ func (status *SystemStatus) SendCoefficientInformation(equalizedGain int, deciba
 		return 0, nil
 	}
 
-	//status.SendData([]byte{byte(equalizedGain)})
-	//status.SendData([]byte{byte(decibal)})
+	status.SendData(decibal)
 	status.SendData(equalizedGain)
 
 	return 0, nil
+}
+
+func (status *SystemStatus) AreYouAlive(numberOfNodes int) (m map[int]bool) {		// Equalized gain or just raw gain and equalization can be done in here
+	if status.debug {
+		return m
+	}
+
+	for i := 1; i <= numberOfNodes; i++ {
+		var m map[int]bool
+		m = make(map[int]bool)
+
+		status.SendMessageHeader()	// i would go here
+		status.SendData(0x52)
+		status.SendData(0x00)
+
+		b := []byte{0x00}
+		error := status.ReadData(b)
+
+		if error == true && b[0] == 0x72 {
+			m[i] = error		// Map error to key [i]
+		} 
+	}
+
+	return m		// Return the map with the microcontrollers that failed in it and maybe why they failed
+
 }
 

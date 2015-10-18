@@ -76,7 +76,7 @@ type VolumeQuery struct {
 	Sets the volume of the control. Expects a post request with variables:
 	- volume (integer)
 */
-func DemoVolumeVariableHandler(w http.ResponseWriter, r *http.Request) {
+func DemoSetVolumeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("VOLUME VARIABLE")
 	volumeRequest := &VolumeQuery{}
 	err := json.NewDecoder(r.Body).Decode(volumeRequest)
@@ -87,7 +87,7 @@ func DemoVolumeVariableHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	//fmt.Println("Telling the controller to turn to whatever I want: ", volumeLevel)	// Print volume level
 	//status.VolumeVariable(volumeLevel)	// need int value not string, hardcoded as 1 for now
-	if status.GetVolumeLevel() > 0 { // Change to comapre incoming volume variable, also > 100
+	if status.GetVolumeLevel() > 0  && status.GetVolumeLevel() < 100 {
 		fmt.Println("Telling the controller to turn to whatever I want", volumeRequest.Volume) // Print volume level
 		status.SetVolume(volumeRequest.Volume)                                                 // Volume variable here)
 		if status.IsDebug() {
@@ -95,4 +95,9 @@ func DemoVolumeVariableHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	fmt.Fprint(w, "1")
+}
+
+func DemoAreYouAliveHandler(w http.ResponseWriter, r *http.Request) {// (m map[int]bool){
+
+	// This should return the map to the front end but I'm not sure how
 }

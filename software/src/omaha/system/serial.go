@@ -32,13 +32,17 @@ func (status *SystemStatus) SendData(data int) {
 	}
 }*/
 
-func (status *SystemStatus) ReadData(buffer []byte) {
+func (status *SystemStatus) ReadData(buffer []byte) (bool) {
 	_, err := status.Port.Read(buffer)
 	fmt.Printf("port.Read: %v\n", buffer)
 	if err != nil {
 		log.Fatalf("port.Read: %v", err)
 		panic("Failed on read")
+
+		return false
 	}
+
+	return true
 }
 
 func (status *SystemStatus) InitializePort() {
