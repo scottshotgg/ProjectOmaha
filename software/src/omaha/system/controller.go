@@ -173,8 +173,7 @@ func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) {		
 	if status.debug {
 		return m
 	}
-
-	var m map[int]string
+	
 	m = make(map[int]string)
 
 	for i := 1; i <= len(n); i++ {		// This should have something passed to it that tells it what IDs are still
