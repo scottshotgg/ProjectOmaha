@@ -73,9 +73,9 @@ func (status *SystemStatus) SetVolume(volumeLevel int) error {
 	if status.debug {
 		return nil
 	}
-	status.SendMessageHeader()
-	status.SendData([]byte{0x6D})
-	status.SendData([]byte{byte(int8(volumeLevel))})
+	status.SendMessageHeader()		// Later we will want to put the zone AND unit ID into this I think
+	status.SendData([]byte{0x76})	// Uppercase V sets the volume
+	status.SendData([]byte{int8(volumeLevel)})		// If compile fails, put back byte()
 
 	return nil
 }
@@ -85,5 +85,50 @@ func (status *SystemStatus) GetVolumeFromController() (int, error) {
 		return 0, nil
 	}
 
-	return 0, nil
+	status.SendMessageHeader()
+	status.SendData([]byte{0x56})		// lowercase v gets the volume
+	status.SendData([]byte{0x00})
+
+	b := []byte{0x00}
+	status.ReadData(b)
+
+	return nil
+}
+
+func (status *SystemStatus) ResetFIFO() { 		// This function resets the FIFO on the micrcontrollers if one ever gets stuck
+	if status.debug {
+		return 0, nil
+	}
+
+	for i := 0; i < 8; i++{
+		status.SendData([]byte{0x00})			// Send all zeros, this will reset their FIFO, [0][0][command][data] could also mean that everyone listens
+	}
+
+	return nil;
+}
+
+func (status *SystemStatus) ResetMicrocontroller() {
+	if status.debug {
+		return 0, nil
+	}
+	
+	status.SendMessageHeader()
+	status.SendData([]byte{0x00})
+	status.SendData([]byte{0x00})
+	
+	return nil
+	
+}
+
+func (status *SystemStatus) ChangeAveragingFilter(filter int) {
+	if status.debug {
+		return 0, nil
+	}ssssssssss
+	
+	status.SendMessageHeader()
+	 
+	
+	
+	
+	return nil
 }
