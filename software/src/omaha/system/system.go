@@ -11,7 +11,7 @@ type SystemStatus struct {
 	LEDOn         bool               `json:"ledOn"`
 	debug         bool               `json:"-"`
 	Port          io.ReadWriteCloser `json:"-"`
-	volumeLevel   int8               `json:"volumeLevel"`
+	VolumeLevel   int8               `json:"volumeLevel"`
 	numberOfNodes int
 }
 
