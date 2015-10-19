@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 )
@@ -9,6 +10,21 @@ type GenericHandler struct {
 	GET  func(http.ResponseWriter, *http.Request)
 	PUT  func(http.ResponseWriter, *http.Request)
 	POST func(http.ResponseWriter, *http.Request)
+}
+
+type genericResponse struct {
+	Success bool   `json:"success"`
+	Err     string `json:"err"`
+}
+
+func getGenericSuccessResponse() []byte {
+	response, _ := json.Marshal(genericResponse{Success: true})
+	return response
+}
+
+func getGenericErrorResponse(err string) []byte {
+	response, _ := json.Marshal(genericResponse{Err: err})
+	return response
 }
 
 func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
