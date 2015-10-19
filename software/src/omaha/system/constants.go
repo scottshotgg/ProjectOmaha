@@ -1,6 +1,19 @@
 package system
 
-const SetVolumeID byte = 0x6D
-const GetLEDStatusID byte = 0x6c
-const TurnLEDOffID byte = 0x76
-const TurnLEDOnID byte = 0x56
+var Commands struct {
+	SetVolume    byte
+	GetVolume    byte
+	TestAlive    byte
+	GetLEDStatus byte
+	TurnLEDOff   byte
+	TurnLEDOn    byte
+}
+
+func init() {
+	Commands.SetVolume = 0x6D
+	Commands.GetVolume = 0x41
+	Commands.TestAlive = 0x52
+	Commands.GetLEDStatus = 0x6C
+	Commands.TurnLEDOff = 0x76
+	Commands.TurnLEDOn = 0x56
+}

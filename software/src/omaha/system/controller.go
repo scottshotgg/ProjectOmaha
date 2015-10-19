@@ -18,7 +18,7 @@ func (status *SystemStatus) TurnLEDOn() error {
 		return nil
 	}
 	data := status.GetMessageHeader(4)
-	data[2] = TurnLEDOnID
+	data[2] = Commands.TurnLEDOn
 	data[3] = 0x00
 
 	req := &ControllerRequest{Data: data}
@@ -34,7 +34,7 @@ func (status *SystemStatus) TurnLEDOff() error {
 		return nil
 	}
 	data := status.GetMessageHeader(4)
-	data[2] = TurnLEDOffID
+	data[2] = Commands.TurnLEDOff
 	data[3] = 0x00
 
 	req := &ControllerRequest{Data: data}
@@ -53,7 +53,7 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 	}
 
 	data := status.GetMessageHeader(4)
-	data[2] = GetLEDStatusID
+	data[2] = Commands.GetLEDStatus
 	data[3] = 0x00
 
 	ch := make(chan interface{})
@@ -76,7 +76,7 @@ func (status *SystemStatus) SetVolume(volumeLevel int8) error {
 		return nil
 	}
 	data := status.GetMessageHeader(4)
-	data[2] = SetVolumeID
+	data[2] = Commands.SetVolume
 	data[3] = byte(volumeLevel)
 
 	req := &ControllerRequest{Data: data}
@@ -90,7 +90,7 @@ func (status *SystemStatus) GetVolumeFromController() (int8, error) {
 	}
 
 	data := status.GetMessageHeader(4)
-	data[2] = 0x41
+	data[2] = Commands.GetVolume
 	data[3] = 0x00
 
 	// status.SendData(filter) commented out until filter is created
@@ -167,7 +167,7 @@ func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) { /
 		// available, maybe the map itself and we can get the length of the map
 
 		// status.SendMessageHeader() // i would go here
-		// status.SendData(0x52)
+		// status.SendData(Commands.TestAlive)
 		// status.SendData(0x00)
 
 		b := []byte{0x00}
