@@ -114,7 +114,7 @@
       },
 
       _initializeStatus: function(event, data) {
-        console.log(data.response.status.ledOn)
+        console.log(data.response.status.controllers["107"].ledOn)
         if(data.response.status.ledOn) {
           this._showDay();
         } else {

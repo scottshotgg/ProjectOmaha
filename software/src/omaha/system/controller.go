@@ -12,13 +12,24 @@ func Btoi(b bool) int {
 	return 0
 }
 
-func (status *SystemStatus) TurnLEDOn() error {
-	data := status.GetMessageHeader(4)
+type ControllerStatus struct {
+	LEDOn       bool `json:"ledOn"`
+	VolumeLevel int8 `json:"volumeLevel"`
+	ID          int8 `json:"id"`
+	SectionID   int8 `json:"sectionId"`
+}
+
+func (this *ControllerStatus) IsLEDOn() bool {
+	return this.LEDOn
+}
+
+func (this *ControllerStatus) TurnLEDOn() error {
+	data := getMessageHeader(this.ID, this.SectionID, 4)
 	data[2] = Commands.TurnLEDOn
 	data[3] = 0x00
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		status.LEDOn = true
+		this.LEDOn = true
 		if status.IsDebug() {
 			fmt.Println("LED turned off")
 		}
@@ -30,13 +41,13 @@ func (status *SystemStatus) TurnLEDOn() error {
 
 }
 
-func (status *SystemStatus) TurnLEDOff() error {
-	data := status.GetMessageHeader(4)
+func (this *ControllerStatus) TurnLEDOff() error {
+	data := getMessageHeader(this.ID, this.SectionID, 4)
 	data[2] = Commands.TurnLEDOff
 	data[3] = 0x00
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		status.LEDOn = false
+		this.LEDOn = false
 		if status.IsDebug() {
 			fmt.Println("LED turned off")
 		}
@@ -51,8 +62,8 @@ type LEDStatusResponse struct {
 	ledOn bool
 }
 
-func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
-	data := status.GetMessageHeader(4)
+func (this *ControllerStatus) GetLEDStatusFromController() (bool, error) {
+	data := getMessageHeader(this.ID, this.SectionID, 4)
 	data[2] = Commands.GetLEDStatus
 	data[3] = 0x00
 
@@ -76,13 +87,14 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 	return response.ledOn, nil
 }
 
-func (status *SystemStatus) SetVolume(volumeLevel int8) error {
-	data := status.GetMessageHeader(4)
+func (this *ControllerStatus) SetVolume(volumeLevel int8) error {
+	fmt.Println(this)
+	data := getMessageHeader(this.ID, this.SectionID, 4)
 	data[2] = Commands.SetVolume
 	data[3] = byte(volumeLevel)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		status.VolumeLevel = volumeLevel
+		this.VolumeLevel = volumeLevel
 		if status.IsDebug() {
 			fmt.Printf("Set volume to %d\n", volumeLevel)
 		}
@@ -93,12 +105,12 @@ func (status *SystemStatus) SetVolume(volumeLevel int8) error {
 	return nil
 }
 
-func (status *SystemStatus) GetVolumeFromController() (int8, error) {
+func (this *ControllerStatus) GetVolumeFromController() (int8, error) {
 	if status.debug {
 		return 0, nil
 	}
 
-	data := status.GetMessageHeader(4)
+	data := getMessageHeader(this.ID, this.SectionID, 4)
 	data[2] = Commands.GetVolume
 	data[3] = 0x00
 
@@ -126,7 +138,7 @@ func (status *SystemStatus) ResetMicrocontroller() (int, error) {
 		return 0, nil
 	}
 
-	data := status.GetMessageHeader(4)
+	data := getMessageHeader(0, 0, 4)
 	data[2] = 0x00
 	data[3] = 0x00
 
@@ -143,7 +155,7 @@ func (status *SystemStatus) GetAveragingFilter(filter int) (int, error) {
 		return 0, nil
 	}
 
-	data := status.GetMessageHeader(4)
+	data := getMessageHeader(0, 0, 4)
 	data[2] = 0x61
 	data[3] = 0x00
 

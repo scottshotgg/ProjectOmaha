@@ -20,7 +20,7 @@ type ControllerRequest struct {
 
 func HandleControllerMessages() {
 	for {
-		req := <- MessageChan
+		req := <-MessageChan
 		status := GetSystemStatus()
 		if !status.IsDebug() {
 			status.Port.Write(req.Data)
@@ -31,10 +31,10 @@ func HandleControllerMessages() {
 	}
 }
 
-func (status *SystemStatus) GetMessageHeader(size int) []byte {
+func getMessageHeader(section, id, size int8) []byte {
 	header := make([]byte, size)
-	header[0] = 0x00 // section ID
-	header[1] = 0x6B // speaker ID
+	header[0] = byte(section) // section ID
+	header[1] = byte(id)      // speaker ID
 	return header
 }
 

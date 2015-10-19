@@ -61,7 +61,7 @@
       
         _setVolumeClicked: function() {
         this.$.toast.show();
-        this.$.setVolumeAjax.body = {"volume": this.volume};
+        this.$.setVolumeAjax.body = {"volume": this.volume, "speaker": 107};
         this.$.setVolumeAjax.generateRequest();
       },
       

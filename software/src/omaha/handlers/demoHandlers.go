@@ -9,9 +9,10 @@ import (
 func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("LED on handler called")
 	status := system.GetSystemStatus()
-	if !status.IsLEDOn() {
+	controller := status.GetController(0x6B)
+	if !controller.IsLEDOn() {
 		fmt.Println("Telling the controller to turn on")
-		status.TurnLEDOn()
+		controller.TurnLEDOn()
 		if status.IsDebug() {
 			fmt.Println("Turned the LED on")
 		}
@@ -23,9 +24,10 @@ func DemoStartHandler(w http.ResponseWriter, r *http.Request) {
 func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("LED off handler called")
 	status := system.GetSystemStatus()
-	if status.IsLEDOn() {
+	controller := status.GetController(0x6B)
+	if controller.IsLEDOn() {
 		fmt.Println("Telling the controller to turn off")
-		status.TurnLEDOff()
+		controller.TurnLEDOff()
 		if status.IsDebug() {
 			fmt.Println("Turned the LED off")
 		}
@@ -36,7 +38,8 @@ func DemoStopHandler(w http.ResponseWriter, r *http.Request) {
 func DemoLEDHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("LED status handler called")
 	status := system.GetSystemStatus()
-	if status.IsLEDOn() {
+	controller := status.GetController(0x6B)
+	if controller.IsLEDOn() {
 		fmt.Fprint(w, "1")
 	} else {
 		fmt.Fprint(w, "0")
