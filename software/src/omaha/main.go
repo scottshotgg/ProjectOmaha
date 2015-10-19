@@ -11,12 +11,12 @@ func main() {
 	// initialization
 	var debug = flag.Bool("d", false, "help me!!!")
 	flag.Parse()
+	go system.HandleControllerMessages()
 	system.InitializeSystemStatus(*debug)
 	if !(*debug) {
 		status := system.GetSystemStatus()
 		defer status.Port.Close()
 	}
-	go system.HandleControllerMessages()
 
 	http.HandleFunc("/", handlers.LoginHandler)
 	http.HandleFunc("/app/", handlers.AppHandler)

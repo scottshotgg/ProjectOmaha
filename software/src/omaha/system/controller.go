@@ -1,8 +1,8 @@
 package system
 
 import (
+	"fmt"
 	"strconv"
-	//"fmt"
 )
 
 func Btoi(b bool) int {
@@ -48,22 +48,24 @@ type LEDStatusResponse struct {
 }
 
 func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
-	if status.debug {
-		return true, nil
-	}
-
 	data := status.GetMessageHeader(4)
 	data[2] = Commands.GetLEDStatus
 	data[3] = 0x00
 
 	ch := make(chan interface{})
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		var b []byte
-		status.ReadData(b)
 		response := &LEDStatusResponse{}
-		response.ledOn = b[0] != 0x01
+		if status.debug {
+			fmt.Println("Got LED Status From Controller")
+			response.ledOn = true
+		} else {
+			var b []byte
+			status.ReadData(b)
+			response.ledOn = b[0] != 0x01
+		}
 		return response
-	}}
+	}, ResultChan: ch}
+
 	MessageChan <- req
 	response := (<-ch).(*LEDStatusResponse)
 
