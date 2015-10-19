@@ -19,12 +19,13 @@ func main() {
 	}
 
 	http.HandleFunc("/", handlers.LoginHandler)
-	http.HandleFunc("/app/", handlers.AppHandler)
-	http.HandleFunc("/demo/start/", handlers.DemoStartHandler)
-	http.HandleFunc("/demo/stop/", handlers.DemoStopHandler)
+	http.Handle("/app/", handlers.GenericHandler{GET: handlers.AppHandler})
 
-	http.HandleFunc("/system/status/", handlers.SystemStatusHandler)
-	http.HandleFunc("/system/volume/set/", handlers.SetVolumeHandler)
+	http.Handle("/demo/start/", handlers.GenericHandler{GET: handlers.DemoStartHandler})
+	http.Handle("/demo/stop/", handlers.GenericHandler{GET: handlers.DemoStopHandler})
+
+	http.Handle("/system/", handlers.GenericHandler{GET: handlers.SystemStatusHandler})
+	http.Handle("/system/volume/", handlers.GenericHandler{POST: handlers.SetVolumeHandler})
 
 	// file handlers
 	http.Handle("/css/", handlers.CssHandler)
