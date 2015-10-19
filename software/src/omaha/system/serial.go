@@ -26,7 +26,10 @@ func HandleControllerMessages() {
 			status.Port.Write(req.Data)
 		}
 		if req.OnWrite != nil {
-			req.ResultChan <- req.OnWrite()
+			result := req.OnWrite()
+			if req.ResultChan != nil {
+				req.ResultChan <- result
+			}
 		}
 	}
 }
