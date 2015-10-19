@@ -25,7 +25,7 @@ func main() {
 	http.Handle("/demo/stop/", handlers.GenericHandler{GET: handlers.DemoStopHandler})
 
 	http.Handle("/system/", handlers.GenericHandler{GET: handlers.SystemStatusHandler})
-	http.Handle("/system/volume/", handlers.GenericHandler{POST: handlers.SetVolumeHandler})
+	http.Handle("/system/speaker/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})
 
 	// file handlers
 	http.Handle("/css/", handlers.CssHandler)

@@ -44,8 +44,8 @@
     <paper-toast id="toast">Volume set to <span>{{volume}}</span></paper-toast>
     <iron-ajax
           id="setVolumeAjax"
-          url="/system/volume/set/"
-          method="POST"
+          url="/system/speaker/"
+          method="PUT"
           content-type="application/json"
           handle-as="json"
           on-response="_logResponse"
@@ -61,7 +61,15 @@
       
         _setVolumeClicked: function() {
         this.$.toast.show();
-        this.$.setVolumeAjax.body = {"volume": this.volume, "speaker": 107};
+        var updatedAttributes = ["volume"];
+        var attributeValues = {
+          "volume": this.volume
+        };
+        this.$.setVolumeAjax.body = {
+          "updatedAttributes": updatedAttributes, 
+          "attributeValues": attributeValues, 
+          "speaker": 107
+        };
         this.$.setVolumeAjax.generateRequest();
       },
       
