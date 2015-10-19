@@ -13,15 +13,17 @@ func Btoi(b bool) int {
 }
 
 func (status *SystemStatus) TurnLEDOn() error {
-	status.LEDOn = true
-	if status.debug {
-		return nil
-	}
 	data := status.GetMessageHeader(4)
 	data[2] = Commands.TurnLEDOn
 	data[3] = 0x00
 
-	req := &ControllerRequest{Data: data}
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		status.LEDOn = true
+		if status.IsDebug() {
+			fmt.Println("LED turned off")
+		}
+		return nil
+	}}
 	MessageChan <- req
 
 	return nil
@@ -29,15 +31,17 @@ func (status *SystemStatus) TurnLEDOn() error {
 }
 
 func (status *SystemStatus) TurnLEDOff() error {
-	status.LEDOn = false
-	if status.debug {
-		return nil
-	}
 	data := status.GetMessageHeader(4)
 	data[2] = Commands.TurnLEDOff
 	data[3] = 0x00
 
-	req := &ControllerRequest{Data: data}
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		status.LEDOn = false
+		if status.IsDebug() {
+			fmt.Println("LED turned off")
+		}
+		return nil
+	}}
 	MessageChan <- req
 
 	return nil
@@ -55,7 +59,7 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 	ch := make(chan interface{})
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		response := &LEDStatusResponse{}
-		if status.debug {
+		if status.IsDebug() {
 			fmt.Println("Got LED Status From Controller")
 			response.ledOn = true
 		} else {
@@ -73,16 +77,19 @@ func (status *SystemStatus) GetLEDStatusFromController() (bool, error) {
 }
 
 func (status *SystemStatus) SetVolume(volumeLevel int8) error {
-	status.VolumeLevel = volumeLevel
-	if status.debug {
-		return nil
-	}
 	data := status.GetMessageHeader(4)
 	data[2] = Commands.SetVolume
 	data[3] = byte(volumeLevel)
 
-	req := &ControllerRequest{Data: data}
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		status.VolumeLevel = volumeLevel
+		if status.IsDebug() {
+			fmt.Printf("Set volume to %d\n", volumeLevel)
+		}
+		return nil
+	}}
 	MessageChan <- req
+
 	return nil
 }
 
