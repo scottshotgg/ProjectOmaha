@@ -11,9 +11,12 @@ type SystemStatus struct {
 	LEDOn         bool               `json:"ledOn"`
 	debug         bool               `json:"-"`
 	Port          io.ReadWriteCloser `json:"-"`
-	VolumeLevel   int8               `json:"volumeLevel"`
+	volumeLevel   int8               `json:"volumeLevel"`
 	numberOfNodes int
 }
+
+// Do we want to store this stuff in a database since that way it will be written to disk?
+// It may also be easier to access (programmatically, at least) that way
 
 func (status *SystemStatus) IsLEDOn() bool {
 	return status.LEDOn

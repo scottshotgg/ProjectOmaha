@@ -14,9 +14,13 @@ type ControllerRequest struct {
 	ResultChan chan interface{}
 }
 
+// Use something like this maybe
+// http://blog.golang.org/go-concurrency-patterns-timing-out-and
+// I think we just need a select-case by the result chan
+
 func HandleControllerMessages() {
 	for {
-		req := <-MessageChan
+		req := <- MessageChan
 		status := GetSystemStatus()
 		if !status.IsDebug() {
 			status.Port.Write(req.Data)
