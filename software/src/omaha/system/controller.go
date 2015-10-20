@@ -88,7 +88,6 @@ func (this *ControllerStatus) GetLEDStatusFromController() (bool, error) {
 }
 
 func (this *ControllerStatus) SetVolume(volumeLevel int8) error {
-	fmt.Println(this)
 	data := getMessageHeader(this.ID, this.SectionID, 4)
 	data[2] = Commands.SetVolume
 	data[3] = byte(volumeLevel)
@@ -117,6 +116,22 @@ func (this *ControllerStatus) GetVolumeFromController() (int8, error) {
 	// status.SendData(filter) commented out until filter is created
 
 	return 0, nil
+}
+
+func (this *ControllerStatus) SetAveragingMode(mode int8) error {
+	data := getMessageHeader(this.ID, this.SectionID, 4)
+	data[2] = Commands.SetAveragingFilter
+	data[3] = byte(mode)
+
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		if status.IsDebug() {
+			fmt.Printf("Set averaging mode to %d\n", mode)
+		}
+		return nil
+	}}
+	MessageChan <- req
+
+	return nil
 }
 
 func (status *SystemStatus) ResetFIFO() (int, error) { // This function resets the FIFO on the micrcontrollers if one ever gets stuck
