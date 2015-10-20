@@ -3,6 +3,8 @@
 <link rel="import" href="/bower_components/iron-icons/image-icons.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
@@ -54,7 +56,7 @@
     </style>
 
   <paper-dropdown-menu always-float-label="true" label="Averaging mode:">
-    <paper-menu class="dropdown-content">
+    <paper-menu id="menu" class="dropdown-content">
       <paper-item>Mode 1</paper-item>
       <paper-item>Mode 2</paper-item>
       <paper-item>Mode 3</paper-item>
@@ -77,68 +79,33 @@
       <paper-item>Mode 20</paper-item>
     </paper-menu>
   </paper-dropdown-menu>
-    <iron-ajax
-      id="ledOnAjax"
-      url="/demo/start"
-      handle-as="json"
-      on-response="_logResponse"
-      debounce-duration="300"></iron-ajax>
-    <iron-ajax
-      id="ledOffAjax"
-      url="/demo/stop"
-      handle-as="json"
-      on-response="_logResponse"
-      debounce-duration="300"></iron-ajax>
-    <iron-ajax
-      id="ledStatusAjax"
-      url="/system/"
-      handle-as="json"
-      on-response="_initializeStatus"
-      debounce-duration="300"></iron-ajax>
+  <iron-ajax
+          id="selectModeAjax"
+          url="/demo/averaging/"
+          method="PUT"
+          content-type="application/json"
+          handle-as="json"
+          on-response="_logResponse"
+          debounce-duration="300"></iron-ajax>
   </template>
   <script>
     Polymer({
       is: 'averaging-controller',
 
-      _onPressed: function(){
-        this._showDay();
-
-        this.$.ledOnAjax.generateRequest();
+      listeners: {
+        'menu.iron-select': '_selectionChanged'
       },
-
-      _offPressed: function() {
-        this._showNight();
-        this.$.ledOffAjax.generateRequest();
-      },
-
-      _showDay: function() {
-        this.$.day.style.display = "block";
-        this.$.night.style.display = "none";
-      },
-
-      _showNight: function() {
-        this.$.day.style.display = "none";
-        this.$.night.style.display = "block";
+      
+      _selectionChanged: function(event) {
+          var data = {"filterType": this.$.menu.selected};
+          this.$.selectModeAjax.body = data;
+          this.$.selectModeAjax.generateRequest();
       },
 
       _logResponse: function(event, data) {
         console.log(data.response);
-      },
-
-      _initializeStatus: function(event, data) {
-        console.log(data.response.status.controllers["107"].ledOn)
-        if(data.response.status.ledOn) {
-          this._showDay();
-        } else {
-          this._showNight();
-        }
-      },
-
-      ready: function() {
-        var elem = this;
-        this.$.ledStatusAjax.generateRequest();
       }
-
+      
     });
   </script>
 </dom-module>
