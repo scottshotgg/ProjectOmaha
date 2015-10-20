@@ -97,7 +97,7 @@
       },
       
       _selectionChanged: function(event) {
-          var data = {"filterType": this.$.menu.selected};
+          var data = {"filterType": this.$.menu.selected + 1};
           this.$.selectModeAjax.body = data;
           this.$.selectModeAjax.generateRequest();
       },
