@@ -30,7 +30,9 @@ func (status *SystemStatus) AddController(controller *ControllerStatus) {
 
 func InitializeSystemStatus(isDebug bool) *SystemStatus {
 	status.debug = isDebug
-
+	if !isDebug {
+		status.InitializePort()
+	}
 	status.Controllers = make(map[string]*ControllerStatus)
 
 	controller := &ControllerStatus{ID: 0x6B}
