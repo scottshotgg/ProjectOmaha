@@ -35,7 +35,7 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 	}
 	status.Controllers = make(map[string]*ControllerStatus)
 
-	controller := &ControllerStatus{ID: 0x6B}
+	controller := &ControllerStatus{ID: 0x6B, SectionID: 0x6B}
 	var err error
 	controller.LEDOn, err = controller.GetLEDStatusFromController()
 	if err != nil {
