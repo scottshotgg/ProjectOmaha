@@ -22,9 +22,9 @@
       paper-card {
         width: 100%
       }
-     
-      paper-slider {
-        width: 100%;
+      
+      paper-dropdown-menu {
+        margin: 0px 25px 5px;
       }
       
       paper-button {
@@ -32,61 +32,43 @@
         color: #fff;
         margin-top: 10px;
       }
-
-      #on {
-        background-color: var(--google-yellow-300);
-      }
-
-      #off {
-        background-color: var(--google-grey-700);
-      }
-
-      iron-icon {
-        --iron-icon-width: 70px;
-        --iron-icon-height: 70px;
-      }
-
-      #day {
-        color: var(--google-yellow-300);
-      }
-
-      #night {
-        color: var(--google-grey-700);
-      }
     </style>
-
-  <paper-dropdown-menu label="Averaging mode:">
-    <paper-menu id="menu" class="dropdown-content">
-      <paper-item>Mode 1</paper-item>
-      <paper-item>Mode 2</paper-item>
-      <paper-item>Mode 3</paper-item>
-      <paper-item>Mode 4</paper-item>
-      <paper-item>Mode 5</paper-item>
-      <paper-item>Mode 6</paper-item>
-      <paper-item>Mode 7</paper-item>
-      <paper-item>Mode 8</paper-item>
-      <paper-item>Mode 9</paper-item>
-      <paper-item>Mode 10</paper-item>
-      <paper-item>Mode 11</paper-item>
-      <paper-item>Mode 12</paper-item>
-      <paper-item>Mode 13</paper-item>
-      <paper-item>Mode 14</paper-item>
-      <paper-item>Mode 15</paper-item>
-      <paper-item>Mode 16</paper-item>
-      <paper-item>Mode 17</paper-item>
-      <paper-item>Mode 18</paper-item>
-      <paper-item>Mode 19</paper-item>
-      <paper-item>Mode 20</paper-item>
-    </paper-menu>
-  </paper-dropdown-menu>
-  <iron-ajax
-          id="selectModeAjax"
-          url="/demo/averaging/"
-          method="PUT"
-          content-type="application/json"
-          handle-as="json"
-          on-response="_logResponse"
-          debounce-duration="300"></iron-ajax>
+    <paper-card heading="Averaging Mode">
+      <div class="card-content">
+        <paper-dropdown-menu no-label-float label="Averaging mode:">
+          <paper-menu id="menu" class="dropdown-content">
+            <paper-item>Mode 1</paper-item>
+            <paper-item>Mode 2</paper-item>
+            <paper-item>Mode 3</paper-item>
+            <paper-item>Mode 4</paper-item>
+            <paper-item>Mode 5</paper-item>
+            <paper-item>Mode 6</paper-item>
+            <paper-item>Mode 7</paper-item>
+            <paper-item>Mode 8</paper-item>
+            <paper-item>Mode 9</paper-item>
+            <paper-item>Mode 10</paper-item>
+            <paper-item>Mode 11</paper-item>
+            <paper-item>Mode 12</paper-item>
+            <paper-item>Mode 13</paper-item>
+            <paper-item>Mode 14</paper-item>
+            <paper-item>Mode 15</paper-item>
+            <paper-item>Mode 16</paper-item>
+            <paper-item>Mode 17</paper-item>
+            <paper-item>Mode 18</paper-item>
+            <paper-item>Mode 19</paper-item>
+            <paper-item>Mode 20</paper-item>
+          </paper-menu>
+        </paper-dropdown-menu>
+      </div>
+    </paper-card>
+    <iron-ajax
+      id="selectModeAjax"
+      url="/demo/averaging/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300"></iron-ajax>
   </template>
   <script>
     Polymer({
