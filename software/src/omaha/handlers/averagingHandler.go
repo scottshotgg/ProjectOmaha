@@ -11,14 +11,6 @@ type averageRequest struct {
 	FilterType int8 `json:"filterType"`
 }
 
-var filterTypes struct {
-	Test int8
-}
-
-func init() {
-	filterTypes.Test = 21 // just an example
-}
-
 func AveragingHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	averagingRequest := &averageRequest{}
@@ -30,7 +22,7 @@ func AveragingHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
-	controller := status.GetController(0x65)
+	controller := status.GetController(0x6b)
 	err = controller.SetAveragingMode(averagingRequest.FilterType)
 	w.Write(getGenericSuccessResponse())
 }
