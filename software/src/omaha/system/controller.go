@@ -90,7 +90,7 @@ func (this *ControllerStatus) GetLEDStatusFromController() (bool, error) {
 func (this *ControllerStatus) SetVolume(volumeLevel int8) error {
 	data := getMessageHeader(this.ID, this.SectionID, 4)
 	data[2] = Commands.SetVolume
-	data[3] = byte(volumeLevel)
+	data[3] = byte(volumeLevel + 48)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.VolumeLevel = volumeLevel
