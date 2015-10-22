@@ -30,6 +30,8 @@ func main() {
 	http.Handle("/system/", handlers.GenericHandler{GET: handlers.SystemStatusHandler})
 	http.Handle("/system/speaker/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})
 
+	//http.Handle("demo/diagnostics/", handlers.GenericHandler{PUT: handlers.DiagnosticsHandler})
+
 	// file handlers
 	http.Handle("/css/", handlers.CssHandler)
 	http.Handle("/bower_components/", handlers.BowerHandler)

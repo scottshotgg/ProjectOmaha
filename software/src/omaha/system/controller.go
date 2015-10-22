@@ -17,6 +17,7 @@ type ControllerStatus struct {
 	VolumeLevel int8 `json:"volumeLevel"`
 	ID          int8 `json:"id"`
 	SectionID   int8 `json:"sectionId"`
+	AveragingMode int8 `json:"averagingMode"`
 }
 
 func (this *ControllerStatus) IsLEDOn() bool {
@@ -161,11 +162,7 @@ func (status *SystemStatus) ResetMicrocontroller() (int, error) {
 
 }
 
-func (status *SystemStatus) ChangeAveragingFilter(filter int) (int, error) {
-	return 0, nil
-}
-
-func (status *SystemStatus) GetAveragingFilter(filter int) (int, error) {
+func (this *ControllerStatus) GetAveragingMode() (int, error) {
 	if status.debug {
 		return 0, nil
 	}
@@ -181,6 +178,7 @@ func (status *SystemStatus) GetAveragingFilter(filter int) (int, error) {
 
 }
 
+// Deprecated
 func (status *SystemStatus) SendCoefficientInformation(equalizedGain int8, decibal int8) (int8, error) { // Equalized gain or just raw gain and equalization can be done in here
 	if status.debug {
 		return 0, nil
@@ -209,7 +207,7 @@ func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) { /
 		b := []byte{0x00}
 		alive := status.ReadData(b)
 
-		if alive != true || b[0] != 0x72 { // This currently does the opposite of what we want it to do. Also include the data send back if we can
+		if alive != true || b[0] != 0x72 {
 			m[i] = strconv.Itoa(Btoi(alive)) + strconv.Itoa(int(b[0])) // This should map the string consisting of 0l where 0 is the bool representing alive and
 			// l is the variable recieved by the master controller if we need to send
 			// maybe we should print thing to make sure its working

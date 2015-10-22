@@ -2,8 +2,9 @@ package system
 
 import (
 	"fmt"
-	"github.com/jacobsa/go-serial/serial"
+	"github.com/tarm/serial"
 	"log"
+	"time"
 )
 
 var MessageChan chan *ControllerRequest = make(chan *ControllerRequest, 100)
@@ -14,19 +15,20 @@ type ControllerRequest struct {
 	ResultChan chan interface{}
 }
 
-// Use something like this maybe
-// http://blog.golang.org/go-concurrency-patterns-timing-out-and
-// I think we just need a select-case by the result chan
-
 func HandleControllerMessages() {
 	for {
 		req := <-MessageChan
 		status := GetSystemStatus()
 		if !status.IsDebug() {
-			status.Port.Write(req.Data)
+			//status.Port.Write(req.Data)			// I dont get what this is doing here....?
+
+			n, err := s.Write([]byte("test"))		// req.Data goes here?
+        	if err != nil {
+            	log.Fatal(err)
+        	}
 		}
 		if req.OnWrite != nil {
-			result := req.OnWrite()
+			result := req.OnWrite()					// I'm a bit confused on where the actual data is sent
 			if req.ResultChan != nil {
 				req.ResultChan <- result
 			}
@@ -75,20 +77,21 @@ func (status *SystemStatus) ReadData(buffer []byte) bool {
 }
 
 func (status *SystemStatus) InitializePort() {
-	options := serial.OpenOptions{
+/*	options := serial.OpenOptions{
 		PortName:        "/dev/ttyUSB0",
 		BaudRate:        9600,
 		DataBits:        8,
 		StopBits:        1,
 		MinimumReadSize: 1,
-	}
+	}*/
 
-	fmt.Println("Hello " + options.PortName)
+	c := &serial.Config{Name: "/dev/ttyUSB0", Baud: 9600, ReadTimeout: time.Second * .5}	// Probably want a half a second. This is plenty for the microcontroller to have time to respond
+	s, err := serial.OpenPort(c)															// If it hasn't responded by now then it isn't going to most likely
+    if err != nil {
+            log.Fatal(err)
+    }
 
-	// Open the port.
-	port, err := serial.Open(options)
-	if err != nil {
-		log.Fatalf("serial.Open: %v", err)
-	}
-	status.Port = port
+	fmt.Println("Hello " + c.Name)
+
+	status.Port = s
 }
