@@ -22,10 +22,10 @@ func HandleControllerMessages() {
 		if !status.IsDebug() {
 			//status.Port.Write(req.Data)			// I dont get what this is doing here....?
 
-			n, err := s.Write([]byte("test"))		// req.Data goes here?
-        	if err != nil {
-            	log.Fatal(err)
-        	}
+			//n, err := s.Write([]byte("test"))		// req.Data goes here?
+        	//if err != nil {
+            //	log.Fatal(err)
+        	//}
 		}
 		if req.OnWrite != nil {
 			result := req.OnWrite()					// I'm a bit confused on where the actual data is sent
@@ -85,7 +85,7 @@ func (status *SystemStatus) InitializePort() {
 		MinimumReadSize: 1,
 	}*/
 
-	c := &serial.Config{Name: "/dev/ttyUSB0", Baud: 9600, ReadTimeout: time.Second * .5}	// Probably want a half a second. This is plenty for the microcontroller to have time to respond
+	c := &serial.Config{Name: "/dev/ttyUSB0", Baud: 9600, ReadTimeout: time.Second}	// Probably want a half a second. This is plenty for the microcontroller to have time to respond
 	s, err := serial.OpenPort(c)															// If it hasn't responded by now then it isn't going to most likely
     if err != nil {
             log.Fatal(err)
