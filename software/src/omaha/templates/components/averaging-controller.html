@@ -63,7 +63,7 @@
     </paper-card>
     <iron-ajax
       id="selectModeAjax"
-      url="/demo/averaging/"
+      url="/system/speaker/"
       method="PUT"
       content-type="application/json"
       handle-as="json"
@@ -76,19 +76,26 @@
 
       properties: {
         speakerId: {
-            type: Number
+            type: Number,
           }
       },
+      
       listeners: {
         'menu.iron-select': '_selectionChanged'
       },
       
       _selectionChanged: function(event) {
-          //var data = {"filterType": this.$.menu.selected + 1};
-          // this.$.selectModeAjax.body = data;
+        console.log(this.speakerId);    // This says the speakerId is undefined
+
+          // Need to put a toast thing here like we have on the volume selector page
+          var updatedAttributes = ["averaging"];
+          var attributeValues = {
+            "averaging": this.$.menu.selected + 1
+          };
           this.$.selectModeAjax.body = {
-            "averaging": this.$.menu.selected + 1,                       // Not sure if this is how its supposed to be
-            "speaker": this.speakerId
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,                        
+            "speaker": this.speakerId     // You can see that this is getting zero in the terminal from the print in  speakerHandlers.go. This is because the value for this.speakerId is undefined for some reason. When I hardcoded 107 it worked fine, which is expected. Just not sure why this is getting undefined....
           };
           this.$.selectModeAjax.generateRequest();
       },

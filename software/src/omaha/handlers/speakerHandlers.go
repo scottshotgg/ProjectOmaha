@@ -21,10 +21,10 @@ type speakerAttributes struct {
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, int8) error{
 	"volume": updateSpeakerVolume,
-	"averaging": updateSpeakerAveragingMode,		// Do I need this? I think I do...
+	"averaging": updateSpeakerAveragingMode,
 }
 
-func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {		// Do we need to make more fucntions like this to update things like the speaker averaging mode and stuff too?
+func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {	
 	status := system.GetSystemStatus()
 	controller := status.GetController(speaker)
 	if controller == nil {
@@ -39,10 +39,12 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {		// Do w
 	return nil
 }
 
-func updateSpeakerAveragingMode(attr *speakerAttributes, speaker int8) error {		// Why isn't this working right? :(((
+func updateSpeakerAveragingMode(attr *speakerAttributes, speaker int8) error {
+	status := system.GetSystemStatus()
+	fmt.Println("This is the speaker that I'm getting in averaging: ", speaker)
 	controller := status.GetController(speaker)
 	if controller == nil {
-		return errors.New("Invalid speaker ID")
+		return errors.New("Invalid speaker ID from averaging")
 	}
 	if attr.Averaging > 0 && attr.Averaging <= 20 {
 		fmt.Printf("Telling speaker %d to set averaging mode to %d\n", speaker, attr.Averaging)
