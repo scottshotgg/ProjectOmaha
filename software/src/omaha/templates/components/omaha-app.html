@@ -42,6 +42,15 @@
     Polymer({
       is: 'omaha-app',
 
+      properties: {
+        volume: Number,
+        
+        selected: {
+          type: Number,
+          value: 1
+        }
+      },
+
       listeners: {
         "nav.iron-select": "_test"
       },
