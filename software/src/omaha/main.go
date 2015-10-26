@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"omaha/database"
 	"omaha/handlers"
 	"omaha/system"
 )
@@ -18,7 +19,7 @@ func main() {
 		status := system.GetSystemStatus()
 		defer status.Port.Close()
 	}
-
+	database.InitDB()
 	http.HandleFunc("/", handlers.LoginHandler)
 	http.Handle("/app/", handlers.GenericHandler{GET: handlers.AppHandler})
 
