@@ -5,11 +5,23 @@
 <link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="/bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
-
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
 
 <dom-module id="omaha-navbar">
   <template>
     <style>
+      :host{
+
+        --paper-input-container-input-color: white;
+        --paper-input-container-underline: {
+          background-color: white;
+        }
+        --paper-dropdown-menu-icon: {
+          color: white;
+        }
+      }
+
     </style>
       <paper-toolbar>
         <paper-menu-button>
@@ -22,6 +34,12 @@
           </paper-menu>
         </paper-menu-button>
         <div class="title">Project Omaha</div>
+        <paper-dropdown-menu no-label-float label="Speaker">
+          <paper-menu class="dropdown-content" selected="0">
+            <paper-item>Speaker 1</paper-item>
+            <paper-item>Speaker 2</paper-item>
+          </paper-menu>
+        </paper-dropdown-menu>
       </paper-toolbar>
   </template>
   <script>
