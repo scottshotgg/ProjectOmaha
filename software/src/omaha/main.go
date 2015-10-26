@@ -28,7 +28,7 @@ func main() {
 	http.Handle("/demo/start/", handlers.GenericHandler{GET: handlers.DemoStartHandler})
 	http.Handle("/demo/stop/", handlers.GenericHandler{GET: handlers.DemoStopHandler})
 
-	http.Handle("/demo/averaging/", handlers.GenericHandler{PUT: handlers.AveragingHandler})
+	http.Handle("/demo/averaging/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})
 
 	http.Handle("/system/", handlers.GenericHandler{GET: handlers.SystemStatusHandler})
 	http.Handle("/system/speaker/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})

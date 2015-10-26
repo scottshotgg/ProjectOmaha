@@ -74,13 +74,22 @@
     Polymer({
       is: 'averaging-controller',
 
+      properties: {
+        speakerId: {
+            type: Number
+          }
+      },
       listeners: {
         'menu.iron-select': '_selectionChanged'
       },
       
       _selectionChanged: function(event) {
-          var data = {"filterType": this.$.menu.selected + 1};
-          this.$.selectModeAjax.body = data;
+          //var data = {"filterType": this.$.menu.selected + 1};
+          // this.$.selectModeAjax.body = data;
+          this.$.selectModeAjax.body = {
+            "averaging": this.$.menu.selected + 1,                       // Not sure if this is how its supposed to be
+            "speaker": this.speakerId
+          };
           this.$.selectModeAjax.generateRequest();
       },
 

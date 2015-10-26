@@ -16,13 +16,15 @@ type speakerPutRequest struct {
 
 type speakerAttributes struct {
 	Volume int8 `json:"volume"`
+	Averaging int8 `json:"averaging"`
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, int8) error{
 	"volume": updateSpeakerVolume,
+	"averaging": updateSpeakerAveragingMode,		// Do I need this? I think I do...
 }
 
-func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {
+func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {		// Do we need to make more fucntions like this to update things like the speaker averaging mode and stuff too?
 	status := system.GetSystemStatus()
 	controller := status.GetController(speaker)
 	if controller == nil {
@@ -37,6 +39,19 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {
 	return nil
 }
 
+func updateSpeakerAveragingMode(attr *speakerAttributes, speaker int8) error {		// Why isn't this working right? :(((
+	controller := status.GetController(speaker)
+	if controller == nil {
+		return errors.New("Invalid speaker ID")
+	}
+	if attr.Averaging > 0 && attr.Averaging <= 20 {
+		fmt.Printf("Telling speaker %d to set averaging mode to %d\n", speaker, attr.Averaging)
+		controller.SetVolume(attr.Averaging) // Volume variable here)
+	} else {
+		return errors.New("Invalid averaging mode")
+	}
+	return nil
+}
 /*
 	update speaker attribtues
 */

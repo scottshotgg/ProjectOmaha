@@ -88,14 +88,26 @@
     Polymer({
       is: 'light-controller',
 
+      properties: {
+        speakerId: {
+            type: Number
+          }
+      },
+
       _onPressed: function(){
         this._showDay();
 
+        this.$.selectModeAjax.body = {
+          "speaker": this.speakerId
+        };
         this.$.ledOnAjax.generateRequest();
       },
 
       _offPressed: function() {
         this._showNight();
+        this.$.selectModeAjax.body = {
+          "speaker": this.speakerId
+        };
         this.$.ledOffAjax.generateRequest();
       },
 
