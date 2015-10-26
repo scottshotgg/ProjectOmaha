@@ -61,6 +61,7 @@
         </paper-dropdown-menu>
       </div>
     </paper-card>
+    <!--<paper-toast id="toast">Averaging mode set to <span>{{volume}}</span></paper-toast>-->
     <iron-ajax
       id="selectModeAjax"
       url="/system/speaker/"
@@ -75,6 +76,7 @@
       is: 'averaging-controller',
 
       properties: {
+        averaging: Number,
         speakerId: {
             type: Number,
           }
@@ -84,7 +86,7 @@
         'menu.iron-select': '_selectionChanged'
       },
       
-      _selectionChanged: function(event) {
+      _selectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
         console.log(this.speakerId);    // This says the speakerId is undefined
 
           // Need to put a toast thing here like we have on the volume selector page

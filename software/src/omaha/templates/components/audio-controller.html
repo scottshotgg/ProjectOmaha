@@ -76,7 +76,7 @@
       <div class="container layout horizontal center">
         <div class="container layout vertical center">
 
-          <light-controller id="light"></light-controller>
+          <light-controller id="light" speaker-id="[[speakerId]]"></light-controller>
         </div>
       </div>
       </neon-animatable>
@@ -85,7 +85,7 @@
       <neon-animatable class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
       <div class="container layout horizontal center">
         <div class="container layout vertical center">
-          <averaging-controller id="averaging"></averaging-controller>
+          <averaging-controller id="averaging" speaker-id="[[speakerId]]" averaging="[[averaging]]"></averaging-controller>
         </div>
       </div>
       </neon-animatable>

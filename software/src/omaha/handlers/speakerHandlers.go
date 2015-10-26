@@ -17,18 +17,20 @@ type speakerPutRequest struct {
 type speakerAttributes struct {
 	Volume int8 `json:"volume"`
 	Averaging int8 `json:"averaging"`
+	LED	bool		`json:led`			// Experimenting, not sure if this is needed or not
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, int8) error{
 	"volume": updateSpeakerVolume,
 	"averaging": updateSpeakerAveragingMode,
+	"led": updateSpeakerLED,
 }
 
 func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {	
 	status := system.GetSystemStatus()
 	controller := status.GetController(speaker)
 	if controller == nil {
-		return errors.New("Invalid speaker ID")
+		return errors.New("Invalid speaker ID from volume")
 	}
 	if attr.Volume >= 0 && attr.Volume <= 100 {
 		fmt.Printf("Telling speaker %d to set volume to %d\n", speaker, attr.Volume)
@@ -48,9 +50,26 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker int8) error {
 	}
 	if attr.Averaging > 0 && attr.Averaging <= 20 {
 		fmt.Printf("Telling speaker %d to set averaging mode to %d\n", speaker, attr.Averaging)
-		controller.SetVolume(attr.Averaging) // Volume variable here)
+		controller.SetAveragingMode(attr.Averaging) // Volume variable here)
 	} else {
 		return errors.New("Invalid averaging mode")
+	}
+	return nil
+}
+
+func updateSpeakerLED(attr *speakerAttributes, speaker int8) error {
+	status := system.GetSystemStatus()
+	fmt.Println("This is the speaker that I'm getting in LED: ", speaker)
+	controller := status.GetController(speaker)
+	if controller == nil {
+		return errors.New("Invalid speaker ID from LED")
+	}
+	if controller.LEDOn {
+		fmt.Printf("Telling speaker %d to turn on the LED", speaker)
+		controller.TurnLEDOn() // Volume variable here)
+	} else {
+		fmt.Printf("Telling speaker %d to turn on the LED", speaker)
+		controller.TurnLEDOn()
 	}
 	return nil
 }
