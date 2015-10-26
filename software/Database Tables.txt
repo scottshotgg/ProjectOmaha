@@ -1,0 +1,34 @@
+CREATE TABLE Speaker (
+	SpeakerID int PRIMARY KEY,
+	Name varchar(50),
+	Volume float NOT NULL
+)
+
+Create TABLE Account (
+	UserID varchar(50) PRIMARY KEY,
+	Password varchar(50) NOT NULL,
+	Name varchar(50)
+)
+
+CREATE TABLE Zone (
+	ZoneID int PRIMARY KEY,
+	NAME varchar(50)	
+)
+
+CREATE TABLE Zones-to-Speakers (
+	ZoneID int REFERENCES Zone(ZoneID),
+	SpeakerID int REFERENCES Speaker(SpeakerID)
+	PRIMARY KEY (ZoneID, SpeakerID)
+)
+
+CREATE TABLE Accounts-to-Speakers (
+	UserID varchar(50) REFERENCES Account(UserID),
+	SpeakerID int REFERENCES Speaker(SpeakerID),
+	PRIMARY KEY (UserID, SpeakerID)	
+)
+
+CREATE TABLE Accounts-to-Zones (
+	UserID varchar(50) REFERENCES Account(UserID),
+	ZoneID int REFERENCES Zone(ZoneID)
+	PRIMARY KEY (UserID, ZoneID)
+)
