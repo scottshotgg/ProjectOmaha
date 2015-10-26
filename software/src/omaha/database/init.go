@@ -28,20 +28,6 @@ func InitDB() {
 	}
 }
 
-func createAccountTable(db *sql.DB) {
-	_, err := db.Exec(`CREATE TABLE  account (
-		uid INTEGER PRIMARY KEY AUTOINCREMENT,
-		username VARCHAR(20) NOT NULL,
-		name VARCHAR(20),
-		hash CHAR(60) NOT NULL
-		);`) // yes, pw shouldn't be plain text
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println("Created account table")
-	}
-}
-
 func createDBFile() {
 	file, err := os.Create(util.GetOmahaPath() + "/omaha.db")
 	if err != nil {

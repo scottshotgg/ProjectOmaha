@@ -21,15 +21,14 @@ func main() {
 	}
 	database.InitDB()
 	defer database.DB.Close()
-	database.CreateAccount("hello", "world", "again")
 	http.HandleFunc("/", handlers.LoginHandler)
 	http.Handle("/app/", handlers.GenericHandler{GET: handlers.AppHandler})
 
 	/*http.Handle("/demo/start/", handlers.GenericHandler{GET: handlers.DemoStartHandler})
 	http.Handle("/demo/stop/", handlers.GenericHandler{GET: handlers.DemoStopHandler})*/
 
-	http.Handle("/demo/start/", handlers.GenericHandler{GET: handlers.SpeakerPutHandler})
-	http.Handle("/demo/stop/", handlers.GenericHandler{GET: handlers.SpeakerPutHandler})
+	http.Handle("/demo/start/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})
+	http.Handle("/demo/stop/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})
 
 	// http.Handle("/demo/averaging/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})	// Don't need this anymore
 

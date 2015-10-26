@@ -15,18 +15,18 @@ type speakerPutRequest struct {
 }
 
 type speakerAttributes struct {
-	Volume int8 `json:"volume"`
+	Volume    int8 `json:"volume"`
 	Averaging int8 `json:"averaging"`
-	LED	bool		`json:led`			// Experimenting, not sure if this is needed or not
+	LED       bool `json:"led"` // Experimenting, not sure if this is needed or not
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, int8) error{
-	"volume": updateSpeakerVolume,
+	"volume":    updateSpeakerVolume,
 	"averaging": updateSpeakerAveragingMode,
-	"led": updateSpeakerLED,
+	"led":       updateSpeakerLED,
 }
 
-func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {	
+func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {
 	status := system.GetSystemStatus()
 	controller := status.GetController(speaker)
 	if controller == nil {
@@ -73,6 +73,7 @@ func updateSpeakerLED(attr *speakerAttributes, speaker int8) error {
 	}
 	return nil
 }
+
 /*
 	update speaker attribtues
 */
@@ -82,7 +83,7 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(speakerRequest)
 	if err != nil {
 		if status.IsDebug() {
-			fmt.Println(err)
+			fmt.Printf("SpeakerPutHandler json decoding error: %s\n", err)
 		}
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
