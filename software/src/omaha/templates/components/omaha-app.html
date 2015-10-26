@@ -31,10 +31,9 @@
         <paper-header-panel class="flex" mode="seamed">
           <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
           <iron-pages id="app-pages" selected="{{selected}}">
-            <audio-controller id="test" volume="21" class="fit"></audio-controller>
             <map-controller class="fit"></map-controller>
-            <audio-controller id="s1" volume="21" class="fit"></audio-controller>
-            <audio-controller id="s2" volume="21" class="fit"></audio-controller>
+            <audio-controller id="s1" volume="50" class="fit" speaker-id="107"></audio-controller>
+            <audio-controller id="s2" volume="10" class="fit" speaker-id="200"></audio-controller>
           </iron-pages>
           <!-- <audio-controller id="test" volume="21" class="fit"></audio-controller> -->
         </paper-header-panel>
@@ -49,14 +48,14 @@
 
       _test: function(x,y,z) {
 
-        if(selected == "s1") {
-          console.log("this is not a drill!!!");
-        }
+        // if(selected == "s1") {
+        //   console.log("this is not a drill!!!");
+        // }
 
-        console.log(x);
-        console.log(y);
-        console.log(z);
-        console.log("just testing");
+        // console.log(x);
+        // console.log(y);
+        // console.log(z);
+        // console.log("just testing");
       }
     });
   </script>

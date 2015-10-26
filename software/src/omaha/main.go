@@ -20,6 +20,8 @@ func main() {
 		defer status.Port.Close()
 	}
 	database.InitDB()
+	defer database.DB.Close()
+	database.CreateAccount("hello", "world", "again")
 	http.HandleFunc("/", handlers.LoginHandler)
 	http.Handle("/app/", handlers.GenericHandler{GET: handlers.AppHandler})
 

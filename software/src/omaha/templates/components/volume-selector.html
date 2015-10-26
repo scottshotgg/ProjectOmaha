@@ -57,9 +57,12 @@
       
       properties: {
         volume: Number,
+        speakerId: {
+          type: Number
+        }
       },
       
-        _setVolumeClicked: function() {
+      _setVolumeClicked: function() {
         this.$.toast.show();
         var updatedAttributes = ["volume"];
         var attributeValues = {
@@ -68,7 +71,7 @@
         this.$.setVolumeAjax.body = {
           "updatedAttributes": updatedAttributes, 
           "attributeValues": attributeValues, 
-          "speaker": 107
+          "speaker": this.speakerIdclcl
         };
         this.$.setVolumeAjax.generateRequest();
       },

@@ -5,22 +5,24 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"omaha/util"
+	"os"
 )
 
-func InitDB() {
+var DB *sql.DB
 
-	db, err := sql.Open("sqlite3", util.GetOmahaPath()+"/omaha.db")
-	defer db.Close()
+func InitDB() {
+	var err error
+	DB, err = sql.Open("sqlite3", util.GetOmahaPath()+"/omaha.db")
 	if err != nil {
-		log.Fatalf("DB file doesn't exist\n")
+		log.Fatal(err)
 	}
 	// check if user table exists
 	var name string
-	err = db.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='account';").Scan(&name)
+	err = DB.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='account';").Scan(&name)
 	switch {
 	case err == sql.ErrNoRows:
 		// table doesn't exist
-		createAccountTable(db)
+		createAccountTable(DB)
 	case err != nil:
 		log.Fatal(err)
 	}
@@ -29,13 +31,25 @@ func InitDB() {
 func createAccountTable(db *sql.DB) {
 	_, err := db.Exec(`CREATE TABLE  account (
 		uid INTEGER PRIMARY KEY AUTOINCREMENT,
-		username VARCHAR(50) NOT NULL,
-		name VARCHAR(50),
-		password VARCHAR(20) NOT NULL
+		username VARCHAR(20) NOT NULL,
+		name VARCHAR(20),
+		hash CHAR(60) NOT NULL
 		);`) // yes, pw shouldn't be plain text
 	if err != nil {
 		log.Fatal(err)
 	} else {
 		log.Println("Created account table")
 	}
+}
+
+func createDBFile() {
+	file, err := os.Create(util.GetOmahaPath() + "/omaha.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = file.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Created DB file")
 }

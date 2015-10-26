@@ -75,14 +75,8 @@
       <neon-animatable class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
       <div class="container layout horizontal center">
         <div class="container layout vertical center">
-          <!-- <neon-animated-pages id="pages" selected="0" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
-            <neon-animatable><div style="height: 100px;"></div></neon-animatable>
-            <neon-animatable>2</neon-animatable>
-          </neon-animated-pages>-->
-          <!-- <volume-selector volume="21"></volume-selector>-->
-          <!--<iron-pages id="pages">-->
+
           <light-controller id="light"></light-controller>
-          <!-- <map-controller></map-controller>-->
         </div>
       </div>
       </neon-animatable>
@@ -91,14 +85,7 @@
       <neon-animatable class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
       <div class="container layout horizontal center">
         <div class="container layout vertical center">
-          <!-- <neon-animated-pages id="pages" selected="0" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
-            <neon-animatable><div style="height: 100px;"></div></neon-animatable>
-            <neon-animatable>2</neon-animatable>
-          </neon-animated-pages>-->
-          <!-- <volume-selector volume="21"></volume-selector>-->
-          <!--<iron-pages id="pages">-->
           <averaging-controller id="averaging"></averaging-controller>
-          <!-- <map-controller></map-controller>-->
         </div>
       </div>
       </neon-animatable>
@@ -107,16 +94,7 @@
       <neon-animatable class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
       <div class="container layout horizontal center">
         <div class="container layout vertical center">
-          <!-- <neon-animated-pages id="pages" selected="0" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
-            <neon-animatable><div style="height: 100px;"></div></neon-animatable>
-            <neon-animatable>2</neon-animatable>
-          </neon-animated-pages>-->
-          <!-- <volume-selector volume="21"></volume-selector>-->
-          <!--<iron-pages id="pages">-->
-          <volume-selector id="volume" volume="21"></volume-selector>
-
-
-          <!-- <map-controller></map-controller>-->
+          <volume-selector id="volume" speaker-id="[[speakerId]]" volume="[[volume]]"></volume-selector>
         </div>
       </div>
       </neon-animatable>
@@ -135,6 +113,9 @@
         page: {
           type: String,
           value: 0
+        },
+        speakerId: {
+          type: Number
         }
       },
 

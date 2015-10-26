@@ -13,10 +13,10 @@ func Btoi(b bool) int {
 }
 
 type ControllerStatus struct {
-	LEDOn       bool `json:"ledOn"`
-	VolumeLevel int8 `json:"volumeLevel"`
-	ID          int8 `json:"id"`
-	SectionID   int8 `json:"sectionId"`
+	LEDOn         bool `json:"ledOn"`
+	VolumeLevel   int8 `json:"volumeLevel"`
+	ID            int8 `json:"id"`
+	SectionID     int8 `json:"sectionId"`
 	AveragingMode int8 `json:"averagingMode"`
 }
 
@@ -91,7 +91,7 @@ func (this *ControllerStatus) GetLEDStatusFromController() (bool, error) {
 func (this *ControllerStatus) SetVolume(volumeLevel int8) error {
 	data := getMessageHeader(this.ID, this.SectionID, 4)
 	data[2] = Commands.SetVolume
-	data[3] = byte(volumeLevel + 48)
+	data[3] = byte(volumeLevel)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.VolumeLevel = volumeLevel

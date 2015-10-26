@@ -25,9 +25,12 @@ var speakerUpdateHandlers = map[string]func(*speakerAttributes, int8) error{
 func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {
 	status := system.GetSystemStatus()
 	controller := status.GetController(speaker)
+	if controller == nil {
+		return errors.New("Invalid speaker ID")
+	}
 	if attr.Volume >= 0 && attr.Volume <= 100 {
-		fmt.Println("Telling the controller to turn to whatever I want", attr.Volume) // Print volume level
-		controller.SetVolume(attr.Volume)                                             // Volume variable here)
+		fmt.Printf("Telling speaker %d to set volume to %d\n", speaker, attr.Volume)
+		controller.SetVolume(attr.Volume) // Volume variable here)
 	} else {
 		return errors.New("Invalid volume")
 	}
