@@ -31,10 +31,11 @@
         <paper-header-panel class="flex" mode="seamed">
           <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
           <iron-pages id="app-pages" selected="{{selected}}">
-            <map-controller class="fit"></map-controller>
-            <template is="dom-repeat" items="{{controllers}}">
+            <map-controller on-speakerselected="_speakerSelected" class="fit"></map-controller>
+            <audio-controller id="controller" class="fit"></audio-controller>
+<!--             <template is="dom-repeat" items="{{controllers}}">
               <audio-controller class="fit" speaker="{{item}}"></audio-controller>
-            </template>
+            </template> -->
           </iron-pages>
         </paper-header-panel>
          <iron-ajax
@@ -52,8 +53,21 @@
       properties: {        
         selected: {
           type: Number,
-          value: 1
+          value: 0
         }
+      },
+
+      _speakerSelected: function(e) {
+        var speakerId = e.detail.speakerId;
+        var speaker;
+        for(var i = 0; i < this.controllers.length; i++) {
+          if(this.controllers[i].id == speakerId) {
+            speaker = this.controllers[i];
+            break;
+          }
+        }
+        this.$.controller.speaker = speaker;
+        this.selected = 1;
       },
 
       _initializeStatus: function(event, data) {

@@ -1,0 +1,49 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/image-icons.html">
+<link rel="import" href="/bower_components/iron-icons/av-icons.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+
+<iron-icon id="day" icon="image:brightness-7"></iron-icon>
+
+<dom-module id="speaker-icon">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .block {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        --iron-icon-fill-color: var(--google-grey-700);
+
+      }
+
+    </style>
+    <iron-icon id="icon" class="block" icon="av:surround-sound"></iron-icon>
+  </template>
+  <script>
+    Polymer({
+      is: 'speaker-icon',
+
+      properties: {
+        x: Number,
+        y: Number,
+        speakerId: Number
+      },
+
+      ready: function () {
+          console.log
+          this.$.icon.style.left = this.x.toString() + "px";
+          this.$.icon.style.top = this.y.toString() + "px";
+      }
+    });
+  </script>
+</dom-module>

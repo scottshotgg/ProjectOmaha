@@ -9,7 +9,7 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
 
-<iron-icon id="day" icon="image:brightness-7"></iron-icon>
+<link rel="import" href="/components/speaker-icon.html">
 
 <dom-module id="map-controller">
   <template>
@@ -37,28 +37,14 @@
       <div class="container layout vertical center">
        <div id="cont" style="position: relative;">
          <img id="map" on-click="test" src="/css/map.jpg">
+         <template is="dom-repeat" items="{{locations}}">
+            <speaker-icon on-click="_iconClicked" x="{{item.x}}" y="{{item.y}}" speaker-id="{{item.id}}"></speaker-icon>
+         </template>
        </div>
       </div>
     </div>
   </template>
   <script>
-    var locations = [
-      {
-        x: 300,
-        y: 200
-      },
-      {
-        x: 150,
-        y: 100
-      },
-      {
-        x: 50,
-        y: 2
-      },
-      {
-        x: 0,
-        y: 0
-      }];
     
     Polymer({
       is: 'map-controller',
@@ -78,17 +64,28 @@
         div.style.top = y.toString() + "px";
         Polymer.dom(this.$.cont).appendChild(div);
       },
+
+      _iconClicked: function(event) {
+        var evnt = Polymer.dom(event);
+        /*
+          event names must be lowercase
+        */
+        this.fire('speakerselected', {speakerId: evnt.localTarget.speakerId});
+        console.log("firing");
+      },
       
       ready: function () {
-        for(i = 0; i < locations.length; i++) {
-          var loc = locations[i];
-          var div = document.createElement("iron-icon");
-          div.icon = "av:surround-sound";
-          div.className = "block";
-          div.style.left = loc.x.toString() + "px";
-          div.style.top = loc.y.toString() + "px";
-          Polymer.dom(this.$.cont).appendChild(div);
-        }
+        this.locations = [
+          {
+            x: 300,
+            y: 200,
+            id: 107
+          },
+          {
+            x: 150,
+            y: 100,
+            id: 108
+        }];
       }
     });
   </script>

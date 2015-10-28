@@ -112,7 +112,10 @@
       is: 'audio-controller',
 
       properties: {
-        speaker: Object,
+        speaker: {
+          type: Object,
+          observer: "_speakerUpdated"
+        },
 
         isReady: {
           type: Boolean,
@@ -211,8 +214,16 @@
         this.volume = speaker.volumeLevel;
       },
 
-      ready: function() {
+      _speakerUpdated: function() {
+        this.isReady = false;
         this._initializeStatus(this.speaker);
+        this.isReady = true;
+        console.log("speaker updated");
+      },
+
+      ready: function() {
+        if(this.speaker !== undefined)
+          this._initializeStatus(this.speaker);
         this.isReady = true;
       }
     });
