@@ -1,54 +1,34 @@
 from kivy.app import App
+from kivy.uix.button import Button
 from kivy.uix.widget import Widget
-from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty
-from kivy.vector import Vector
-from kivy.clock import Clock
-from random import randint
+from kivy.properties import ObjectProperty
+import json, urllib2
 
-class PongGame(Widget):
-    ball = ObjectProperty(None)
+class MyWidget(Widget):
+    volumeBtn = ObjectProperty(None)
+    volumeSlider = ObjectProperty(None)
 
-    def on_touch_down(self, touch):
-        self.serve_ball()
+    def setVolume(self, instance):
+		reqData = {
+			'updatedAttributes': ['volume'],
+			'attributeValues': {
+				'volume': int(self.volumeSlider.value)
+			},
+			'speaker': 107
+			}
+		data = json.dumps(reqData)
+		opener = urllib2.build_opener(urllib2.HTTPHandler)
+		request = urllib2.Request("http://localhost:8080/system/speaker/", data=data)
+		request.add_header('Content-Type', 'application/json')
+		request.get_method = lambda: 'PUT'
+		url = opener.open(request)
 
-    def serve_ball(self):
-        self.ball.center = self.center
-        self.ball.velocity = Vector(4, 0).rotate(randint(0, 360))
+class OmahaApp(App):
 
-    def update(self, dt):
-        # call ball.move and other stuff
-        self.ball.move()
-
-        # bounce off top/bottom
-        if (self.ball.y < 0) or (self.ball.top > self.height):
-            self.ball.velocity_y *= -1
-
-        # bounce off left and right
-        if (self.ball.x < 0) or (self.ball.right > self.width):
-            self.ball.velocity_x *= -1
-    
-class PongBall(Widget):
-
-    # velocity of the ball on x and y axis
-    velocity_x = NumericProperty(0)
-    velocity_y = NumericProperty(0)
-
-    # referencelist property so we can use ball.velocity as
-    # a shorthand, just like e.g. w.pos for w.x and w.y
-    velocity = ReferenceListProperty(velocity_x, velocity_y)
-
-    # ``move`` function will move the ball one step. This
-    #  will be called in equal intervals to animate the ball
-    def move(self):
-        self.pos = Vector(*self.velocity) + self.pos
-
-class PongApp(App):
     def build(self):
-        game = PongGame()
-        game.serve_ball()
-        Clock.schedule_interval(game.update, 1.0/60.0)
-        return game
-
+        widget = MyWidget()
+        widget.volumeBtn.bind(on_press=widget.setVolume)
+        return widget
 
 if __name__ == '__main__':
-    PongApp().run()
+    OmahaApp().run()
