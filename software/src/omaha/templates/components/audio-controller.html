@@ -93,7 +93,7 @@
       <neon-animatable class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <div class="container layout horizontal center">
           <div class="container layout vertical center">
-            <volume-selector id="volume" speaker-id="[[speakerId]]" volume="{{volume}}"></volume-selector>
+            <volume-selector id="volume" volume="{{volume}}"></volume-selector>
           </div>
         </div>
       </neon-animatable>
@@ -106,19 +106,14 @@
           handle-as="json"
           on-response="_logResponse"
           debounce-duration="300"></iron-ajax>
-    <iron-ajax
-      id="systemStatusAjax"
-      url="/system/"
-      content-type="application/json"
-      handle-as="json"
-      on-response="_initializeStatus"
-      debounce-duration="300"></iron-ajax>
   </template>
   <script>
     Polymer({
       is: 'audio-controller',
 
       properties: {
+        speaker: Object,
+
         isReady: {
           type: Boolean,
           value: false
@@ -210,18 +205,15 @@
         console.log(data.response);
       },
 
-      _initializeStatus: function(event, data) {
-        var controller = data.response.status.controllers[this.speakerId.toString()];
-        // if a speaker with this ID doesn't exist on the server, default to false
-        var ledOn = controller !== undefined ? controller.ledOn : this.ledOn;
-        var volume = controller !== undefined ? controller.volumeLevel : this.volume;
-        this.ledOn = ledOn;
-        this.volume = volume;
-        this.isReady = true;
+      _initializeStatus: function(speaker) {
+        this.speakerId = speaker.id;
+        this.ledOn = speaker.ledOn;
+        this.volume = speaker.volumeLevel;
       },
 
       ready: function() {
-        this.$.systemStatusAjax.generateRequest();
+        this._initializeStatus(this.speaker);
+        this.isReady = true;
       }
     });
   </script>

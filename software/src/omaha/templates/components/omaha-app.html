@@ -32,41 +32,43 @@
           <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
           <iron-pages id="app-pages" selected="{{selected}}">
             <map-controller class="fit"></map-controller>
-            <audio-controller id="s1" class="fit" speaker-id="107"></audio-controller>
-            <audio-controller id="s2" class="fit" speaker-id="108"></audio-controller>
+            <template is="dom-repeat" items="{{controllers}}">
+              <audio-controller class="fit" speaker="{{item}}"></audio-controller>
+            </template>
           </iron-pages>
-          <!-- <audio-controller id="test" volume="21" class="fit"></audio-controller> -->
         </paper-header-panel>
+         <iron-ajax
+            id="systemStatusAjax"
+            url="/system/"
+            content-type="application/json"
+            handle-as="json"
+            on-response="_initializeStatus"
+            debounce-duration="300"></iron-ajax>
   </template>
   <script>
     Polymer({
       is: 'omaha-app',
 
-      properties: {
-        volume: Number,
-        averaging: Number,      // Not sure if this needs to be there
-        
+      properties: {        
         selected: {
           type: Number,
           value: 1
         }
       },
 
-      listeners: {
-        "nav.iron-select": "_test"
+      _initializeStatus: function(event, data) {
+        var controllers = new Array();
+        var controllersMap = data.response.status.controllers
+        for(var id in controllersMap) {
+          controllers.push(controllersMap[id])
+        }
+        this.controllers = controllers
       },
 
-      _test: function(x,y,z) {
-
-        // if(selected == "s1") {
-        //   console.log("this is not a drill!!!");
-        // }
-
-        // console.log(x);
-        // console.log(y);
-        // console.log(z);
-        // console.log("just testing");
+      ready: function() {
+        this.$.systemStatusAjax.generateRequest();
       }
+
     });
   </script>
 </dom-module>

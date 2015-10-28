@@ -48,12 +48,32 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 		fmt.Println(err)
 	}
 
-//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
+	//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	status.AddController(controller)
+
+	controller = &ControllerStatus{ID: 0x6C, SectionID: 0x6B}
+
+	controller.LEDOn, err = controller.GetLEDStatusFromController()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	controller.VolumeLevel, err = controller.GetVolumeFromController()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	status.AddController(controller)
+
 	return &status
 }
 
