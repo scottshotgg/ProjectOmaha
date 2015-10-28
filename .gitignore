@@ -16,3 +16,5 @@ Icon
 pkg/
 build/
 bin/
+software/src/*/
+!software/src/omaha/
