@@ -168,6 +168,10 @@
       },
 
       _ledUpdate: function() {
+        /*
+          We only want to notify the server of changes if this is after ready() has been called.
+          This is because _ledUpdate is triggered when initially setting values received from the server
+        */
         if(this.isReady) {
           var updatedAttributes = ["led"];
           var attributeValues = {
