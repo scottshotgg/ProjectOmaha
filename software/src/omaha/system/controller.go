@@ -32,7 +32,7 @@ func (this *ControllerStatus) TurnLEDOn() error {
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = true
 		if status.IsDebug() {
-			fmt.Println("LED turned off")
+			fmt.Println("LED turned on")
 		}
 		return nil
 	}}

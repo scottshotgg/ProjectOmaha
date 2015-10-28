@@ -64,12 +64,12 @@ func updateSpeakerLED(attr *speakerAttributes, speaker int8) error {
 	if controller == nil {
 		return errors.New("Invalid speaker ID from LED")
 	}
-	if controller.LEDOn {
-		fmt.Printf("Telling speaker %d to turn on the LED", speaker)
+	if attr.LED {
+		fmt.Printf("Telling speaker %d to turn on the LED\n", speaker)
 		controller.TurnLEDOn() // Volume variable here)
 	} else {
-		fmt.Printf("Telling speaker %d to turn on the LED", speaker)
-		controller.TurnLEDOn()
+		fmt.Printf("Telling speaker %d to turn off the LED\n", speaker)
+		controller.TurnLEDOff()
 	}
 	return nil
 }

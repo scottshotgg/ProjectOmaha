@@ -65,68 +65,33 @@
         <paper-button id="off" on-click="_offPressed">off</paper-button>
       </div>
     </paper-card>
-    <iron-ajax
-      id="ledOnAjax"
-      url="/demo/start"
-      method="PUT"
-      content-type="application/json"
-      handle-as="json"
-      on-response="_logResponse"
-      debounce-duration="300"></iron-ajax>
-    <iron-ajax
-      id="ledOffAjax"
-      url="/demo/stop"
-      method="PUT"
-      content-type="application/json"
-      handle-as="json"
-      on-response="_logResponse"
-      debounce-duration="300"></iron-ajax>
-    <iron-ajax
-      id="ledStatusAjax"
-      url="/system/"
-      content-type="application/json"
-      handle-as="json"
-      on-response="_initializeStatus"
-      debounce-duration="300"></iron-ajax>
   </template>
   <script>
     Polymer({
       is: 'light-controller',
 
       properties: {
-        speakerId: {
-            type: Number,
-          }
+        ledOn: {
+          type: Boolean,
+          notify: true,
+          observer: '_ledStatusChanged'
+        }
+      },
+
+      _ledStatusChanged: function(e) {
+        if(this.ledOn) {
+          this._showDay();
+        } else {
+          this._showNight();
+        }
       },
 
       _onPressed: function(){
-        this._showDay();
-
-        var updatedAttributes = ["led"];
-        var attributeValues = {
-          "led": true
-        };
-        this.$.ledOnAjax.body = {
-          "updatedAttributes": updatedAttributes, 
-          "attributeValues": attributeValues,
-          "speaker": this.speakerId
-        };
-        this.$.ledOnAjax.generateRequest();
+        this.ledOn = true;
       },
 
       _offPressed: function() {
-        this._showNight();
-
-        var updatedAttributes = ["led"];
-        var attributeValues = {
-          "led": 0
-        };
-        this.$.ledOffAjax.body = {
-          "updatedAttributes": updatedAttributes, 
-          "attributeValues": attributeValues,
-          "speaker": this.speakerId
-        };
-        this.$.ledOffAjax.generateRequest();
+        this.ledOn = false;
       },
 
       _showDay: function() {
@@ -139,22 +104,12 @@
         this.$.night.style.display = "block";
       },
 
-      _logResponse: function(event, data) {
-        console.log(data.response);
-      },
-
-      _initializeStatus: function(event, data) {
-        console.log(data.response.status.controllers["107"].ledOn)
-        if(data.response.status.ledOn) {
+      ready: function() {
+        if(this.ledOn) {
           this._showDay();
         } else {
           this._showNight();
         }
-      },
-
-      ready: function() {
-        var elem = this;
-        this.$.ledStatusAjax.generateRequest();
       }
 
     });
