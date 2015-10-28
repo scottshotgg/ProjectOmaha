@@ -93,7 +93,7 @@
       <neon-animatable class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <div class="container layout horizontal center">
           <div class="container layout vertical center">
-            <volume-selector id="volume" speaker-id="[[speakerId]]" volume="[[volume]]"></volume-selector>
+            <volume-selector id="volume" speaker-id="[[speakerId]]" volume="{{volume}}"></volume-selector>
           </div>
         </div>
       </neon-animatable>
@@ -141,6 +141,11 @@
           type: Boolean,
           value: true,
           observer: '_ledUpdate'
+        },
+        volume: {
+          type: Number,
+          value: 0,
+          observer: '_volumeUpdate'
         }
       },
 
@@ -186,6 +191,21 @@
         }
       },
 
+      _volumeUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["volume"];
+          var attributeValues = {
+            "volume": this.volume,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+
       _logResponse: function(event, data) {
         console.log(data.response);
       },
@@ -193,8 +213,10 @@
       _initializeStatus: function(event, data) {
         var controller = data.response.status.controllers[this.speakerId.toString()];
         // if a speaker with this ID doesn't exist on the server, default to false
-        var ledOn = controller !== undefined ? controller.ledOn : false;
+        var ledOn = controller !== undefined ? controller.ledOn : this.ledOn;
+        var volume = controller !== undefined ? controller.volumeLevel : this.volume;
         this.ledOn = ledOn;
+        this.volume = volume;
         this.isReady = true;
       },
 

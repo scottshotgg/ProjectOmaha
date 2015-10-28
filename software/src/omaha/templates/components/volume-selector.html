@@ -33,7 +33,7 @@
       <div class="card-content">
         <div class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
-          <paper-slider id="volume2" pin min="0" max="100" value="{{volume}}"></paper-slider>
+          <paper-slider id="volume2" pin min="0" max="100" value="{{internalVolume}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
       </div>
@@ -42,39 +42,32 @@
       </div>
     </paper-card>
     <paper-toast id="toast">Volume set to <span>{{volume}}</span></paper-toast>
-    <iron-ajax
-          id="setVolumeAjax"
-          url="/system/speaker/"
-          method="PUT"
-          content-type="application/json"
-          handle-as="json"
-          on-response="_logResponse"
-          debounce-duration="300"></iron-ajax>
   </template>
   <script>
     Polymer({
       is: 'volume-selector',
       
       properties: {
-        volume: Number,
+        internalVolume: Number,
+
+        volume: {
+          type: Number,
+          notify: true,
+          observer: '_setInternalVolume'
+        },
+
         speakerId: {
           type: Number
         }
       },
+
+      _setInternalVolume: function(volume) {
+        this.internalVolume = volume;
+      },
       
       _setVolumeClicked: function() {
-        console.log(this.speakerId);
+        this.volume = this.internalVolume;
         this.$.toast.show();
-        var updatedAttributes = ["volume"];
-        var attributeValues = {
-          "volume": this.volume
-        };
-        this.$.setVolumeAjax.body = {
-          "updatedAttributes": updatedAttributes, 
-          "attributeValues": attributeValues, 
-          "speaker": this.speakerId
-        };
-        this.$.setVolumeAjax.generateRequest();
       },
       
       decrementVolume: function() {
@@ -108,8 +101,8 @@
         this.$.volume2._resetKnob();
       },
 
-      _logResponse: function(event, data) {
-        console.log(data.response);
+      ready: function() {
+        this.internalVolume = this.volume;
       }
     });
   </script>
