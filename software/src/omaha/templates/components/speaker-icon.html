@@ -8,6 +8,7 @@
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
 
 <iron-icon id="day" icon="image:brightness-7"></iron-icon>
 
@@ -23,11 +24,13 @@
         height: 30px;
         position: absolute;
         --iron-icon-fill-color: var(--google-grey-700);
+        cursor: pointer;
 
       }
 
     </style>
     <iron-icon id="icon" class="block" icon="av:surround-sound"></iron-icon>
+    <paper-tooltip for="icon">Speaker <span>{{speakerId}}</span></paper-tooltip>
   </template>
   <script>
     Polymer({
