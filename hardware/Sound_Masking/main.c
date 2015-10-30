@@ -19,6 +19,8 @@
 #define	FIRORDER		299
 #define VOLUME_SCALAR	3500
 #define	NULLZONE		78
+#define PUTTY 			1
+
 #include "F28x_Project.h"     // Device Headerfile and Examples Include File
 #include <stdint.h>
 #include "fpu_filter.h"
@@ -390,30 +392,47 @@ __interrupt void scibRxFifoIsr(void){
 
 	switch(receivedChar[2]){			//third byte is command
 
-		case 'm':						//m means manual volume adjustment
-
+		case 'V':						//m means manual volume adjustment, I think that we should change this to be capital V
 			if(receivedChar[3] > 100 || receivedChar[3] < 0)
-			//if(receivedChar[3] > 75 || receivedChar[3] < 0)//max volume with board 5V regulator and 4 ohm speaker
+			//if(receivedChar[3] > 75 || receivedChar[3] < 0) //max volume with board 5V regulator and 4 ohm speaker
 				return;	//somehow a bad volume level was sent, return out
-
 			volumeLevel = receivedChar[3];
 			GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
 			break;
 
-		case 'a':						//a means change moving average
-			setMASize(receivedChar[3] - 48);
+		case 'v':
+			ScibRegs.SCITXBUF.all = volumeLevel;
 			break;
 
-		case 'i':						//i means toggle manual mode
-			if(receivedChar[3] == 'O')
+		case 'a':						//a means change moving average
+			setMASize(receivedChar[3] - 48 * (PUTTY));
+			break;
+
+		case 'i':						// i means toggle manual mode
+			if(receivedChar[3] == 'O')	
 				IIR_on = 1;
 			else if(receivedChar[3] == 'o')
 				IIR_on = 0;
 			break;
+
 		case 'f':
-			initializeFilter(receivedChar[3] - 48);
+			initializeFilter(receivedChar[3] - 48 * (PUTTY));
 			break;
-		default:
+
+		case 'R':		// Reserved for AreYouALive commands
+			ScibRegs.SCITXBUF.all = 'r';	// Little r back is like an ack
+			break;
+
+		case 'm':		// Get microphone reading
+			ScibRegs.SCITXBUF.all = AdcaResultRegs.ADCRESULT0;		// Not sure if we can actually do this, may have to check if it is zero or use ADCReadings[k]
+			break;
+
+		case 'l':
+			if(receivedChar[3] - 48 * (PUTTY) == 0 || receivedChar[3] - 48 * (PUTTY) == 1)
+				GPIO_WritePin(13, receivedChar[3]);
+			break;
+
+		default:		// This should never get called, but maybe we can think of something to put here
 			break;
 	}
 }
@@ -544,6 +563,3 @@ __interrupt void cla1Isr3(void){ //After the CLA initializes this will be called
 	PieCtrlRegs.PIEACK.all = M_INT11;
 
 }
-
-
-
