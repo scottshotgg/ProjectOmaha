@@ -57,6 +57,14 @@
         }
       },
 
+      listeners: {
+        'nav.backpressed': '_showMap'
+      },
+
+      _showMap: function() {
+        this.selected = 0;
+      },
+
       _speakerSelected: function(e) {
         var speakerId = e.detail.speakerId;
         var speaker;
@@ -67,6 +75,7 @@
           }
         }
         this.$.controller.speaker = speaker;
+        this.$.nav.showBackArrow();
         this.selected = 1;
       },
 
@@ -81,6 +90,7 @@
 
       ready: function() {
         this.$.systemStatusAjax.generateRequest();
+        this.$.nav.hideBackArrow();
       }
 
     });
