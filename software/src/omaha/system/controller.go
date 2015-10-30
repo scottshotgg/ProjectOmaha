@@ -25,7 +25,7 @@ func (this *ControllerStatus) IsLEDOn() bool {
 }
 
 func (this *ControllerStatus) TurnLEDOn() error {
-	data := getMessageHeader(this.ID, this.SectionID, 4)
+	data := getMessageHeader(this.SectionID, this.ID, 4)
 	data[2] = Commands.TurnLEDOn
 	data[3] = 0x00
 
@@ -43,9 +43,9 @@ func (this *ControllerStatus) TurnLEDOn() error {
 }
 
 func (this *ControllerStatus) TurnLEDOff() error {
-	data := getMessageHeader(this.ID, this.SectionID, 4)
+	data := getMessageHeader(this.SectionID, this.ID, 4)
 	data[2] = Commands.TurnLEDOff
-	data[3] = 0x00
+	data[3] = 0x01
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = false
@@ -64,7 +64,7 @@ type LEDStatusResponse struct {
 }
 
 func (this *ControllerStatus) GetLEDStatusFromController() (bool, error) {
-	data := getMessageHeader(this.ID, this.SectionID, 4)
+	data := getMessageHeader(this.SectionID, this.ID, 4)
 	data[2] = Commands.GetLEDStatus
 	data[3] = 0x00
 
@@ -89,7 +89,7 @@ func (this *ControllerStatus) GetLEDStatusFromController() (bool, error) {
 }
 
 func (this *ControllerStatus) SetVolume(volumeLevel int8) error {
-	data := getMessageHeader(this.ID, this.SectionID, 4)
+	data := getMessageHeader(this.SectionID, this.ID, 4)
 	data[2] = Commands.SetVolume
 	data[3] = byte(volumeLevel)
 
@@ -110,7 +110,7 @@ func (this *ControllerStatus) GetVolumeFromController() (int8, error) {
 		return 0, nil
 	}
 
-	data := getMessageHeader(this.ID, this.SectionID, 4)
+	data := getMessageHeader(this.SectionID, this.ID, 4)
 	data[2] = Commands.GetVolume
 	data[3] = 0x00
 
@@ -120,7 +120,7 @@ func (this *ControllerStatus) GetVolumeFromController() (int8, error) {
 }
 
 func (this *ControllerStatus) SetAveragingMode(mode int8) error {
-	data := getMessageHeader(this.ID, this.SectionID, 4)
+	data := getMessageHeader(this.SectionID, this.ID, 4)
 	data[2] = Commands.SetAveragingFilter
 	data[3] = byte(mode)
 
@@ -211,6 +211,7 @@ func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) { /
 			m[i] = strconv.Itoa(Btoi(alive)) + strconv.Itoa(int(b[0])) // This should map the string consisting of 0l where 0 is the bool representing alive and
 			// l is the variable recieved by the master controller if we need to send
 			// maybe we should print thing to make sure its working
+			// In here if it isn't r then we also need to check if it is 'v', 'm', other crap
 		} /*else if alive == true{
 
 		}*/
