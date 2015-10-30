@@ -80,10 +80,10 @@
         var rect = this.$.map.getBoundingClientRect();
         var parentX = rect.left;
         var eventX = event.pageX;
-        var x = Math.round(Math.min(Math.max(eventX-parentX-15, 0),370));
+        var x = Math.round(Math.min(Math.max(eventX-parentX-15, 0), this.$.map.width-30));
         var parentY = rect.top;
         var eventY = event.pageY;
-        var y = Math.round(Math.min(Math.max(eventY-parentY-15, 0), 370));
+        var y = Math.round(Math.min(Math.max(eventY-parentY-15, 0), this.$.map.height-30));
         var div = document.createElement("iron-icon");
         div.icon = "av:surround-sound";
         div.className = "block";
