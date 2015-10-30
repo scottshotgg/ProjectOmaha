@@ -111,6 +111,10 @@
     Polymer({
       is: 'audio-controller',
 
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+      ],
+
       properties: {
         speaker: {
           type: Object,
@@ -144,6 +148,38 @@
           type: Number,
           value: 0,
           observer: '_volumeUpdate'
+        },
+
+        sharedElements: {
+          type: Object,
+          value: function() {
+            return {
+              'hero': this.$.pages,
+            }
+          }
+        },
+
+        animationConfig: {
+          value: function() {
+            return {
+              'entry': [{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  toPage: this,
+                  timing: {
+                    delay: 150
+                  }
+                },{
+                  name: 'fade-in-animation',
+                  node: this
+                }],
+              'exit': {
+                // provided by neon-animation-animations/fade-out-animation.html
+                name: 'slide-left-animation',
+                node: this
+              }
+            }
+          }
         }
       },
 
