@@ -1,0 +1,46 @@
+/*
+ *  This file is written for the CLA of the F28377S and is a CLA source file.
+ *	This file contains the IIR filter enviornment. This is used for manual mode in the sound masking system
+ *	The IIR filter is entirely separated from the main CPU and all variables are local to the CLA. The CPU
+ *	Passes vital information such as changes that need to be made to the IIR filter and the samples that need
+ *	to be filtered. The CLA both adjusts the IIR filter as well as executes the IIR filter algorithum
+ *
+ *	SOUND_MASKING program written for F28377S MCU for Univerity of Texas at Dallas Applied Research Center and Speech Privacy Systems
+ * 	Written by Matt Kramer and Scott Gayados
+ *
+ */
+
+#include "Cla_Shared.h"
+#define	 FILTER_ORDER 20
+
+
+//These variables are seen only by the CLA
+float A[FILTER_ORDER];
+float B[FILTER_ORDER];
+float out[FILTER_ORDER];
+
+//inputToCLA, outputFromCLA, decibel and decade are floats shared with the CPU and CLA
+//inputToCLA, decibel and decade will be provided by the CPU for the CLA
+//outputFromCLA is the final filtered output from the CLA
+
+interrupt void Cla1Task1 (void) //task 1 will execute the filter
+{
+	outputFromCLA = inputToCLA;		//at this point the filter is a wire
+}
+
+interrupt void Cla1Task2 (void) //task 2 will adjust the filter
+{
+	
+}
+
+
+interrupt void Cla1Task3 (void) //Task 3 will initialize the variables
+{
+	int i;
+	for(i = 0; i < FILTER_ORDER; i++){
+		A[i] = 0;
+		B[i] = 0;
+		out[i] = 0;
+	}
+}
+
