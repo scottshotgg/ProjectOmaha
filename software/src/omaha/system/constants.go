@@ -12,7 +12,7 @@ var Commands struct {
 
 func init() {
 	Commands.SetVolume = byte('S')		// Checking to see if this works
-	Commands.GetVolume = byte('s')
+	Commands.GetVolume = byte('s') 
 	Commands.TestAlive = 0x52
 	Commands.GetLEDStatus = 0x6C
 	Commands.TurnLEDOff = 0x76
