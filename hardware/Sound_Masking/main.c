@@ -373,6 +373,21 @@ __interrupt void scibRxFifoIsr(void){
 
 	int i;
 
+	/***** 
+			This entire checking sequence needs to depend on whether or not we have an ID assigned yet to the microcontroller or not 
+			If there is not ID then we need to set one up before the protocol can begin.
+			If not, we wait for the main controller or another speaker (depending on the protocol) to ask us if we need one
+			When that message does come, we need to send back threee bytes [HID][HID][HID][0]
+			The response will be of the form [HID][HID][HID][ID]
+			This may be able to be our default, but that is getting a bit tricky at that point as you induce a lot of checking 
+			and potential ID reseting.
+
+			I am also not sure about this, but should we send 4 bytes from the MCU, will the master now have an ID because of the new
+			protocol?
+
+			I think we also need to set up another SCI interface
+	*****/
+
 	for(i = 0; i < sciBufferSize; i++){	 //load up received characters
 
 		receivedChar[i] = ScibRegs.SCIRXBUF.all;
@@ -392,19 +407,26 @@ __interrupt void scibRxFifoIsr(void){
 
 	switch(receivedChar[2]){			//third byte is command
 
-		case 'V':						//m means manual volume adjustment, I think that we should change this to be capital V
+		case 'S':						//m means manual volume adjustment, I think that we should change this to be capital V
 			if(receivedChar[3] > 100 || receivedChar[3] < 0)
 			//if(receivedChar[3] > 75 || receivedChar[3] < 0) //max volume with board 5V regulator and 4 ohm speaker
-				return;	//somehow a bad volume level was sent, return out
+				return;	// somehow a bad volume level was sent, return out
 			volumeLevel = receivedChar[3];
 			GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
 			break;
 
-		case 'v':
+		case 's':
 			ScibRegs.SCITXBUF.all = volumeLevel;
 			break;
 
-		case 'a':						//a means change moving average
+		case 'v':		// This should be for viewing the voltage, which will be done in an ADC, we might be able to do speaker too depending on data recieved
+			if(receivedChar[3])			// If it wants the speaker voltage
+				ScibRegs.SCITXBUF.all = AdccResultRegs.ADCRESULT0;
+			else 						// If not then just give it the MCU voltage
+				ScibRegs.SCITXBUF.all = AdcbResultRegs.ADCRESULT0;
+			break;
+
+		case 'a':						// a means change moving average
 			setMASize(receivedChar[3] - 48 * (PUTTY));
 			break;
 
@@ -428,13 +450,15 @@ __interrupt void scibRxFifoIsr(void){
 			break;
 
 		case 'l':
-			if(receivedChar[3] - 48 * (PUTTY) == 0 || receivedChar[3] - 48 * (PUTTY) == 1)
-				GPIO_WritePin(13, receivedChar[3]);
+			if(receivedChar[3] - 48 * (PUTTY) == 0 || receivedChar[3] - 48 * (PUTTY) == 1)		/* Not sure what happens if you write > 1 to the LED
+				GPIO_WritePin(13, receivedChar[3]);												   If nothing bad happens then maybe we can just write the value */
 			break;
 
 		default:		// This should never get called, but maybe we can think of something to put here
-			break;
-	}
+			break;		/*
+							It may be indicative of a potential security hazard, but I'm not sdure how to handle it
+	}						Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
+						*/	
 }
 
 void setMASize(int size){
