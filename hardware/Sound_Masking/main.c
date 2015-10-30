@@ -369,7 +369,7 @@ __interrupt void adca1_ISR(void){
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
 
-__interrupt void scibRxFifoIsr(void){
+__interrupt void scibRxFifoIsr(void){ 
  
 	int i;
 
