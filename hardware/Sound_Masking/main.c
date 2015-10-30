@@ -370,7 +370,7 @@ __interrupt void adca1_ISR(void){
 }
 
 __interrupt void scibRxFifoIsr(void){
-
+ 
 	int i;
 
 	/***** 
