@@ -36,17 +36,16 @@
 
       #cont{
         height: 100%;
+        width: auto;
+        display: inline-block;
       }
 
       #map {
-        display: block;
+        display: inline-block;
         width: auto;
         height: auto;
+        max-width: 100%;
         max-height: 100%;
-      }
-
-      speaker-icon {
-        backdrop-filter: blur(10px);
       }
     </style>
     <div class="container-height layout horizontal center">
@@ -66,8 +65,14 @@
       is: 'map-controller',
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonSharedElementAnimatableBehavior,
+        Polymer.IronResizableBehavior
+
       ],
+
+      listeners: {
+        'iron-resize': '_onIronResize'
+      },
 
       properties: {
         animationConfig: {
@@ -112,6 +117,7 @@
       },
 
       _iconClicked: function(event) {
+        console.log(event);
         var evnt = Polymer.dom(event);
         this.sharedElements = {
           'hero': event.target
@@ -147,14 +153,50 @@
                   id: 107
                 },
                 {
-                  x: Math.round(150 * (this.$.map.width/this.$.map.naturalWidth)),
+                  x: Math.round(120 * (this.$.map.width/this.$.map.naturalWidth)),
                   y: Math.round(100 * (this.$.map.height/this.$.map.naturalHeight)),
                   id: 108
                 }];
 
             }
           });
+      },
+
+      _onIronResize: function() {
+        /*
+          Is it retarded I have to do this? Yes it is...
+          idk why the heck this works, but it does.
+        */
+        var container = this.$.cont;
+        container.style.display="none"; 
+        container.offsetWidth;
+        container.style.display="inline-block";
+        console.log(this);
+
+        // recalculate the positions of the speakers.
+        // this code definitely needs some work
+        var locations = [
+          {
+            x: 300,
+            y: 200
+          },
+          {
+            x: 120,
+            y: 100
+          }
+        ]
+        // update x / y of icons
+        var icons = Polymer.dom(this.$.cont).querySelectorAll("speaker-icon");
+        console.log(icons);
+        for(var i = 0 ; i < icons.length; i++) {
+          var icon = icons[i];
+          var x = Math.round(locations[i].x * (this.$.map.width/this.$.map.naturalWidth));
+          var y = Math.round(locations[i].y * (this.$.map.height/this.$.map.naturalHeight));
+          icon.$.icon.style.left = x.toString() + "px";
+          icon.$.icon.style.top = y.toString() + "px";
+        }
       }
+    
     });
   </script>
 </dom-module>
