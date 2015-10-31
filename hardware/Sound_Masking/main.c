@@ -277,9 +277,12 @@ void initializeADC(){
 	AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;
 	DELAY_US(1000); //wait one millisecond for the AdC to properly initialize
 	EDIS;
+
+
+	// Need to add speaker VCC and mcu VCC adc
 }
 
-void initializeUart(){
+void initializeUart(){		// This may need to change to initializeRxUart
 
 	GPIO_SetupPinMux(15, GPIO_MUX_CPU1, 2);
 	GPIO_SetupPinOptions(15, GPIO_INPUT, GPIO_PUSHPULL);
@@ -457,8 +460,10 @@ __interrupt void scibRxFifoIsr(void){
 		default:		// This should never get called, but maybe we can think of something to put here
 			break;		/*
 							It may be indicative of a potential security hazard, but I'm not sdure how to handle it
-	}						Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
-						*/	
+							Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
+						*/
+	}
+
 }
 
 void setMASize(int size){
