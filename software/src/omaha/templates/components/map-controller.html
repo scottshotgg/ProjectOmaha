@@ -9,7 +9,6 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="/bower_components/paper-badge/paper-badge.html">
 
 <link rel="import" href="/components/speaker-icon.html">
 
@@ -55,7 +54,7 @@
        <div id="cont" style="position: relative;">
          <img id="map" src="/css/map.png">
          <template is="dom-repeat" items="{{locations}}">
-            <speaker-icon id="speaker" on-click="_iconClicked" x="{{item.x}}" y="{{item.y}}" speaker-id="{{item.id}}"></speaker-icon>
+            <speaker-icon id="speaker" on-tap="_iconClicked" on-click="_iconClicked" x="{{item.x}}" y="{{item.y}}" speaker-id="{{item.id}}"></speaker-icon>
          </template>
        </div>
       </div>
@@ -122,7 +121,7 @@
         */
         this.fire('speakerselected', {speakerId: evnt.localTarget.speakerId});
       },
-      
+
       ready: function () {
         
       },
