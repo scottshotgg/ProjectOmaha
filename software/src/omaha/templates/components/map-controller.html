@@ -9,6 +9,8 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/paper-badge/paper-badge.html">
+
 <link rel="import" href="/components/speaker-icon.html">
 
 <dom-module id="map-controller">
@@ -30,19 +32,30 @@
       }
 
       .container-height {
+        max-height: 100%;
+      }
+
+      #cont{
         height: 100%;
       }
 
       #map {
-        width: 100%;
+        display: block;
+        width: auto;
+        height: auto;
+        max-height: 100%;
+      }
+
+      speaker-icon {
+        backdrop-filter: blur(10px);
       }
     </style>
     <div class="container-height layout horizontal center">
-      <div class="container layout vertical center">
+      <div class="fit container layout vertical center">
        <div id="cont" style="position: relative;">
          <img id="map" src="/css/map.png">
          <template is="dom-repeat" items="{{locations}}">
-            <speaker-icon on-click="_iconClicked" x="{{item.x}}" y="{{item.y}}" speaker-id="{{item.id}}"></speaker-icon>
+            <speaker-icon id="speaker" on-click="_iconClicked" x="{{item.x}}" y="{{item.y}}" speaker-id="{{item.id}}"></speaker-icon>
          </template>
        </div>
       </div>
@@ -87,11 +100,15 @@
         var parentY = rect.top;
         var eventY = event.pageY;
         var y = Math.round(Math.min(Math.max(eventY-parentY-15, 0), this.$.map.height-30));
+
+
         var div = document.createElement("iron-icon");
         div.icon = "av:volume-up";
         div.className = "block";
         div.style.left = x.toString() + "px";
         div.style.top = y.toString() + "px";
+
+
         Polymer.dom(this.$.cont).appendChild(div);
       },
 
@@ -104,24 +121,40 @@
           event names must be lowercase
         */
         this.fire('speakerselected', {speakerId: evnt.localTarget.speakerId});
-        console.log("firing");
       },
       
       ready: function () {
-        this.locations = [
-          {
-            x: Math.round(300.0 * (this.$.map.width/this.$.map.naturalWidth)),
-            y: Math.round(200.0 * (this.$.map.height/this.$.map.naturalHeight)),
-            id: 107
-          },
-          {
-            x: 150 * (1/2),
-            y: 100 * (1/2),
-            id: 108
-        }];
-      console.log(this.$.map.naturalWidth)
-      console.log(this.locations[0].x)
-      console.log(this.locations[0].y)
+        
+      },
+
+      attached: function() {
+        this.initializeLocations();
+      },
+
+      initializeLocations: function() {
+          this.async(function(){
+            if(this.$.map.naturalWidth == 0) {
+              /*
+                Sometimes the dimensions aren't accessible
+                when this function is executed. If they aren't,
+                wait some delay (30ms) and try again.
+              */
+              this.async(this.initializeLocations, 30);
+            } else {
+              this.locations = [
+                {
+                  x: Math.round(300 * (this.$.map.width/this.$.map.naturalWidth)),
+                  y: Math.round(200 * (this.$.map.height/this.$.map.naturalHeight)),
+                  id: 107
+                },
+                {
+                  x: Math.round(150 * (this.$.map.width/this.$.map.naturalWidth)),
+                  y: Math.round(100 * (this.$.map.height/this.$.map.naturalHeight)),
+                  id: 108
+                }];
+
+            }
+          });
       }
     });
   </script>
