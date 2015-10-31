@@ -126,6 +126,8 @@
         this.sharedElements = {
           'hero': event.target
         };
+
+        console.log(evnt.localTarget.speakerId);
         /*
           event names must be lowercase
         */
@@ -208,9 +210,12 @@
                 }];
             }
 
-            console.log(this.locations[0].id, this.locations[0].x, this.locations[0].y);
+            // This id for debugging to make sure the speakers are getting the correct IDs and coordinates.
+            for(i = 0; i < this.locations.length; i++) {
+              console.log("Speaker " + i + ": \n\tID:", this.locations[i].id, "\n\tX: ", this.locations[i].x, "\n\tY: ", this.locations[i].y);
+            }
           });
       }
     });
   </script>
-</dom-module>
+</dom-module> 
