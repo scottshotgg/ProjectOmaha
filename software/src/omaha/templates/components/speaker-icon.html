@@ -16,7 +16,6 @@
   <template>
     <style>
       :host {
-        display: block;
       }
 
       .block {
@@ -62,7 +61,6 @@
       },
 
       ready: function () {
-          console.log
           this.$.icon.style.left = this.x.toString() + "px";
           this.$.icon.style.top = this.y.toString() + "px";
           var color = colors[Math.floor(Math.random()*colors.length)];
