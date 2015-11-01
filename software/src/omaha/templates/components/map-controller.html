@@ -36,18 +36,17 @@
 
       #cont{
         height: 100%;
+        width: auto;
+        display: inline-block;
       }
 
       #map {
 
-        /*
-            There is a problem with this I think because when you use a bigger or smaller scaling then the speakers are misaligned.
-        */
-
-        display: block;
-        width: 100%;
+        display: inline-block;
+        width: auto;
         height: auto;
         max-height: 100%;
+        max-width: 100%;
       }
 
       speaker-icon {
@@ -72,8 +71,13 @@
       is: 'map-controller',
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonSharedElementAnimatableBehavior,
+        Polymer.IronResizableBehavior
       ],
+
+      listeners: {
+        'iron-resize': '_onIronResize'
+      },
 
       properties: {
         animationConfig: {
@@ -135,6 +139,62 @@
       },
 
       ready: function () {
+        this.originalLocations = [
+          {
+            x: 570,  // #1
+            y: 235,
+            id: 107
+          },                
+          {
+            x: 570,  // #2
+            y: 360,
+            id: 108
+          },
+          {
+            x: 570,  // #3
+            y: 495,
+            id: 109
+          },
+          {
+            x: 420,  // #4
+            y: 495,
+            id: 110
+          },
+          {
+            x: 420,  // #5
+            y: 365,
+            id: 111
+          },
+          {
+            x: 420,  // #6
+            y: 235,
+            id: 112
+          },
+          {
+            x: 270,  // #7
+            y: 235,
+            id: 113
+          },
+          {
+            x: 90,  // #8
+            y: 232,
+            id: 114
+          },
+          {
+            x: 88,  // #9
+            y: 365,
+            id: 115
+          },
+          {
+            x: 270,  // #10
+            y: 365,
+            id: 116
+          },
+          {
+            x: 270,  // #11
+            y: 500,
+            id: 117
+          }];
         
       },
 
@@ -152,62 +212,15 @@
               */
               this.async(this.initializeLocations, 30);
             } else {
-              this.locations = [
-                {
-                  x: Math.round(570 * (this.$.map.width/this.$.map.naturalWidth)),  // #1
-                  y: Math.round(235 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 107
-                },                
-                {
-                  x: Math.round(570 * (this.$.map.width/this.$.map.naturalWidth)),  // #2
-                  y: Math.round(360 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 108
-                },
-                {
-                  x: Math.round(570 * (this.$.map.width/this.$.map.naturalWidth)),  // #3
-                  y: Math.round(495 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 109
-                },
-                {
-                  x: Math.round(420 * (this.$.map.width/this.$.map.naturalWidth)),  // #4
-                  y: Math.round(495 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 110
-                },
-                {
-                  x: Math.round(420 * (this.$.map.width/this.$.map.naturalWidth)),  // #5
-                  y: Math.round(365 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 111
-                },
-                {
-                  x: Math.round(420 * (this.$.map.width/this.$.map.naturalWidth)),  // #6
-                  y: Math.round(235 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 112
-                },
-                {
-                  x: Math.round(270 * (this.$.map.width/this.$.map.naturalWidth)),  // #7
-                  y: Math.round(235 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 113
-                },
-                {
-                  x: Math.round(90 * (this.$.map.width/this.$.map.naturalWidth)),  // #8
-                  y: Math.round(232 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 114
-                },
-                {
-                  x: Math.round(88 * (this.$.map.width/this.$.map.naturalWidth)),  // #9
-                  y: Math.round(365 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 115
-                },
-                {
-                  x: Math.round(270 * (this.$.map.width/this.$.map.naturalWidth)),  // #10
-                  y: Math.round(365 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 116
-                },
-                {
-                  x: Math.round(270 * (this.$.map.width/this.$.map.naturalWidth)),  // #11
-                  y: Math.round(500 * (this.$.map.height/this.$.map.naturalHeight)),
-                  id: 117
-                }];
+              var self = this;
+              this.locations = this.originalLocations.map(function(loc){
+                var newLoc = {
+                  x: Math.round(loc.x * (self.$.map.width/self.$.map.naturalWidth)),
+                  y: Math.round(loc.y * (self.$.map.height/self.$.map.naturalHeight)),
+                  id: loc.id
+                };
+                return newLoc;
+              });
             }
 
             // This id for debugging to make sure the speakers are getting the correct IDs and coordinates.
@@ -215,6 +228,32 @@
               console.log("Speaker " + i + ": \n\tID:", this.locations[i].id, "\n\tX: ", this.locations[i].x, "\n\tY: ", this.locations[i].y);
             }
           });
+      },
+
+      _onIronResize: function() {
+        /*
+          Is it retarded I have to do this? Yes it is...
+          idk why the heck this works, but it does.
+        */
+        var container = this.$.cont;
+        container.style.display="none"; 
+        container.offsetWidth;
+        container.style.display="inline-block";
+        console.log(this);
+
+        // recalculate the positions of the speakers.
+        // this code definitely needs some work
+        var locations = this.originalLocations;
+        // update x / y of icons
+        var icons = Polymer.dom(this.$.cont).querySelectorAll("speaker-icon");
+        console.log(icons);
+        for(var i = 0 ; i < icons.length; i++) {
+          var icon = icons[i];
+          var x = Math.round(locations[i].x * (this.$.map.width/this.$.map.naturalWidth));
+          var y = Math.round(locations[i].y * (this.$.map.height/this.$.map.naturalHeight));
+          icon.$.icon.style.left = x.toString() + "px";
+          icon.$.icon.style.top = y.toString() + "px";
+        }
       }
     });
   </script>
