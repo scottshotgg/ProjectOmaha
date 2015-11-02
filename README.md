@@ -1,5 +1,7 @@
 # ProjectOmaha - Senior Design
 ## Software
+### How to login
+Authentication was recently added. Use username "admin" and password "password" to login.
 ### How to run the server
 #### Windows
 1. run `scripts/windows/run.bat`
