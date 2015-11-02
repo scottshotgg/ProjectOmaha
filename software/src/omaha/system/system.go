@@ -35,44 +35,34 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 	}
 	status.Controllers = make(map[string]*ControllerStatus)
 
-	controller := &ControllerStatus{ID: 0x6B, SectionID: 0x6B}
-	var err error
+	controllerInfoArr := []struct {
+		id        int8
+		sectionId int8
+	}{
+		{0x6B, 0x6B},
+		{0x6C, 0x6B}}
 
-	controller.LEDOn, err = controller.GetLEDStatusFromController()
-	if err != nil {
-		fmt.Println(err)
+	for _, controllerInfo := range controllerInfoArr {
+		controller := &ControllerStatus{ID: controllerInfo.id, SectionID: controllerInfo.sectionId}
+		var err error
+
+		controller.LEDOn, err = controller.GetLEDStatusFromController()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		controller.VolumeLevel, err = controller.GetVolumeFromController()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		status.AddController(controller)
 	}
-
-	controller.VolumeLevel, err = controller.GetVolumeFromController()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	status.AddController(controller)
-
-	controller = &ControllerStatus{ID: 0x6C, SectionID: 0x6B}
-
-	controller.LEDOn, err = controller.GetLEDStatusFromController()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	controller.VolumeLevel, err = controller.GetVolumeFromController()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	status.AddController(controller)
 
 	return &status
 }
