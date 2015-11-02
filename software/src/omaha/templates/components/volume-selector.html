@@ -31,7 +31,7 @@
     </style>
    <paper-card heading="Volume" elevation="4">
       <div class="card-content">
-        <div class="layout horizontal">
+        <div id="slider" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
           <paper-slider id="volume2" pin min="0" max="100" value="{{internalVolume}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
@@ -98,7 +98,7 @@
       
       resetKnob: function(elem) {
         elem.prevTimeout = 0;
-        this.$.volume2._resetKnob();
+        elem.$.volume2._resetKnob();
       },
 
       ready: function() {
