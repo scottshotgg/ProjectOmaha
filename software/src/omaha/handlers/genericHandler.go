@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"omaha/database"
 )
 
 type GenericHandler struct {
@@ -28,6 +29,12 @@ func getGenericErrorResponse(err string) []byte {
 }
 
 func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	sessionCookie, _ := req.Cookie("session")
+	if sessionCookie == nil || !database.IsSessionHashValid(sessionCookie.Value) {
+		redirectToLoginHandler(w, req)
+		log.Println("Redirected to login")
+		return
+	}
 	/*
 		Generic stuff goes here
 	*/

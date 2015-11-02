@@ -24,6 +24,7 @@
     "paper-item": "PolymerElements/paper-item#~1.0.3",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#~1.0.4",
     "paper-tooltip": "PolymerElements/paper-tooltip#~1.1.1",
-    "iron-fit-behavior": "PolymerElements/iron-fit-behavior#~1.0.4"
+    "iron-fit-behavior": "PolymerElements/iron-fit-behavior#~1.0.4",
+    "paper-dialog": "PolymerElements/paper-dialog#~1.0.2"
   }
 }

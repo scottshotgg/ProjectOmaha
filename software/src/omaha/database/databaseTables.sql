@@ -14,6 +14,11 @@ CREATE TABLE  account IF NOT EXISTS (
 
 CREATE INDEX usernameIndex ON account(username);
 
+create table accountSession (
+	sessionKey text primary key,
+	userID int not null
+)
+
 CREATE TABLE Zone (
 	zoneID INTEGER PRIMARY KEY AUTOINCREMENT,
 	name varchar(50)	

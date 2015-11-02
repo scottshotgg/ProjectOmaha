@@ -21,7 +21,10 @@ func main() {
 	}
 	database.InitDB()
 	defer database.DB.Close()
-	http.HandleFunc("/", handlers.LoginHandler)
+
+	http.HandleFunc("/login/", handlers.LoginPostHandler)
+	http.HandleFunc("/", handlers.LoginPageHandler)
+
 	http.Handle("/app/", handlers.GenericHandler{GET: handlers.AppHandler})
 
 	/*http.Handle("/demo/start/", handlers.GenericHandler{GET: handlers.DemoStartHandler})
@@ -42,7 +45,7 @@ func main() {
 	http.Handle("/bower_components/", handlers.BowerHandler)
 	http.Handle("/components/", handlers.ComponentsHandler)
 
-	err := http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatalf("%s\n", err.Error())
 	}
