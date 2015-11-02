@@ -4,6 +4,7 @@
 <link rel="import" href="/bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
 
 <link rel="import" href="/components/omaha-navbar.html">
 <link rel="import" href="/components/audio-controller.html">
@@ -37,7 +38,14 @@
 <!--             <template is="dom-repeat" items="{{controllers}}">
               <audio-controller class="fit" speaker="{{item}}"></audio-controller>
             </template> -->
-          </neon-animated-pages
+          </neon-animated-pages>
+          <paper-dialog id="dialog">
+            <h2>Error</h2>
+            <div>That speaker does not exist on the server</div>
+            <div class="buttons layout vertical center">
+              <paper-button dialog-confirm>Okay</paper-button>
+            </div>
+          </paper-dialog>
         </paper-header-panel>
          <iron-ajax
             id="systemStatusAjax"
@@ -75,9 +83,13 @@
             break;
           }
         }
-        this.$.controller.speaker = speaker;
-        this.$.nav.showBackArrow();
-        this.selected = 1;
+        if(speaker === undefined) {
+          this.$.dialog.open();
+        } else {
+          this.$.controller.speaker = speaker;
+          this.$.nav.showBackArrow();
+          this.selected = 1;
+        }
       },
 
       _initializeStatus: function(event, data) {
