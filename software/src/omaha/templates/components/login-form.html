@@ -36,16 +36,22 @@
       .message {
         color: var(--paper-red-500);
       }
+
+      .hidden {
+        display: none;
+      }
     </style>
     <div class="flex company">Project Omaha</div>
     <template is="dom-if" if="{{redirect}}">
       <div class="message">Please login before proceeding</div>
     </template>
     <div class="message">{{err}}</div>
-    <form is="iron-form" id="form"  method="post">
-      <paper-input id="username" name="username" label="Username" required></paper-input>
-      <paper-input id="password" name="password" label="Password" type="password" required></paper-input>
-      <paper-button raised on-click="_submit">Login</paper-button>
+    <form on-iron-form-submit="_submit" is="iron-form" id="form"  method="post">
+      <paper-input id="username" name="username" label="Username"></paper-input>
+      <paper-input id="password" name="password" label="Password" type="password"></paper-input>
+      <paper-button type="submit" raised on-click="_submit">Login</paper-button>
+      <!-- We should be able to press enter to submit. This button with type submit is required to do so. -->
+      <button class="hidden" type="submit">I should be hidden</button>
     </form>
     <iron-ajax
         id="loginAjax"
@@ -76,6 +82,8 @@
         if(data.response.hash !== undefined) {
           var sessionCookie = "session=" + data.response.hash + ";";
           document.cookie = sessionCookie;
+          document.location.href = "/app/"
+        } else if (data.response.success){
           document.location.href = "/app/"
         } else {
           console.log(data.response);
