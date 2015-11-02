@@ -75,6 +75,7 @@
       _handleLogin: function(event, data, x) {
         if(data.response.hash !== undefined) {
           var sessionCookie = "session=" + data.response.hash + ";";
+          document.cookie = sessionCookie;
           document.location.href = "/app/"
         } else {
           console.log(data.response);
