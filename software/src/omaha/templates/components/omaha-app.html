@@ -9,6 +9,7 @@
 <link rel="import" href="/components/omaha-navbar.html">
 <link rel="import" href="/components/audio-controller.html">
 <link rel="import" href="/components/map-controller.html">
+<link rel="import" href="/components/open-map-controller.html">
 
 <dom-module id="omaha-app">
   <template>
@@ -33,7 +34,7 @@
         <paper-header-panel class="flex" mode="seamed">
           <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
           <neon-animated-pages class="fit" id="app-pages" selected="{{selected}}">
-            <map-controller on-speakerselected="_speakerSelected" class="fit"></map-controller>
+            <open-map-controller on-speakerselected="_speakerSelected" class="fit"></open-map-controller>
             <audio-controller id="controller" class="fit"></audio-controller>
 <!--             <template is="dom-repeat" items="{{controllers}}">
               <audio-controller class="fit" speaker="{{item}}"></audio-controller>
@@ -58,6 +59,10 @@
   <script>
     Polymer({
       is: 'omaha-app',
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
 
       properties: {        
         selected: {

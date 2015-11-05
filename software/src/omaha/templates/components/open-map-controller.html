@@ -1,0 +1,212 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/image-icons.html">
+<link rel="import" href="/bower_components/iron-icons/av-icons.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+
+<link rel="import" href="/components/speaker-icon.html">
+
+<dom-module id="open-map-controller">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div id="map" class="map">
+    </div>
+  </template>
+  <script>
+    
+    Polymer({
+      is: 'open-map-controller',
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+        animationConfig: {
+          value: function() {
+            return {
+              'entry': {
+                  name: 'fade-in-animation',
+                  node: this
+                },
+              'exit': {
+                // provided by neon-animation-animations/fade-out-animation.html
+                name: 'slide-left-animation',
+                node: this
+              }
+            }
+          }
+        }
+      },
+
+      attached: function() {
+        var mapController = this;
+        // Map views always need a projection.  Here we just want to map image
+        // coordinates directly to map coordinates, so we create a projection that uses
+        // the image extent in pixels.
+        var extent = [0, 0, 670, 651];
+        var projection = new ol.proj.Projection({
+          code: 'xkcd-image',
+          units: 'pixels',
+          extent: extent
+        });
+
+        var locations = [
+          {
+            x: 570,  // #1
+            y: 235,
+            id: 107
+          },                
+          {
+            x: 570,  // #2
+            y: 360,
+            id: 108
+          },
+          {
+            x: 570,  // #3
+            y: 495,
+            id: 109
+          },
+          {
+            x: 420,  // #4
+            y: 495,
+            id: 110
+          },
+          {
+            x: 420,  // #5
+            y: 365,
+            id: 111
+          },
+          {
+            x: 420,  // #6
+            y: 235,
+            id: 112
+          },
+          {
+            x: 270,  // #7
+            y: 235,
+            id: 113
+          },
+          {
+            x: 90,  // #8
+            y: 232,
+            id: 114
+          },
+          {
+            x: 88,  // #9
+            y: 365,
+            id: 115
+          },
+          {
+            x: 270,  // #10
+            y: 365,
+            id: 116
+          },
+          {
+            x: 270,  // #11
+            y: 500,
+            id: 117
+          }];
+        var features = new Array(locations.length);
+        for(var i = 0; i < features.length; i++) {
+            var coordinates = [locations[i].x+15, 651-locations[i].y-15];
+            features[i] = new ol.Feature({
+              geometry: new ol.geom.Point(coordinates),
+              speakerId: locations[i].id
+            });
+        }
+
+
+
+
+
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var style = {}
+
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: function(feature, resolution) {
+                if(style.resolution !== resolution) {
+                  style.style = [new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 15/Math.max(resolution,1),
+                            stroke: new ol.style.Stroke({
+                                color: '#1A237E'
+                            }),
+                            fill: new ol.style.Fill({
+                                color: '#9FA8DA'
+                            })
+                        })
+                    })];
+                    style.resolution = resolution;
+                }
+                return style.style;
+            }
+        });
+
+        var map = new ol.Map({
+          layers: [
+            new ol.layer.Image({
+              source: new ol.source.ImageStatic({
+                attributions: [
+                  new ol.Attribution({
+                    html: '&copy; <a href="http://xkcd.com/license.html">xkcd</a>'
+                  })
+                ],
+                url: '/css/map.png',
+                projection: projection,
+                imageExtent: extent
+              })
+            }),
+              vectorLayer
+          ],
+          target: 'map',
+          view: new ol.View({
+            projection: projection,
+            center: ol.extent.getCenter(extent),
+            zoom: 2
+          })
+        });
+
+        var select = new ol.interaction.Select({
+            style: function(feature, resolution) {
+                console.log(resolution);
+                return [new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 15/Math.max(resolution,1),
+                        stroke: new ol.style.Stroke({
+                            color: '#F44336'
+                        }),
+                        fill: new ol.style.Fill({
+                            color: '#EF9A9A'
+                        })
+                    })
+                })];
+            }
+        });
+        map.addInteraction(select);
+        select.on('select', function(e) {
+            if(e.selected.length > 0) {
+              console.log("Selected");
+              var speakerId = e.selected[0].getProperties().speakerId
+              console.log(console.log(speakerId));
+              mapController.fire('speakerselected', {speakerId: speakerId});
+            }
+        });
+      }
+    });
+  </script>
+</dom-module> 
