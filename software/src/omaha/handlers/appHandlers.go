@@ -16,9 +16,9 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
 	templatePath := fmt.Sprintf("%s/templates/app.html", omahaDir)
 	t, err := template.ParseFiles(templatePath)
 	if err != nil {
-		fmt.Printf("Error parsing template at %s\n", templatePath)
-		fmt.Println(err.Error())
-		fmt.Fprint(w, "Something bad happened!")
+		log.Printf("Error parsing template at %s\n", templatePath)
+		log.Println(err)
+		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
 	t.Execute(w, nil)
@@ -29,9 +29,9 @@ func redirectToLoginHandler(w http.ResponseWriter, r *http.Request) {
 	templatePath := fmt.Sprintf("%s/templates/loginFromRedirect.html", omahaDir)
 	t, err := template.ParseFiles(templatePath)
 	if err != nil {
-		fmt.Printf("Error parsing template at %s\n", templatePath)
-		fmt.Println(err.Error())
-		fmt.Fprint(w, "Something bad happened!")
+		log.Printf("Error parsing template at %s\n", templatePath)
+		log.Println(err)
+		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
 	t.Execute(w, nil)
@@ -79,9 +79,9 @@ func LoginPageHandler(w http.ResponseWriter, r *http.Request) {
 	templatePath := fmt.Sprintf("%s/templates/login.html", omahaDir)
 	t, err := template.ParseFiles(templatePath)
 	if err != nil {
-		fmt.Printf("Error parsing template at %s\n", templatePath)
-		fmt.Println(err.Error())
-		fmt.Fprint(w, "Something bad happened!")
+		log.Printf("Error parsing template at %s\n", templatePath)
+		log.Println(err)
+		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
 	t.Execute(w, nil)

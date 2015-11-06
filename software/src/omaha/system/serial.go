@@ -1,7 +1,6 @@
 package system
 
 import (
-	"fmt"
 	"github.com/tarm/serial"
 	"log"
 	"time"
@@ -44,7 +43,7 @@ func getMessageHeader(section, id, size int8) []byte {
 }
 
 func (status *SystemStatus) SendData(data byte) {
-	fmt.Printf("port.Write: %v\n", data)
+	log.Printf("port.Write: %v\n", data)
 	_, err := status.Port.Write([]byte{data})
 	if err != nil {
 		log.Fatalf("port.Write: %v", err)
@@ -54,7 +53,7 @@ func (status *SystemStatus) SendData(data byte) {
 
 /*func (status *SystemStatus) SendMoreData(data []byte, amount int) {
 	for int i := 0; i < amount; i++ {
-		fmt.Printf("port.Write: %v\n", data)
+		log.Printf("port.Write: %v\n", data)
 		_, err := status.Port.Write(data)
 		if err != nil {
 			log.Fatalf("port.Write: %v", err)
@@ -65,7 +64,7 @@ func (status *SystemStatus) SendData(data byte) {
 
 func (status *SystemStatus) ReadData(buffer []byte) bool {
 	_, err := status.Port.Read(buffer)
-	fmt.Printf("port.Read: %v\n", buffer)
+	log.Printf("port.Read: %v\n", buffer)
 	if err != nil {
 		log.Fatalf("port.Read: %v", err)
 		panic("Failed on read")
@@ -91,7 +90,7 @@ func (status *SystemStatus) InitializePort() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Hello " + c.Name)
+	log.Println("Hello " + c.Name)
 
 	status.Port = s
 }

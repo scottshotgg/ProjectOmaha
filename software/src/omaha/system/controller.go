@@ -1,7 +1,7 @@
 package system
 
 import (
-	"fmt"
+	"log"
 	"omaha/database"
 	"strconv"
 )
@@ -25,7 +25,7 @@ func TurnLEDOn(this *database.ControllerStatus) error {
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = true
 		if status.IsDebug() {
-			fmt.Println("LED turned on")
+			log.Println("LED turned on")
 		}
 		return nil
 	}}
@@ -43,7 +43,7 @@ func TurnLEDOff(this *database.ControllerStatus) error {
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = false
 		if status.IsDebug() {
-			fmt.Println("LED turned off")
+			log.Println("LED turned off")
 		}
 		return nil
 	}}
@@ -65,7 +65,7 @@ func GetLEDStatusFromController(this *database.ControllerStatus) (bool, error) {
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		response := &LEDStatusResponse{}
 		if status.IsDebug() {
-			fmt.Println("Got LED Status From Controller")
+			log.Println("Got LED Status From Controller")
 			response.ledOn = true
 		} else {
 			var b []byte
@@ -89,7 +89,7 @@ func SetVolume(this *database.ControllerStatus, volumeLevel int8) error {
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.VolumeLevel = volumeLevel
 		if status.IsDebug() {
-			fmt.Printf("Set volume to %d\n", volumeLevel)
+			log.Printf("Set volume to %d\n", volumeLevel)
 		}
 		return nil
 	}}
@@ -119,7 +119,7 @@ func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		if status.IsDebug() {
-			fmt.Printf("Set averaging mode to %d\n", mode)
+			log.Printf("Set averaging mode to %d\n", mode)
 		}
 		return nil
 	}}

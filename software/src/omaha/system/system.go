@@ -1,8 +1,8 @@
 package system
 
 import (
-	"fmt"
 	"io"
+	"log"
 	"omaha/database"
 	"strconv"
 )
@@ -43,17 +43,17 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 
 		controller.LEDOn, err = GetLEDStatusFromController(controller)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 
 		controller.VolumeLevel, err = GetVolumeFromController(controller)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 
 		//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 		status.AddController(controller)
 	}

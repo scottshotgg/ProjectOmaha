@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"omaha/system"
 )
@@ -17,7 +17,7 @@ func AveragingHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(averagingRequest)
 	if err != nil {
 		if status.IsDebug() {
-			fmt.Println(err)
+			log.Println(err)
 		}
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
