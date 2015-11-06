@@ -23,6 +23,6 @@ func AveragingHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	controller := status.GetController(0x6b)
-	err = controller.SetAveragingMode(averagingRequest.FilterType)
+	err = system.SetAveragingMode(controller, averagingRequest.FilterType)
 	w.Write(getGenericSuccessResponse())
 }

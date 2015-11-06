@@ -34,7 +34,7 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {
 	}
 	if attr.Volume >= 0 && attr.Volume <= 100 {
 		fmt.Printf("Telling speaker %d to set volume to %d\n", speaker, attr.Volume)
-		controller.SetVolume(attr.Volume) // Volume variable here)
+		system.SetVolume(controller, attr.Volume) // Volume variable here)
 	} else {
 		return errors.New("Invalid volume")
 	}
@@ -50,7 +50,7 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker int8) error {
 	}
 	if attr.Averaging > 0 && attr.Averaging <= 20 {
 		fmt.Printf("Telling speaker %d to set averaging mode to %d\n", speaker, attr.Averaging)
-		controller.SetAveragingMode(attr.Averaging) // Volume variable here)
+		system.SetAveragingMode(controller, attr.Averaging) // Volume variable here)
 	} else {
 		return errors.New("Invalid averaging mode")
 	}
@@ -66,10 +66,10 @@ func updateSpeakerLED(attr *speakerAttributes, speaker int8) error {
 	}
 	if attr.LED {
 		fmt.Printf("Telling speaker %d to turn on the LED\n", speaker)
-		controller.TurnLEDOn() // Volume variable here)
+		system.TurnLEDOn(controller) // Volume variable here)
 	} else {
 		fmt.Printf("Telling speaker %d to turn off the LED\n", speaker)
-		controller.TurnLEDOff()
+		system.TurnLEDOff(controller)
 	}
 	return nil
 }

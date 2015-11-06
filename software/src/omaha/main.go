@@ -13,32 +13,28 @@ func main() {
 	// initialization
 	var debug = flag.Bool("d", false, "help me!!!")
 	flag.Parse()
+
 	go system.HandleControllerMessages()
+
+	database.InitDB()
+	defer database.DB.Close()
+
 	system.InitializeSystemStatus(*debug)
 	if !(*debug) {
 		status := system.GetSystemStatus()
 		defer status.Port.Close()
 	}
-	database.InitDB()
-	defer database.DB.Close()
 
 	http.HandleFunc("/login/", handlers.LoginPostHandler)
 	http.HandleFunc("/", handlers.LoginPageHandler)
 
 	http.Handle("/app/", handlers.GenericHandler{GET: handlers.AppHandler})
 
-	/*http.Handle("/demo/start/", handlers.GenericHandler{GET: handlers.DemoStartHandler})
-	http.Handle("/demo/stop/", handlers.GenericHandler{GET: handlers.DemoStopHandler})*/
-
 	http.Handle("/demo/start/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})
 	http.Handle("/demo/stop/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})
 
-	// http.Handle("/demo/averaging/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})	// Don't need this anymore
-
 	http.Handle("/system/", handlers.GenericHandler{GET: handlers.SystemStatusHandler})
 	http.Handle("/system/speaker/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})
-
-	//http.Handle("demo/diagnostics/", handlers.GenericHandler{PUT: handlers.DiagnosticsHandler})
 
 	// file handlers
 	http.Handle("/css/", handlers.CssHandler)

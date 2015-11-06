@@ -681,7 +681,7 @@ y: 909,
             source: vectorSource,
             style: function(feature, resolution) {
                 if(style.resolution !== resolution) {
-                  style.style = [new ol.style.Style({
+                  style.unavailableStyle = [new ol.style.Style({
                         image: new ol.style.Circle({
                             radius: 15/Math.max(resolution,1),
                             stroke: new ol.style.Stroke({
@@ -692,7 +692,25 @@ y: 909,
                             })
                         })
                     })];
+                  style.availableStyle = [new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 15/Math.max(resolution,1),
+                            stroke: new ol.style.Stroke({
+                                color: '#4CAF50'
+                            }),
+                            fill: new ol.style.Fill({
+                                color: '#66BB6A'
+                            })
+                        })
+                    })];
                     style.resolution = resolution;
+                }
+                switch(feature.getProperties().speakerId) {
+                  case 107:
+                  case 108:
+                    return style.availableStyle;
+                  default:
+                    return style.unavailableStyle;
                 }
                 return style.style;
             }
@@ -702,7 +720,7 @@ y: 909,
           layers: [
             new ol.layer.Image({
               source: new ol.source.ImageStatic({
-                url: '/css/testingImage.png',
+                url: '/css/map.png',
                 projection: projection,
                 imageExtent: extent
               })

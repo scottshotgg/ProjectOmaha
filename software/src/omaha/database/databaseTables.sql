@@ -1,7 +1,8 @@
 CREATE TABLE Speaker (
-	SpeakerID int PRIMARY KEY,
-	Name varchar(50),
-	Volume FLOAT NOT NULL
+	speakerID INTEGER PRIMARY KEY,
+	name varchar(50),
+	y INTEGER,
+	x INTEGER
 )
 
 

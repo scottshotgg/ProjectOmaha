@@ -42,7 +42,6 @@ func LoginAccount(username, password string) (string, error) {
 func CreateAccount(username, password, name string) {
 	hashByte, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hash := string(hashByte)
-	log.Println(hash)
 	_, err := DB.Exec(`INSERT INTO account 
 		(username, name, hash)
 		VALUES (?, ?, ?)
@@ -80,7 +79,12 @@ func createAccountTable(db *sql.DB) {
 		log.Println("Created account table")
 	}
 
-	CreateAccount("admin", "password", "IIsAdmin")
+	CreateAccount("admin", "password", "admin")
+	CreateAccount("andy", "andy", "andy")
+	CreateAccount("danny", "danny", "danny")
+	CreateAccount("bruce", "bruce", "bruce")
+	CreateAccount("scott", "scott", "scott")
+	CreateAccount("eric", "eric", "eric")
 }
 
 func IsSessionHashValid(hash string) bool {
