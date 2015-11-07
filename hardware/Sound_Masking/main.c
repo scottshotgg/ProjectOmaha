@@ -71,7 +71,8 @@ char					receivedChar	[16];
 int						unitID									= 107;
 int						zone									= 107;
 int 					volumeLevel								= 60;
-int						sciBufferSize							= 4;
+int						ScibBufferSize							= 4;
+int 					ScicBufferSize							= 2;
 float					FIRBuffer		[FIRORDER + 1];
 int						IIR_on									= 0;
 int 					foundNorm1								= 0;
@@ -134,7 +135,6 @@ FIR_FP_Handle 			hnd_firFP								= &firFP;
 
 __interrupt void 	cpu_timer0_isr(void);
 __interrupt	void 	cpu_timer1_isr(void);
-__interrupt void 	adca1_ISR(void);
 __interrupt void 	adca1_ISR(void);
 __interrupt void	scibRxFifoIsr(void);
 __interrupt void	scicRxFifoIsr(void);
@@ -280,23 +280,6 @@ void initializeADC(){
 	AdcaRegs.ADCINTSEL1N2.bit.INT1E = 1;
 	AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;
 
-	// Addition
-	// Voltage monitoring ADC
-
-	PieVectTable.ADCB1_INT = &adcb1_ISR;		// This needs to be set to something else
-	AdcbRegs.ADCCTL2.bit.PRESCALE = 6;
-	AdcSetMode(ADC_ADCB, ADC_RESOLUTION_12BIT, ADC_SIGNALMODE_SINGLE);  //singlemode adc will be trigger by timer interrupt
-	AdcbRegs.ADCCTL1.bit.INTPULSEPOS = 1;
-	AdcbRegs.ADCCTL1.bit.ADCPWDNZ = 1;		// I think these channels might need to change
-	AdcbRegs.ADCSOC0CTL.bit.CHSEL = 2;
-	AdcbRegs.ADCSOC0CTL.bit.ACQPS = 14;
-	AdcbRegs.ADCINTSEL1N2.bit.INT1SEL = 0;
-	AdcbRegs.ADCINTSEL1N2.bit.INT1E = 1;
-	AdcbRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;
-
-	// End addition
-
-
 	DELAY_US(1000); //wait one millisecond for the AdC to properly initialize
 
 
@@ -327,7 +310,7 @@ void initializeUart(){		// This may need to change to initializeRxUart
 	ScibRegs.SCICTL2.bit.RXBKINTENA =1;
 	ScibRegs.SCIFFRX.all = 0x0022;
 	ScibRegs.SCIFFTX.bit.SCIFFENA = 1;
-	ScibRegs.SCIFFRX.bit.RXFFIL = sciBufferSize;
+	ScibRegs.SCIFFRX.bit.RXFFIL = ScibBufferSize;
 	ScibRegs.SCIFFCT.all = 0x00;
 	ScibRegs.SCIHBAUD.all = 0x0002; //baud rate of 9600 @ 200mhz, 2400 at 50mhz
 	ScibRegs.SCILBAUD.all = 0x008B;
@@ -359,7 +342,7 @@ void initializeUart(){		// This may need to change to initializeRxUart
 	ScicRegs.SCICTL2.bit.RXBKINTENA = 1;
 	ScicRegs.SCIFFRX.all= 0x0022;
 	ScicRegs.SCIFFTX.bit.SCIFFENA = 1;
-	ScicRegs.SCIFFRX.bit.RXFFIL = sciBufferSize;
+	ScicRegs.SCIFFRX.bit.RXFFIL = ScibBufferSize;
 	ScicRegs.SCIFFCT.all = 0x00;
 	ScicRegs.SCIHBAUD.all = 0x0002; //baud rate of 9600 @ 200mhz, 2400 at 50mhz
 	ScicRegs.SCILBAUD.all = 0x008B;
@@ -430,10 +413,6 @@ __interrupt void adca1_ISR(void){
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
 
-__interrupt void adcb1_ISR(void){
-	return;
-}
-
 __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of these for scic, maybe an inclusive function or we can bind to the same interrupt and check
 												// For this, if something comes into SCIC then see if it is for all or not you and pass on
 	int i;										// Same with SCIB, intepret and pass on
@@ -452,10 +431,9 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			I think we also need to set up another SCI interface
 	*****/
 
-	for(i = 0; i < sciBufferSize; i++){	 //load up received characters
+	for(i = 0; i < ScibBufferSize; i++){	 //load up received characters
 
 		receivedChar[i] = ScibRegs.SCIRXBUF.all;
-		ScibRegs.SCITXBUF.all = receivedChar[i]; //inserted for debugging purposes
 	}
 	ScibRegs.SCIFFRX.bit.RXFFOVRCLR=1;   // Clear Overflow flag
 	ScibRegs.SCIFFRX.bit.RXFFINTCLR=1;   // Clear Interrupt flag
@@ -463,11 +441,19 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 
 	if(receivedChar[0] == NULLZONE){     //NULLZONE means not in zonemode
 
-		if(receivedChar[1] != unitID)	//if not talking to zone and unitID dont match
+		if(receivedChar[1] != unitID){
+			for(i = 0; i < ScibBufferSize; i++)	 
+				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit 							
 			return;						//this message is not for this mcu, return out
+		}	
+								
 	}
-	else if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
-		return;							//zone is not right, return out
+	else {
+		for(i = 0; i < ScibBufferSize; i++)	 
+			ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
+
+		if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
+			return;							//zone is not right, return out
 
 	switch(receivedChar[2]){			//third byte is command
 
@@ -480,6 +466,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			break;
 
 		case 'v':
+			ScibRegs.SCITXBUF.all = unitID;
 			ScibRegs.SCITXBUF.all = volumeLevel;
 			break;
 
@@ -492,7 +479,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 
 		case 'a':						// a means change moving average
 			setMASize(receivedChar[3] - 48 * (PUTTY));
-			break;
+			break; 
 
 		case 'i':						// i means toggle manual mode
 			if(receivedChar[3] == 'O')	
@@ -520,7 +507,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 
 		default:		// This should never get called, but maybe we can think of something to put here
 			break;		/*
-							It may be indicative of a potential security hazard, but I'm not sdure how to handle it
+							It may be indicative of a potential security hazard, but I'm not sure how to handle it
 							Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
 						*/
 	}
@@ -528,7 +515,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 }
 
 __interrupt void scicRxFifoIsr(void) {
-	return;
+	ScibRegs.SCITXBUF.all = ScicRegs.SCIRXBUF.all;		// Keep it moving down the line
 }
 
 void setMASize(int size){
