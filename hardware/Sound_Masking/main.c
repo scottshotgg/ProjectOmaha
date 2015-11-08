@@ -7,19 +7,19 @@
  *
  *
  *	SOUND_MASKING program written for F28377S MCU for the Univerity of Texas at Dallas Applied Research Center and Speech Privacy Systems
- * 	Written by Matt Kramer and Scott Gayados
+ * 	Written by Matt Kramer and Scott Gaydos
  *
  */
 #define WAITSTEP 	asm(" RPT #255 || NOP")
-#define ARRAYSIZE 		512			//any smaller and program does not work
+#define ARRAYSIZE 		512	//any smaller and program does not work
 #define	ADCARRAYSIZE	128
 #define BLOCKSIZE       128
 #define	SAMPLERATE		20000
 #define ADCSAMPLERATE	1000
 #define	FIRORDER		299
 #define VOLUME_SCALAR	3500
-#define	NULLZONE		78
-#define PUTTY 			1
+#define	NULLZONE		0
+#define PUTTY 			0
 
 #include "F28x_Project.h"     // Device Headerfile and Examples Include File
 #include <stdint.h>
@@ -66,9 +66,10 @@ int32_t					maxValue								= 0;
 int32_t					minValue 								= 4095;
 float 					lfsrArray		[ARRAYSIZE];
 float					filteredArray	[ARRAYSIZE];
+float					magic			[8192];					//do not delete this variable.
 uint16_t				ADCReadings		[ADCARRAYSIZE];
 char					receivedChar	[16];
-int						unitID									= 107;
+int						unitID									= 108;
 int						zone									= 107;
 int 					volumeLevel								= 60;
 int						ScibBufferSize							= 4;
@@ -210,6 +211,8 @@ void initialize(){
 	CpuTimer1Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
 	IER |= M_INT1;
 	IER |= M_INT13;
+	EALLOW;
+	ClkCfgRegs.LOSPCP.bit.LSPCLKDIV = 0;
 	PieCtrlRegs.PIEIER1.bit.INTx7 = 1;
 	PieCtrlRegs.PIEIER1.bit.INTx1  = 1; //ADC Interrupt
 	EINT;  // Enable Global interrupt INTM
@@ -263,7 +266,6 @@ void initializeFilter(int filterNumber){
 			break;
 	}
 }
-
 void initializeADC(){
 
 	EALLOW;
@@ -417,13 +419,13 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 												// For this, if something comes into SCIC then see if it is for all or not you and pass on
 	int i;										// Same with SCIB, intepret and pass on
 
-	/***** 
-			This entire checking sequence needs to depend on whether or not we have an ID assigned yet to the microcontroller or not 
+	/*****
+			This entire checking sequence needs to depend on whether or not we have an ID assigned yet to the microcontroller or not
 			If there is not ID then we need to set one up before the protocol can begin.
 			If not, we wait for the main controller or another speaker (depending on the protocol) to ask us if we need one
 			When that message does come, we need to send back threee bytes [HWID][HWID][HWID][0]
 			The response will be of the form [HWID][HWID][HWID][ID]
-			This may be able to be our default, but that is getting a bit tricky at that point as you induce a lot of checking 
+			This may be able to be our default, but that is getting a bit tricky at that point as you induce a lot of checking
 			and potential ID reseting.
 
 			I am also not sure about this, but should we send 4 bytes from the MCU, will think the master now have an ID because of the new implementation
@@ -442,22 +444,22 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 	if(receivedChar[0] == NULLZONE){     //NULLZONE means not in zonemode
 
 		if(receivedChar[1] != unitID){
-			for(i = 0; i < ScibBufferSize; i++)	 
-				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit 							
+			for(i = 0; i < ScibBufferSize; i++)
+				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
 			return;						//this message is not for this mcu, return out
-		}	
-								
+		}
+
 	}
 	else {
-		for(i = 0; i < ScibBufferSize; i++)	 
+		for(i = 0; i < ScibBufferSize; i++)
 			ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
 
 		if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
 			return;							//zone is not right, return out
-
+	}
 	switch(receivedChar[2]){			//third byte is command
 
-		case 'V':						//m means manual volume adjustment, I think that we should change this to be capital V
+		case 'S':						//m means manual volume adjustment, I think that we should change this to be capital V
 			if(receivedChar[3] > 100 || receivedChar[3] < 0)
 			//if(receivedChar[3] > 75 || receivedChar[3] < 0) //max volume with board 5V regulator and 4 ohm speaker
 				return;	// somehow a bad volume level was sent, return out
@@ -465,7 +467,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
 			break;
 
-		case 'v':
+		case 's':
 			ScibRegs.SCITXBUF.all = unitID;
 			ScibRegs.SCITXBUF.all = volumeLevel;
 			break;
@@ -479,17 +481,17 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 
 		case 'a':						// a means change moving average
 			setMASize(receivedChar[3] - 48 * (PUTTY));
-			break; 
+			break;
 
 		case 'i':						// i means toggle manual mode
-			if(receivedChar[3] == 'O')	
+			if(receivedChar[3] == 'O')
 				IIR_on = 1;
 			else if(receivedChar[3] == 'o')
 				IIR_on = 0;
 			break;
 
 		case 'f':
-			initializeFilter(receivedChar[3] - 48 * (PUTTY));
+			initializeFilter(receivedChar[3]);
 			break;
 
 		case 'R':		// Reserved for AreYouALive commands
@@ -501,11 +503,14 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			break;
 
 		case 'l':
-			if(receivedChar[3] - 48 * (PUTTY) == 0 || receivedChar[3] - 48 * (PUTTY) == 1)		// Not sure what happens if you write > 1 to the LED,
-				GPIO_WritePin(13, receivedChar[3]);												// If nothing bad happens then maybe we can just write the value
+					// Not sure what happens if you write > 1 to the LED,
+			GPIO_WritePin(13, 1);												// If nothing bad happens then maybe we can just write the value
 			break;
 
-		case ''
+		case 'L':
+					// Not sure what happens if you write > 1 to the LED,
+			GPIO_WritePin(13, 0);												// If nothing bad happens then maybe we can just write the value
+			break;
 
 		default:		// This should never get called, but maybe we can think of something to put here
 			break;		/*
@@ -513,7 +518,6 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 							Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
 						*/
 	}
-
 }
 
 __interrupt void scicRxFifoIsr(void) {
@@ -646,3 +650,6 @@ __interrupt void cla1Isr3(void){ //After the CLA initializes this will be called
 	PieCtrlRegs.PIEACK.all = M_INT11;
 
 }
+
+
+
