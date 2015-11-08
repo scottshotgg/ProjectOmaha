@@ -56,7 +56,7 @@ uint32_t				lfsr16 									= 0xF0668742;
 uint32_t				bit										= 0;
 uint16_t				currentAddress  						= 0;
 int						i										= 0;
-int						j;
+int						j										= 0;
 int 					k 										= 0;
 int 					h 										= 0;
 int						l 										= 1;
@@ -71,7 +71,8 @@ char					receivedChar	[16];
 int						unitID									= 107;
 int						zone									= 107;
 int 					volumeLevel								= 60;
-int						sciBufferSize							= 4;
+int						ScibBufferSize							= 4;
+int 					ScicBufferSize							= 2;
 float					FIRBuffer		[FIRORDER + 1];
 int						IIR_on									= 0;
 int 					foundNorm1								= 0;
@@ -131,11 +132,6 @@ float					coeffcients2	[FIRORDER + 1]			={5.641896,5.598687,5.555808,5.513259,5.
 FIR_FP					firFP									= FIR_FP_DEFAULTS;
 FIR_FP_Handle 			hnd_firFP								= &firFP;
 
-
-__interrupt void 	cpu_timer0_isr(void);
-__interrupt	void 	cpu_timer1_isr(void);
-__interrupt void 	adca1_ISR(void);
-__interrupt void	scibRxFifoIsr(void);
 			void 	initialize();
 			void 	initializeFilter(int filterNumber);
 			void 	initializeADC();
@@ -144,19 +140,25 @@ __interrupt void	scibRxFifoIsr(void);
 			void	setMASize(int size);
 			void 	CLA_configClaMemory(void);
 			void 	CLA_initCpu1Cla1(void);
+__interrupt void 	cpu_timer0_isr(void);
+__interrupt	void 	cpu_timer1_isr(void);
+__interrupt void 	adca1_ISR(void);
+__interrupt void	scibRxFifoIsr(void);
+__interrupt void	scicRxFifoIsr(void);
 __interrupt void 	cla1Isr1(void);
 __interrupt void 	cla1Isr2(void);
 __interrupt void 	cla1Isr3(void);
+
 void main(void){
 
 	initialize();
-	CLA_initCpu1Cla1();
+	CLA_initCpu1Cla1();		// This stuff shouldm ove to initialize
 	CLA_configClaMemory();
 	// Enable global Interrupts and higher priority real-time debug events:
 	EINT;   // Enable Global __interrupt INTM
 	ERTM;   // Enable Global realtime __interrupt DBGM
 	EALLOW;
-	GpioCtrlRegs.GPAMUX1.bit.GPIO12 = 0;
+	GpioCtrlRegs.GPAMUX1.bit.GPIO12 = 0;		// This stuff should move to initialize
 	GpioCtrlRegs.GPADIR.bit.GPIO12 = 1;
 	GpioCtrlRegs.GPAMUX1.bit.GPIO13 = 0;
 	GpioCtrlRegs.GPADIR.bit.GPIO13 = 1;
@@ -265,6 +267,8 @@ void initializeFilter(int filterNumber){
 void initializeADC(){
 
 	EALLOW;
+
+
 	PieVectTable.ADCA1_INT = &adca1_ISR;
 	AdcaRegs.ADCCTL2.bit.PRESCALE = 6;
 	AdcSetMode(ADC_ADCA, ADC_RESOLUTION_12BIT, ADC_SIGNALMODE_SINGLE);  //singlemode adc will be trigger by timer interrupt
@@ -275,7 +279,10 @@ void initializeADC(){
 	AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 0;
 	AdcaRegs.ADCINTSEL1N2.bit.INT1E = 1;
 	AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;
+
 	DELAY_US(1000); //wait one millisecond for the AdC to properly initialize
+
+
 	EDIS;
 
 
@@ -293,25 +300,59 @@ void initializeUart(){		// This may need to change to initializeRxUart
 	EDIS;
 	//PieCtrlRegs.PIEIER9.bit.INTx2=1;    // goodbye fucker// PIE Group 9, INT2
 	EINT;
-	ScibRegs.SCICCR.all =0x0007;   // 1 stop bit,  No loopback
+	ScibRegs.SCICCR.all = 0x0007;   // 1 stop bit,  No loopback
 								   // No parity,8 char bits,
 								   // async mode, idle-line protocol
-	ScibRegs.SCICTL1.all =0x0003;  // enable TX, RX, internal SCICLK,
+	ScibRegs.SCICTL1.all = 0x0003;  // enable TX, RX, internal SCICLK,
 								   // Disable RX ERR, SLEEP, TXWAKE
-	ScibRegs.SCICTL2.all =0x0003;
+	ScibRegs.SCICTL2.all = 0x0003;
 	ScibRegs.SCICTL2.bit.TXINTENA =1;
 	ScibRegs.SCICTL2.bit.RXBKINTENA =1;
-	ScibRegs.SCIFFRX.all=0x0022;
+	ScibRegs.SCIFFRX.all = 0x0022;
 	ScibRegs.SCIFFTX.bit.SCIFFENA = 1;
-	ScibRegs.SCIFFRX.bit.RXFFIL = sciBufferSize;
-	ScibRegs.SCIFFCT.all=0x00;
-	ScibRegs.SCIHBAUD.all    =0x0002; //baud rate of 9600 @ 200mhz
-	ScibRegs.SCILBAUD.all    =0x008B;
-	ScibRegs.SCICTL1.all =0x0023;  // Relinquish SCI from Reset
+	ScibRegs.SCIFFRX.bit.RXFFIL = ScibBufferSize;
+	ScibRegs.SCIFFCT.all = 0x00;
+	ScibRegs.SCIHBAUD.all = 0x0002; //baud rate of 9600 @ 200mhz, 2400 at 50mhz
+	ScibRegs.SCILBAUD.all = 0x008B;
+	ScibRegs.SCICTL1.all = 0x0023;  // Relinquish SCI from Reset
 	ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
 	PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block
-	PieCtrlRegs.PIEIER9.bit.INTx3=1;     // PIE Group 9, INT1
+	PieCtrlRegs.PIEIER9.bit.INTx3 = 1;     // PIE Group 9, INT1
 	IER = 0x100; // Enable CPU INT
+
+	// Addition
+	// I think we need one of these for transmit and one for recieve
+
+	GPIO_SetupPinMux(62, GPIO_MUX_CPU1, 1);						// GPIO pin mux may not be correct
+	GPIO_SetupPinOptions(62, GPIO_INPUT, GPIO_PUSHPULL);
+	GPIO_SetupPinMux(63, GPIO_MUX_CPU1, 1);
+	GPIO_SetupPinOptions(63, GPIO_OUTPUT, GPIO_ASYNC);
+	EALLOW;
+	PieVectTable.SCIC_RX_INT = &scicRxFifoIsr;
+	EDIS;
+	//PieCtrlRegs.PIEIER9.bit.INTx2=1;    // goodbye fucker// PIE Group 9, INT2
+	EINT;
+	ScicRegs.SCICCR.all = 0x0007;   // 1 stop bit,  No loopback
+								   // No parity,8 char bits,
+								   // async mode, idle-line protocol
+	ScicRegs.SCICTL1.all = 0x0003;  // enable TX, RX, internal SCICLK,
+								   // Disable RX ERR, SLEEP, TXWAKE
+	ScicRegs.SCICTL2.all = 0x0003;
+	ScicRegs.SCICTL2.bit.TXINTENA = 1;
+	ScicRegs.SCICTL2.bit.RXBKINTENA = 1;
+	ScicRegs.SCIFFRX.all= 0x0022;
+	ScicRegs.SCIFFTX.bit.SCIFFENA = 1;
+	ScicRegs.SCIFFRX.bit.RXFFIL = ScibBufferSize;
+	ScicRegs.SCIFFCT.all = 0x00;
+	ScicRegs.SCIHBAUD.all = 0x0002; //baud rate of 9600 @ 200mhz, 2400 at 50mhz
+	ScicRegs.SCILBAUD.all = 0x008B;
+	ScicRegs.SCICTL1.all = 0x0023;  // Relinquish SCI from Reset
+	ScicRegs.SCIFFRX.bit.RXFIFORESET = 1;
+	PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block		// Do these need to change?
+	PieCtrlRegs.PIEIER9.bit.INTx3 = 1;     // PIE Group 9, INT1
+	IER = 0x100; // Enable CPU INT
+
+	// End addition
 
 }
 
@@ -372,29 +413,27 @@ __interrupt void adca1_ISR(void){
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
 
-__interrupt void scibRxFifoIsr(void){ 
- 
-	int i;
+__interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of these for scic, maybe an inclusive function or we can bind to the same interrupt and check
+												// For this, if something comes into SCIC then see if it is for all or not you and pass on
+	int i;										// Same with SCIB, intepret and pass on
 
 	/***** 
 			This entire checking sequence needs to depend on whether or not we have an ID assigned yet to the microcontroller or not 
 			If there is not ID then we need to set one up before the protocol can begin.
 			If not, we wait for the main controller or another speaker (depending on the protocol) to ask us if we need one
-			When that message does come, we need to send back threee bytes [HID][HID][HID][0]
-			The response will be of the form [HID][HID][HID][ID]
+			When that message does come, we need to send back threee bytes [HWID][HWID][HWID][0]
+			The response will be of the form [HWID][HWID][HWID][ID]
 			This may be able to be our default, but that is getting a bit tricky at that point as you induce a lot of checking 
 			and potential ID reseting.
 
-			I am also not sure about this, but should we send 4 bytes from the MCU, will the master now have an ID because of the new
-			protocol?
+			I am also not sure about this, but should we send 4 bytes from the MCU, will think the master now have an ID because of the new implementation
 
 			I think we also need to set up another SCI interface
 	*****/
 
-	for(i = 0; i < sciBufferSize; i++){	 //load up received characters
+	for(i = 0; i < ScibBufferSize; i++){	 //load up received characters
 
 		receivedChar[i] = ScibRegs.SCIRXBUF.all;
-		ScibRegs.SCITXBUF.all = receivedChar[i]; //inserted for debugging purposes
 	}
 	ScibRegs.SCIFFRX.bit.RXFFOVRCLR=1;   // Clear Overflow flag
 	ScibRegs.SCIFFRX.bit.RXFFINTCLR=1;   // Clear Interrupt flag
@@ -402,15 +441,23 @@ __interrupt void scibRxFifoIsr(void){
 
 	if(receivedChar[0] == NULLZONE){     //NULLZONE means not in zonemode
 
-		if(receivedChar[1] != unitID)	//if not talking to zone and unitID dont match
+		if(receivedChar[1] != unitID){
+			for(i = 0; i < ScibBufferSize; i++)	 
+				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit 							
 			return;						//this message is not for this mcu, return out
+		}	
+								
 	}
-	else if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
-		return;							//zone is not right, return out
+	else {
+		for(i = 0; i < ScibBufferSize; i++)	 
+			ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
+
+		if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
+			return;							//zone is not right, return out
 
 	switch(receivedChar[2]){			//third byte is command
 
-		case 'S':						//m means manual volume adjustment, I think that we should change this to be capital V
+		case 'V':						//m means manual volume adjustment, I think that we should change this to be capital V
 			if(receivedChar[3] > 100 || receivedChar[3] < 0)
 			//if(receivedChar[3] > 75 || receivedChar[3] < 0) //max volume with board 5V regulator and 4 ohm speaker
 				return;	// somehow a bad volume level was sent, return out
@@ -418,20 +465,21 @@ __interrupt void scibRxFifoIsr(void){
 			GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
 			break;
 
-		case 's':
+		case 'v':
+			ScibRegs.SCITXBUF.all = unitID;
 			ScibRegs.SCITXBUF.all = volumeLevel;
 			break;
 
-		case 'v':		// This should be for viewing the voltage, which will be done in an ADC, we might be able to do speaker too depending on data recieved
+		/*case 'v':		// This should be for viewing the voltage, which will be done in an ADC, we might be able to do speaker too depending on data recieved
 			if(receivedChar[3])			// If it wants the speaker voltage
 				ScibRegs.SCITXBUF.all = AdccResultRegs.ADCRESULT0;
 			else 						// If not then just give it the MCU voltage
 				ScibRegs.SCITXBUF.all = AdcbResultRegs.ADCRESULT0;
-			break;
+			break;*/
 
 		case 'a':						// a means change moving average
 			setMASize(receivedChar[3] - 48 * (PUTTY));
-			break;
+			break; 
 
 		case 'i':						// i means toggle manual mode
 			if(receivedChar[3] == 'O')	
@@ -453,17 +501,23 @@ __interrupt void scibRxFifoIsr(void){
 			break;
 
 		case 'l':
-			if(receivedChar[3] - 48 * (PUTTY) == 0 || receivedChar[3] - 48 * (PUTTY) == 1)		/* Not sure what happens if you write > 1 to the LED
-				GPIO_WritePin(13, receivedChar[3]);												   If nothing bad happens then maybe we can just write the value */
+			if(receivedChar[3] - 48 * (PUTTY) == 0 || receivedChar[3] - 48 * (PUTTY) == 1)		// Not sure what happens if you write > 1 to the LED,
+				GPIO_WritePin(13, receivedChar[3]);												// If nothing bad happens then maybe we can just write the value
 			break;
+
+		case ''
 
 		default:		// This should never get called, but maybe we can think of something to put here
 			break;		/*
-							It may be indicative of a potential security hazard, but I'm not sdure how to handle it
+							It may be indicative of a potential security hazard, but I'm not sure how to handle it
 							Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
 						*/
 	}
 
+}
+
+__interrupt void scicRxFifoIsr(void) {
+	ScibRegs.SCITXBUF.all = ScicRegs.SCIRXBUF.all;		// Keep it moving down the line
 }
 
 void setMASize(int size){
