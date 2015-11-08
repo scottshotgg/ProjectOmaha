@@ -68,7 +68,7 @@ func GetLEDStatusFromController(this *database.ControllerStatus) (bool, error) {
 			log.Println("Got LED Status From Controller")
 			response.ledOn = true
 		} else {
-			var b []byte
+			b := make([]byte, 1)
 			status.ReadData(b)
 			response.ledOn = b[0] != 0x01
 		}

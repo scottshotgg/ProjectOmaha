@@ -56,7 +56,7 @@ uint32_t				lfsr16 									= 0xF0668742;
 uint32_t				bit										= 0;
 uint16_t				currentAddress  						= 0;
 int						i										= 0;
-int						j;
+int						j										= 0;
 int 					k 										= 0;
 int 					h 										= 0;
 int						l 										= 1;
@@ -132,12 +132,6 @@ float					coeffcients2	[FIRORDER + 1]			={5.641896,5.598687,5.555808,5.513259,5.
 FIR_FP					firFP									= FIR_FP_DEFAULTS;
 FIR_FP_Handle 			hnd_firFP								= &firFP;
 
-
-__interrupt void 	cpu_timer0_isr(void);
-__interrupt	void 	cpu_timer1_isr(void);
-__interrupt void 	adca1_ISR(void);
-__interrupt void	scibRxFifoIsr(void);
-__interrupt void	scicRxFifoIsr(void);
 			void 	initialize();
 			void 	initializeFilter(int filterNumber);
 			void 	initializeADC();
@@ -146,19 +140,25 @@ __interrupt void	scicRxFifoIsr(void);
 			void	setMASize(int size);
 			void 	CLA_configClaMemory(void);
 			void 	CLA_initCpu1Cla1(void);
+__interrupt void 	cpu_timer0_isr(void);
+__interrupt	void 	cpu_timer1_isr(void);
+__interrupt void 	adca1_ISR(void);
+__interrupt void	scibRxFifoIsr(void);
+__interrupt void	scicRxFifoIsr(void);
 __interrupt void 	cla1Isr1(void);
 __interrupt void 	cla1Isr2(void);
 __interrupt void 	cla1Isr3(void);
+
 void main(void){
 
 	initialize();
-	CLA_initCpu1Cla1();
+	CLA_initCpu1Cla1();		// This stuff shouldm ove to initialize
 	CLA_configClaMemory();
 	// Enable global Interrupts and higher priority real-time debug events:
 	EINT;   // Enable Global __interrupt INTM
 	ERTM;   // Enable Global realtime __interrupt DBGM
 	EALLOW;
-	GpioCtrlRegs.GPAMUX1.bit.GPIO12 = 0;
+	GpioCtrlRegs.GPAMUX1.bit.GPIO12 = 0;		// This stuff should move to initialize
 	GpioCtrlRegs.GPADIR.bit.GPIO12 = 1;
 	GpioCtrlRegs.GPAMUX1.bit.GPIO13 = 0;
 	GpioCtrlRegs.GPADIR.bit.GPIO13 = 1;
@@ -511,6 +511,8 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 					// Not sure what happens if you write > 1 to the LED,
 			GPIO_WritePin(13, 0);												// If nothing bad happens then maybe we can just write the value
 			break;
+
+		case ''
 
 		default:		// This should never get called, but maybe we can think of something to put here
 			break;		/*
