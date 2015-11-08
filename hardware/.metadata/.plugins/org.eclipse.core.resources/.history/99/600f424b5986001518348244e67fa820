@@ -519,7 +519,8 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 							It may be indicative of a potential security hazard, but I'm not sure how to handle it
 							Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
 						*/
-	}
+		}
+
 }
 
 __interrupt void scicRxFifoIsr(void) {
