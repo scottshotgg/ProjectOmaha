@@ -32,6 +32,9 @@
             <paper-item>Speaker 2</paper-item>
           </paper-menu>
         </paper-dropdown-menu> -->
+        <template is="dom-if" if="{{showAccountCreation}}">
+          <paper-icon-button on-click="_createAccountPressed" icon="account-circle"></paper-icon-button>
+        </template>
       </paper-toolbar>
   </template>
   <script>
@@ -43,6 +46,11 @@
           type: Number,
           notify: true
         }
+      },
+
+      _createAccountPressed: function() {
+        this.fire('showaccountcreation', {})
+        this.showBackArrow();
       },
 
       _backPressed: function() {

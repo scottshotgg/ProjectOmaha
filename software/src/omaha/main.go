@@ -28,6 +28,8 @@ func main() {
 	http.HandleFunc("/login/", handlers.LoginPostHandler)
 	http.HandleFunc("/", handlers.LoginPageHandler)
 
+	http.Handle("/user/", handlers.GenericHandler{POST: handlers.AccountCreationHandler})
+
 	http.Handle("/app/", handlers.GenericHandler{GET: handlers.AppHandler})
 
 	http.Handle("/demo/start/", handlers.GenericHandler{PUT: handlers.SpeakerPutHandler})

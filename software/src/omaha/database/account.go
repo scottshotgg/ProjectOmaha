@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"errors"
+	"github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"math/big"
@@ -39,18 +40,26 @@ func LoginAccount(username, password string) (string, error) {
 	}
 }
 
-func CreateAccount(username, password, name string) {
+func CreateAccount(username, password, name string) error {
 	hashByte, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hash := string(hashByte)
 	_, err := DB.Exec(`INSERT INTO account 
 		(username, name, hash)
 		VALUES (?, ?, ?)
 		`, username, name, hash)
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Printf("Created account %s", username)
+	if err == nil {
+		log.Printf("Created account %s\n", username)
+		return nil
 	}
+	switch err.(sqlite3.Error).Code {
+	case 19:
+		log.Println("Account already exists")
+		return errors.New("An account with that username already exists")
+	default:
+		log.Fatal(err)
+		return nil
+	}
+	return nil
 }
 
 // func GetAccountByUsername(username string) omaha.Account {

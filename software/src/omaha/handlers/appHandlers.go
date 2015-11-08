@@ -86,3 +86,24 @@ func LoginPageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	t.Execute(w, nil)
 }
+
+type accountCreationRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func AccountCreationHandler(w http.ResponseWriter, r *http.Request) {
+	accountRequest := &accountCreationRequest{}
+	err := json.NewDecoder(r.Body).Decode(accountRequest)
+	if err != nil {
+		log.Printf("AccountCreationHandler json decoding error: %s\n", err)
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+	err = database.CreateAccount(accountRequest.Username, accountRequest.Password, "")
+	if err != nil {
+		w.Write(getGenericErrorResponse(err.Error()))
+	} else {
+		w.Write(getGenericSuccessResponse())
+	}
+}

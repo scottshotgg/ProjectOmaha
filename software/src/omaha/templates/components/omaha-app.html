@@ -10,7 +10,8 @@
 <link rel="import" href="/components/audio-controller.html">
 <link rel="import" href="/components/map-controller.html">
 <link rel="import" href="/components/open-map-controller.html">
-
+<link rel="import" href="/components/account-creation-form.html">
+<link rel="import" href="/components/simple-fit.html">
 <dom-module id="omaha-app">
   <template>
     <style>
@@ -34,8 +35,14 @@
         <paper-header-panel class="flex" mode="seamed">
           <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
           <neon-animated-pages class="fit" id="app-pages" selected="{{selected}}">
-            <open-map-controller on-speakerselected="_speakerSelected" class="fit"></open-map-controller>
+            <open-map-controller id="mapcontroller" on-speakerselected="_speakerSelected" controllers="[[controllers]]" class="fit"></open-map-controller>
             <audio-controller id="controller" class="fit"></audio-controller>
+
+            <neon-animatable class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+              <paper-material class="flex self-center card" elevation="5">
+                <account-creation-form></account-creation-form>
+              </paper-material>
+            </neon-animatable> 
           </neon-animated-pages>
           <paper-dialog id="dialog">
             <h2>Error</h2>
@@ -65,11 +72,13 @@
       },
 
       listeners: {
-        'nav.backpressed': '_showMap'
+        'nav.backpressed': '_showMap',
+        'nav.showaccountcreation': '_showAccountCreation'
       },
 
       _showMap: function() {
         this.selected = 0;
+        this.$.nav.showAccountCreation = true;
       },
 
       _speakerSelected: function(e) {
@@ -97,11 +106,18 @@
           controllers.push(controllersMap[id])
         }
         this.controllers = controllers
+        this.$.mapcontroller.renderMap();
+      },
+
+      _showAccountCreation: function() {
+        this.selected = 2;
+        this.$.nav.showAccountCreation = false;
       },
 
       ready: function() {
         this.$.systemStatusAjax.generateRequest();
         this.$.nav.hideBackArrow();
+        this.$.nav.showAccountCreation = true;
       }
 
     });

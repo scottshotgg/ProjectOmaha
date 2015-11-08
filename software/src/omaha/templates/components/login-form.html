@@ -29,7 +29,7 @@
       paper-button {
         background-color: #4285f4;
         color: #fff;
-        margin-top: 50px;
+        margin-top: 20px;
         width: 100%;
       }
 
@@ -47,8 +47,8 @@
     </template>
     <div class="message">{{err}}</div>
     <form on-iron-form-submit="_submit" is="iron-form" id="form"  method="post">
-      <paper-input id="username" name="username" label="Username"></paper-input>
-      <paper-input id="password" name="password" label="Password" type="password"></paper-input>
+      <paper-input id="username" name="username" label="Username" required></paper-input>
+      <paper-input id="password" name="password" label="Password" type="password" required></paper-input>
       <paper-button type="submit" raised on-click="_submit">Login</paper-button>
       <!-- We should be able to press enter to submit. This button with type submit is required to do so. -->
       <button class="hidden" type="submit">I should be hidden</button>
