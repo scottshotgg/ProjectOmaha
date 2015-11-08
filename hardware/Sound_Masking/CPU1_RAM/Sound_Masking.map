@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker Unix v6.4.6                    
 ******************************************************************************
->> Linked Sun Nov  8 15:25:03 2015
+>> Linked Sun Nov  8 15:34:37 2015
 
 OUTPUT FILE NAME:   <Sound_Masking.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 0001759a
@@ -812,7 +812,7 @@ address     data page           name
 
 0000cc80     332 (0000cc80)     _lfsrArray
 
-0000d080     342 (0000d080)     _motherfucker
+0000d080     342 (0000d080)     _magic
 
 00011080     442 (00011080)     _SCI
 00011084     442 (00011080)     _MCBSP
@@ -1267,10 +1267,10 @@ abs   ffffffff  ___pinit__
 1     0000c010  _lfsr9                                
 1     0000cc80  _lfsrArray                            
 1     0001628c  _loadWhiteNoiseSamples                
+1     0000d080  _magic                                
 1     00016009  _main                                 
 1     0000c02a  _maxValue                             
 1     0000c02c  _minValue                             
-1     0000d080  _motherfucker                         
 1     0000c02e  _movingAverage                        
 1     0000c00d  _movingAverageSize                    
 1     00001502  _octave                               
@@ -1430,7 +1430,7 @@ page  address   name
 1     0000c600  _FIRBuffer                            
 1     0000c880  _filteredArray                        
 1     0000cc80  _lfsrArray                            
-1     0000d080  _motherfucker                         
+1     0000d080  _magic                                
 1     00011080  _SCI                                  
 1     00011084  _MCBSP                                
 1     00011088  _I2C                                  

@@ -459,7 +459,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 	}
 	switch(receivedChar[2]){			//third byte is command
 
-		case 'V':						//m means manual volume adjustment, I think that we should change this to be capital V
+		case 'S':						//m means manual volume adjustment, I think that we should change this to be capital V
 			if(receivedChar[3] > 100 || receivedChar[3] < 0)
 			//if(receivedChar[3] > 75 || receivedChar[3] < 0) //max volume with board 5V regulator and 4 ohm speaker
 				return;	// somehow a bad volume level was sent, return out
@@ -467,7 +467,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
 			break;
 
-		case 'v':
+		case 's':
 			ScibRegs.SCITXBUF.all = unitID;
 			ScibRegs.SCITXBUF.all = volumeLevel;
 			break;
@@ -491,7 +491,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			break;
 
 		case 'f':
-			initializeFilter(receivedChar[3] - 48 * (PUTTY));
+			initializeFilter(receivedChar[3]);
 			break;
 
 		case 'R':		// Reserved for AreYouALive commands
