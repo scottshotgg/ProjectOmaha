@@ -2,9 +2,10 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-SHELL = cmd.exe
+CG_TOOL_ROOT := /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6
 
-CG_TOOL_ROOT := C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2
+GEN_OPTS__FLAG := 
+GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
 "./eq.obj" \
@@ -44,8 +45,8 @@ $(GEN_CMDS__FLAG) \
 
 -include ../makefile.init
 
-RM := DEL /F
-RMDIR := RMDIR /S/Q
+RM := rm -rf
+RMDIR := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
@@ -161,7 +162,7 @@ all: Sound_Masking.out
 Sound_Masking.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: C2000 Linker'
-	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include" -i"C:/SD/ProjectOmaha/hardware/Sound_Masking/CPU1_FLASH/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" $(ORDERED_OBJS)
+	"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_FLASH/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -169,9 +170,9 @@ Sound_Masking.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)
 	-$(RM) "eq.pp" 
-	-$(RM) "main.pp" "source\F2837xS_Adc.pp" "source\F2837xS_CpuTimers.pp" "source\F2837xS_DefaultISR.pp" "source\F2837xS_Dma.pp" "source\F2837xS_ECap.pp" "source\F2837xS_EPwm.pp" "source\F2837xS_EQep.pp" "source\F2837xS_Emif.pp" "source\F2837xS_GlobalVariableDefs.pp" "source\F2837xS_Gpio.pp" "source\F2837xS_I2C.pp" "source\F2837xS_Mcbsp.pp" "source\F2837xS_PieCtrl.pp" "source\F2837xS_PieVect.pp" "source\F2837xS_Sci.pp" "source\F2837xS_Spi.pp" "source\F2837xS_SysCtrl.pp" "source\F2837xS_TempSensorConv.pp" "source\F2837xS_Upp.pp" "source\F2837xS_sci_io.pp" "source\F2837xS_sdfm_drivers.pp" "source\F2837xS_struct.pp" "include\examples_setup.pp" 
-	-$(RM) "eq.obj" "main.obj" "source\F2837xS_Adc.obj" "source\F2837xS_CodeStartBranch.obj" "source\F2837xS_CpuTimers.obj" "source\F2837xS_DBGIER.obj" "source\F2837xS_DefaultISR.obj" "source\F2837xS_Dma.obj" "source\F2837xS_ECap.obj" "source\F2837xS_EPwm.obj" "source\F2837xS_EQep.obj" "source\F2837xS_Emif.obj" "source\F2837xS_GlobalVariableDefs.obj" "source\F2837xS_Gpio.obj" "source\F2837xS_I2C.obj" "source\F2837xS_Mcbsp.obj" "source\F2837xS_PieCtrl.obj" "source\F2837xS_PieVect.obj" "source\F2837xS_Sci.obj" "source\F2837xS_Spi.obj" "source\F2837xS_SysCtrl.obj" "source\F2837xS_TempSensorConv.obj" "source\F2837xS_Upp.obj" "source\F2837xS_sci_io.obj" "source\F2837xS_sdfm_drivers.obj" "source\F2837xS_struct.obj" "source\F2837xS_usDelay.obj" "source\FIR_f32.obj" "include\examples_setup.obj" 
-	-$(RM) "source\F2837xS_CodeStartBranch.pp" "source\F2837xS_DBGIER.pp" "source\F2837xS_usDelay.pp" "source\FIR_f32.pp" 
+	-$(RM) "main.pp" "source/F2837xS_Adc.pp" "source/F2837xS_CpuTimers.pp" "source/F2837xS_DefaultISR.pp" "source/F2837xS_Dma.pp" "source/F2837xS_ECap.pp" "source/F2837xS_EPwm.pp" "source/F2837xS_EQep.pp" "source/F2837xS_Emif.pp" "source/F2837xS_GlobalVariableDefs.pp" "source/F2837xS_Gpio.pp" "source/F2837xS_I2C.pp" "source/F2837xS_Mcbsp.pp" "source/F2837xS_PieCtrl.pp" "source/F2837xS_PieVect.pp" "source/F2837xS_Sci.pp" "source/F2837xS_Spi.pp" "source/F2837xS_SysCtrl.pp" "source/F2837xS_TempSensorConv.pp" "source/F2837xS_Upp.pp" "source/F2837xS_sci_io.pp" "source/F2837xS_sdfm_drivers.pp" "source/F2837xS_struct.pp" "include/examples_setup.pp" 
+	-$(RM) "eq.obj" "main.obj" "source/F2837xS_Adc.obj" "source/F2837xS_CodeStartBranch.obj" "source/F2837xS_CpuTimers.obj" "source/F2837xS_DBGIER.obj" "source/F2837xS_DefaultISR.obj" "source/F2837xS_Dma.obj" "source/F2837xS_ECap.obj" "source/F2837xS_EPwm.obj" "source/F2837xS_EQep.obj" "source/F2837xS_Emif.obj" "source/F2837xS_GlobalVariableDefs.obj" "source/F2837xS_Gpio.obj" "source/F2837xS_I2C.obj" "source/F2837xS_Mcbsp.obj" "source/F2837xS_PieCtrl.obj" "source/F2837xS_PieVect.obj" "source/F2837xS_Sci.obj" "source/F2837xS_Spi.obj" "source/F2837xS_SysCtrl.obj" "source/F2837xS_TempSensorConv.obj" "source/F2837xS_Upp.obj" "source/F2837xS_sci_io.obj" "source/F2837xS_sdfm_drivers.obj" "source/F2837xS_struct.obj" "source/F2837xS_usDelay.obj" "source/FIR_f32.obj" "include/examples_setup.obj" 
+	-$(RM) "source/F2837xS_CodeStartBranch.pp" "source/F2837xS_DBGIER.pp" "source/F2837xS_usDelay.pp" "source/FIR_f32.pp" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

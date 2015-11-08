@@ -1,0 +1,653 @@
+/*
+ *  This file is the main source code for the main cpu.
+ *
+ *
+ *
+ *
+ *
+ *
+ *	SOUND_MASKING program written for F28377S MCU for the Univerity of Texas at Dallas Applied Research Center and Speech Privacy Systems
+ * 	Written by Matt Kramer and Scott Gayados
+ *
+ */
+#define WAITSTEP 	asm(" RPT #255 || NOP")
+#define ARRAYSIZE 		512			//any smaller and program does not work
+#define	ADCARRAYSIZE	128
+#define BLOCKSIZE       128
+#define	SAMPLERATE		20000
+#define ADCSAMPLERATE	1000
+#define	FIRORDER		299
+#define VOLUME_SCALAR	3500
+#define	NULLZONE		0
+#define PUTTY 			0
+
+#include "F28x_Project.h"     // Device Headerfile and Examples Include File
+#include <stdint.h>
+#include "fpu_filter.h"
+#include "math.h"
+#include "examples_setup.h"
+#include "Cla_Shared.h"
+
+#pragma DATA_SECTION(inputToCLA,"CpuToCla1MsgRAM")
+float inputToCLA;
+#pragma DATA_SECTION(outputFromCLA,"Cla1ToCpuMsgRAM")
+float outputFromCLA;
+#pragma DATA_SECTION(octave,"CpuToCla1MsgRAM")
+float octave;
+#pragma DATA_SECTION(decibel,"CpuToCla1MsgRAM")
+float decibel;
+
+uint32_t     			lfsr1 									= 0xF8621234;
+uint32_t     			lfsr2 									= 0x12784321;
+uint32_t				lfsr3 									= 0x57621465;
+uint32_t				lfsr4 									= 0x21345676;
+uint32_t				lfsr5 									= 0x85672468;
+uint32_t				lfsr6 									= 0x01011011;
+uint32_t				lfsr7 									= 0x11065431;
+uint32_t				lfsr8 									= 0xA1AF3214;
+uint32_t     			lfsr9 									= 0x52F11F68; //initialize linear feedback shift registers
+uint32_t     			lfsr10 									= 0xF158F620;
+uint32_t				lfsr11 									= 0xF16C8F13;
+uint32_t				lfsr12 									= 0x65F21561;
+uint32_t				lfsr13									= 0xF86F1235;
+uint32_t				lfsr14 									= 0x7788221F;
+uint32_t				lfsr15 									= 0xEF123FEE;
+uint32_t				lfsr16 									= 0xF0668742;
+uint32_t				bit										= 0;
+uint16_t				currentAddress  						= 0;
+int						i										= 0;
+int						j;
+int 					k 										= 0;
+int 					h 										= 0;
+int						l 										= 1;
+int						movingAverageSize;
+float					movingAverage;
+int32_t					maxValue								= 0;
+int32_t					minValue 								= 4095;
+float 					lfsrArray		[ARRAYSIZE];
+float					filteredArray	[ARRAYSIZE];
+uint16_t				ADCReadings		[ADCARRAYSIZE];
+char					receivedChar	[16];
+int						unitID									= 108;
+int						zone									= 107;
+int 					volumeLevel								= 60;
+int						ScibBufferSize							= 4;
+int 					ScicBufferSize							= 2;
+float					FIRBuffer		[FIRORDER + 1];
+int						IIR_on									= 0;
+int 					foundNorm1								= 0;
+int						foundNorm2								= 0;
+float					coeffcients1	[FIRORDER + 1]          ={ 0.031416,0.031903,0.032397,0.032899,0.033409,0.033926,0.034452,0.034986,0.035528,0.036079,0.036638,0.037205,
+																0.037782,0.038367,0.038962,0.039566,0.040179,0.040801,0.041433,0.042075,0.042727,0.043389,0.044062,0.044744,
+																0.045438,0.046142,0.046857,0.047583,0.048320,0.049069,0.049829,0.050601,0.051385,0.052182,0.052990,0.053811,
+																0.054645,0.055492,0.056352,0.057225,0.058111,0.059012,0.059926,0.060855,0.061798,0.062755,0.063728,0.064715,
+																0.065718,0.066736,0.067770,0.068820,0.069887,0.070970,0.072069,0.073186,0.074320,0.075472,0.076641,0.077829,
+																0.079035,0.080259,0.081503,0.082766,0.084048,0.085351,0.086673,0.088016,0.089380,0.090765,0.092171,0.093599,
+																0.095050,0.096523,0.098018,0.099537,0.101079,0.102646,0.104236,0.105851,0.107491,0.109157,0.110848,0.112566,
+																0.114310,0.116081,0.117880,0.119707,0.121561,0.123445,0.125358,0.127300,0.129273,0.131276,0.133310,0.135376,
+																0.137473,0.139603,0.141767,0.143963,0.146194,0.148459,0.150760,0.153096,0.155468,0.157877,0.160323,0.162807,
+																0.165330,0.167892,0.170493,0.173135,0.175818,0.178542,0.181309,0.184118,0.186971,0.189868,0.192810,0.195798,
+																0.198832,0.201913,0.205041,0.208218,0.211445,0.214721,0.218048,0.221427,0.224858,0.228342,0.231880,0.235473,
+																0.239122,0.242827,0.246590,0.250410,0.254291,0.258231,0.262232,0.266295,0.270422,0.274612,0.278867,0.283188,
+																0.287576,0.292032,0.296557,0.301152,0.305818,0.310557,0.315369,0.320256,0.325218,0.330258,0.335375,0.340572,
+																0.345849,0.351208,0.356650,0.362176,0.367788,0.373487,0.379274,0.385151,0.391119,0.397179,0.403333,0.409583,
+																0.415929,0.422374,0.428919,0.435565,0.442314,0.449168,0.456128,0.463195,0.470373,0.477661,0.485062,0.492578,
+																0.500211,0.507962,0.515833,0.523825,0.531942,0.540185,0.548555,0.557055,0.565686,0.574452,0.583353,0.592392,
+																0.601571,0.610892,0.620358,0.629970,0.639732,0.649644,0.659711,0.669933,0.680314,0.690855,0.701560,0.712431,
+																0.723470,0.734680,0.746064,0.757624,0.769363,0.781285,0.793391,0.805684,0.818168,0.830846,0.843720,0.856793,
+																0.870069,0.883551,0.897242,0.911145,0.925263,0.939600,0.954159,0.968943,0.983957,0.999204,1.014686,1.030409,
+																1.046375,1.062589,1.079054,1.095774,1.112753,1.129995,1.147504,1.165285,1.183341,1.201677,1.220297,1.239205,
+																1.258407,1.277906,1.297707,1.317815,1.338234,1.358970,1.380028,1.401411,1.423126,1.445177,1.467570,1.490310,
+																1.513403,1.536853,1.560667,1.584849,1.609406,1.634344,1.659668,1.685385,1.711500,1.738020,1.764950,1.792298,
+																1.820070,1.848272,1.876911,1.905994,1.935527,1.965518,1.995974,2.026902,2.058309,2.090202,2.122590,2.155479,
+																2.188879,2.222795,2.257237,2.292213,2.327731,2.363800,2.400427,2.437621,2.475392,2.513749,2.552699,2.592253,
+																2.632420,2.673210,2.714631,2.756694,2.799409,2.842786,2.886835,2.931567,2.976991,3.023120,3.069963,3.117532 };
+
+float					coeffcients2	[FIRORDER + 1]			={5.641896,5.598687,5.555808,5.513259,5.471035,5.429134,5.387554,5.346293,5.305348,5.264716,5.224396,5.184384,
+																5.144679,5.105278,5.066179,5.027379,4.988876,4.950668,4.912753,4.875128,4.837791,4.800740,4.763973,4.727488,
+																4.691282,4.655353,4.619699,4.584319,4.549209,4.514369,4.479795,4.445486,4.411439,4.377654,4.344127,4.310857,
+																4.277842,4.245080,4.212568,4.180306,4.148290,4.116520,4.084993,4.053708,4.022662,3.991854,3.961282,3.930944,
+																3.900838,3.870963,3.841317,3.811898,3.782704,3.753734,3.724985,3.696457,3.668147,3.640054,3.612177,3.584512,
+																3.557060,3.529818,3.502784,3.475958,3.449337,3.422919,3.396705,3.370691,3.344876,3.319259,3.293838,3.268611,
+																3.243578,3.218737,3.194086,3.169624,3.145349,3.121260,3.097355,3.073634,3.050094,3.026734,3.003554,2.980551,
+																2.957724,2.935072,2.912593,2.890287,2.868151,2.846185,2.824387,2.802756,2.781291,2.759990,2.738852,2.717877,
+																2.697061,2.676406,2.655908,2.635568,2.615383,2.595352,2.575476,2.555751,2.536178,2.516754,2.497479,2.478352,
+																2.459371,2.440536,2.421845,2.403297,2.384891,2.366626,2.348501,2.330514,2.312666,2.294954,2.277378,2.259936,
+																2.242628,2.225453,2.208409,2.191496,2.174712,2.158056,2.141529,2.125128,2.108852,2.092701,2.076674,2.060769,
+																2.044987,2.029325,2.013783,1.998360,1.983056,1.967868,1.952797,1.937841,1.923000,1.908273,1.893658,1.879155,
+																1.864763,1.850482,1.836310,1.822246,1.808290,1.794441,1.780698,1.767061,1.753527,1.740098,1.726771,1.713546,
+																1.700423,1.687400,1.674477,1.661653,1.648927,1.636298,1.623766,1.611331,1.598990,1.586744,1.574592,1.562533,
+																1.550566,1.538691,1.526906,1.515212,1.503608,1.492092,1.480665,1.469325,1.458072,1.446905,1.435824,1.424828,
+																1.413915,1.403087,1.392341,1.381678,1.371096,1.360595,1.350175,1.339834,1.329573,1.319390,1.309286,1.299258,
+																1.289308,1.279434,1.269635,1.259911,1.250262,1.240687,1.231185,1.221756,1.212399,1.203113,1.193899,1.184756,
+																1.175682,1.166678,1.157743,1.148876,1.140077,1.131346,1.122681,1.114083,1.105551,1.097084,1.088682,1.080344,
+																1.072070,1.063859,1.055712,1.047626,1.039603,1.031641,1.023740,1.015900,1.008119,1.000398,0.992737,0.985134,
+																0.977589,0.970102,0.962672,0.955300,0.947983,0.940723,0.933518,0.926369,0.919274,0.912234,0.905247,0.898314,
+																0.891435,0.884607,0.877833,0.871110,0.864438,0.857818,0.851248,0.844729,0.838259,0.831839,0.825469,0.819147,
+																0.812873,0.806648,0.800470,0.794339,0.788256,0.782219,0.776228,0.770283,0.764384,0.758530,0.752721,0.746956,
+																0.741235,0.735558,0.729925,0.724335,0.718787,0.713282,0.707820,0.702399,0.697019,0.691681,0.686384,0.681127,
+																0.675910,0.670734,0.665597,0.660499,0.655441,0.650421,0.645440,0.640497,0.635591,0.630724,0.625893,0.621100,
+																0.616343,0.611623,0.606938,0.602290,0.597677,0.593100,0.588558,0.584050,0.579577,0.575138,0.570734,0.566363 };
+
+FIR_FP					firFP									= FIR_FP_DEFAULTS;
+FIR_FP_Handle 			hnd_firFP								= &firFP;
+
+
+__interrupt void 	cpu_timer0_isr(void);
+__interrupt	void 	cpu_timer1_isr(void);
+__interrupt void 	adca1_ISR(void);
+__interrupt void	scibRxFifoIsr(void);
+__interrupt void	scicRxFifoIsr(void);
+			void 	initialize();
+			void 	initializeFilter(int filterNumber);
+			void 	initializeADC();
+			void 	loadWhiteNoiseSamples(int startingSample, int length);
+			void	initializeUart();
+			void	setMASize(int size);
+			void 	CLA_configClaMemory(void);
+			void 	CLA_initCpu1Cla1(void);
+__interrupt void 	cla1Isr1(void);
+__interrupt void 	cla1Isr2(void);
+__interrupt void 	cla1Isr3(void);
+void main(void){
+
+	initialize();
+	CLA_initCpu1Cla1();
+	CLA_configClaMemory();
+	// Enable global Interrupts and higher priority real-time debug events:
+	EINT;   // Enable Global __interrupt INTM
+	ERTM;   // Enable Global realtime __interrupt DBGM
+	EALLOW;
+	GpioCtrlRegs.GPAMUX1.bit.GPIO12 = 0;
+	GpioCtrlRegs.GPADIR.bit.GPIO12 = 1;
+	GpioCtrlRegs.GPAMUX1.bit.GPIO13 = 0;
+	GpioCtrlRegs.GPADIR.bit.GPIO13 = 1;
+	GPIO_WritePin(13, 1);
+
+	EDIS;
+	for(;;){
+
+		loadWhiteNoiseSamples(currentAddress, BLOCKSIZE);
+		currentAddress = currentAddress + BLOCKSIZE;
+		if(currentAddress >= ARRAYSIZE){
+			currentAddress = 0;
+		}
+	}
+}
+
+void initialize(){
+	// Initialize System Control:
+	InitSysCtrl();
+	FPU_initSystemClocks();
+	FPU_initEpie();
+	InitGpio();
+	initializeFilter(1);
+	setMASize(1);
+	GPIO_SetupPinMux(65, GPIO_MUX_CPU1, 0);
+	GPIO_SetupPinOptions(65, GPIO_OUTPUT, GPIO_PUSHPULL);
+	DINT;
+	InitPieCtrl();
+	IER = 0x0000;
+	IFR = 0x0000;
+	InitPieVectTable();
+	initializeUart();
+	initializeADC();
+	EALLOW;
+	DacaRegs.DACCTL.bit.DACREFSEL  = 1;
+	DacaRegs.DACOUTEN.bit.DACOUTEN = 1;
+	DacbRegs.DACCTL.bit.DACREFSEL  = 1;
+	DacbRegs.DACOUTEN.bit.DACOUTEN = 1;
+	DaccRegs.DACCTL.bit.DACREFSEL  = 1;
+	DaccRegs.DACOUTEN.bit.DACOUTEN = 1;
+	DaccRegs.DACVALS.bit.DACVALS = VOLUME_SCALAR - (((float)volumeLevel/100.0) * VOLUME_SCALAR); //turn volumn down immedately before anything is output to amplifier
+	PieVectTable.TIMER0_INT = &cpu_timer0_isr;
+	PieVectTable.TIMER1_INT = &cpu_timer1_isr;
+	EDIS;
+	InitCpuTimers();   // For this example, only initialize the Cpu Timers
+	ConfigCpuTimer(&CpuTimer0, 50, 500000/(SAMPLERATE));	 	//DAC will output at nyquist rate of twice the samplerate. 500ms/samplerate = 1sec/(2*samplerate)
+	ConfigCpuTimer(&CpuTimer1, 50, 1000000/(ADCSAMPLERATE));
+	CpuTimer0Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
+	CpuTimer1Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
+	IER |= M_INT1;
+	IER |= M_INT13;
+	EALLOW;
+	ClkCfgRegs.LOSPCP.bit.LSPCLKDIV = 0;
+	PieCtrlRegs.PIEIER1.bit.INTx7 = 1;
+	PieCtrlRegs.PIEIER1.bit.INTx1  = 1; //ADC Interrupt
+	EINT;  // Enable Global interrupt INTM
+	ERTM;  // Enable Global realtime interrupt DBGM
+	EDIS;
+
+}
+
+void initializeFilter(int filterNumber){
+
+	hnd_firFP->order       = FIRORDER;
+	hnd_firFP->dbuffer_ptr = FIRBuffer;
+	hnd_firFP->init(hnd_firFP);
+	setMASize(movingAverageSize);
+	int i;
+	float sum = 0;
+	float mag;
+	switch(filterNumber){
+
+		case 2:
+
+			hnd_firFP->coeff_ptr   = (float *)coeffcients2;
+			if(!foundNorm2){
+				foundNorm2 = 1;
+				for(i = 0; i < FIRORDER + 1; i++){
+
+					sum += coeffcients2[i]*coeffcients2[i]; //add up squares of filter for magnitude calculation
+
+				}
+				mag = sqrt(sum);							//take squareroot
+				for(i = 0; i < FIRORDER + 1; i++){
+
+					coeffcients2[i] = coeffcients2[i]/(mag*64); //normalize coeffcients before filtering
+				}
+			}
+			break;
+		default:
+			hnd_firFP->coeff_ptr   = (float *)coeffcients1;
+			if(!foundNorm1){
+				foundNorm1 = 1;
+				for(i = 0; i < FIRORDER; i++){//add up squares of filter for magnitude calculation
+
+					sum += coeffcients1[i]*coeffcients1[i]; //take squareroot
+				}
+				mag = sqrt(sum);
+				for(i = 0; i < FIRORDER + 1; i++){
+
+					coeffcients1[i] = coeffcients1[i]/(mag*64); //normalize coeffcients before filtering
+				}
+			}
+			break;
+	}
+}
+
+void initializeADC(){
+
+	EALLOW;
+
+
+	PieVectTable.ADCA1_INT = &adca1_ISR;
+	AdcaRegs.ADCCTL2.bit.PRESCALE = 6;
+	AdcSetMode(ADC_ADCA, ADC_RESOLUTION_12BIT, ADC_SIGNALMODE_SINGLE);  //singlemode adc will be trigger by timer interrupt
+	AdcaRegs.ADCCTL1.bit.INTPULSEPOS = 1;
+	AdcaRegs.ADCCTL1.bit.ADCPWDNZ = 1;
+	AdcaRegs.ADCSOC0CTL.bit.CHSEL = 2;
+	AdcaRegs.ADCSOC0CTL.bit.ACQPS = 14;
+	AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 0;
+	AdcaRegs.ADCINTSEL1N2.bit.INT1E = 1;
+	AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;
+
+	DELAY_US(1000); //wait one millisecond for the AdC to properly initialize
+
+
+	EDIS;
+
+
+	// Need to add speaker VCC and mcu VCC adc
+}
+
+void initializeUart(){		// This may need to change to initializeRxUart
+
+	GPIO_SetupPinMux(15, GPIO_MUX_CPU1, 2);
+	GPIO_SetupPinOptions(15, GPIO_INPUT, GPIO_PUSHPULL);
+	GPIO_SetupPinMux(14, GPIO_MUX_CPU1, 2);
+	GPIO_SetupPinOptions(14, GPIO_OUTPUT, GPIO_ASYNC);
+	EALLOW;
+	PieVectTable.SCIB_RX_INT = &scibRxFifoIsr;
+	EDIS;
+	//PieCtrlRegs.PIEIER9.bit.INTx2=1;    // goodbye fucker// PIE Group 9, INT2
+	EINT;
+	ScibRegs.SCICCR.all = 0x0007;   // 1 stop bit,  No loopback
+								   // No parity,8 char bits,
+								   // async mode, idle-line protocol
+	ScibRegs.SCICTL1.all = 0x0003;  // enable TX, RX, internal SCICLK,
+								   // Disable RX ERR, SLEEP, TXWAKE
+	ScibRegs.SCICTL2.all = 0x0003;
+	ScibRegs.SCICTL2.bit.TXINTENA =1;
+	ScibRegs.SCICTL2.bit.RXBKINTENA =1;
+	ScibRegs.SCIFFRX.all = 0x0022;
+	ScibRegs.SCIFFTX.bit.SCIFFENA = 1;
+	ScibRegs.SCIFFRX.bit.RXFFIL = ScibBufferSize;
+	ScibRegs.SCIFFCT.all = 0x00;
+	ScibRegs.SCIHBAUD.all = 0x0002; //baud rate of 9600 @ 200mhz, 2400 at 50mhz
+	ScibRegs.SCILBAUD.all = 0x008B;
+	ScibRegs.SCICTL1.all = 0x0023;  // Relinquish SCI from Reset
+	ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
+	PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block
+	PieCtrlRegs.PIEIER9.bit.INTx3 = 1;     // PIE Group 9, INT1
+	IER = 0x100; // Enable CPU INT
+
+	// Addition
+	// I think we need one of these for transmit and one for recieve
+
+	GPIO_SetupPinMux(62, GPIO_MUX_CPU1, 1);						// GPIO pin mux may not be correct
+	GPIO_SetupPinOptions(62, GPIO_INPUT, GPIO_PUSHPULL);
+	GPIO_SetupPinMux(63, GPIO_MUX_CPU1, 1);
+	GPIO_SetupPinOptions(63, GPIO_OUTPUT, GPIO_ASYNC);
+	EALLOW;
+	PieVectTable.SCIC_RX_INT = &scicRxFifoIsr;
+	EDIS;
+	//PieCtrlRegs.PIEIER9.bit.INTx2=1;    // goodbye fucker// PIE Group 9, INT2
+	EINT;
+	ScicRegs.SCICCR.all = 0x0007;   // 1 stop bit,  No loopback
+								   // No parity,8 char bits,
+								   // async mode, idle-line protocol
+	ScicRegs.SCICTL1.all = 0x0003;  // enable TX, RX, internal SCICLK,
+								   // Disable RX ERR, SLEEP, TXWAKE
+	ScicRegs.SCICTL2.all = 0x0003;
+	ScicRegs.SCICTL2.bit.TXINTENA = 1;
+	ScicRegs.SCICTL2.bit.RXBKINTENA = 1;
+	ScicRegs.SCIFFRX.all= 0x0022;
+	ScicRegs.SCIFFTX.bit.SCIFFENA = 1;
+	ScicRegs.SCIFFRX.bit.RXFFIL = ScibBufferSize;
+	ScicRegs.SCIFFCT.all = 0x00;
+	ScicRegs.SCIHBAUD.all = 0x0002; //baud rate of 9600 @ 200mhz, 2400 at 50mhz
+	ScicRegs.SCILBAUD.all = 0x008B;
+	ScicRegs.SCICTL1.all = 0x0023;  // Relinquish SCI from Reset
+	ScicRegs.SCIFFRX.bit.RXFIFORESET = 1;
+	PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block		// Do these need to change?
+	PieCtrlRegs.PIEIER9.bit.INTx3 = 1;     // PIE Group 9, INT1
+	IER = 0x100; // Enable CPU INT
+
+	// End addition
+
+}
+
+__interrupt void cpu_timer0_isr(void)
+{
+
+	GpioDataRegs.GPATOGGLE.bit.GPIO12 = 1;
+	hnd_firFP->input = lfsrArray[j];
+	hnd_firFP->calc(&firFP);
+	filteredArray[j&(ARRAYSIZE - 1)] = hnd_firFP->output;
+	movingAverage += filteredArray[j&(ARRAYSIZE - 1)]/movingAverageSize;
+	movingAverage -= filteredArray[j - movingAverageSize]/movingAverageSize;
+	if(IIR_on){
+
+		inputToCLA = movingAverage;
+		Cla1ForceTask1();
+	}
+	else{
+
+		if((movingAverage + 2048) > maxValue){
+			maxValue = (movingAverage + 2048);
+			if(maxValue > 4095)
+				DINT;
+		}
+
+		if((movingAverage + 2048) < minValue){
+			minValue = (movingAverage + 2048);
+			if(minValue < 0)
+				DINT;
+		}
+		DacaRegs.DACVALS.bit.DACVALS = (movingAverage + 2048);
+	}
+	DacbRegs.DACVALS.bit.DACVALS = (uint16_t)(lfsrArray[j]/32 + 2048);	//output original white noise
+	j++;
+	if(j >= ARRAYSIZE + movingAverageSize)
+		j = movingAverageSize;
+
+	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1; // Acknowledge this __interrupt to receive more __interrupts from group 1
+}
+
+__interrupt	void cpu_timer1_isr(void){
+
+	AdcaRegs.ADCSOCFRC1.all = 0x0001; //this will jump down to adca1_ISR below
+
+}
+
+
+__interrupt void adca1_ISR(void){
+
+	while(AdcaRegs.ADCINTFLG.bit.ADCINT1 == 0);
+			AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;
+	ADCReadings[k] = AdcaResultRegs.ADCRESULT0;
+	k++;
+	DaccRegs.DACVALS.bit.DACVALS = VOLUME_SCALAR - (((float)volumeLevel/100.0) * VOLUME_SCALAR);
+	if(k == ADCARRAYSIZE)
+		k = 0;
+	AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1; //clear INT1 flag
+	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
+}
+
+__interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of these for scic, maybe an inclusive function or we can bind to the same interrupt and check
+												// For this, if something comes into SCIC then see if it is for all or not you and pass on
+	int i;										// Same with SCIB, intepret and pass on
+
+	/***** 
+			This entire checking sequence needs to depend on whether or not we have an ID assigned yet to the microcontroller or not 
+			If there is not ID then we need to set one up before the protocol can begin.
+			If not, we wait for the main controller or another speaker (depending on the protocol) to ask us if we need one
+			When that message does come, we need to send back threee bytes [HWID][HWID][HWID][0]
+			The response will be of the form [HWID][HWID][HWID][ID]
+			This may be able to be our default, but that is getting a bit tricky at that point as you induce a lot of checking 
+			and potential ID reseting.
+
+			I am also not sure about this, but should we send 4 bytes from the MCU, will think the master now have an ID because of the new implementation
+
+			I think we also need to set up another SCI interface
+	*****/
+
+	for(i = 0; i < ScibBufferSize; i++){	 //load up received characters
+
+		receivedChar[i] = ScibRegs.SCIRXBUF.all;
+	}
+	ScibRegs.SCIFFRX.bit.RXFFOVRCLR=1;   // Clear Overflow flag
+	ScibRegs.SCIFFRX.bit.RXFFINTCLR=1;   // Clear Interrupt flag
+	PieCtrlRegs.PIEACK.all|=0x100;       // Issue PIE ack
+
+	if(receivedChar[0] == NULLZONE){     //NULLZONE means not in zonemode
+
+		if(receivedChar[1] != unitID){
+			for(i = 0; i < ScibBufferSize; i++)	 
+				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit 							
+			return;						//this message is not for this mcu, return out
+		}	
+								
+	}
+	else {
+		for(i = 0; i < ScibBufferSize; i++)	 
+			ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
+
+		if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
+			return;							//zone is not right, return out
+
+	switch(receivedChar[2]){			//third byte is command
+
+		case 'V':						//m means manual volume adjustment, I think that we should change this to be capital V
+			if(receivedChar[3] > 100 || receivedChar[3] < 0)
+			//if(receivedChar[3] > 75 || receivedChar[3] < 0) //max volume with board 5V regulator and 4 ohm speaker
+				return;	// somehow a bad volume level was sent, return out
+			volumeLevel = receivedChar[3];
+			GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
+			break;
+
+		case 'v':
+			ScibRegs.SCITXBUF.all = unitID;
+			ScibRegs.SCITXBUF.all = volumeLevel;
+			break;
+
+		/*case 'v':		// This should be for viewing the voltage, which will be done in an ADC, we might be able to do speaker too depending on data recieved
+			if(receivedChar[3])			// If it wants the speaker voltage
+				ScibRegs.SCITXBUF.all = AdccResultRegs.ADCRESULT0;
+			else 						// If not then just give it the MCU voltage
+				ScibRegs.SCITXBUF.all = AdcbResultRegs.ADCRESULT0;
+			break;*/
+
+		case 'a':						// a means change moving average
+			setMASize(receivedChar[3] - 48 * (PUTTY));
+			break; 
+
+		case 'i':						// i means toggle manual mode
+			if(receivedChar[3] == 'O')	
+				IIR_on = 1;
+			else if(receivedChar[3] == 'o')
+				IIR_on = 0;
+			break;
+
+		case 'f':
+			initializeFilter(receivedChar[3] - 48 * (PUTTY));
+			break;
+
+		case 'R':		// Reserved for AreYouALive commands
+			ScibRegs.SCITXBUF.all = 'r';	// Little r back is like an ack
+			break;
+
+		case 'm':		// Get microphone reading
+			ScibRegs.SCITXBUF.all = AdcaResultRegs.ADCRESULT0;		// Not sure if we can actually do this, may have to check if it is zero or use ADCReadings[k]
+			break;
+
+		case 'l':
+					// Not sure what happens if you write > 1 to the LED,
+			GPIO_WritePin(13, 1);												// If nothing bad happens then maybe we can just write the value
+			break;
+
+		case 'L':
+					// Not sure what happens if you write > 1 to the LED,
+			GPIO_WritePin(13, 0);												// If nothing bad happens then maybe we can just write the value
+			break;
+
+		default:		// This should never get called, but maybe we can think of something to put here
+			break;		/*
+							It may be indicative of a potential security hazard, but I'm not sure how to handle it
+							Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
+						*/
+		}
+	}
+}
+
+__interrupt void scicRxFifoIsr(void) {
+	ScibRegs.SCITXBUF.all = ScicRegs.SCIRXBUF.all;		// Keep it moving down the line
+}
+
+void setMASize(int size){
+	int i = 0;
+	if(size > 100 || size < 1)
+		return;
+	movingAverageSize = j = size;
+	movingAverage = 0;
+	for(i = 0; i < ARRAYSIZE; i++){
+		filteredArray[i] = 0;
+	}
+}
+
+void loadWhiteNoiseSamples(int startingSample, int length){ //load lfsr array up with values, 16 at a time
+
+	for(i = startingSample; i <= (startingSample + length);){
+
+		bit = ((lfsr1 >> (16 - 16)) ^ (lfsr1 >> (16 - 14)) ^ (lfsr1 >> (16 - 13)) ^ (lfsr1 >> (16 - 11)) & 1);
+		lfsr1 = (lfsr1 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr1));
+		bit = ((lfsr2 >> (16 - 16)) ^ (lfsr2 >> (16 - 14)) ^ (lfsr2 >> (16 - 13)) ^ (lfsr2 >> (16 - 11)) & 1);
+		lfsr2 = (lfsr2 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr2));
+		bit = ((lfsr3 >> (16 - 16)) ^ (lfsr3 >> (16 - 14)) ^ (lfsr3 >> (16 - 13)) ^ (lfsr3 >> (16 - 11)) & 1);
+		lfsr3 = (lfsr3 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr3));
+		bit = ((lfsr4 >> (16 - 16)) ^ (lfsr4 >> (16 - 14)) ^ (lfsr4 >> (16 - 13)) ^ (lfsr4 >> (16 - 11)) & 1);
+		lfsr4 = (lfsr4 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr4));
+		bit = ((lfsr5 >> (16 - 16)) ^ (lfsr5 >> (16 - 14)) ^ (lfsr5 >> (16 - 13)) ^ (lfsr5 >> (16 - 11)) & 1);
+		lfsr5 = (lfsr5 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr5));
+		bit = ((lfsr6 >> (16 - 16)) ^ (lfsr6 >> (16 - 14)) ^ (lfsr6 >> (16 - 13)) ^ (lfsr6 >> (16 - 11)) & 1);
+		lfsr6 = (lfsr6 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr6));
+		bit = ((lfsr7 >> (16 - 16)) ^ (lfsr7 >> (16 - 14)) ^ (lfsr7 >> (16 - 13)) ^ (lfsr7 >> (16 - 11)) & 1);
+		lfsr7 = (lfsr7 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr7));
+		bit = ((lfsr8 >> (16 - 16)) ^ (lfsr8 >> (16 - 14)) ^ (lfsr8 >> (16 - 13)) ^ (lfsr8 >> (16 - 11)) & 1);
+		lfsr8 = (lfsr8 >> 1)|(bit << 31);
+ 		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr8));
+		bit = ((lfsr9 >> (16 - 16)) ^ (lfsr9 >> (16 - 14)) ^ (lfsr9 >> (16 - 13)) ^ (lfsr9 >> (16 - 11)) & 1);
+		lfsr9 = (lfsr9 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr9));
+		bit = ((lfsr10 >> (16 - 16)) ^ (lfsr10 >> (16 - 14)) ^ (lfsr10 >> (16 - 13)) ^ (lfsr10 >> (16 - 11)) & 1);
+		lfsr10 = (lfsr10 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr10));
+		bit = ((lfsr11 >> (16 - 16)) ^ (lfsr11 >> (16 - 14)) ^ (lfsr11 >> (16 - 13)) ^ (lfsr11 >> (16 - 11)) & 1);
+		lfsr11 = (lfsr11 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr11));
+		bit = ((lfsr12 >> (16 - 16)) ^ (lfsr12 >> (16 - 14)) ^ (lfsr12 >> (16 - 13)) ^ (lfsr12 >> (16 - 11)) & 1);
+		lfsr12 = (lfsr12 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr12));
+		bit = ((lfsr13 >> (16 - 16)) ^ (lfsr13 >> (16 - 14)) ^ (lfsr13 >> (16 - 13)) ^ (lfsr13 >> (16 - 11)) & 1);
+		lfsr13 = (lfsr13 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr13));
+		bit = ((lfsr14 >> (16 - 16)) ^ (lfsr14 >> (16 - 14)) ^ (lfsr14 >> (16 - 13)) ^ (lfsr14 >> (16 - 11)) & 1);
+		lfsr14 = (lfsr14 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr14));
+		bit = ((lfsr15 >> (16 - 16)) ^ (lfsr15 >> (16 - 14)) ^ (lfsr15 >> (16 - 13)) ^ (lfsr15 >> (16 - 11)) & 1);
+		lfsr15 = (lfsr15 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr15));
+		bit = ((lfsr16 >> (16 - 16)) ^ (lfsr16 >> (16 - 14)) ^ (lfsr16 >> (16 - 13)) ^ (lfsr16 >> (16 - 11)) & 1);
+		lfsr16 = (lfsr16 >> 1)|(bit << 31);
+		lfsrArray[i++] = (float)(int16_t)((0x0000FFFF)&(lfsr16));
+	}
+}
+
+void CLA_configClaMemory(void){
+	extern uint32_t Cla1funcsRunStart, Cla1funcsLoadStart, Cla1funcsLoadSize;
+	EALLOW;
+
+#ifdef _FLASH
+	// Copy over code from FLASH to RAM
+	memcpy((uint32_t *)&Cla1funcsRunStart, (uint32_t *)&Cla1funcsLoadStart,
+			(uint32_t)&Cla1funcsLoadSize);
+#endif //_FLASH
+
+	MemCfgRegs.MSGxINIT.bit.INIT_CLA1TOCPU = 1;
+	while(MemCfgRegs.MSGxINITDONE.bit.INITDONE_CLA1TOCPU != 1){};
+	MemCfgRegs.MSGxINIT.bit.INIT_CPUTOCLA1 = 1;
+	while(MemCfgRegs.MSGxINITDONE.bit.INITDONE_CPUTOCLA1 != 1){};
+	MemCfgRegs.LSxMSEL.bit.MSEL_LS5 = 1;
+	MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS5 = 1;
+	MemCfgRegs.LSxMSEL.bit.MSEL_LS0 = 1;
+	MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS0 = 0;
+	MemCfgRegs.LSxMSEL.bit.MSEL_LS1 = 1;
+	MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS1 = 0;
+	EDIS;
+}
+
+void CLA_initCpu1Cla1(void){
+	// Compute all CLA task vectors
+	// On Type-1 CLAs the MVECT registers accept full 16-bit task addresses as
+	// opposed to offsets used on older Type-0 CLAs
+	EALLOW;
+	Cla1Regs.MVECT1 = (uint16_t)(&Cla1Task1);
+	Cla1Regs.MVECT2 = (uint16_t)(&Cla1Task2);
+	Cla1Regs.MVECT3 = (uint16_t)(&Cla1Task3);
+    Cla1Regs.MCTL.bit.IACKE = 1;
+    Cla1Regs.MIER.all 	= 0x00FF;
+	PieVectTable.CLA1_1_INT   = &cla1Isr1;
+	PieVectTable.CLA1_2_INT   = &cla1Isr2;
+	PieVectTable.CLA1_3_INT   = &cla1Isr3;
+	PieCtrlRegs.PIEIER11.all  = 0xFFFF;
+	IER |= (M_INT11 );
+
+}
+
+__interrupt void cla1Isr1(void){ //After the CLA has finished filtering this will be called.
+
+	// Acknowledge the end-of-task interrupt for task 1
+	PieCtrlRegs.PIEACK.all = M_INT11;
+	DacaRegs.DACVALS.bit.DACVALS = (outputFromCLA + 2048);
+
+}
+
+__interrupt void cla1Isr2(void){ //After the CLA has finished adjusting filter this will be called
+	// Acknowledge the end-of-task interrupt for task 2
+	PieCtrlRegs.PIEACK.all = M_INT11;
+
+}
+
+__interrupt void cla1Isr3(void){ //After the CLA initializes this will be called.
+	// Acknowledge the end-of-task interrupt for task 3
+	PieCtrlRegs.PIEACK.all = M_INT11;
+
+}

@@ -1,0 +1,375 @@
+
+**** Clean-only build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k clean 
+rm -rf  "Sound_Masking.out" 
+rm -rf "eq.pp" 
+rm -rf "main.pp" "source/F2837xS_Adc.pp" "source/F2837xS_CpuTimers.pp" "source/F2837xS_DefaultISR.pp" "source/F2837xS_Dma.pp" "source/F2837xS_ECap.pp" "source/F2837xS_EPwm.pp" "source/F2837xS_EQep.pp" "source/F2837xS_Emif.pp" "source/F2837xS_GlobalVariableDefs.pp" "source/F2837xS_Gpio.pp" "source/F2837xS_I2C.pp" "source/F2837xS_Mcbsp.pp" "source/F2837xS_PieCtrl.pp" "source/F2837xS_PieVect.pp" "source/F2837xS_Sci.pp" "source/F2837xS_Spi.pp" "source/F2837xS_SysCtrl.pp" "source/F2837xS_TempSensorConv.pp" "source/F2837xS_Upp.pp" "source/F2837xS_sci_io.pp" "source/F2837xS_sdfm_drivers.pp" "source/F2837xS_struct.pp" "include/examples_setup.pp" 
+rm -rf "eq.obj" "main.obj" "source/F2837xS_Adc.obj" "source/F2837xS_CodeStartBranch.obj" "source/F2837xS_CpuTimers.obj" "source/F2837xS_DBGIER.obj" "source/F2837xS_DefaultISR.obj" "source/F2837xS_Dma.obj" "source/F2837xS_ECap.obj" "source/F2837xS_EPwm.obj" "source/F2837xS_EQep.obj" "source/F2837xS_Emif.obj" "source/F2837xS_GlobalVariableDefs.obj" "source/F2837xS_Gpio.obj" "source/F2837xS_I2C.obj" "source/F2837xS_Mcbsp.obj" "source/F2837xS_PieCtrl.obj" "source/F2837xS_PieVect.obj" "source/F2837xS_Sci.obj" "source/F2837xS_Spi.obj" "source/F2837xS_SysCtrl.obj" "source/F2837xS_TempSensorConv.obj" "source/F2837xS_Upp.obj" "source/F2837xS_sci_io.obj" "source/F2837xS_sdfm_drivers.obj" "source/F2837xS_struct.obj" "source/F2837xS_usDelay.obj" "source/FIR_f32.obj" "include/examples_setup.obj" 
+rm -rf "source/F2837xS_CodeStartBranch.pp" "source/F2837xS_DBGIER.pp" "source/F2837xS_usDelay.pp" "source/FIR_f32.pp" 
+Finished clean
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../eq.cla
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="eq.pp" --cla_support=cla1  "../eq.cla"
+Finished building: ../eq.cla
+ 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+"../main.c", line 517: error #68: expected a "}"
+
+>> Compilation failure
+"../main.c", line 646: warning #1-D: last line of file ends without a newline
+1 error detected in the compilation of "../main.c".
+gmake: *** [main.obj] Error 1
+Building file: ../source/F2837xS_Adc.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_Adc.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_Adc.c"
+Finished building: ../source/F2837xS_Adc.c
+ 
+Building file: ../source/F2837xS_CodeStartBranch.asm
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_CodeStartBranch.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_CodeStartBranch.asm"
+Finished building: ../source/F2837xS_CodeStartBranch.asm
+ 
+Building file: ../source/F2837xS_CpuTimers.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_CpuTimers.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_CpuTimers.c"
+Finished building: ../source/F2837xS_CpuTimers.c
+ 
+Building file: ../source/F2837xS_DBGIER.asm
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_DBGIER.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_DBGIER.asm"
+Finished building: ../source/F2837xS_DBGIER.asm
+ 
+Building file: ../source/F2837xS_DefaultISR.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_DefaultISR.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_DefaultISR.c"
+Finished building: ../source/F2837xS_DefaultISR.c
+ 
+Building file: ../source/F2837xS_Dma.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_Dma.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_Dma.c"
+Finished building: ../source/F2837xS_Dma.c
+ 
+Building file: ../source/F2837xS_ECap.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_ECap.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_ECap.c"
+Finished building: ../source/F2837xS_ECap.c
+ 
+Building file: ../source/F2837xS_EPwm.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_EPwm.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_EPwm.c"
+Finished building: ../source/F2837xS_EPwm.c
+ 
+Building file: ../source/F2837xS_EQep.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_EQep.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_EQep.c"
+Finished building: ../source/F2837xS_EQep.c
+ 
+Building file: ../source/F2837xS_Emif.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_Emif.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_Emif.c"
+Finished building: ../source/F2837xS_Emif.c
+ 
+Building file: ../source/F2837xS_GlobalVariableDefs.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_GlobalVariableDefs.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_GlobalVariableDefs.c"
+Finished building: ../source/F2837xS_GlobalVariableDefs.c
+ 
+Building file: ../source/F2837xS_Gpio.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_Gpio.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_Gpio.c"
+Finished building: ../source/F2837xS_Gpio.c
+ 
+Building file: ../source/F2837xS_I2C.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_I2C.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_I2C.c"
+Finished building: ../source/F2837xS_I2C.c
+ 
+Building file: ../source/F2837xS_Mcbsp.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_Mcbsp.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_Mcbsp.c"
+Finished building: ../source/F2837xS_Mcbsp.c
+ 
+Building file: ../source/F2837xS_PieCtrl.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_PieCtrl.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_PieCtrl.c"
+Finished building: ../source/F2837xS_PieCtrl.c
+ 
+Building file: ../source/F2837xS_PieVect.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_PieVect.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_PieVect.c"
+Finished building: ../source/F2837xS_PieVect.c
+ 
+Building file: ../source/F2837xS_Sci.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_Sci.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_Sci.c"
+Finished building: ../source/F2837xS_Sci.c
+ 
+Building file: ../source/F2837xS_Spi.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_Spi.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_Spi.c"
+Finished building: ../source/F2837xS_Spi.c
+ 
+Building file: ../source/F2837xS_SysCtrl.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_SysCtrl.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_SysCtrl.c"
+Finished building: ../source/F2837xS_SysCtrl.c
+ 
+Building file: ../source/F2837xS_TempSensorConv.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_TempSensorConv.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_TempSensorConv.c"
+Finished building: ../source/F2837xS_TempSensorConv.c
+ 
+Building file: ../source/F2837xS_Upp.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_Upp.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_Upp.c"
+Finished building: ../source/F2837xS_Upp.c
+ 
+Building file: ../source/F2837xS_sci_io.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_sci_io.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_sci_io.c"
+Finished building: ../source/F2837xS_sci_io.c
+ 
+Building file: ../source/F2837xS_sdfm_drivers.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_sdfm_drivers.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_sdfm_drivers.c"
+Finished building: ../source/F2837xS_sdfm_drivers.c
+ 
+Building file: ../source/F2837xS_struct.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_struct.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_struct.c"
+Finished building: ../source/F2837xS_struct.c
+ 
+Building file: ../source/F2837xS_usDelay.asm
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/F2837xS_usDelay.pp" --obj_directory="source" --cla_support=cla1  "../source/F2837xS_usDelay.asm"
+Finished building: ../source/F2837xS_usDelay.asm
+ 
+Building file: ../source/FIR_f32.asm
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="source/FIR_f32.pp" --obj_directory="source" --cla_support=cla1  "../source/FIR_f32.asm"
+Finished building: ../source/FIR_f32.asm
+ 
+Building file: ../include/examples_setup.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="include/examples_setup.pp" --obj_directory="include" --cla_support=cla1  "../include/examples_setup.c"
+Finished building: ../include/examples_setup.c
+gmake: Target `all' not remade because of errors.
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+"../main.c", line 517: error #68: expected a "}"
+1 error detected in the compilation of "../main.c".
+
+>> Compilation failure
+gmake: *** [main.obj] Error 1
+gmake: Target `all' not remade because of errors.
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+gmake: Nothing to be done for `all'.
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+gmake: Nothing to be done for `all'.
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+gmake: Nothing to be done for `all'.
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****

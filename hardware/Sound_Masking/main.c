@@ -18,8 +18,8 @@
 #define ADCSAMPLERATE	1000
 #define	FIRORDER		299
 #define VOLUME_SCALAR	3500
-#define	NULLZONE		78
-#define PUTTY 			1
+#define	NULLZONE		0
+#define PUTTY 			0
 
 #include "F28x_Project.h"     // Device Headerfile and Examples Include File
 #include <stdint.h>
@@ -68,7 +68,7 @@ float 					lfsrArray		[ARRAYSIZE];
 float					filteredArray	[ARRAYSIZE];
 uint16_t				ADCReadings		[ADCARRAYSIZE];
 char					receivedChar	[16];
-int						unitID									= 107;
+int						unitID									= 108;
 int						zone									= 107;
 int 					volumeLevel								= 60;
 int						ScibBufferSize							= 4;
@@ -210,6 +210,8 @@ void initialize(){
 	CpuTimer1Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
 	IER |= M_INT1;
 	IER |= M_INT13;
+	EALLOW;
+	ClkCfgRegs.LOSPCP.bit.LSPCLKDIV = 0;
 	PieCtrlRegs.PIEIER1.bit.INTx7 = 1;
 	PieCtrlRegs.PIEIER1.bit.INTx1  = 1; //ADC Interrupt
 	EINT;  // Enable Global interrupt INTM
@@ -454,7 +456,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 
 		if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
 			return;							//zone is not right, return out
-
+	}
 	switch(receivedChar[2]){			//third byte is command
 
 		case 'V':						//m means manual volume adjustment, I think that we should change this to be capital V
@@ -501,8 +503,13 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			break;
 
 		case 'l':
-			if(receivedChar[3] - 48 * (PUTTY) == 0 || receivedChar[3] - 48 * (PUTTY) == 1)		// Not sure what happens if you write > 1 to the LED,
-				GPIO_WritePin(13, receivedChar[3]);												// If nothing bad happens then maybe we can just write the value
+					// Not sure what happens if you write > 1 to the LED,
+			GPIO_WritePin(13, 1);												// If nothing bad happens then maybe we can just write the value
+			break;
+
+		case 'L':
+					// Not sure what happens if you write > 1 to the LED,
+			GPIO_WritePin(13, 0);												// If nothing bad happens then maybe we can just write the value
 			break;
 
 		default:		// This should never get called, but maybe we can think of something to put here
@@ -510,7 +517,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 							It may be indicative of a potential security hazard, but I'm not sure how to handle it
 							Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
 						*/
-	}
+		}
 
 }
 

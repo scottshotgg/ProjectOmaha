@@ -5,15 +5,15 @@ include/examples_setup.obj: ../include/examples_setup.h
 include/examples_setup.obj: ../include/F28x_Project.h
 include/examples_setup.obj: ../include/F2837xS_Cla_typedefs.h
 include/examples_setup.obj: ../include/F2837xS_device.h
-include/examples_setup.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/assert.h
-include/examples_setup.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/linkage.h
-include/examples_setup.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stdarg.h
-include/examples_setup.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stdbool.h
-include/examples_setup.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/yvals.h
-include/examples_setup.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stdarg.h
-include/examples_setup.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/_lock.h
-include/examples_setup.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stddef.h
-include/examples_setup.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stdint.h
+include/examples_setup.obj: /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/assert.h
+include/examples_setup.obj: /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/linkage.h
+include/examples_setup.obj: /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stdarg.h
+include/examples_setup.obj: /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stdbool.h
+include/examples_setup.obj: /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/yvals.h
+include/examples_setup.obj: /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stdarg.h
+include/examples_setup.obj: /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/_lock.h
+include/examples_setup.obj: /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stddef.h
+include/examples_setup.obj: /home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stdint.h
 include/examples_setup.obj: ../include/F2837xS_adc.h
 include/examples_setup.obj: ../include/F2837xS_analogsubsys.h
 include/examples_setup.obj: ../include/F2837xS_cla.h
@@ -64,15 +64,15 @@ include/examples_setup.obj: ../include/F2837xS_defaultisr.h
 ../include/F28x_Project.h: 
 ../include/F2837xS_Cla_typedefs.h: 
 ../include/F2837xS_device.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/assert.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/linkage.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stdarg.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stdbool.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/yvals.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stdarg.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/_lock.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stddef.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.2/include/stdint.h: 
+/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/assert.h: 
+/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/linkage.h: 
+/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stdarg.h: 
+/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stdbool.h: 
+/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/yvals.h: 
+/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stdarg.h: 
+/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/_lock.h: 
+/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stddef.h: 
+/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include/stdint.h: 
 ../include/F2837xS_adc.h: 
 ../include/F2837xS_analogsubsys.h: 
 ../include/F2837xS_cla.h: 
