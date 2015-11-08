@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/tarm/serial"
+	"io"
 	"log"
 	"time"
 )
@@ -63,9 +64,10 @@ func (status *SystemStatus) SendData(data byte) {
 }*/
 
 func (status *SystemStatus) ReadData(buffer []byte) bool {
+	buffer[0] = 0x01
 	_, err := status.Port.Read(buffer)
 	log.Printf("port.Read: %v\n", buffer)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		log.Fatalf("port.Read: %v", err)
 		panic("Failed on read")
 
