@@ -7,11 +7,11 @@
  *
  *
  *	SOUND_MASKING program written for F28377S MCU for the Univerity of Texas at Dallas Applied Research Center and Speech Privacy Systems
- * 	Written by Matt Kramer and Scott Gayados
+ * 	Written by Matt Kramer and Scott Gaydos
  *
  */
 #define WAITSTEP 	asm(" RPT #255 || NOP")
-#define ARRAYSIZE 		512			//any smaller and program does not work
+#define ARRAYSIZE 		512	//any smaller and program does not work
 #define	ADCARRAYSIZE	128
 #define BLOCKSIZE       128
 #define	SAMPLERATE		20000
@@ -66,6 +66,7 @@ int32_t					maxValue								= 0;
 int32_t					minValue 								= 4095;
 float 					lfsrArray		[ARRAYSIZE];
 float					filteredArray	[ARRAYSIZE];
+float					magic			[8192];					//do not delete this variable.
 uint16_t				ADCReadings		[ADCARRAYSIZE];
 char					receivedChar	[16];
 int						unitID									= 108;
@@ -265,7 +266,6 @@ void initializeFilter(int filterNumber){
 			break;
 	}
 }
-
 void initializeADC(){
 
 	EALLOW;
@@ -419,13 +419,13 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 												// For this, if something comes into SCIC then see if it is for all or not you and pass on
 	int i;										// Same with SCIB, intepret and pass on
 
-	/***** 
-			This entire checking sequence needs to depend on whether or not we have an ID assigned yet to the microcontroller or not 
+	/*****
+			This entire checking sequence needs to depend on whether or not we have an ID assigned yet to the microcontroller or not
 			If there is not ID then we need to set one up before the protocol can begin.
 			If not, we wait for the main controller or another speaker (depending on the protocol) to ask us if we need one
 			When that message does come, we need to send back threee bytes [HWID][HWID][HWID][0]
 			The response will be of the form [HWID][HWID][HWID][ID]
-			This may be able to be our default, but that is getting a bit tricky at that point as you induce a lot of checking 
+			This may be able to be our default, but that is getting a bit tricky at that point as you induce a lot of checking
 			and potential ID reseting.
 
 			I am also not sure about this, but should we send 4 bytes from the MCU, will think the master now have an ID because of the new implementation
@@ -444,14 +444,14 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 	if(receivedChar[0] == NULLZONE){     //NULLZONE means not in zonemode
 
 		if(receivedChar[1] != unitID){
-			for(i = 0; i < ScibBufferSize; i++)	 
-				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit 							
+			for(i = 0; i < ScibBufferSize; i++)
+				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
 			return;						//this message is not for this mcu, return out
-		}	
-								
+		}
+
 	}
 	else {
-		for(i = 0; i < ScibBufferSize; i++)	 
+		for(i = 0; i < ScibBufferSize; i++)
 			ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
 
 		if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
@@ -481,10 +481,10 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 
 		case 'a':						// a means change moving average
 			setMASize(receivedChar[3] - 48 * (PUTTY));
-			break; 
+			break;
 
 		case 'i':						// i means toggle manual mode
-			if(receivedChar[3] == 'O')	
+			if(receivedChar[3] == 'O')
 				IIR_on = 1;
 			else if(receivedChar[3] == 'o')
 				IIR_on = 0;
@@ -511,8 +511,6 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 					// Not sure what happens if you write > 1 to the LED,
 			GPIO_WritePin(13, 0);												// If nothing bad happens then maybe we can just write the value
 			break;
-
-		case ''
 
 		default:		// This should never get called, but maybe we can think of something to put here
 			break;		/*
@@ -652,3 +650,6 @@ __interrupt void cla1Isr3(void){ //After the CLA initializes this will be called
 	PieCtrlRegs.PIEACK.all = M_INT11;
 
 }
+
+
+

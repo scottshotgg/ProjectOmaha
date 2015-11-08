@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker Unix v6.4.6                    
 ******************************************************************************
->> Linked Sun Nov  8 14:38:29 2015
+>> Linked Sun Nov  8 15:25:03 2015
 
 OUTPUT FILE NAME:   <Sound_Masking.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 0001759a
@@ -101,9 +101,9 @@ PAGE 1:
   RAMLS1                00008800   00000800  0000017a  00000686  RWIX
   RAMLS2                00009000   00000800  00000000  00000800  RWIX
   RAMLS3                00009800   00000800  00000000  00000800  RWIX
-  RAMGS0                0000c000   0000a000  000012df  00008d21  RWIX
+  RAMGS0                0000c000   0000a000  000052df  00004d21  RWIX
   RAMGS10               00016000   00002000  000016c1  0000093f  RWIX
-  RAMGS12               00018000   00001000  00000609  000009f7  RWIX
+  RAMGS12               00018000   00001000  0000060d  000009f3  RWIX
   RAMGS13               00019000   00001000  00000000  00001000  RWIX
   RAMGS14               0001a000   00001000  00000000  00001000  RWIX
   RAMGS15               0001b000   00001000  00000000  00001000  RWIX
@@ -163,14 +163,14 @@ ramfuncs   0    00000122    00000004
                   000176b6    00000008     F2837xS_CodeStartBranch.obj (.text)
                   000176be    00000003     F2837xS_DBGIER.obj (.text)
 
-.cinit     1    00018000    00000609     
-                  00018000    0000055f     main.obj (.cinit)
-                  0001855f    00000090     F2837xS_struct.obj (.cinit)
-                  000185ef    0000000a     rts2800_fpu32.lib : exit.obj (.cinit)
-                  000185f9    00000005                       : _lock.obj (.cinit:__lock)
-                  000185fe    00000005                       : _lock.obj (.cinit:__unlock)
-                  00018603    00000004     F2837xS_sci_io.obj (.cinit)
-                  00018607    00000002     --HOLE-- [fill = 0]
+.cinit     1    00018000    0000060d     
+                  00018000    00000563     main.obj (.cinit)
+                  00018563    00000090     F2837xS_struct.obj (.cinit)
+                  000185f3    0000000a     rts2800_fpu32.lib : exit.obj (.cinit)
+                  000185fd    00000005                       : _lock.obj (.cinit:__lock)
+                  00018602    00000005                       : _lock.obj (.cinit:__unlock)
+                  00018607    00000004     F2837xS_sci_io.obj (.cinit)
+                  0001860b    00000002     --HOLE-- [fill = 0]
 
 .pinit     1    00018000    00000000     UNINITIALIZED
 
@@ -180,18 +180,18 @@ ramfuncs   0    00000122    00000004
 .stack     1    00000400    00000100     UNINITIALIZED
                   00000400    00000100     --HOLE--
 
-.ebss      1    0000c000    0000111f     UNINITIALIZED
-                  0000c000    00001080     main.obj (.ebss)
-                  0000d080    00000078     F2837xS_struct.obj (.ebss)
-                  0000d0f8    00000006     F2837xS_TempSensorConv.obj (.ebss)
-                  0000d0fe    00000002     rts2800_fpu32.lib : _lock.obj (.ebss:__lock)
-                  0000d100    00000018     F2837xS_CpuTimers.obj (.ebss)
-                  0000d118    00000004     rts2800_fpu32.lib : exit.obj (.ebss)
-                  0000d11c    00000002                       : _lock.obj (.ebss:__unlock)
-                  0000d11e    00000001     F2837xS_sci_io.obj (.ebss)
+.ebss      1    0000c000    0000511f     UNINITIALIZED
+                  0000c000    00005080     main.obj (.ebss)
+                  00011080    00000078     F2837xS_struct.obj (.ebss)
+                  000110f8    00000006     F2837xS_TempSensorConv.obj (.ebss)
+                  000110fe    00000002     rts2800_fpu32.lib : _lock.obj (.ebss:__lock)
+                  00011100    00000018     F2837xS_CpuTimers.obj (.ebss)
+                  00011118    00000004     rts2800_fpu32.lib : exit.obj (.ebss)
+                  0001111c    00000002                       : _lock.obj (.ebss:__unlock)
+                  0001111e    00000001     F2837xS_sci_io.obj (.ebss)
 
-.econst    1    0000d120    000001c0     
-                  0000d120    000001c0     F2837xS_PieVect.obj (.econst)
+.econst    1    00011120    000001c0     
+                  00011120    000001c0     F2837xS_PieVect.obj (.econst)
 
 Cla1Prog   0    0000a800    0000008a     
                   0000a800    00000076     eq.obj (Cla1Prog:_Cla1Task3)
@@ -802,40 +802,42 @@ address     data page           name
 
 0000c080     302 (0000c080)     _ADCReadings
 
-0000c100     304 (0000c100)     _coeffcients2
+0000c100     304 (0000c100)     _coeffcients1
 
-0000c380     30e (0000c380)     _coeffcients1
+0000c380     30e (0000c380)     _coeffcients2
 
 0000c600     318 (0000c600)     _FIRBuffer
 
-0000c880     322 (0000c880)     _lfsrArray
+0000c880     322 (0000c880)     _filteredArray
 
-0000cc80     332 (0000cc80)     _filteredArray
+0000cc80     332 (0000cc80)     _lfsrArray
 
-0000d080     342 (0000d080)     _SCI
-0000d084     342 (0000d080)     _MCBSP
-0000d088     342 (0000d080)     _I2C
-0000d08c     342 (0000d080)     _SDFM
-0000d092     342 (0000d080)     _EQEP
-0000d09a     342 (0000d080)     _SPI
-0000d0a2     342 (0000d080)     _ADC
-0000d0ac     342 (0000d080)     _ECAP
+0000d080     342 (0000d080)     _motherfucker
 
-0000d0c0     343 (0000d0c0)     _EPWM
-0000d0da     343 (0000d0c0)     _TRIP_SEL
-0000d0f8     343 (0000d0c0)     _tempSensor_tempOffset
-0000d0fa     343 (0000d0c0)     _tempSensor_tempSlope
-0000d0fc     343 (0000d0c0)     _tempSensor_scaleFactor
-0000d0fe     343 (0000d0c0)     __lock
+00011080     442 (00011080)     _SCI
+00011084     442 (00011080)     _MCBSP
+00011088     442 (00011080)     _I2C
+0001108c     442 (00011080)     _SDFM
+00011092     442 (00011080)     _EQEP
+0001109a     442 (00011080)     _SPI
+000110a2     442 (00011080)     _ADC
+000110ac     442 (00011080)     _ECAP
 
-0000d100     344 (0000d100)     _CpuTimer1
-0000d108     344 (0000d100)     _CpuTimer2
-0000d110     344 (0000d100)     _CpuTimer0
-0000d118     344 (0000d100)     ___TI_cleanup_ptr
-0000d11a     344 (0000d100)     ___TI_dtors_ptr
-0000d11c     344 (0000d100)     __unlock
-0000d11e     344 (0000d100)     _deviceOpen
-0000d120     344 (0000d100)     _PieVectTableInit
+000110c0     443 (000110c0)     _EPWM
+000110da     443 (000110c0)     _TRIP_SEL
+000110f8     443 (000110c0)     _tempSensor_tempOffset
+000110fa     443 (000110c0)     _tempSensor_tempSlope
+000110fc     443 (000110c0)     _tempSensor_scaleFactor
+000110fe     443 (000110c0)     __lock
+
+00011100     444 (00011100)     _CpuTimer1
+00011108     444 (00011100)     _CpuTimer2
+00011110     444 (00011100)     _CpuTimer0
+00011118     444 (00011100)     ___TI_cleanup_ptr
+0001111a     444 (00011100)     ___TI_dtors_ptr
+0001111c     444 (00011100)     __unlock
+0001111e     444 (00011100)     _deviceOpen
+00011120     444 (00011100)     _PieVectTableInit
 
 00047000    11c0 (00047000)     _Emif1Regs
 
@@ -890,7 +892,7 @@ page  address   name
 1     00017680  C$$EXIT                               
 abs   00000100  CLA_SCRATCHPAD_SIZE                   
 1     00008900  _A                                    
-1     0000d0a2  _ADC                                  
+1     000110a2  _ADC                                  
 1     000166fa  _ADCA1_ISR                            
 1     000169ba  _ADCA2_ISR                            
 1     000169c5  _ADCA3_ISR                            
@@ -961,11 +963,11 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     00005d60  _Cmpss8Regs                           
 1     00017560  _ConfigCpuTimer                       
 1     0005d300  _CpuSysRegs                           
-1     0000d110  _CpuTimer0                            
+1     00011110  _CpuTimer0                            
 1     00000c00  _CpuTimer0Regs                        
-1     0000d100  _CpuTimer1                            
+1     00011100  _CpuTimer1                            
 1     00000c08  _CpuTimer1Regs                        
-1     0000d108  _CpuTimer2                            
+1     00011108  _CpuTimer2                            
 1     00000c10  _CpuTimer2Regs                        
 1     00017146  _CsmUnlock                            
 1     0001663f  _DATALOG_ISR                          
@@ -988,7 +990,7 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     00016fe8  _DisablePeripheralClocks              
 1     00007980  _DmaClaSrcSelRegs                     
 1     00001000  _DmaRegs                              
-1     0000d0ac  _ECAP                                 
+1     000110ac  _ECAP                                 
 1     00016802  _ECAP1_ISR                            
 1     0001680d  _ECAP2_ISR                            
 1     00016818  _ECAP3_ISR                            
@@ -1004,7 +1006,7 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     00016bbf  _EMIF_ERROR_ISR                       
 1     00016c22  _EMPTY_ISR                            
 1     00016655  _EMU_ISR                              
-1     0000d0c0  _EPWM                                 
+1     000110c0  _EPWM                                 
 1     00016b04  _EPWM10_ISR                           
 1     00016ad8  _EPWM10_TZ_ISR                        
 1     00016b0f  _EPWM11_ISR                           
@@ -1042,7 +1044,7 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     00004700  _EPwm8Regs                            
 1     00004800  _EPwm9Regs                            
 1     00007a00  _EPwmXbarRegs                         
-1     0000d092  _EQEP                                 
+1     00011092  _EQEP                                 
 1     00016844  _EQEP1_ISR                            
 1     0001684f  _EQEP2_ISR                            
 1     0001685a  _EQEP3_ISR                            
@@ -1087,7 +1089,7 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     00007f00  _GpioDataRegs                         
 1     000171bb  _HALT                                 
 1     000171cc  _HIB                                  
-1     0000d088  _I2C                                  
+1     00011088  _I2C                                  
 1     0001690a  _I2CA_FIFO_ISR                        
 1     000168ff  _I2CA_ISR                             
 1     00016920  _I2CB_FIFO_ISR                        
@@ -1110,7 +1112,7 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     00016f33  _InitSysCtrl                          
 1     0001701c  _InitSysPll                           
 1     00007900  _InputXbarRegs                        
-1     0000d084  _MCBSP                                
+1     00011084  _MCBSP                                
 1     00016891  _MCBSPA_RX_ISR                        
 1     0001689c  _MCBSPA_TX_ISR                        
 1     000168a7  _MCBSPB_RX_ISR                        
@@ -1126,13 +1128,13 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     00016c17  _PIE_RESERVED_ISR                     
 1     00000ce0  _PieCtrlRegs                          
 1     00000d00  _PieVectTable                         
-1     0000d120  _PieVectTableInit                     
+1     00011120  _PieVectTableInit                     
 1     00016be0  _RAM_ACCESS_VIOLATION_ISR             
 1     00016bca  _RAM_CORRECTABLE_ERROR_ISR            
 1     0001664a  _RTOS_ISR                             
 1     0005e608  _RomPrefetchRegs                      
 1     0005f540  _RomWaitStateRegs                     
-1     0000d080  _SCI                                  
+1     00011080  _SCI                                  
 1     00016957  _SCIA_RX_ISR                          
 1     00016962  _SCIA_TX_ISR                          
 1     0001696d  _SCIB_RX_ISR                          
@@ -1143,8 +1145,8 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     0001694c  _SCID_TX_ISR                          
 1     00016b25  _SD1_ISR                              
 1     00016b30  _SD2_ISR                              
-1     0000d08c  _SDFM                                 
-1     0000d09a  _SPI                                  
+1     0001108c  _SDFM                                 
+1     0001109a  _SPI                                  
 1     00016865  _SPIA_RX_ISR                          
 1     00016870  _SPIA_TX_ISR                          
 1     0001687b  _SPIB_RX_ISR                          
@@ -1173,7 +1175,7 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     0001673c  _TIMER0_ISR                           
 1     00016629  _TIMER1_ISR                           
 1     00016634  _TIMER2_ISR                           
-1     0000d0da  _TRIP_SEL                             
+1     000110da  _TRIP_SEL                             
 1     00016b51  _UPPA_ISR                             
 1     00016b5c  _USBA_ISR                             
 1     000166d9  _USER10_ISR                           
@@ -1201,8 +1203,8 @@ abs   00000100  CLA_SCRATCHPAD_SIZE
 1     00007070  _XintRegs                             
 1     00000500  __STACK_END                           
 abs   00000100  __STACK_SIZE                          
-1     0000d118  ___TI_cleanup_ptr                     
-1     0000d11a  ___TI_dtors_ptr                       
+1     00011118  ___TI_cleanup_ptr                     
+1     0001111a  ___TI_dtors_ptr                       
 abs   ffffffff  ___binit__                            
 abs   ffffffff  ___c_args__                           
 1     00018000  ___cinit__                            
@@ -1210,12 +1212,12 @@ abs   ffffffff  ___c_args__
 abs   ffffffff  ___pinit__                            
 1     00016000  ___text__                             
 1     00017667  __args_main                           
-1     0000d0fe  __lock                                
+1     000110fe  __lock                                
 1     000176b5  __nop                                 
 1     000176b1  __register_lock                       
 1     000176ad  __register_unlock                     
 1     00000400  __stack                               
-1     0000d11c  __unlock                              
+1     0001111c  __unlock                              
 1     00017680  _abort                                
 1     00016d54  _adca1_ISR                            
 1     0000c028  _bit                                  
@@ -1223,16 +1225,16 @@ abs   ffffffff  ___pinit__
 1     00016ed3  _cla1Isr1                             
 1     00016f11  _cla1Isr2                             
 1     00016f22  _cla1Isr3                             
-1     0000c380  _coeffcients1                         
-1     0000c100  _coeffcients2                         
+1     0000c100  _coeffcients1                         
+1     0000c380  _coeffcients2                         
 1     00016c3a  _cpu_timer0_isr                       
 1     00016d43  _cpu_timer1_isr                       
 1     0000c00c  _currentAddress                       
 1     00001504  _decibel                              
-1     0000d11e  _deviceOpen                           
+1     0001111e  _deviceOpen                           
 1     000176ab  _done                                 
 1     00017682  _exit                                 
-1     0000cc80  _filteredArray                        
+1     0000c880  _filteredArray                        
 1     0000c040  _firFP                                
 1     0000c003  _foundNorm1                           
 1     0000c00b  _foundNorm2                           
@@ -1263,11 +1265,12 @@ abs   ffffffff  ___pinit__
 1     0000c018  _lfsr7                                
 1     0000c016  _lfsr8                                
 1     0000c010  _lfsr9                                
-1     0000c880  _lfsrArray                            
+1     0000cc80  _lfsrArray                            
 1     0001628c  _loadWhiteNoiseSamples                
 1     00016009  _main                                 
 1     0000c02a  _maxValue                             
 1     0000c02c  _minValue                             
+1     0000d080  _motherfucker                         
 1     0000c02e  _movingAverage                        
 1     0000c00d  _movingAverageSize                    
 1     00001502  _octave                               
@@ -1277,9 +1280,9 @@ abs   ffffffff  ___pinit__
 1     00016dbf  _scibRxFifoIsr                        
 1     00016ec0  _scicRxFifoIsr                        
 1     00016265  _setMASize                            
-1     0000d0fc  _tempSensor_scaleFactor               
-1     0000d0f8  _tempSensor_tempOffset                
-1     0000d0fa  _tempSensor_tempSlope                 
+1     000110fc  _tempSensor_scaleFactor               
+1     000110f8  _tempSensor_tempOffset                
+1     000110fa  _tempSensor_tempSlope                 
 1     0000c009  _unitID                               
 1     0000c001  _volumeLevel                          
 1     0000c008  _zone                                 
@@ -1422,33 +1425,34 @@ page  address   name
 1     0000c040  _firFP                                
 1     0000c04e  _receivedChar                         
 1     0000c080  _ADCReadings                          
-1     0000c100  _coeffcients2                         
-1     0000c380  _coeffcients1                         
+1     0000c100  _coeffcients1                         
+1     0000c380  _coeffcients2                         
 1     0000c600  _FIRBuffer                            
-1     0000c880  _lfsrArray                            
-1     0000cc80  _filteredArray                        
-1     0000d080  _SCI                                  
-1     0000d084  _MCBSP                                
-1     0000d088  _I2C                                  
-1     0000d08c  _SDFM                                 
-1     0000d092  _EQEP                                 
-1     0000d09a  _SPI                                  
-1     0000d0a2  _ADC                                  
-1     0000d0ac  _ECAP                                 
-1     0000d0c0  _EPWM                                 
-1     0000d0da  _TRIP_SEL                             
-1     0000d0f8  _tempSensor_tempOffset                
-1     0000d0fa  _tempSensor_tempSlope                 
-1     0000d0fc  _tempSensor_scaleFactor               
-1     0000d0fe  __lock                                
-1     0000d100  _CpuTimer1                            
-1     0000d108  _CpuTimer2                            
-1     0000d110  _CpuTimer0                            
-1     0000d118  ___TI_cleanup_ptr                     
-1     0000d11a  ___TI_dtors_ptr                       
-1     0000d11c  __unlock                              
-1     0000d11e  _deviceOpen                           
-1     0000d120  _PieVectTableInit                     
+1     0000c880  _filteredArray                        
+1     0000cc80  _lfsrArray                            
+1     0000d080  _motherfucker                         
+1     00011080  _SCI                                  
+1     00011084  _MCBSP                                
+1     00011088  _I2C                                  
+1     0001108c  _SDFM                                 
+1     00011092  _EQEP                                 
+1     0001109a  _SPI                                  
+1     000110a2  _ADC                                  
+1     000110ac  _ECAP                                 
+1     000110c0  _EPWM                                 
+1     000110da  _TRIP_SEL                             
+1     000110f8  _tempSensor_tempOffset                
+1     000110fa  _tempSensor_tempSlope                 
+1     000110fc  _tempSensor_scaleFactor               
+1     000110fe  __lock                                
+1     00011100  _CpuTimer1                            
+1     00011108  _CpuTimer2                            
+1     00011110  _CpuTimer0                            
+1     00011118  ___TI_cleanup_ptr                     
+1     0001111a  ___TI_dtors_ptr                       
+1     0001111c  __unlock                              
+1     0001111e  _deviceOpen                           
+1     00011120  _PieVectTableInit                     
 1     00016000  .text                                 
 1     00016000  ___text__                             
 1     00016009  _main                                 
@@ -1697,4 +1701,4 @@ abs   ffffffff  ___pinit__
 abs   ffffffff  binit                                 
 abs   ffffffff  pinit                                 
 
-[402 symbols]
+[403 symbols]
