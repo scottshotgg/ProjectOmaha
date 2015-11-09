@@ -19,7 +19,6 @@
 #define	FIRORDER		299
 #define VOLUME_SCALAR	3500
 #define	NULLZONE		0
-#define PUTTY 			0
 
 #include "F28x_Project.h"     // Device Headerfile and Examples Include File
 #include <stdint.h>
@@ -464,7 +463,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			//if(receivedChar[3] > 75 || receivedChar[3] < 0) //max volume with board 5V regulator and 4 ohm speaker
 				return;	// somehow a bad volume level was sent, return out
 			volumeLevel = receivedChar[3];
-			GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
+			//GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
 			break;
 
 		case 's':
@@ -480,7 +479,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			break;*/
 
 		case 'a':						// a means change moving average
-			setMASize(receivedChar[3] - 48 * (PUTTY));
+			setMASize(receivedChar[3]);
 			break;
 
 		case 'i':						// i means toggle manual mode
@@ -491,25 +490,30 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			break;
 
 		case 'f':
-			initializeFilter(receivedChar[3]);
+			initializeFilter(receivedChar[3]);		// Needs to be some checking on recievedChar[3] first
 			break;
 
-		case 'R':		// Reserved for AreYouALive commands
-			ScibRegs.SCITXBUF.all = 'r';	// Little r back is like an ack
+		case 'U':		// Reserved for AreYouALive commands
+			ScibRegs.SCITXBUF.all = 'u';	// Little r back is like an ack
 			break;
 
 		case 'm':		// Get microphone reading
+			ScibRegs.SCITXBUF.all = unitID;
 			ScibRegs.SCITXBUF.all = AdcaResultRegs.ADCRESULT0;		// Not sure if we can actually do this, may have to check if it is zero or use ADCReadings[k]
 			break;
 
 		case 'l':
-					// Not sure what happens if you write > 1 to the LED,
-			GPIO_WritePin(13, 1);												// If nothing bad happens then maybe we can just write the value
+			ScibRegs.SCITXBUF.all = unitID;
+			ScibRegs.SCITXBUF.all = GPIO_ReadPin(13);
 			break;
 
 		case 'L':
-					// Not sure what happens if you write > 1 to the LED,
-			GPIO_WritePin(13, 0);												// If nothing bad happens then maybe we can just write the value
+			if(receivedChar[3] == 1)
+				GPIO_WritePin(13, 0);												// If nothing bad happens then maybe we can just write the value
+			else if(receivedChar[3] == 0)
+				GPIO_WritePin(13, 1);
+			else
+				// This should print to a log that something happened that wasn't supposed to
 			break;
 
 		default:		// This should never get called, but maybe we can think of something to put here

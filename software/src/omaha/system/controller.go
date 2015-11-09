@@ -6,6 +6,14 @@ import (
 	"strconv"
 )
 
+
+
+
+const NULLZone int = 0
+
+
+
+
 func Btoi(b bool) int {
 	if b {
 		return 1
@@ -18,9 +26,9 @@ func IsLEDOn(this *database.ControllerStatus) bool {
 }
 
 func TurnLEDOn(this *database.ControllerStatus) error {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.TurnLEDOn
-	data[3] = 0x00
+	data[3] = 0x01
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = true
@@ -36,9 +44,9 @@ func TurnLEDOn(this *database.ControllerStatus) error {
 }
 
 func TurnLEDOff(this *database.ControllerStatus) error {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.TurnLEDOff
-	data[3] = 0x01
+	data[3] = 0x00
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = false
@@ -57,7 +65,7 @@ type LEDStatusResponse struct {
 }
 
 func GetLEDStatusFromController(this *database.ControllerStatus) (bool, error) {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.GetLEDStatus
 	data[3] = 0x00
 
@@ -82,7 +90,7 @@ func GetLEDStatusFromController(this *database.ControllerStatus) (bool, error) {
 }
 
 func SetVolume(this *database.ControllerStatus, volumeLevel int8) error {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.SetVolume
 	data[3] = byte(volumeLevel)
 
@@ -103,7 +111,7 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 		return 0, nil
 	}
 
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.GetVolume
 	data[3] = 0x00
 
@@ -113,7 +121,7 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 }
 
 func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.SetAveragingFilter
 	data[3] = byte(mode)
 
