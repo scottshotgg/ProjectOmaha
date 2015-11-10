@@ -19,6 +19,7 @@
 #define	FIRORDER		299
 #define VOLUME_SCALAR	3500
 #define	NULLZONE		0
+#define ALLZONE			1
 
 #include "F28x_Project.h"     // Device Headerfile and Examples Include File
 #include <stdint.h>
@@ -441,13 +442,18 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 	PieCtrlRegs.PIEACK.all|=0x100;       // Issue PIE ack
 
 	if(receivedChar[0] == NULLZONE){     //NULLZONE means not in zonemode
-
 		if(receivedChar[1] != unitID){
 			for(i = 0; i < ScibBufferSize; i++)
 				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
 			return;						//this message is not for this mcu, return out
 		}
 
+	}
+	else if(receivedChar[0] == ALLZONE) {		// Implementing zone 1 to send to everyone
+		if(receivedChar[1] != unitID){
+			for(i = 0; i < ScibBufferSize; i++)
+				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit, not sure if this will cause problems when sending before processing
+		}
 	}
 	else {
 		for(i = 0; i < ScibBufferSize; i++)
@@ -456,7 +462,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 		if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
 			return;							//zone is not right, return out
 	}
-	switch(receivedChar[2]){			//third byte is command
+	switch(receivedChar[2]) {			//third byte is command
 
 		case 'S':						//m means manual volume adjustment, I think that we should change this to be capital V
 			if(receivedChar[3] > 100 || receivedChar[3] < 0)
@@ -482,19 +488,55 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			setMASize(receivedChar[3]);
 			break;
 
-		case 'i':						// i means toggle manual mode
+		case 'I':						// i means toggle manual mode
 			if(receivedChar[3] == 'O')
 				IIR_on = 1;
 			else if(receivedChar[3] == 'o')
 				IIR_on = 0;
 			break;
 
+		case 'i':
+			ScibRegs.SCITXBUF.all = unitID;
+			ScibRegs.SCITXBUF.all = IIR_on;	
+			break;
+
 		case 'f':
 			initializeFilter(receivedChar[3]);		// Needs to be some checking on recievedChar[3] first
 			break;
 
+		case 'W':		// This wil be used when we write the ID to flash
+			break;		// Chapter 24: External Memory Interface (EMIF), page 2301 of http://www.ti.com/lit/ug/spruhx5c/spruhx5c.pdf
+
+		case 'w':		// This will be used when we want to know what the ID is
+			ScibRegs.SCITXBUF.all = unitID;
+			ScibRegs.SCITXBUF.all = unitID;		// Hah, unitID twice, maybe this doesn't need to happen
+												// This comamnd might be useless, but we could send back the ID behind it or something
+			break;
+
 		case 'U':		// Reserved for AreYouALive commands
-			ScibRegs.SCITXBUF.all = 'u';	// Little r back is like an ack
+			ScibRegs.SCITXBUF.all = unitID;
+			ScibRegs.SCITXBUF.all = 'u';	// Little u back is like an ack
+			break;
+
+		case 'R':
+			/* 
+				We need to something with a software reset here, there is no way to do this on the F28x devices other than 
+				using the watchdog
+				https://e2e.ti.com/support/microcontrollers/c2000/f/171/t/21505
+
+				Sorry Tim but I've to correct you:
+
+				To force a software reset by the watchdog unit you have to write into WDCR and not into WDKEY!  A  wrong value written into WDKEY will do nothing. A reset can be forced by a false pattern ( any other than 101) written into the WDCHK - Bits of WDCR (Figure 3-14, sprufb0B).
+
+				Regards
+			*/
+			return;
+
+		case 'r':	// This case is for reseting the FIFO
+			/*
+				Check to make sure FIFO isn't empty, it might give false data if you try to read it while it is empty
+				Afterwards read everything form FIFO and set the array to 0
+			*/
 			break;
 
 		case 'm':		// Get microphone reading
