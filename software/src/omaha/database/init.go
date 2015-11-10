@@ -23,6 +23,8 @@ func InitDB() {
 	case err == sql.ErrNoRows:
 		// table doesn't exist
 		createAccountTable(DB)
+		createSpeakerTable(DB)
+		populateSpeakerTable()
 	case err != nil:
 		log.Fatal(err)
 	}

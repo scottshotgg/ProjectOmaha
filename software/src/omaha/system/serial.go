@@ -1,8 +1,8 @@
 package system
 
 import (
-	"fmt"
 	"github.com/tarm/serial"
+	"io"
 	"log"
 	"time"
 )
@@ -36,15 +36,15 @@ func HandleControllerMessages() {
 	}
 }
 
-func getMessageHeader(section, id, size int8) []byte {
+func getMessageHeader(zone, id, size int8) []byte {
 	header := make([]byte, size)
-	header[0] = byte(section) // section ID
+	header[0] = byte(zone) // zone ID
 	header[1] = byte(id)      // speaker ID
 	return header
 }
 
 func (status *SystemStatus) SendData(data byte) {
-	fmt.Printf("port.Write: %v\n", data)
+	log.Printf("port.Write: %v\n", data)
 	_, err := status.Port.Write([]byte{data})
 	if err != nil {
 		log.Fatalf("port.Write: %v", err)
@@ -54,7 +54,7 @@ func (status *SystemStatus) SendData(data byte) {
 
 /*func (status *SystemStatus) SendMoreData(data []byte, amount int) {
 	for int i := 0; i < amount; i++ {
-		fmt.Printf("port.Write: %v\n", data)
+		log.Printf("port.Write: %v\n", data)
 		_, err := status.Port.Write(data)
 		if err != nil {
 			log.Fatalf("port.Write: %v", err)
@@ -64,9 +64,10 @@ func (status *SystemStatus) SendData(data byte) {
 }*/
 
 func (status *SystemStatus) ReadData(buffer []byte) bool {
+	buffer[0] = 0x01
 	_, err := status.Port.Read(buffer)
-	fmt.Printf("port.Read: %v\n", buffer)
-	if err != nil {
+	log.Printf("port.Read: %v\n", buffer)
+	if err != nil && err != io.EOF {
 		log.Fatalf("port.Read: %v", err)
 		panic("Failed on read")
 
@@ -91,7 +92,7 @@ func (status *SystemStatus) InitializePort() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Hello " + c.Name)
+	log.Println("Hello " + c.Name)
 
 	status.Port = s
 }

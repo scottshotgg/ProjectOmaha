@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"omaha/system"
 )
@@ -17,13 +17,13 @@ func DiagnosticsHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(diagnosticsRequest)
 	if err != nil {
 		if status.IsDebug() {
-			fmt.Println(err)
+			log.Println(err)
 		}
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
 	//controller := status.GetController(0x6B)
 	//err = controller.SetAveragingMode(averagingRequest.FilterType)
-//	controller.Set
+	//	controller.Set
 	w.Write(getGenericSuccessResponse())
 }

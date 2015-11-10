@@ -1,0 +1,17 @@
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+/home/matt/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../main.c
+Invoking: C2000 Compiler
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed --include_path="/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/home/matt/ProjectOmaha/hardware/Sound_Masking/include" -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 --preproc_with_compile --preproc_dependency="main.pp" --cla_support=cla1  "../main.c"
+Finished building: ../main.c
+ 
+Building target: Sound_Masking.out
+Invoking: C2000 Linker
+"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./eq.obj" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+Finished building target: Sound_Masking.out
+ 
+
+**** Build Finished ****

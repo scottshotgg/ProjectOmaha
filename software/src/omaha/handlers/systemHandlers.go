@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"omaha/system"
 )
@@ -15,8 +15,8 @@ func SystemStatusHandler(w http.ResponseWriter, r *http.Request) {
 	response := &SystemStatusResponse{Status: system.GetSystemStatus()}
 	responseData, err := json.Marshal(response)
 	if err != nil {
-		fmt.Println(err)
-		fmt.Fprint(w, err.Error())
+		log.Println(err)
+		w.Write(getGenericErrorResponse(err.Error()))
 	} else {
 		w.Write(responseData)
 	}

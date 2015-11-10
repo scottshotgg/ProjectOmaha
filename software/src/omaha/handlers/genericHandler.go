@@ -3,7 +3,9 @@ package handlers
 import (
 	"encoding/json"
 	"log"
+	"net"
 	"net/http"
+	"omaha/database"
 )
 
 type GenericHandler struct {
@@ -28,6 +30,22 @@ func getGenericErrorResponse(err string) []byte {
 }
 
 func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	sessionCookie, _ := req.Cookie("session")
+	host, _, _ := net.SplitHostPort(req.RemoteAddr)
+	/*
+		If we're at the same IP address as the server, the host should be ::1 (ipv6 localhost)
+	*/
+	switch {
+	case host == "::1":
+		/*
+			The request is coming from the server. Let it through by default.
+		*/
+	case sessionCookie == nil || !database.IsSessionHashValid(sessionCookie.Value):
+		redirectToLoginHandler(w, req)
+		log.Println("Redirected to login")
+		return
+	}
+
 	/*
 		Generic stuff goes here
 	*/

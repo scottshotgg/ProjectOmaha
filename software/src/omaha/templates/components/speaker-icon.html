@@ -16,15 +16,18 @@
   <template>
     <style>
       :host {
-        display: block;
       }
 
       .block {
         width: 30px;
-        height: 30px;
+        height: 30px; 
         position: absolute;
         cursor: pointer;
-
+        --iron-icon-fill-color: white;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+        background: var(--speaker-background-color);
       }
 
     </style>
@@ -37,7 +40,7 @@
       '--paper-deep-orange-500',
       '--paper-orange-500',
       '--paper-amber-500',
-      '--paper-yellow-500',
+      //'--paper-yellow-500', this is kinda hard to see
       '--paper-lime-500',
       '--paper-light-green-500',
       '--paper-green-500',
@@ -62,12 +65,11 @@
       },
 
       ready: function () {
-          console.log
           this.$.icon.style.left = this.x.toString() + "px";
           this.$.icon.style.top = this.y.toString() + "px";
           var color = colors[Math.floor(Math.random()*colors.length)];
-          this.$.icon.customStyle['--iron-icon-fill-color'] = 'var(' + color + ')';
-          this.$.icon.updateStyles();
+          this.customStyle['--speaker-background-color'] = 'var(' + color + ')';
+          this.updateStyles();
       }
     });
   </script>

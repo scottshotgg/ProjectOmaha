@@ -162,7 +162,7 @@ all: Sound_Masking.out
 Sound_Masking.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: C2000 Linker'
-	"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/C28_CLA/Sound_Masking/CPU1_FLASH/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" $(ORDERED_OBJS)
+	"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"/home/matt/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"/home/matt/ProjectOmaha/hardware/Sound_Masking/CPU1_FLASH/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

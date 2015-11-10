@@ -1,17 +1,18 @@
 package system
 
 import (
-	"fmt"
 	"io"
+	"log"
+	"omaha/database"
 	"strconv"
 )
 
 var status SystemStatus
 
 type SystemStatus struct {
-	debug       bool                         `json:"-"`
-	Port        io.ReadWriteCloser           `json:"-"`
-	Controllers map[string]*ControllerStatus `json:"controllers"` // controllers mapped by their ID
+	debug       bool                                  `json:"-"`
+	Port        io.ReadWriteCloser                    `json:"-"`
+	Controllers map[string]*database.ControllerStatus `json:"controllers"` // controllers mapped by their ID
 }
 
 // Do we want to store this stuff in a database since that way it will be written to disk?
@@ -20,11 +21,11 @@ func (status *SystemStatus) IsDebug() bool {
 	return status.debug
 }
 
-func (status *SystemStatus) GetController(ID int8) *ControllerStatus {
+func (status *SystemStatus) GetController(ID int8) *database.ControllerStatus {
 	return status.Controllers[strconv.Itoa(int(ID))]
 }
 
-func (status *SystemStatus) AddController(controller *ControllerStatus) {
+func (status *SystemStatus) AddController(controller *database.ControllerStatus) {
 	status.Controllers[strconv.Itoa(int(controller.ID))] = controller
 }
 
@@ -33,47 +34,29 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 	if !isDebug {
 		status.InitializePort()
 	}
-	status.Controllers = make(map[string]*ControllerStatus)
+	status.Controllers = make(map[string]*database.ControllerStatus)
 
-	controller := &ControllerStatus{ID: 0x6B, SectionID: 0x6B}
-	var err error
+	controllers := database.GetAllSpeakers()
 
-	controller.LEDOn, err = controller.GetLEDStatusFromController()
-	if err != nil {
-		fmt.Println(err)
+	for _, controller := range controllers {
+		var err error
+
+		controller.LEDOn, err = GetLEDStatusFromController(controller)
+		if err != nil {
+			log.Println(err)
+		}
+
+		controller.VolumeLevel, err = GetVolumeFromController(controller)
+		if err != nil {
+			log.Println(err)
+		}
+
+		//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
+		if err != nil {
+			log.Println(err)
+		}
+		status.AddController(controller)
 	}
-
-	controller.VolumeLevel, err = controller.GetVolumeFromController()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	status.AddController(controller)
-
-	controller = &ControllerStatus{ID: 0x6C, SectionID: 0x6B}
-
-	controller.LEDOn, err = controller.GetLEDStatusFromController()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	controller.VolumeLevel, err = controller.GetVolumeFromController()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	status.AddController(controller)
-
 	return &status
 }
 

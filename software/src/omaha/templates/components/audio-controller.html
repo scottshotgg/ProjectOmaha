@@ -4,6 +4,7 @@
 <link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
 
+<link rel="import" href="/components/simple-fit.html">
 <link rel="import" href="/components/test-controller.html">
 <link rel="import" href="/components/volume-selector.html">
 <link rel="import" href="/components/light-controller.html">
@@ -73,29 +74,21 @@
     </div>
     <neon-animated-pages selected="[[page]]" id="pages" class="flex">
       <neon-animatable class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <div class="container layout horizontal center">
-          <div class="container layout vertical center">
-            <light-controller id="light" led-on="{{ledOn}}"></light-controller>
-          </div>
-        </div>
+        <simple-fit class="container">
+          <light-controller id="light" led-on="{{ledOn}}"></light-controller>
+        </simple-fit>
       </neon-animatable>
 
 
       <neon-animatable class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <div class="container layout horizontal center">
-          <div class="container layout vertical center">
-            <averaging-controller id="averaging" speaker-id="[[speakerId]]" averaging="[[averaging]]"></averaging-controller>
-          </div>
-        </div>
+        <simple-fit class="container">
+          <averaging-controller id="averaging" speaker-id="[[speakerId]]" averaging="[[averaging]]"></averaging-controller>
+        </simple-fit>
       </neon-animatable>
-
-
       <neon-animatable class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
-        <div class="container layout horizontal center">
-          <div class="container layout vertical center">
-            <volume-selector id="volume" volume="{{volume}}"></volume-selector>
-          </div>
-        </div>
+        <simple-fit class="container">
+          <volume-selector id="volume" volume="{{volume}}"></volume-selector>
+        </simple-fit>
       </neon-animatable>
     </neon-animated-pages>
     <iron-ajax
@@ -112,7 +105,7 @@
       is: 'audio-controller',
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonAnimatableBehavior
       ],
 
       properties: {
@@ -150,29 +143,13 @@
           observer: '_volumeUpdate'
         },
 
-        sharedElements: {
-          type: Object,
-          value: function() {
-            return {
-              'hero': this.$.pages,
-            }
-          }
-        },
-
         animationConfig: {
           value: function() {
             return {
-              'entry': [{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  toPage: this,
-                  timing: {
-                    delay: 150
-                  }
-                },{
+              'entry': {
                   name: 'fade-in-animation',
                   node: this
-                }],
+                },
               'exit': {
                 // provided by neon-animation-animations/fade-out-animation.html
                 name: 'slide-left-animation',

@@ -143,9 +143,9 @@ void InitPeripheralClocks()
 	CpuSysRegs.PCLKCR6.bit.SD1 = 0;
 	CpuSysRegs.PCLKCR6.bit.SD2 = 0;
 
-	CpuSysRegs.PCLKCR7.bit.SCI_A = 0;
+	CpuSysRegs.PCLKCR7.bit.SCI_A = 0;		// We didn't use this because it was bound to USB serial communication on the Launchpad
 	CpuSysRegs.PCLKCR7.bit.SCI_B = 1;
-	CpuSysRegs.PCLKCR7.bit.SCI_C = 0;
+	CpuSysRegs.PCLKCR7.bit.SCI_C = 1;		// Addition
 	CpuSysRegs.PCLKCR7.bit.SCI_D = 0;
 
 	CpuSysRegs.PCLKCR8.bit.SPI_A = 0;
@@ -165,7 +165,7 @@ void InitPeripheralClocks()
 	CpuSysRegs.PCLKCR12.bit.uPP_A = 0;
 
 	CpuSysRegs.PCLKCR13.bit.ADC_A = 1;
-	CpuSysRegs.PCLKCR13.bit.ADC_B = 0;
+	CpuSysRegs.PCLKCR13.bit.ADC_B = 1;		// Addition
 	CpuSysRegs.PCLKCR13.bit.ADC_C = 0;
 	CpuSysRegs.PCLKCR13.bit.ADC_D = 0;
 

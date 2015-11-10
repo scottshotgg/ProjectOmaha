@@ -4,11 +4,14 @@
 <link rel="import" href="/bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
 
 <link rel="import" href="/components/omaha-navbar.html">
 <link rel="import" href="/components/audio-controller.html">
 <link rel="import" href="/components/map-controller.html">
-
+<link rel="import" href="/components/open-map-controller.html">
+<link rel="import" href="/components/account-creation-form.html">
+<link rel="import" href="/components/simple-fit.html">
 <dom-module id="omaha-app">
   <template>
     <style>
@@ -32,12 +35,22 @@
         <paper-header-panel class="flex" mode="seamed">
           <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
           <neon-animated-pages class="fit" id="app-pages" selected="{{selected}}">
-            <map-controller on-speakerselected="_speakerSelected" class="fit"></map-controller>
+            <open-map-controller id="mapcontroller" on-speakerselected="_speakerSelected" controllers="[[controllers]]" class="fit"></open-map-controller>
             <audio-controller id="controller" class="fit"></audio-controller>
-<!--             <template is="dom-repeat" items="{{controllers}}">
-              <audio-controller class="fit" speaker="{{item}}"></audio-controller>
-            </template> -->
-          </neon-animated-pages
+
+            <neon-animatable class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+              <paper-material class="flex self-center card" elevation="5">
+                <account-creation-form></account-creation-form>
+              </paper-material>
+            </neon-animatable> 
+          </neon-animated-pages>
+          <paper-dialog id="dialog">
+            <h2>Error</h2>
+            <div>That speaker does not exist on the server</div>
+            <div class="buttons layout vertical center">
+              <paper-button dialog-confirm>Okay</paper-button>
+            </div>
+          </paper-dialog>
         </paper-header-panel>
          <iron-ajax
             id="systemStatusAjax"
@@ -59,11 +72,13 @@
       },
 
       listeners: {
-        'nav.backpressed': '_showMap'
+        'nav.backpressed': '_showMap',
+        'nav.showaccountcreation': '_showAccountCreation'
       },
 
       _showMap: function() {
         this.selected = 0;
+        this.$.nav.showAccountCreation = true;
       },
 
       _speakerSelected: function(e) {
@@ -75,9 +90,13 @@
             break;
           }
         }
-        this.$.controller.speaker = speaker;
-        this.$.nav.showBackArrow();
-        this.selected = 1;
+        if(speaker === undefined) {
+          this.$.dialog.open();
+        } else {
+          this.$.controller.speaker = speaker;
+          this.$.nav.showBackArrow();
+          this.selected = 1;
+        }
       },
 
       _initializeStatus: function(event, data) {
@@ -87,11 +106,18 @@
           controllers.push(controllersMap[id])
         }
         this.controllers = controllers
+        this.$.mapcontroller.renderMap();
+      },
+
+      _showAccountCreation: function() {
+        this.selected = 2;
+        this.$.nav.showAccountCreation = false;
       },
 
       ready: function() {
         this.$.systemStatusAjax.generateRequest();
         this.$.nav.hideBackArrow();
+        this.$.nav.showAccountCreation = true;
       }
 
     });

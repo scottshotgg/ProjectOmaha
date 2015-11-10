@@ -1,4 +1,8 @@
 #!/bin/bash
 export SOFTWARE_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../../
 export GOPATH=$SOFTWARE_DIR
+export PYTHONPATH=/usr/local/lib/python2.7/site-packages
+echo "Running analysis on map"
+python $SOFTWARE_DIR/src/omaha/main.py $SOFTWARE_DIR/src/omaha/templates/css/map.png $SOFTWARE_DIR/src/omaha/templates/css/speakerLocations.txt
+echo "Finished analyzing map"
 go run $SOFTWARE_DIR/src/omaha/main.go "$@"

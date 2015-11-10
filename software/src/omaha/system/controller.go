@@ -1,9 +1,18 @@
 package system
 
 import (
-	"fmt"
+	"log"
+	"omaha/database"
 	"strconv"
 )
+
+
+
+
+const NULLZone int = 0
+
+
+
 
 func Btoi(b bool) int {
 	if b {
@@ -12,27 +21,19 @@ func Btoi(b bool) int {
 	return 0
 }
 
-type ControllerStatus struct {
-	LEDOn         bool `json:"ledOn"`
-	VolumeLevel   int8 `json:"volumeLevel"`
-	ID            int8 `json:"id"`
-	SectionID     int8 `json:"sectionId"`
-	AveragingMode int8 `json:"averagingMode"`
-}
-
-func (this *ControllerStatus) IsLEDOn() bool {
+func IsLEDOn(this *database.ControllerStatus) bool {
 	return this.LEDOn
 }
 
-func (this *ControllerStatus) TurnLEDOn() error {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+func TurnLEDOn(this *database.ControllerStatus) error {
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.TurnLEDOn
-	data[3] = 0x00
+	data[3] = 0x01
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = true
 		if status.IsDebug() {
-			fmt.Println("LED turned on")
+			log.Println("LED turned on")
 		}
 		return nil
 	}}
@@ -42,15 +43,15 @@ func (this *ControllerStatus) TurnLEDOn() error {
 
 }
 
-func (this *ControllerStatus) TurnLEDOff() error {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+func TurnLEDOff(this *database.ControllerStatus) error {
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.TurnLEDOff
-	data[3] = 0x01
+	data[3] = 0x00
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = false
 		if status.IsDebug() {
-			fmt.Println("LED turned off")
+			log.Println("LED turned off")
 		}
 		return nil
 	}}
@@ -63,8 +64,8 @@ type LEDStatusResponse struct {
 	ledOn bool
 }
 
-func (this *ControllerStatus) GetLEDStatusFromController() (bool, error) {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+func GetLEDStatusFromController(this *database.ControllerStatus) (bool, error) {
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.GetLEDStatus
 	data[3] = 0x00
 
@@ -72,10 +73,10 @@ func (this *ControllerStatus) GetLEDStatusFromController() (bool, error) {
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		response := &LEDStatusResponse{}
 		if status.IsDebug() {
-			fmt.Println("Got LED Status From Controller")
+			log.Println("Got LED Status From Controller")
 			response.ledOn = true
 		} else {
-			var b []byte
+			b := make([]byte, 1)
 			status.ReadData(b)
 			response.ledOn = b[0] != 0x01
 		}
@@ -88,15 +89,15 @@ func (this *ControllerStatus) GetLEDStatusFromController() (bool, error) {
 	return response.ledOn, nil
 }
 
-func (this *ControllerStatus) SetVolume(volumeLevel int8) error {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+func SetVolume(this *database.ControllerStatus, volumeLevel int8) error {
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.SetVolume
 	data[3] = byte(volumeLevel)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.VolumeLevel = volumeLevel
 		if status.IsDebug() {
-			fmt.Printf("Set volume to %d\n", volumeLevel)
+			log.Printf("Set volume to %d\n", volumeLevel)
 		}
 		return nil
 	}}
@@ -105,12 +106,12 @@ func (this *ControllerStatus) SetVolume(volumeLevel int8) error {
 	return nil
 }
 
-func (this *ControllerStatus) GetVolumeFromController() (int8, error) {
+func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 	if status.debug {
 		return 0, nil
 	}
 
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.GetVolume
 	data[3] = 0x00
 
@@ -119,14 +120,14 @@ func (this *ControllerStatus) GetVolumeFromController() (int8, error) {
 	return 0, nil
 }
 
-func (this *ControllerStatus) SetAveragingMode(mode int8) error {
-	data := getMessageHeader(this.SectionID, this.ID, 4)
+func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
+	data := getMessageHeader(this.ZoneID, this.ID, 4)
 	data[2] = Commands.SetAveragingFilter
 	data[3] = byte(mode)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		if status.IsDebug() {
-			fmt.Printf("Set averaging mode to %d\n", mode)
+			log.Printf("Set averaging mode to %d\n", mode)
 		}
 		return nil
 	}}
@@ -162,7 +163,7 @@ func (status *SystemStatus) ResetMicrocontroller() (int, error) {
 
 }
 
-func (this *ControllerStatus) GetAveragingMode() (int, error) {
+func GetAveragingMode(this *database.ControllerStatus) (int, error) {
 	if status.debug {
 		return 0, nil
 	}
