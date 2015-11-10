@@ -529,10 +529,17 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 				To force a software reset by the watchdog unit you have to write into WDCR and not into WDKEY!  A  wrong value written into WDKEY will do nothing. A reset can be forced by a false pattern ( any other than 101) written into the WDCHK - Bits of WDCR (Figure 3-14, sprufb0B).
 
 				Regards
+
+
+				I am going to try implementing it following the above URL
 			*/
+
+			// Can't implement, need to go to SPN and see if WatchDog is enabled by default
+			// I'm not even sure if we want to implement this because what wil lhappen if we reset and this board needs to pass a message forward
 			return;
 
 		case 'r':	// This case is for reseting the FIFO
+					// May not want to do this for the same reason that we may not want to do the reset board command
 			/*
 				Check to make sure FIFO isn't empty, it might give false data if you try to read it while it is empty
 				Afterwards read everything form FIFO and set the array to 0
