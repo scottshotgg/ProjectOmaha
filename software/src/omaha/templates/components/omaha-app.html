@@ -5,6 +5,7 @@
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-drawer-panel/paper-drawer-panel.html">
 
 <link rel="import" href="/components/omaha-navbar.html">
 <link rel="import" href="/components/audio-controller.html">
@@ -32,26 +33,29 @@
       }
 
     </style>
-        <paper-header-panel class="flex" mode="seamed">
-          <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
-          <neon-animated-pages class="fit" id="app-pages" selected="{{selected}}">
-            <open-map-controller id="mapcontroller" on-speakerselected="_speakerSelected" controllers="[[controllers]]" class="fit"></open-map-controller>
-            <audio-controller id="controller" class="fit"></audio-controller>
+    <paper-drawer-panel id="panel">
+      <div drawer> Drawer panel... </div>
+      <paper-header-panel class="flex" mode="seamed" main>
+        <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
+        <neon-animated-pages class="fit" id="app-pages" selected="{{selected}}">
+          <open-map-controller id="mapcontroller" on-speakerselected="_speakerSelected" controllers="[[controllers]]" class="fit"></open-map-controller>
+          <audio-controller id="controller" class="fit"></audio-controller>
 
-            <neon-animatable class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
-              <paper-material class="flex self-center card" elevation="5">
-                <account-creation-form></account-creation-form>
-              </paper-material>
-            </neon-animatable> 
-          </neon-animated-pages>
-          <paper-dialog id="dialog">
-            <h2>Error</h2>
-            <div>That speaker does not exist on the server</div>
-            <div class="buttons layout vertical center">
-              <paper-button dialog-confirm>Okay</paper-button>
-            </div>
-          </paper-dialog>
-        </paper-header-panel>
+          <neon-animatable class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+            <paper-material class="flex self-center card" elevation="5">
+              <account-creation-form></account-creation-form>
+            </paper-material>
+          </neon-animatable> 
+        </neon-animated-pages>
+        <paper-dialog id="dialog">
+          <h2>Error</h2>
+          <div>That speaker does not exist on the server</div>
+          <div class="buttons layout vertical center">
+            <paper-button dialog-confirm>Okay</paper-button>
+          </div>
+        </paper-dialog>
+      </paper-header-panel>
+    </paper-drawer-panel>
          <iron-ajax
             id="systemStatusAjax"
             url="/system/"
@@ -73,7 +77,8 @@
 
       listeners: {
         'nav.backpressed': '_showMap',
-        'nav.showaccountcreation': '_showAccountCreation'
+        'nav.showaccountcreation': '_showAccountCreation',
+        'nav.toggledrawer': '_toggleDrawer'
       },
 
       _showMap: function() {
@@ -114,10 +119,15 @@
         this.$.nav.showAccountCreation = false;
       },
 
+      _toggleDrawer: function() {
+        this.$.panel.togglePanel();
+      },
+
       ready: function() {
         this.$.systemStatusAjax.generateRequest();
         this.$.nav.hideBackArrow();
         this.$.nav.showAccountCreation = true;
+        this.$.panel.forceNarrow = true;
       }
 
     });

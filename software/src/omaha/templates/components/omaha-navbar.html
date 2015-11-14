@@ -7,6 +7,7 @@
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-drawer-panel/paper-drawer-panel.html">
 
 <dom-module id="omaha-navbar">
   <template>
@@ -24,6 +25,7 @@
 
     </style>
       <paper-toolbar>
+
         <paper-icon-button on-click="_backPressed" id="back" icon="arrow-back"></paper-icon-button>
         <div class="title">Project Omaha</div>
 <!--         <paper-dropdown-menu no-label-float label="Speaker">
@@ -32,6 +34,7 @@
             <paper-item>Speaker 2</paper-item>
           </paper-menu>
         </paper-dropdown-menu> -->
+        <paper-icon-button on-click="_toggleDrawerPressed" icon="menu"></paper-icon-button>
         <template is="dom-if" if="{{showAccountCreation}}">
           <paper-icon-button on-click="_createAccountPressed" icon="account-circle"></paper-icon-button>
         </template>
@@ -46,6 +49,10 @@
           type: Number,
           notify: true
         }
+      },
+
+      _toggleDrawerPressed: function() {
+        this.fire('toggledrawer', {});
       },
 
       _createAccountPressed: function() {
