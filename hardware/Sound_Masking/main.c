@@ -19,7 +19,7 @@
 #define	FIRORDER		299
 #define VOLUME_SCALAR	3500
 #define	NULLZONE		0
-#define PUTTY 			0
+#define ALLZONE			1
 
 #include "F28x_Project.h"     // Device Headerfile and Examples Include File
 #include <stdint.h>
@@ -442,13 +442,18 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 	PieCtrlRegs.PIEACK.all|=0x100;       // Issue PIE ack
 
 	if(receivedChar[0] == NULLZONE){     //NULLZONE means not in zonemode
-
 		if(receivedChar[1] != unitID){
 			for(i = 0; i < ScibBufferSize; i++)
 				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
 			return;						//this message is not for this mcu, return out
 		}
 
+	}
+	else if(receivedChar[0] == ALLZONE) {		// Implementing zone 1 to send to everyone
+		if(receivedChar[1] != unitID){
+			for(i = 0; i < ScibBufferSize; i++)
+				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit, not sure if this will cause problems when sending before processing
+		}
 	}
 	else {
 		for(i = 0; i < ScibBufferSize; i++)
@@ -457,14 +462,14 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 		if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
 			return;							//zone is not right, return out
 	}
-	switch(receivedChar[2]){			//third byte is command
+	switch(receivedChar[2]) {			//third byte is command
 
 		case 'S':						//m means manual volume adjustment, I think that we should change this to be capital V
 			if(receivedChar[3] > 100 || receivedChar[3] < 0)
 			//if(receivedChar[3] > 75 || receivedChar[3] < 0) //max volume with board 5V regulator and 4 ohm speaker
 				return;	// somehow a bad volume level was sent, return out
 			volumeLevel = receivedChar[3];
-			GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
+			//GpioDataRegs.GPATOGGLE.bit.GPIO13 = 1;
 			break;
 
 		case 's':
@@ -480,36 +485,84 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			break;*/
 
 		case 'a':						// a means change moving average
-			setMASize(receivedChar[3] - 48 * (PUTTY));
+			setMASize(receivedChar[3]);
 			break;
 
-		case 'i':						// i means toggle manual mode
+		case 'I':						// i means toggle manual mode
 			if(receivedChar[3] == 'O')
 				IIR_on = 1;
 			else if(receivedChar[3] == 'o')
 				IIR_on = 0;
 			break;
 
-		case 'f':
-			initializeFilter(receivedChar[3]);
+		case 'i':
+			ScibRegs.SCITXBUF.all = unitID;
+			ScibRegs.SCITXBUF.all = IIR_on;	
 			break;
 
-		case 'R':		// Reserved for AreYouALive commands
-			ScibRegs.SCITXBUF.all = 'r';	// Little r back is like an ack
+		case 'f':
+			initializeFilter(receivedChar[3]);		// Needs to be some checking on recievedChar[3] first
+			break;
+
+		case 'W':		// This wil be used when we write the ID to flash
+			break;		// Chapter 24: External Memory Interface (EMIF), page 2301 of http://www.ti.com/lit/ug/spruhx5c/spruhx5c.pdf
+
+		case 'w':		// This will be used when we want to know what the ID is
+			ScibRegs.SCITXBUF.all = unitID;
+			ScibRegs.SCITXBUF.all = unitID;		// Hah, unitID twice, maybe this doesn't need to happen
+												// This comamnd might be useless, but we could send back the ID behind it or something
+			break;
+
+		case 'U':		// Reserved for AreYouALive commands
+			ScibRegs.SCITXBUF.all = unitID;
+			ScibRegs.SCITXBUF.all = 'u';	// Little u back is like an ack
+			break;
+
+		case 'R':
+			/* 
+				We need to something with a software reset here, there is no way to do this on the F28x devices other than 
+				using the watchdog
+				https://e2e.ti.com/support/microcontrollers/c2000/f/171/t/21505
+
+				Sorry Tim but I've to correct you:
+
+				To force a software reset by the watchdog unit you have to write into WDCR and not into WDKEY!  A  wrong value written into WDKEY will do nothing. A reset can be forced by a false pattern ( any other than 101) written into the WDCHK - Bits of WDCR (Figure 3-14, sprufb0B).
+
+				Regards
+
+
+				I am going to try implementing it following the above URL
+			*/
+
+			// Can't implement, need to go to SPN and see if WatchDog is enabled by default
+			// I'm not even sure if we want to implement this because what wil lhappen if we reset and this board needs to pass a message forward
+			return;
+
+		case 'r':	// This case is for reseting the FIFO
+					// May not want to do this for the same reason that we may not want to do the reset board command
+			/*
+				Check to make sure FIFO isn't empty, it might give false data if you try to read it while it is empty
+				Afterwards read everything form FIFO and set the array to 0
+			*/
 			break;
 
 		case 'm':		// Get microphone reading
+			ScibRegs.SCITXBUF.all = unitID;
 			ScibRegs.SCITXBUF.all = AdcaResultRegs.ADCRESULT0;		// Not sure if we can actually do this, may have to check if it is zero or use ADCReadings[k]
 			break;
 
 		case 'l':
-					// Not sure what happens if you write > 1 to the LED,
-			GPIO_WritePin(13, 1);												// If nothing bad happens then maybe we can just write the value
+			ScibRegs.SCITXBUF.all = unitID;
+			ScibRegs.SCITXBUF.all = GPIO_ReadPin(13);
 			break;
 
 		case 'L':
-					// Not sure what happens if you write > 1 to the LED,
-			GPIO_WritePin(13, 0);												// If nothing bad happens then maybe we can just write the value
+			if(receivedChar[3] == 1)
+				GPIO_WritePin(13, 0);												// If nothing bad happens then maybe we can just write the value
+			else if(receivedChar[3] == 0)
+				GPIO_WritePin(13, 1);
+			else
+				// This should print to a log that something happened that wasn't supposed to
 			break;
 
 		default:		// This should never get called, but maybe we can think of something to put here
