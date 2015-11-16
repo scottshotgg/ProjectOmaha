@@ -15,17 +15,21 @@
         margin-left: auto;
       }
     </style>
-    <paper-menu selected="0">
+    <paper-menu id="menu" selected="{{selected}}">
       <paper-item>Map<iron-icon class="icon" icon="maps:map"></iron-icon></paper-item>
       <paper-item>Admin<iron-icon class="icon" icon="account-circle"></iron-icon></paper-item>
     </paper-menu>
   </template>
   <script>
     Polymer({
-      is: 'omaha-drawer'
-      /*
-        TODO: Make the menu actually do something
-      */
+      is: 'omaha-drawer',
+
+      properties: {
+        selected: {
+          type: Number,
+          notify: true
+        }
+      }
     });
   </script>
 </dom-module>

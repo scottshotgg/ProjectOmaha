@@ -35,18 +35,17 @@
 
     </style>
     <paper-drawer-panel id="panel">
-      <omaha-drawer drawer></omaha-drawer>
+      <omaha-drawer id="drawer" drawer selected="{{selected}}"></omaha-drawer>
       <paper-header-panel class="flex" mode="seamed" main>
         <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
         <neon-animated-pages class="fit" id="app-pages" selected="{{selected}}">
           <open-map-controller id="mapcontroller" on-speakerselected="_speakerSelected" controllers="[[controllers]]" class="fit"></open-map-controller>
-          <audio-controller id="controller" class="fit"></audio-controller>
-
           <neon-animatable class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
             <paper-material class="flex self-center card" elevation="5">
               <account-creation-form></account-creation-form>
             </paper-material>
           </neon-animatable> 
+          <audio-controller id="controller" class="fit"></audio-controller>
         </neon-animated-pages>
         <paper-dialog id="dialog">
           <h2>Error</h2>
@@ -78,13 +77,13 @@
 
       listeners: {
         'nav.backpressed': '_showMap',
-        'nav.showaccountcreation': '_showAccountCreation',
+        'drawer.showmap': '_showMap',
+        'drawer.iron-select': '_toggleDrawer',
         'nav.toggledrawer': '_toggleDrawer'
       },
 
       _showMap: function() {
         this.selected = 0;
-        this.$.nav.showAccountCreation = true;
       },
 
       _speakerSelected: function(e) {
@@ -101,7 +100,7 @@
         } else {
           this.$.controller.speaker = speaker;
           this.$.nav.showBackArrow();
-          this.selected = 1;
+          this.selected = 2;
         }
       },
 
@@ -127,7 +126,6 @@
       ready: function() {
         this.$.systemStatusAjax.generateRequest();
         this.$.nav.hideBackArrow();
-        this.$.nav.showAccountCreation = true;
         this.$.panel.forceNarrow = true;
       }
 
