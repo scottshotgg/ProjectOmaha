@@ -1,0 +1,31 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<dom-module id="omaha-drawer">
+  <template>
+    <style>
+      paper-item {
+        --paper-item: {
+          cursor: pointer;
+        };
+      }
+      .icon {
+        --iron-icon-fill-color: #757575;
+        margin-left: auto;
+      }
+    </style>
+    <paper-menu selected="0">
+      <paper-item>Map<iron-icon class="icon" icon="maps:map"></iron-icon></paper-item>
+      <paper-item>Admin<iron-icon class="icon" icon="account-circle"></iron-icon></paper-item>
+    </paper-menu>
+  </template>
+  <script>
+    Polymer({
+      is: 'omaha-drawer'
+      /*
+        TODO: Make the menu actually do something
+      */
+    });
+  </script>
+</dom-module>

@@ -13,6 +13,7 @@
 <link rel="import" href="/components/open-map-controller.html">
 <link rel="import" href="/components/account-creation-form.html">
 <link rel="import" href="/components/simple-fit.html">
+<link rel="import" href="/components/omaha-drawer.html">
 <dom-module id="omaha-app">
   <template>
     <style>
@@ -34,7 +35,7 @@
 
     </style>
     <paper-drawer-panel id="panel">
-      <div drawer class="title">Project Omaha</div>
+      <omaha-drawer drawer></omaha-drawer>
       <paper-header-panel class="flex" mode="seamed" main>
         <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
         <neon-animated-pages class="fit" id="app-pages" selected="{{selected}}">
