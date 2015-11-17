@@ -437,33 +437,44 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 
 		receivedChar[i] = ScibRegs.SCIRXBUF.all;
 	}
+
 	ScibRegs.SCIFFRX.bit.RXFFOVRCLR=1;   // Clear Overflow flag
 	ScibRegs.SCIFFRX.bit.RXFFINTCLR=1;   // Clear Interrupt flag
 	PieCtrlRegs.PIEACK.all|=0x100;       // Issue PIE ack
 
-	if(receivedChar[0] == NULLZONE){     //NULLZONE means not in zonemode
-		if(receivedChar[1] != unitID){
-			for(i = 0; i < ScibBufferSize; i++)
-				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
+	if(receivedChar[0] == NULLZONE) {     //NULLZONE means not in zonemode
+		if(receivedChar[1] != 1){
+			ScicRegs.SCITXBUF.all = receivedChar[i];			// We may not even need this if we can abstract it in software
+			ScicRegs.SCITXBUF.all = receivedChar[i] - 1;		// Decrementing the ID
+			ScicRegs.SCITXBUF.all = receivedChar[i];
+			ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
 			return;						//this message is not for this mcu, return out
 		}
-
+		else if(receivedChar[1] == 1)
+			switheroo();		// Do the switch and process the command
 	}
 	else if(receivedChar[0] == ALLZONE) {		// Implementing zone 1 to send to everyone
-		if(receivedChar[1] != unitID){
+		//if(receivedChar[1] != unitID){			// Why would need to check the ID if it is for ALLZONE?
 			for(i = 0; i < ScibBufferSize; i++)
 				ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit, not sure if this will cause problems when sending before processing
-		}
+		//}
+		switheroo();
 	}
-	else {
-		for(i = 0; i < ScibBufferSize; i++)
+	//else {		// May get an if without an else if this statement is not here
+		/*for(i = 0; i < ScibBufferSize; i++)					// not sure what this is for, I dont think we need this
+			ScicRegs.SCITXBUF.all = receivedChar[i];			// We may not even need this if we can abstract it in software
+			ScicRegs.SCITXBUF.all = receivedChar[i] - 1;		// Decrementing the ID
+			ScicRegs.SCITXBUF.all = receivedChar[i];
 			ScicRegs.SCITXBUF.all = receivedChar[i]; //send out message to next unit
 
 		if(receivedChar[0] != zone)	//must be in zonemode if the zone != NULLZONE
 			return;							//zone is not right, return out
-	}
-	switch(receivedChar[2]) {			//third byte is command
+			*/
+	//}
+}
 
+void switheroo() {
+	switch(receivedChar[2]) {			//third byte is command
 		case 'S':						//m means manual volume adjustment, I think that we should change this to be capital V
 			if(receivedChar[3] > 100 || receivedChar[3] < 0)
 			//if(receivedChar[3] > 75 || receivedChar[3] < 0) //max volume with board 5V regulator and 4 ohm speaker
@@ -566,6 +577,7 @@ __interrupt void scibRxFifoIsr(void){ 			// ****** Need to add another one of th
 			break;
 
 		default:		// This should never get called, but maybe we can think of something to put here
+
 			break;		/*
 							It may be indicative of a potential security hazard, but I'm not sure how to handle it
 							Maybe we should record this to a log and also send this back to the main computer so that it can log it as well.
