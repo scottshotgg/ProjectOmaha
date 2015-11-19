@@ -23,7 +23,7 @@ upper_blue = np.array([130,255,255])
 mask = cv2.inRange(hsv, lower_blue, upper_blue)
 mask = cv2.medianBlur(mask,7)
 
-# Here we need to check the version because the MSER object has changed has changed
+# Here we need to check the version because the MSER object has changed between versions
 # You MAY need to install libgl1-mesa-dri
 
 version = cv2.__version__
