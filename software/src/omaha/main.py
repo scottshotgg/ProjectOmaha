@@ -38,6 +38,22 @@ else:
 fs = detector.detect(mask)
 fs.sort(key = lambda x: -x.size)
 
+sfs = [x for x in fs if not supress(x)]
+
+circleMap = {"circleLocations" : [parseCircle(x) for x in sfs]}
+
+outputFile.write(json.dumps(circleMap, indent=4))
+
+
+# These were way too confusing being in the middle of the program....
+
+def parseCircle(circle):
+    x = int(circle.pt[0])
+    y = int(circle.pt[1])
+    cv2.circle(orig, (x, y), int(circle.size/2), (0, 255, 0), 2)
+    cv2.rectangle(orig, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255),-1)
+    return {"x": x, "y": y}
+
 # merge blobs that are intersecting
 def supress(x):
         for f in fs:
@@ -46,16 +62,3 @@ def supress(x):
                 dist = math.sqrt(distx*distx + disty*disty)
                 if (f.size > x.size) and (dist<f.size/2):
                         return True
-
-sfs = [x for x in fs if not supress(x)]
-
-
-def parseCircle(circle):
-    x = int(circle.pt[0])
-    y = int(circle.pt[1])
-    cv2.circle(orig, (x, y), int(circle.size/2), (0, 255, 0), 2)
-    cv2.rectangle(orig, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255),-1)
-    return {"x": x, "y": y}
-circleMap = {"circleLocations" : [parseCircle(x) for x in sfs]}
-
-outputFile.write(json.dumps(circleMap, indent=4))
