@@ -22,7 +22,19 @@ upper_blue = np.array([130,255,255])
 # upper_blue = np.array([30,255,255])
 mask = cv2.inRange(hsv, lower_blue, upper_blue)
 mask = cv2.medianBlur(mask,7)
-detector = cv2.MSER_create()
+
+# Here we need to check the version because the MSER object has changed has changed
+# You MAY need to install libgl1-mesa-dri
+
+version = cv2.__version__
+
+print("Using Open CV version: " + version)
+
+if int(version[0]) < 3:
+    detector = cv2.MSER()
+else:
+    detector = cv2.MSER_create()
+
 fs = detector.detect(mask)
 fs.sort(key = lambda x: -x.size)
 
