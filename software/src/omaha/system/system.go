@@ -4,7 +4,6 @@ import (
 	"io"
 	"log"
 	"omaha/database"
-	"strconv"
 )
 
 var status SystemStatus
@@ -12,7 +11,6 @@ var status SystemStatus
 type SystemStatus struct {
 	debug       bool                                  `json:"-"`
 	Port        io.ReadWriteCloser                    `json:"-"`
-	Controllers map[string]*database.ControllerStatus `json:"controllers"` // controllers mapped by their ID
 }
 
 // Do we want to store this stuff in a database since that way it will be written to disk?
@@ -21,20 +19,11 @@ func (status *SystemStatus) IsDebug() bool {
 	return status.debug
 }
 
-func (status *SystemStatus) GetController(ID int8) *database.ControllerStatus {
-	return database.GetSpeaker(ID)
-}
-
-func (status *SystemStatus) AddController(controller *database.ControllerStatus) {
-	status.Controllers[strconv.Itoa(int(controller.ID))] = controller
-}
-
 func InitializeSystemStatus(isDebug bool) *SystemStatus {
 	status.debug = isDebug
 	if !isDebug {
 		status.InitializePort()
 	}
-	status.Controllers = make(map[string]*database.ControllerStatus)
 
 	controllers := database.GetAllSpeakers()
 
@@ -55,7 +44,7 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 		if err != nil {
 			log.Println(err)
 		}
-		status.AddController(controller)
+		database.SaveSpeaker(controller)
 	}
 	return &status
 }

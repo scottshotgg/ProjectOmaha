@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"omaha/system"
+	"omaha/database"
 )
 
 type averageRequest struct {
@@ -22,7 +23,7 @@ func AveragingHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
-	controller := status.GetController(0x6b)
+	controller := database.GetSpeaker(0x6b)
 	err = system.SetAveragingMode(controller, averagingRequest.FilterType)
 	w.Write(getGenericSuccessResponse())
 }
