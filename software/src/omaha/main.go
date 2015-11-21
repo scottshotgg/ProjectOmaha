@@ -26,7 +26,7 @@ func main() {
 	}
 	
 	handlers.InitializeHandlers()
-
+	log.Println("Starting server")
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatalf("%s\n", err.Error())
@@ -34,5 +34,5 @@ func main() {
 }
 
 func initializeLogger() {
-	log.SetFlags(log.Ldate |  log.Ltime | log.Llongfile)
+	log.SetFlags(log.Ldate |  log.Ltime | log.Lshortfile)
 }
