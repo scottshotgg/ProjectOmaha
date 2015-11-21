@@ -7,17 +7,17 @@ type Account struct {
 }
 
 type ControllerStatus struct {
-	LEDOn        	bool `json:"ledOn"`
-	VolumeLevel  	int8 `json:"volumeLevel"`
-	ID            	int8 `json:"id"`
-	X             	int  `json:"x"`
-	Y             	int  `json:"y"`
-	AveragingMode 	int8 `json:"averagingMode"`
+	LEDOn         bool `json:"ledOn"`
+	VolumeLevel   int8 `json:"volumeLevel"`
+	ID            int8 `json:"id"`
+	X             int  `json:"x"`
+	Y             int  `json:"y"`
+	AveragingMode int8 `json:"averagingMode"`
 }
 
 type Zone struct {
-	VolumeLevel int8
-	ID int8
-	Name string
-	Speakers []*ControllerStatus
+	VolumeLevel int8                `json:"-"`
+	ID          int8                `json:"zoneID"`
+	Name        string              `json:"name"`
+	Speakers    []*ControllerStatus `json:"speakers"`
 }
