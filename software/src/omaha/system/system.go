@@ -22,7 +22,7 @@ func (status *SystemStatus) IsDebug() bool {
 }
 
 func (status *SystemStatus) GetController(ID int8) *database.ControllerStatus {
-	return status.Controllers[strconv.Itoa(int(ID))]
+	return database.GetSpeaker(ID)
 }
 
 func (status *SystemStatus) AddController(controller *database.ControllerStatus) {

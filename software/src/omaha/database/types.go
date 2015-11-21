@@ -12,7 +12,6 @@ type ControllerStatus struct {
 	ID            	int8 `json:"id"`
 	X             	int  `json:"x"`
 	Y             	int  `json:"y"`
-	ZoneID     		int8 `json:"sectionId"`
 	AveragingMode 	int8 `json:"averagingMode"`
 }
 

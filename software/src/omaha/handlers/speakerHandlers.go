@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"omaha/system"
+	"omaha/database"
 )
 
 type speakerPutRequest struct {
@@ -20,54 +21,39 @@ type speakerAttributes struct {
 	LED       bool `json:"led"` // Experimenting, not sure if this is needed or not
 }
 
-var speakerUpdateHandlers = map[string]func(*speakerAttributes, int8) error{
+var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error{
 	"volume":    updateSpeakerVolume,
 	"averaging": updateSpeakerAveragingMode,
 	"led":       updateSpeakerLED,
 }
 
-func updateSpeakerVolume(attr *speakerAttributes, speaker int8) error {
-	status := system.GetSystemStatus()
-	controller := status.GetController(speaker)
-	if controller == nil {
-		return errors.New("Invalid speaker ID from volume")
-	}
+func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	if attr.Volume >= 0 && attr.Volume <= 100 {
 		log.Printf("Telling speaker %d to set volume to %d\n", speaker, attr.Volume)
-		system.SetVolume(controller, attr.Volume) // Volume variable here)
+		system.SetVolume(speaker, attr.Volume) // Volume variable here)
 	} else {
 		return errors.New("Invalid volume")
 	}
 	return nil
 }
 
-func updateSpeakerAveragingMode(attr *speakerAttributes, speaker int8) error {
-	status := system.GetSystemStatus()
-	controller := status.GetController(speaker)
-	if controller == nil {
-		return errors.New("Invalid speaker ID from averaging")
-	}
+func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	if attr.Averaging > 0 && attr.Averaging <= 20 {
 		log.Printf("Telling speaker %d to set averaging mode to %d\n", speaker, attr.Averaging)
-		system.SetAveragingMode(controller, attr.Averaging) // Volume variable here)
+		system.SetAveragingMode(speaker, attr.Averaging) // Volume variable here)
 	} else {
 		return errors.New("Invalid averaging mode")
 	}
 	return nil
 }
 
-func updateSpeakerLED(attr *speakerAttributes, speaker int8) error {
-	status := system.GetSystemStatus()
-	controller := status.GetController(speaker)
-	if controller == nil {
-		return errors.New("Invalid speaker ID from LED")
-	}
+func updateSpeakerLED(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	if attr.LED {
 		log.Printf("Telling speaker %d to turn on the LED\n", speaker)
-		system.TurnLEDOn(controller) // Volume variable here)
+		system.TurnLEDOn(speaker) // Volume variable here)
 	} else {
 		log.Printf("Telling speaker %d to turn off the LED\n", speaker)
-		system.TurnLEDOff(controller)
+		system.TurnLEDOff(speaker)
 	}
 	return nil
 }
@@ -86,8 +72,15 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
+	
+	controller := database.GetSpeaker(speakerRequest.Speaker)
+	if controller == nil {
+		w.Write(getGenericErrorResponse("Invalid speaker ID from volume"))
+		return
+	}
+	
 	for _, attr := range speakerRequest.UpdatedAttributes {
-		err = speakerUpdateHandlers[attr](&speakerRequest.AttributeValues, speakerRequest.Speaker)
+		err = speakerUpdateHandlers[attr](&speakerRequest.AttributeValues, controller)
 		if err != nil {
 			w.Write(getGenericErrorResponse(err.Error()))
 			return

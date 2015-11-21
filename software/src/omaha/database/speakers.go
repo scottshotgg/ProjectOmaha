@@ -14,7 +14,8 @@ func createSpeakerTable() {
 			speakerID INTEGER PRIMARY KEY,
 			name varchar(50),
 			y INTEGER,
-			x INTEGER
+			x INTEGER,
+			volumeLevel INTEGER
 		)
 	`)
 	if err != nil {
@@ -51,12 +52,42 @@ func GetAllSpeakers() []*ControllerStatus {
 	return speakers
 }
 
+// GetSpeaker gets a speaker from the database
+func GetSpeaker(speakerID int8) *ControllerStatus {
+	var volumeLevel int8
+	var x int
+	var y int
+	err := DB.QueryRow(`
+		SELECT x, y, volumeLevel
+		FROM speaker
+		WHERE speakerID=?;
+		`, speakerID).Scan(&x, &y, &volumeLevel)
+	if err != nil {
+		log.Fatal(err)
+	}
+	speaker := &ControllerStatus{X: x, Y: y, VolumeLevel: volumeLevel, ID: speakerID}
+	return speaker
+}
+
+// SaveSpeaker saves the speaker provided to the database
+func SaveSpeaker(speaker *ControllerStatus) {
+	_, err := DB.Exec(`
+		UPDATE speaker
+		SET
+			volumeLevel = ?
+		WHERE speakerID = ?
+	`, speaker.VolumeLevel, speaker.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // addSpeaker adds a speaker to the database at the specified location
 func addSpeaker(loc speakerLocation) {
 	// add to speaker table
 	result, err := DB.Exec(`INSERT INTO speaker 
-		(x, y)
-		VALUES (?, ?)
+		(x, y, volumeLevel)
+		VALUES (?, ?, 0)
 		`, loc.X, loc.Y)
 	if err != nil {
 		log.Fatal(err)
