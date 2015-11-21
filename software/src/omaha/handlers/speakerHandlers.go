@@ -73,7 +73,7 @@ func updateSpeakerLED(attr *speakerAttributes, speaker int8) error {
 }
 
 /*
-	update speaker attribtues
+	SpeakerPutHandler updates speaker attribtues according to the request
 */
 func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()

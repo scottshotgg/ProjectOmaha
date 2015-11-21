@@ -4,12 +4,14 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"errors"
-	"github.com/mattn/go-sqlite3"
-	"golang.org/x/crypto/bcrypt"
 	"log"
 	"math/big"
+	"github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
 
+// LoginAccount checks the given information against what is in the account table.
+// If the information is correct, a new session hash is returned.
 func LoginAccount(username, password string) (string, error) {
 	var accountHash string
 	err := DB.QueryRow(`
@@ -34,12 +36,12 @@ func LoginAccount(username, password string) (string, error) {
 	if err != nil {
 		log.Fatal(err)
 		return "", err
-	} else {
-		log.Printf("%s logged in\n", username)
-		return sessionHash, nil
 	}
+	log.Printf("%s logged in\n", username)
+	return sessionHash, nil
 }
 
+// CreateAccount inserts a row in the account table with the given configuration
 func CreateAccount(username, password, name string) error {
 	hashByte, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hash := string(hashByte)
@@ -52,8 +54,8 @@ func CreateAccount(username, password, name string) error {
 		return nil
 	}
 	switch err.(sqlite3.Error).Code {
-	case 19:
-		log.Println("Account already exists")
+	case sqlite3.ErrConstraint:
+		// If a constraint is violated, this username is already in use
 		return errors.New("An account with that username already exists")
 	default:
 		log.Fatal(err)
@@ -62,12 +64,8 @@ func CreateAccount(username, password, name string) error {
 	return nil
 }
 
-// func GetAccountByUsername(username string) omaha.Account {
-// 	return nil
-// }
-
-func createAccountTable(db *sql.DB) {
-	_, err := db.Exec(`
+func createAccountTable() {
+	_, err := DB.Exec(`
 		CREATE TABLE  account (
 			uid INTEGER PRIMARY KEY AUTOINCREMENT,
 			username VARCHAR(20) NOT NULL UNIQUE,
@@ -96,6 +94,7 @@ func createAccountTable(db *sql.DB) {
 	CreateAccount("eric", "eric", "eric")
 }
 
+// IsSessionHashValid checks if the given hash is present in the database
 func IsSessionHashValid(hash string) bool {
 	var count int
 	err := DB.QueryRow(`
@@ -108,7 +107,7 @@ func IsSessionHashValid(hash string) bool {
 }
 
 func generateSessionHash() string {
-	var chars string = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	var chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	charsSize := big.NewInt(int64(len(chars)))
 	hashSize := 30
 	hash := make([]byte, hashSize)
