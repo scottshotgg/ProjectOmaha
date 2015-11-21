@@ -105,11 +105,7 @@
       },
 
       _initializeStatus: function(event, data) {
-        var controllers = new Array();
-        var controllersMap = data.response.status.controllers
-        for(var id in controllersMap) {
-          controllers.push(controllersMap[id])
-        }
+        var controllers = data.response.zones[0].speakers;
         this.controllers = controllers
         this.$.mapcontroller.renderMap();
       },

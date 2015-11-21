@@ -4,15 +4,15 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"omaha/system"
+	"omaha/database"
 )
 
-type SystemStatusResponse struct {
-	Status *system.SystemStatus `json:"status"`
+type systemStatusResponse struct {
+	Zones []*database.Zone `json:"zones"`
 }
 
 func SystemStatusHandler(w http.ResponseWriter, r *http.Request) {
-	response := &SystemStatusResponse{Status: system.GetSystemStatus()}
+	response := &systemStatusResponse{Zones: database.GetAllZones()}
 	responseData, err := json.Marshal(response)
 	if err != nil {
 		log.Println(err)
