@@ -2,14 +2,17 @@ package database
 
 import (
 	"database/sql"
+	// import the sqlite implementation
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"omaha/util"
 	"os"
 )
 
+// DB is the object used to access the database
 var DB *sql.DB
 
+// InitDB creates the DB variable. If the database hasn't been created yet, it will be created.
 func InitDB() {
 	var err error
 	DB, err = sql.Open("sqlite3", util.GetOmahaPath()+"/omaha.db")
@@ -20,10 +23,13 @@ func InitDB() {
 	var name string
 	err = DB.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='account';").Scan(&name)
 	switch {
+	// user table doesn't exist
 	case err == sql.ErrNoRows:
-		// table doesn't exist
-		createAccountTable(DB)
-		createSpeakerTable(DB)
+		// create all tables
+		createAccountTable()
+		createSpeakerTable()
+		createZoneTable()
+		createZoneToSpeakerTable()
 		populateSpeakerTable()
 	case err != nil:
 		log.Fatal(err)

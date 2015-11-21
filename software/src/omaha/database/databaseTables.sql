@@ -20,14 +20,14 @@ create table accountSession (
 	userID int not null
 )
 
-CREATE TABLE Zone (
+CREATE TABLE zone (
 	zoneID INTEGER PRIMARY KEY AUTOINCREMENT,
 	name varchar(50)	
 )
 
-CREATE TABLE Zones-to-Speakers (
-	ZoneID int REFERENCES Zone(ZoneID),
-	SpeakerID int REFERENCES Speaker(SpeakerID)
+CREATE TABLE zoneToSpeaker (
+	zoneID int REFERENCES Zone(ZoneID),
+	speakerID int REFERENCES Speaker(SpeakerID)
 	PRIMARY KEY (ZoneID, SpeakerID)
 )
 

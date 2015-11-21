@@ -15,3 +15,10 @@ type ControllerStatus struct {
 	ZoneID     		int8 `json:"sectionId"`
 	AveragingMode 	int8 `json:"averagingMode"`
 }
+
+type Zone struct {
+	VolumeLevel int8
+	ID int8
+	Name string
+	Speakers []*ControllerStatus
+}
