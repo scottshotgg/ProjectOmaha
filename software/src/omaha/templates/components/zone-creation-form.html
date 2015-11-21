@@ -1,0 +1,111 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-progress/paper-progress.html">
+
+<dom-module id="zone-creation-form">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .form-title {
+        margin-bottom: 20px;
+      }
+      
+      .company {
+        color: #3367d6;
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+      
+      paper-button {
+        background-color: #4285f4;
+        color: #fff;
+        margin-top: 20px;
+        width: 100%;
+      }
+
+      .message {
+        color: var(--paper-red-500);
+      }
+
+      .success {
+        color: var(--paper-green-800);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      paper-progress {
+        width: 100%;
+        --paper-progress-active-color: #4285f4;
+        --paper-progress-secondary-color: #A5D6A7;
+        --paper-progress-container-color: #4CAF50;
+      }
+
+    </style>
+    <div class="flex company">Create Zone</div>
+    <div class="message">{{err}}</div>
+    <div class="success">{{successMsg}}</div>
+    <form on-iron-form-submit="_submit" is="iron-form" id="form">
+      <paper-input id="name" name="name" label="Zone Name" required></paper-input>
+      <paper-button raised on-click="_submit">Create Zone</paper-button>
+      <paper-progress id="progress" value="100"></paper-progress>
+      <!-- We should be able to press enter to submit. This button with type submit is required to do so. -->
+      <button class="hidden" type="submit">I should be hidden</button>
+    </form>
+    <iron-ajax
+        id="zoneCreationAjax"
+        url="/system/zone/"
+        method="POST"
+        content-type="application/json"
+        handle-as="json"
+        on-response="_logResponse"
+        debounce-duration="300"></iron-ajax>
+    <paper-toast id="toast"><span>{{err}}</span></paper-toast>
+  </template>
+  <script>
+    Polymer({
+      is: 'zone-creation-form',
+
+      _submit: function() {
+        if(!this.$.form.validate())
+            return;
+        this.err = "";
+        this.successMsg = "";
+        this.$.progress.customStyle['--paper-progress-active-color'] = "#4285f4";
+        this.$.progress.updateStyles();
+        this.$.progress.indeterminate = true;
+		this.$.zoneCreationAjax.body = {
+			name: this.$.name.value,
+		}
+		this.$.zoneCreationAjax.generateRequest();
+      },
+
+      _logResponse: function(event, data) {
+        if(!data.response.success) {
+          this.$.progress.customStyle['--paper-progress-active-color'] = "#F44336";
+          this.$.progress.updateStyles();
+          this.$.progress.indeterminate = false;
+          this.$.progress.value = 100;
+          this.err = data.response.err
+        } else {
+          this.$.progress.value = 0;
+          this.$.progress.indeterminate = false;
+          this.successMsg = "Zone created";
+          this.$.name.value = "";
+        }
+    }
+    });
+  </script>
+</dom-module>

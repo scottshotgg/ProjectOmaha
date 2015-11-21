@@ -12,6 +12,7 @@
 <link rel="import" href="/components/map-controller.html">
 <link rel="import" href="/components/open-map-controller.html">
 <link rel="import" href="/components/account-creation-form.html">
+<link rel="import" href="/components/zone-creation-form.html">
 <link rel="import" href="/components/simple-fit.html">
 <link rel="import" href="/components/omaha-drawer.html">
 <dom-module id="omaha-app">
@@ -45,6 +46,12 @@
               <account-creation-form></account-creation-form>
             </paper-material>
           </neon-animatable> 
+          <neon-animatable class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+            <paper-material class="flex self-center card" elevation="5">
+              <zone-creation-form></zone-creation-form>
+            </paper-material>
+          </neon-animatable> 
+          
           <audio-controller id="controller" class="fit"></audio-controller>
         </neon-animated-pages>
         <paper-dialog id="dialog">
@@ -78,7 +85,7 @@
       listeners: {
         'nav.backpressed': '_showMap',
         'drawer.showmap': '_showMap',
-        'drawer.iron-select': '_toggleDrawer',
+        'drawer.iron-select': '_closeDrawer',
         'nav.toggledrawer': '_toggleDrawer'
       },
 
@@ -117,6 +124,10 @@
 
       _toggleDrawer: function() {
         this.$.panel.togglePanel();
+      },
+      
+      _closeDrawer: function() {
+        this.$.panel.closeDrawer();
       },
 
       ready: function() {
