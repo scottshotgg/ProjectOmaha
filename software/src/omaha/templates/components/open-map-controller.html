@@ -23,9 +23,22 @@
         height: 100%;
         width: 100%;
       }
+      paper-card {
+        padding: 10px;
+      }
+      paper-button {
+        background-color: #4285f4;
+        color: #fff;
+        margin-top: 5px;
+        width: 100%;
+      }
     </style>
     <div id="map" class="map">
     </div>
+    <paper-card id="popup">
+      <div><paper-button>speaker</paper-button></div>
+      <div><paper-button>zone</paper-button></div>
+    </paper-card>
   </template>
   <script>
     
@@ -55,6 +68,15 @@
       },
 
       renderMap: function() {
+        var container = document.getElementById('popup');
+        var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+          element: container,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+
         var mapController = this;
         // Map views always need a projection.  Here we just want to map image
         // coordinates directly to map coordinates, so we create a projection that uses
@@ -136,12 +158,18 @@
             }),
               vectorLayer
           ],
+          overlays: [overlay],
           target: 'map',
           view: new ol.View({
             projection: projection,
             center: ol.extent.getCenter(extent),
             zoom: 2
           })
+        });
+
+        map.on('singleclick', function(evt) {
+          var coordinate = evt.coordinate;
+          overlay.setPosition(coordinate);
         });
 
         var select = new ol.interaction.Select({
