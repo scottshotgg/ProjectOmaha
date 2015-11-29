@@ -8,9 +8,10 @@
 <link rel="import" href="/bower_components/paper-drawer-panel/paper-drawer-panel.html">
 
 <link rel="import" href="/components/omaha-navbar.html">
-<link rel="import" href="/components/audio-controller.html">
+<link rel="import" href="/components/speaker-controller.html">
 <link rel="import" href="/components/map-controller.html">
 <link rel="import" href="/components/open-map-controller.html">
+<link rel="import" href="/components/zone-map-controller.html">
 <link rel="import" href="/components/account-creation-form.html">
 <link rel="import" href="/components/zone-creation-form.html">
 <link rel="import" href="/components/simple-fit.html">
@@ -23,13 +24,13 @@
         height: 100%;
       }
       @media (min-width: 500px) {
-        audio-controller {
+        speaker-controller {
           @apply(--layout-horizontal)
         }
       }
 
       @media (max-width: 499px) {
-        audio-controller {
+        speaker-controller {
           @apply(--layout-vertical)
         }
       }
@@ -40,7 +41,7 @@
       <paper-header-panel class="flex" mode="seamed" main>
         <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
         <neon-animated-pages class="fit" id="app-pages" selected="{{selected}}">
-          <open-map-controller id="mapcontroller" on-speakerselected="_speakerSelected" controllers="[[controllers]]" class="fit"></open-map-controller>
+          <open-map-controller id="mapcontroller" controllers="[[controllers]]" class="fit"></open-map-controller>
           <neon-animatable class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
             <paper-material class="flex self-center card" elevation="5">
               <account-creation-form></account-creation-form>
@@ -52,7 +53,7 @@
             </paper-material>
           </neon-animatable> 
           
-          <audio-controller id="controller" class="fit"></audio-controller>
+          <speaker-controller id="controller" class="fit"></speaker-controller>
         </neon-animated-pages>
         <paper-dialog id="dialog">
           <h2>Error</h2>
@@ -86,7 +87,9 @@
         'nav.backpressed': '_showMap',
         'drawer.showmap': '_showMap',
         'drawer.iron-select': '_closeDrawer',
-        'nav.toggledrawer': '_toggleDrawer'
+        'nav.toggledrawer': '_toggleDrawer',
+        'mapcontroller.speakerselected': '_speakerSelected',
+        'mapcontroller.zoneselected': '_zoneSelected'
       },
 
       _showMap: function() {
@@ -94,26 +97,35 @@
       },
 
       _speakerSelected: function(e) {
-        var speakerId = e.detail.speakerId;
-        var speaker;
-        for(var i = 0; i < this.controllers.length; i++) {
-          if(this.controllers[i].id == speakerId) {
-            speaker = this.controllers[i];
-            break;
-          }
-        }
+        var speaker = e.detail.speaker;
         if(speaker === undefined) {
           this.$.dialog.open();
         } else {
           this.$.controller.speaker = speaker;
           this.$.nav.showBackArrow();
-          this.selected = 2;
+          this.selected = 3;
         }
+      },
+      
+      _zoneSelected: function(e) {
+        var zone = e.detail.zone;
+        console.log(zone);
       },
 
       _initializeStatus: function(event, data) {
-        var controllers = data.response.zones[0].speakers;
-        this.controllers = controllers
+        // add zone ID to each speaker
+        var zones = data.response.zones;
+        zones.forEach(function(zone){
+          zone.speakers.forEach(function(speaker){
+            speaker.zone = zone;
+          });
+        })
+        // populate the speaker array
+        var speakers = [];
+        zones.forEach(function(zone){
+          Array.prototype.push.apply(speakers, zone.speakers);
+        })
+        this.controllers = speakers
         this.$.mapcontroller.renderMap();
       },
 

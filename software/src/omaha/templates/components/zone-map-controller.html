@@ -9,10 +9,14 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
 
 <link rel="import" href="/components/speaker-icon.html">
 
-<dom-module id="open-map-controller">
+<dom-module id="zone-map-controller">
   <template>
     <style>
       :host {
@@ -26,24 +30,49 @@
       paper-card {
         padding: 10px;
       }
-      paper-button {
+      
+      #zoneBtn {
         background-color: #4285f4;
         color: #fff;
         margin-top: 5px;
         width: 100%;
       }
+      
+      #zoneContainer {
+        text-align: center;
+      }
+      
+      paper-listbox {
+        max-height: 100px;
+      }
     </style>
     <div id="map" class="map">
     </div>
     <paper-card id="popup">
-      <div><paper-button on-click="_selectSpeaker">speaker</paper-button></div>
-      <div><paper-button on-click="_selectZone">zone</paper-button></div>
+      <div>Current Zone: <span><b>{{selected.zone.name}}</b></span></div>
+      <div><paper-button id="zoneBtn" on-click="_assignZone">assign zone</paper-button></div>
     </paper-card>
+    <paper-dialog id="dialog">
+      <h2>Assign Zone</h2>
+      <div id="zoneContainer">
+        <paper-dropdown-menu label="Zone">
+          <paper-menu class="dropdown-content">
+            <template is="dom-repeat" items="{{controllers}}">
+              <paper-item>{{item.id}}</paper-item>
+            </template>
+          </paper-menu>
+        </paper-dropdown-menu>
+      </div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm>Accept</paper-button>
+      </div>
+    </paper-dialog>
   </template>
   <script>
     
     Polymer({
-      is: 'open-map-controller',
+      is: 'zone-map-controller',
 
       behaviors: [
         Polymer.NeonAnimatableBehavior
@@ -67,14 +96,9 @@
         }
       },
       
-      _selectSpeaker: function() {
+      _assignZone: function() {
         this._hideOverlay();
-        this.fire('speakerselected', {speaker: this.selected});
-      },
-      
-      _selectZone: function() {
-        this._hideOverlay();
-        this.fire('zoneselected', {zone: this.selected.zone});
+        this.$.dialog.open();
       },
       
       _hideOverlay: function() {
