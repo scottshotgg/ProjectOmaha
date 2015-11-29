@@ -115,8 +115,8 @@ func getAllZoneIDs() []int8 {
 	return zoneIDs
 }
 
-// GetZone gets the Zone with the specified ID from the database
-func GetZone(zoneID int8) *Zone {
+// getZonesSpeakers gets the speakers that belong to the specified zone
+func getZonesSpeakers(zoneID int8) []*ControllerStatus {
 	rows, err := DB.Query(`
 		SELECT s.speakerID, x, y
 		FROM speaker s
@@ -141,8 +141,21 @@ func GetZone(zoneID int8) *Zone {
 		speaker.ID = int8(speakerID)
 		speakers = append(speakers, speaker)
 	}
-	
-	zone := &Zone{ID: zoneID}
-	zone.Speakers = speakers
+	return speakers
+}
+
+// GetZone gets the Zone with the specified ID from the database
+func GetZone(zoneID int8) *Zone {
+	// get speakers
+	speakers := getZonesSpeakers(zoneID)
+	// get name
+	var name string
+	DB.QueryRow(`
+		SELECT name 
+		FROM zone
+		WHERE zoneID=?
+		`, zoneID).Scan(&name)
+		
+	zone := &Zone{ID: zoneID, Name: name, Speakers: speakers}
 	return zone
 }
