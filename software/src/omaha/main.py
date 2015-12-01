@@ -1,3 +1,5 @@
+#This class needs to either be renamed or removed.
+
 import cv2
 import numpy as np
 import math
