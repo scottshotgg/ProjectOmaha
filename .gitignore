@@ -18,4 +18,4 @@ build/
 bin/
 
 # DB file
-softwate/src/omaha/omaha.db
+software/src/omaha/omaha.db
