@@ -16,5 +16,6 @@ Icon
 pkg/
 build/
 bin/
-software/src/*/
-!software/src/omaha/
+
+# DB file
+softwate/src/omaha/omaha.db
