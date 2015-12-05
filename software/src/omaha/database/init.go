@@ -10,7 +10,11 @@ import (
 )
 
 // DB is the object used to access the database
-var DB *sql.DB
+var (
+	DB *sql.DB
+	insertSpeakerStmt *sql.Stmt
+	addSpeakerToZonesStmt *sql.Stmt
+)
 
 // InitDB creates the DB variable. If the database hasn't been created yet, it will be created.
 func InitDB() {
@@ -30,8 +34,21 @@ func InitDB() {
 		createSpeakerTable()
 		createZoneTable()
 		createZoneToSpeakerTable()
+		prepareStatements()
 		populateSpeakerTable()
 	case err != nil:
+		log.Fatal(err)
+	}
+}
+
+func prepareStatements() {
+	var err error
+	insertSpeakerStmt, err = getInsertSpeakerStatement()
+	if err != nil {
+		log.Fatal(err)
+	}
+	addSpeakerToZonesStmt, err = getAddSpeakerToZonesStmt()
+	if err != nil {
 		log.Fatal(err)
 	}
 }

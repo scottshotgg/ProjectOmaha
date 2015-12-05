@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"database/sql"
 )
 
 // createZoneTable creates the zone table in the database
@@ -62,12 +63,20 @@ func getZoneID(zoneName string) (int8, error) {
 	return zoneID, nil
 }
 
-func addSpeakerToDefaultZone(speakerID int8) {
-	zoneID, _ := getZoneID("default")
-	_, err := DB.Exec(`INSERT INTO zoneToSpeaker 
+func getAddSpeakerToZonesStmt() (*sql.Stmt, error) {
+	stmt, err := DB.Prepare(`INSERT INTO zoneToSpeaker 
 		(zoneID, speakerID)
 		VALUES (?, ?)
-		`, zoneID, speakerID)
+		`)
+	if err != nil {
+		return nil, err
+	}
+	return stmt, nil
+}
+
+func addSpeakerToDefaultZone(speakerID int8) {
+	zoneID, _ := getZoneID("default")
+	_, err := addSpeakerToZonesStmt.Exec(zoneID, speakerID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -79,7 +88,8 @@ func SetSpeakerToZone(speaker *ControllerStatus, zoneName string) {
 	// update zoneToSpeaker table
 	_, err := DB.Exec(`UPDATE zoneToSpeaker 
 		SET zoneID = ?
-		`, zoneID)
+		WHERE speakerID = ?
+		`, zoneID, )
 	if err != nil {
 		log.Fatal(err)
 	}

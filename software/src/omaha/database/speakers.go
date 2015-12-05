@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"omaha/util"
+	"database/sql"
 )
 
 // createSpeakerTable creates the speaker table in the database
@@ -83,12 +84,9 @@ func SaveSpeaker(speaker *ControllerStatus) {
 }
 
 // addSpeaker adds a speaker to the database at the specified location
-func addSpeaker(loc speakerLocation) {
+func addSpeaker(loc speakerLocation) int8 {
 	// add to speaker table
-	result, err := DB.Exec(`INSERT INTO speaker 
-		(x, y, volumeLevel)
-		VALUES (?, ?, 0)
-		`, loc.X, loc.Y)
+	result, err := insertSpeakerStmt.Exec(loc.X, loc.Y)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -97,17 +95,44 @@ func addSpeaker(loc speakerLocation) {
 			log.Fatal(err)
 		}
 		// add to default zone
-		addSpeakerToDefaultZone(int8(id))
+		//addSpeakerToDefaultZone(int8(id), zoneStmt2)
 		log.Printf("Created speaker %d at (%d, %d)\n", id,loc.X, loc.Y)
+		return int8(id)
 	}
+	return 0
+}
+
+func getInsertSpeakerStatement() (*sql.Stmt, error) {
+	stmt, err := DB.Prepare(`INSERT INTO speaker 
+		(x, y, volumeLevel)
+		VALUES (?, ?, 0)
+		`)
+	if err != nil {
+		return nil, err
+	}
+	return stmt, nil
 }
 
 // populateSpeaker table populates the speaker table with the locations from the speaker locations file
 func populateSpeakerTable() {
+	tx, err := DB.Begin()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// reset the statements back to their original values
+	defer func(speakerStmt, zoneStmt *sql.Stmt){
+		insertSpeakerStmt = speakerStmt
+		addSpeakerToZonesStmt = zoneStmt
+	}(insertSpeakerStmt, addSpeakerToZonesStmt)
+	// change the statements to use this transaction
+	insertSpeakerStmt = tx.Stmt(insertSpeakerStmt)
+	addSpeakerToZonesStmt = tx.Stmt(addSpeakerToZonesStmt)
 	speakerLocations := getSpeakerLocations()
 	for _, speakerLoc := range speakerLocations {
-		addSpeaker(speakerLoc)
+		id := addSpeaker(speakerLoc)
+		addSpeakerToDefaultZone(id)
 	}
+	tx.Commit()
 }
 
 type speakerLocation struct {

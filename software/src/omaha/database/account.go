@@ -64,6 +64,13 @@ func CreateAccount(username, password, name string) error {
 	return nil
 }
 
+func getCreateAccountStmt() (*sql.Stmt, error) {
+	return DB.Prepare(`INSERT INTO account 
+		(username, name, hash)
+		VALUES (?, ?, ?)
+		`)
+}
+
 func createAccountTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE  account (
