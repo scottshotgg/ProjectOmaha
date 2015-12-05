@@ -5,8 +5,8 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"omaha/system"
 	"omaha/database"
+	"omaha/system"
 )
 
 type speakerPutRequest struct {
@@ -72,13 +72,13 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
-	
+
 	controller := database.GetSpeaker(speakerRequest.Speaker)
 	if controller == nil {
 		w.Write(getGenericErrorResponse("Invalid speaker ID from volume"))
 		return
 	}
-	
+
 	for _, attr := range speakerRequest.UpdatedAttributes {
 		err = speakerUpdateHandlers[attr](&speakerRequest.AttributeValues, controller)
 		if err != nil {

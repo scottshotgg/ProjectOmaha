@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"omaha/system"
 	"omaha/database"
+	"omaha/system"
 )
 
 type averageRequest struct {

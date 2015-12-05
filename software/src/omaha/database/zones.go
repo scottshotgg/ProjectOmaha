@@ -1,8 +1,8 @@
 package database
 
 import (
-	"log"
 	"database/sql"
+	"log"
 )
 
 // createZoneTable creates the zone table in the database
@@ -89,7 +89,7 @@ func SetSpeakerToZone(speaker *ControllerStatus, zoneName string) {
 	_, err := DB.Exec(`UPDATE zoneToSpeaker 
 		SET zoneID = ?
 		WHERE speakerID = ?
-		`, zoneID, )
+		`, zoneID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -144,7 +144,7 @@ func getZonesSpeakers(zoneID int8) []*ControllerStatus {
 		var x int
 		var y int
 		rows.Scan(&speakerID, &x, &y)
-		
+
 		speaker := &ControllerStatus{}
 		speaker.X = x
 		speaker.Y = y
@@ -165,7 +165,7 @@ func GetZone(zoneID int8) *Zone {
 		FROM zone
 		WHERE zoneID=?
 		`, zoneID).Scan(&name)
-		
+
 	zone := &Zone{ID: zoneID, Name: name, Speakers: speakers}
 	return zone
 }

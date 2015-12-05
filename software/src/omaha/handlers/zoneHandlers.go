@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"omaha/system"
 	"omaha/database"
+	"omaha/system"
 )
 
 type zonePostRequest struct {
-	Name string          `json:"name"`
+	Name string `json:"name"`
 }
 
 // ZonePostHandler handles an http request to create a new zone
@@ -24,7 +24,7 @@ func ZonePostHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
-	
+
 	database.AddZone(zoneRequest.Name)
 	w.Write(getGenericSuccessResponse())
 }

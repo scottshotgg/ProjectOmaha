@@ -11,8 +11,8 @@ import (
 
 // DB is the object used to access the database
 var (
-	DB *sql.DB
-	insertSpeakerStmt *sql.Stmt
+	DB                    *sql.DB
+	insertSpeakerStmt     *sql.Stmt
 	addSpeakerToZonesStmt *sql.Stmt
 )
 

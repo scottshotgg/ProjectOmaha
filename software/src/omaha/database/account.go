@@ -4,10 +4,10 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"errors"
-	"log"
-	"math/big"
 	"github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
+	"log"
+	"math/big"
 )
 
 // LoginAccount checks the given information against what is in the account table.

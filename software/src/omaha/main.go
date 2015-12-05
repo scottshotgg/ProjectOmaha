@@ -24,7 +24,7 @@ func main() {
 		status := system.GetSystemStatus()
 		defer status.Port.Close()
 	}
-	
+
 	handlers.InitializeHandlers()
 	log.Println("Starting server")
 	err := http.ListenAndServe(":8080", nil)
@@ -34,5 +34,5 @@ func main() {
 }
 
 func initializeLogger() {
-	log.SetFlags(log.Ldate |  log.Ltime | log.Lshortfile)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }

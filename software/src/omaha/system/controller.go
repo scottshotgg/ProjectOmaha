@@ -6,13 +6,7 @@ import (
 	"strconv"
 )
 
-
-
-
 const NULLZone int = 0
-
-
-
 
 func Btoi(b bool) int {
 	if b {

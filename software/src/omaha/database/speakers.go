@@ -1,11 +1,11 @@
 package database
 
 import (
+	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"omaha/util"
-	"database/sql"
 )
 
 // createSpeakerTable creates the speaker table in the database
@@ -96,7 +96,7 @@ func addSpeaker(loc speakerLocation) int8 {
 		}
 		// add to default zone
 		//addSpeakerToDefaultZone(int8(id), zoneStmt2)
-		log.Printf("Created speaker %d at (%d, %d)\n", id,loc.X, loc.Y)
+		log.Printf("Created speaker %d at (%d, %d)\n", id, loc.X, loc.Y)
 		return int8(id)
 	}
 	return 0
@@ -120,7 +120,7 @@ func populateSpeakerTable() {
 		log.Fatal(err)
 	}
 	// reset the statements back to their original values
-	defer func(speakerStmt, zoneStmt *sql.Stmt){
+	defer func(speakerStmt, zoneStmt *sql.Stmt) {
 		insertSpeakerStmt = speakerStmt
 		addSpeakerToZonesStmt = zoneStmt
 	}(insertSpeakerStmt, addSpeakerToZonesStmt)
