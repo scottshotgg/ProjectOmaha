@@ -32,12 +32,19 @@
         margin-top: 5px;
         width: 100%;
       }
+      
+      #test {
+        margin-left: 10px;
+      }
     </style>
     <div id="map" class="map">
     </div>
     <paper-card id="popup">
       <div><paper-button on-click="_selectSpeaker">speaker</paper-button></div>
       <div><paper-button on-click="_selectZone">zone</paper-button></div>
+    </paper-card>
+    <paper-card id="test">
+      <div>Status: Broken :(</div>
     </paper-card>
   </template>
   <script>
@@ -92,6 +99,15 @@
           }
         }));
         
+        var tt = document.getElementById('test');
+        var tooltip = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+          element: tt,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+        
         mapController.overlay = overlay;
         
         // Map views always need a projection.  Here we just want to map image
@@ -108,36 +124,89 @@
         var features = new Array(locations.length);
         for(var i = 0; i < features.length; i++) {
             var coordinates = [locations[i].x, 1700-locations[i].y];
+            var point = new ol.geom.Point(coordinates);
             features[i] = new ol.Feature({
-              geometry: new ol.geom.Point(coordinates),
+              geometry: point,
               speaker: locations[i]
             });
         }
-
+        
         var vectorSource = new ol.source.Vector({
             features: features
         });
 
         var style = {}
-
+        var allColors = [
+          '#795548',
+          '#ff5722',
+          '#ff9800',
+          '#ffc107',
+          //'--paper-yellow-500', this is kinda hard to see
+          '#cddc39',
+          '#8bc34a',
+          '#009688',
+          '#00bcd4',
+          '#03a9f4',
+          '#2196f3',
+          '#3f51b5',
+          '#673ab7',
+          '#9c27b0',
+          '#e91e63',
+          '#f44336'
+        ];
+        
+        var unusedColors = [
+          '#795548',
+          '#ff5722',
+          '#ff9800',
+          '#ffc107',
+          //'--paper-yellow-500', this is kinda hard to see
+          '#cddc39',
+          '#8bc34a',
+          '#009688',
+          '#00bcd4',
+          '#03a9f4',
+          '#2196f3',
+          '#3f51b5',
+          '#673ab7',
+          '#9c27b0',
+          '#e91e63',
+          '#f44336'
+        ];
+        var colorMap = {};
+        
         var vectorLayer = new ol.layer.Vector({
             source: vectorSource,
             style: function(feature, resolution) {
-                if(style.resolution !== resolution) {
-                  style.style = [new ol.style.Style({
+              var zone = feature.getProperties().speaker.zone.name;
+                if(!(zone in colorMap)) {
+                  var color;
+                  if(unusedColors.length > 0) {
+                    var index = Math.floor(Math.random() * unusedColors.length)
+                    color = unusedColors[index]
+                    unusedColors.splice(index, 1);
+                  } else {
+                    color = colors[Math.floor(Math.random() * colors.length)]
+                  }
+
+                  colorMap[zone] = color;
+                }
+                if(!(zone in style) || style[zone].resolution !== resolution) {
+                  style[zone] = {};
+                  style[zone].style = [new ol.style.Style({
                         image: new ol.style.Circle({
                             radius: 15/Math.max(resolution,1),
                             stroke: new ol.style.Stroke({
-                                color: '#1A237E'
+                                color: '#000000'
                             }),
                             fill: new ol.style.Fill({
-                                color: '#9FA8DA'
+                                color: colorMap[zone]
                             })
                         })
                     })];
-                    style.resolution = resolution;
+                    style[zone].resolution = resolution;
                 }
-                return style.style;
+                return style[zone].style;
             }
         });
 
@@ -152,7 +221,7 @@
             }),
               vectorLayer
           ],
-          overlays: [overlay],
+          overlays: [overlay, tooltip],
           target: 'map',
           view: new ol.View({
             projection: projection,
@@ -176,12 +245,30 @@
               // get the point's coordinate
               var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
               overlay.setPosition(coordinate);
+              console.log(colorMap);
             } else {
               // make sure the overlay is hidden
               mapController._hideOverlay();
             }
             
         });
+        
+        var hoverInteraction = new ol.interaction.Select({
+            condition: ol.events.condition.pointerMove,
+            style: function(feature, resolution) {
+                return style.style;
+            }
+        });
+        //map.addInteraction(hoverInteraction);
+        hoverInteraction.on('select', function(e){
+          if(e.selected.length > 0) {
+              console.log("Selected");
+              var speaker = e.selected[0].getProperties().speaker
+              console.log(speaker);
+              var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
+              tooltip.setPosition(coordinate);
+            }
+        })
       }
     });
   </script>
