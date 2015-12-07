@@ -11,7 +11,7 @@
 <link rel="import" href="/components/speaker-controller.html">
 <link rel="import" href="/components/map-controller.html">
 <link rel="import" href="/components/open-map-controller.html">
-<link rel="import" href="/components/zone-map-controller.html">
+<link rel="import" href="/components/zones/zone-map-controller.html">
 <link rel="import" href="/components/account-creation-form.html">
 <link rel="import" href="/components/zone-creation-form.html">
 <link rel="import" href="/components/simple-fit.html">
@@ -40,20 +40,21 @@
       <omaha-drawer id="drawer" drawer selected="{{selected}}"></omaha-drawer>
       <paper-header-panel class="flex" mode="seamed" main>
         <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
-        <neon-animated-pages class="fit" id="app-pages" selected="{{selected}}">
-          <open-map-controller id="mapcontroller" controllers="[[controllers]]" class="fit"></open-map-controller>
-          <neon-animatable class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+        <neon-animated-pages on-iron-select="refreshMap" id="pages" attr-for-selected="page" class="fit" id="app-pages" selected="{{selected}}">
+          <open-map-controller page="map" id="mapcontroller" zones="{{zones}}" controllers="[[controllers]]" class="fit"></open-map-controller>
+          <zone-map-controller page="zoneMap" zones="{{zones}}" id="zoneMap"  controllers="[[controllers]]" class="fit"></zone-map-controller>
+          <neon-animatable page="accountCreation" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
             <paper-material class="flex self-center card" elevation="5">
               <account-creation-form></account-creation-form>
             </paper-material>
           </neon-animatable> 
-          <neon-animatable class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+          <neon-animatable page="zoneCreation" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
             <paper-material class="flex self-center card" elevation="5">
               <zone-creation-form></zone-creation-form>
             </paper-material>
           </neon-animatable> 
           
-          <speaker-controller id="controller" class="fit"></speaker-controller>
+          <speaker-controller page="speakerController" id="controller" class="fit"></speaker-controller>
         </neon-animated-pages>
         <paper-dialog id="dialog">
           <h2>Error</h2>
@@ -78,9 +79,11 @@
 
       properties: {        
         selected: {
-          type: Number,
-          value: 0
-        }
+          type: String,
+          value: "map"
+        },
+        zones: Object,
+        controllers: Object
       },
 
       listeners: {
@@ -93,7 +96,7 @@
       },
 
       _showMap: function() {
-        this.selected = 0;
+        this.selected = "map";
       },
 
       _speakerSelected: function(e) {
@@ -103,7 +106,7 @@
         } else {
           this.$.controller.speaker = speaker;
           this.$.nav.showBackArrow();
-          this.selected = 3;
+          this.selected = "speakerController";
         }
       },
       
@@ -126,11 +129,13 @@
           Array.prototype.push.apply(speakers, zone.speakers);
         })
         this.controllers = speakers
+        this.zones = zones;
         this.$.mapcontroller.renderMap();
+        this.$.zoneMap.renderMap();
       },
 
       _showAccountCreation: function() {
-        this.selected = 2;
+        this.selected = "accountCreation";
         this.$.nav.showAccountCreation = false;
       },
 
@@ -140,6 +145,16 @@
       
       _closeDrawer: function() {
         this.$.panel.closeDrawer();
+      },
+      
+      refreshMap: function() {
+        switch(this.$.pages.selected) {
+          case "map":
+          case "zoneMap":
+            var map = this.$.pages.selectedItem.map;
+            if(map !== undefined)
+              map.updateSize();
+        }
       },
 
       ready: function() {

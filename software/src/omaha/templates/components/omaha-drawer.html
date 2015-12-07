@@ -15,10 +15,11 @@
         margin-left: auto;
       }
     </style>
-    <paper-menu id="menu" selected="{{selected}}">
-      <paper-item>Map<iron-icon class="icon" icon="maps:map"></iron-icon></paper-item>
-      <paper-item>Admin<iron-icon class="icon" icon="account-circle"></iron-icon></paper-item>
-      <paper-item>Zone Creation</paper-item>
+    <paper-menu attr-for-selected="page" id="menu" selected="{{selected}}">
+      <paper-item page="map">Map<iron-icon class="icon" icon="maps:map"></iron-icon></paper-item>
+      <paper-item page="accountCreation">Admin<iron-icon class="icon" icon="account-circle"></iron-icon></paper-item>
+      <paper-item page="zoneCreation">Zone Creation</paper-item>
+      <paper-item page="zoneMap">Update Zones</paper-item>
     </paper-menu>
   </template>
   <script>
@@ -27,7 +28,7 @@
 
       properties: {
         selected: {
-          type: Number,
+          type: String,
           notify: true
         }
       }

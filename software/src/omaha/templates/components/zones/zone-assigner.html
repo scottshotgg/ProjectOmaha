@@ -1,0 +1,87 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+
+
+<dom-module id="zone-assigner">
+  <template>
+    <style>
+      :host {
+        text-align: center;
+      }
+    </style>
+    <h2>Assign Zone</h2>
+      <div id="zoneContainer">
+        <paper-dropdown-menu label="Zone">
+          <paper-menu attr-for-selected="zoneName" id="zoneMenu" class="dropdown-content">
+            <template is="dom-repeat" items="{{zones}}">
+              <paper-item zone-name="{{item.name}}" zone="{{item}}">{{item.name}}</paper-item>
+            </template>
+          </paper-menu>
+        </paper-dropdown-menu>
+      </div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-click="_acceptClicked" dialog-confirm>Accept</paper-button>
+      </div>
+      
+      <iron-ajax
+          id="speakerUpdateAjax"
+          url="/system/speaker/"
+          method="PUT"
+          content-type="application/json"
+          handle-as="json"
+          on-response="_logResponse"
+          debounce-duration="300"></iron-ajax>
+  </template>
+  <script>
+    Polymer({
+      is: 'zone-assigner',
+
+      properties: {
+        speaker: {
+          type: Object,
+          observer: "_speakerUpdated"
+        }
+      },
+      
+      _acceptClicked: function() {
+        this.updateZoneId();
+        return true;
+      },
+      
+      updateZoneId: function() {
+        var zone = this.$.zoneMenu.selectedItem.zone;
+        var updatedAttributes = ["zoneId"];
+          var attributeValues = {
+            "zoneId": zone.zoneID,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speaker.id
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+       var oldZone = this.speaker.zone;
+       zone.speakers.push(this.speaker);
+       oldZone.speakers.splice(oldZone.speakers.indexOf(this.speaker), 1);
+       this.speaker.zone = zone;
+       this.fire('zoneupdated', {speakerId: this.speaker.id});
+      },
+      
+      _speakerUpdated: function() {
+        var speaker = this.speaker;
+        var zoneName = speaker.zone.name;
+        this.$.zoneMenu.selected = zoneName;
+        console.log(this.speaker);
+      },
+      
+       _logResponse: function(event, data) {
+        console.log(data.response);
+      }
+    });
+  </script>
+</dom-module>

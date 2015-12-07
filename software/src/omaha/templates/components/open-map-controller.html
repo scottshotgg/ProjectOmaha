@@ -229,10 +229,12 @@
             zoom: 2
           })
         });
+        mapController.map = map;
 
         var select = new ol.interaction.Select({
           style: function(feature, resolution) {
-                return style.style;
+                var zone = feature.getProperties().speaker.zone.name;
+                return style[zone].style;
             }
         });
         map.addInteraction(select);

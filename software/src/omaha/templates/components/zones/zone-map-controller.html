@@ -10,12 +10,10 @@
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="/bower_components/paper-item/paper-item.html">
-<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+
 
 <link rel="import" href="/components/speaker-icon.html">
-
+<link rel="import" href="/components/zones/zone-assigner.html">
 <dom-module id="zone-map-controller">
   <template>
     <style>
@@ -41,32 +39,15 @@
       #zoneContainer {
         text-align: center;
       }
-      
-      paper-listbox {
-        max-height: 100px;
-      }
     </style>
-    <div id="map" class="map">
+    <div id="zoneMap" class="map">
     </div>
     <paper-card id="popup">
       <div>Current Zone: <span><b>{{selected.zone.name}}</b></span></div>
       <div><paper-button id="zoneBtn" on-click="_assignZone">assign zone</paper-button></div>
     </paper-card>
     <paper-dialog id="dialog">
-      <h2>Assign Zone</h2>
-      <div id="zoneContainer">
-        <paper-dropdown-menu label="Zone">
-          <paper-menu class="dropdown-content">
-            <template is="dom-repeat" items="{{controllers}}">
-              <paper-item>{{item.id}}</paper-item>
-            </template>
-          </paper-menu>
-        </paper-dropdown-menu>
-      </div>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm>Accept</paper-button>
-      </div>
+      <zone-assigner on-zoneupdated="_refreshSpeaker" id="zoneAssigner" speaker="{{selected}}" zones="{{zones}}"></zone-assigner>
     </paper-dialog>
   </template>
   <script>
@@ -96,6 +77,11 @@
         }
       },
       
+      _refreshSpeaker: function(e) {
+        var speakerId = e.detail.speakerId;
+        this.featureMap[speakerId].changed();
+      },
+      
       _assignZone: function() {
         this._hideOverlay();
         this.$.dialog.open();
@@ -107,7 +93,8 @@
 
       renderMap: function() {
         var mapController = this;
-        var container = document.getElementById('popup');
+        mapController.featureMap = {};
+        var container = mapController.$.popup;
         var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
           element: container,
           autoPan: true,
@@ -136,6 +123,7 @@
               geometry: new ol.geom.Point(coordinates),
               speaker: locations[i]
             });
+            mapController.featureMap[locations[i].id] = features[i]
         }
 
         var vectorSource = new ol.source.Vector({
@@ -144,24 +132,77 @@
 
         var style = {}
 
+       var allColors = [
+          '#795548',
+          '#ff5722',
+          '#ff9800',
+          '#ffc107',
+          //'--paper-yellow-500', this is kinda hard to see
+          '#cddc39',
+          '#8bc34a',
+          '#009688',
+          '#00bcd4',
+          '#03a9f4',
+          '#2196f3',
+          '#3f51b5',
+          '#673ab7',
+          '#9c27b0',
+          '#e91e63',
+          '#f44336'
+        ];
+        
+        var unusedColors = [
+          '#795548',
+          '#ff5722',
+          '#ff9800',
+          '#ffc107',
+          //'--paper-yellow-500', this is kinda hard to see
+          '#cddc39',
+          '#8bc34a',
+          '#009688',
+          '#00bcd4',
+          '#03a9f4',
+          '#2196f3',
+          '#3f51b5',
+          '#673ab7',
+          '#9c27b0',
+          '#e91e63',
+          '#f44336'
+        ];
+        var colorMap = {};
+        
         var vectorLayer = new ol.layer.Vector({
             source: vectorSource,
             style: function(feature, resolution) {
-                if(style.resolution !== resolution) {
-                  style.style = [new ol.style.Style({
+              var zone = feature.getProperties().speaker.zone.name;
+                if(!(zone in colorMap)) {
+                  var color;
+                  if(unusedColors.length > 0) {
+                    var index = Math.floor(Math.random() * unusedColors.length)
+                    color = unusedColors[index]
+                    unusedColors.splice(index, 1);
+                  } else {
+                    color = colors[Math.floor(Math.random() * colors.length)]
+                  }
+
+                  colorMap[zone] = color;
+                }
+                if(!(zone in style) || style[zone].resolution !== resolution) {
+                  style[zone] = {};
+                  style[zone].style = [new ol.style.Style({
                         image: new ol.style.Circle({
                             radius: 15/Math.max(resolution,1),
                             stroke: new ol.style.Stroke({
-                                color: '#1A237E'
+                                color: '#000000'
                             }),
                             fill: new ol.style.Fill({
-                                color: '#9FA8DA'
+                                color: colorMap[zone]
                             })
                         })
                     })];
-                    style.resolution = resolution;
+                    style[zone].resolution = resolution;
                 }
-                return style.style;
+                return style[zone].style;
             }
         });
 
@@ -177,25 +218,27 @@
               vectorLayer
           ],
           overlays: [overlay],
-          target: 'map',
+          target: 'zoneMap',
           view: new ol.View({
             projection: projection,
             center: ol.extent.getCenter(extent),
             zoom: 2
           })
         });
+        
+        mapController.map = map;
 
         var select = new ol.interaction.Select({
           style: function(feature, resolution) {
-                return style.style;
+                var zone = feature.getProperties().speaker.zone.name;
+                return style[zone].style;
             }
         });
         map.addInteraction(select);
         select.on('select', function(e) {
             if(e.selected.length > 0) {
-              console.log("Selected");
               var speaker = e.selected[0].getProperties().speaker
-              console.log(speaker);
+
               mapController.selected = speaker;
               // get the point's coordinate
               var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
