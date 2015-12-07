@@ -1,0 +1,31 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+
+<dom-module id="help-panel">
+
+  <style>
+    :host {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        z-index: 1;
+        margin: 10px;
+    }
+  </style>
+
+  <template>
+    <paper-card>
+      <div class="card-content">Click on a speaker to get started</div>
+    </paper-card>
+  </template>
+
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'help-panel',
+    behaviors: [
+      Polymer.IronFitBehavior
+    ]
+  });
+</script>
