@@ -71,7 +71,7 @@
         <paper-radio-button name="light" class="flex">LED</paper-radio-button>
       </paper-radio-group>
     </div>
-    <neon-animated-pages selected="[[page]]" id="pages" class="flex">
+    <neon-animated-pages selected="[[selectedPage]]" class="flex">
       <neon-animatable class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
           <light-controller id="light" led-on="{{ledOn}}"></light-controller>
@@ -123,7 +123,7 @@
           value: "light",
           observer: "_selectionChanged"
         },
-        page: {
+        selectedPage: {
           type: String,
           value: 0
         },
@@ -166,15 +166,15 @@
         switch(selected) {
 
           case "light":
-            this.page = 0;
+            this.selectedPage = 0;
             break;
 
           case "averaging":
-            this.page = 1;
+            this.selectedPage = 1;
             break;
 
           case "volume":
-            this.page = 2;
+            this.selectedPage = 2;
             break;
 
           default:
