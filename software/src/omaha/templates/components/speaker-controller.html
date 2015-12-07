@@ -71,20 +71,20 @@
         <paper-radio-button name="light" class="flex">LED</paper-radio-button>
       </paper-radio-group>
     </div>
-    <neon-animated-pages selected="[[selectedPage]]" class="flex">
-      <neon-animatable class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+    <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
+      <neon-animatable page="light" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
           <light-controller id="light" led-on="{{ledOn}}"></light-controller>
         </simple-fit>
       </neon-animatable>
 
 
-      <neon-animatable class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+      <neon-animatable page="averaging" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
           <averaging-controller id="averaging" speaker-id="[[speakerId]]" averaging="[[averaging]]"></averaging-controller>
         </simple-fit>
       </neon-animatable>
-      <neon-animatable class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
+      <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <simple-fit class="container">
           <volume-selector id="volume" volume="{{volume}}"></volume-selector>
         </simple-fit>
@@ -120,13 +120,9 @@
 
         mode: {
           type: String,
-          value: "light",
-          observer: "_selectionChanged"
+          value: "volume"
         },
-        selectedPage: {
-          type: String,
-          value: 0
-        },
+
         speakerId: {
           type: Number,
           value: 0
@@ -156,29 +152,6 @@
               }
             }
           }
-        }
-      },
-
-      _selectionChanged: function(event) {
-        
-        var selected = this.mode;
-
-        switch(selected) {
-
-          case "light":
-            this.selectedPage = 0;
-            break;
-
-          case "averaging":
-            this.selectedPage = 1;
-            break;
-
-          case "volume":
-            this.selectedPage = 2;
-            break;
-
-          default:
-            break;
         }
       },
 
