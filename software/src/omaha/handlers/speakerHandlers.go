@@ -19,12 +19,14 @@ type speakerAttributes struct {
 	Volume    int8 `json:"volume"`
 	Averaging int8 `json:"averaging"`
 	LED       bool `json:"led"` // Experimenting, not sure if this is needed or not
+	ZoneID int8 `json:"zoneId"`
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error{
 	"volume":    updateSpeakerVolume,
 	"averaging": updateSpeakerAveragingMode,
 	"led":       updateSpeakerLED,
+	"zoneId": updateSpeakerZoneID,
 }
 
 func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerStatus) error {
@@ -55,6 +57,11 @@ func updateSpeakerLED(attr *speakerAttributes, speaker *database.ControllerStatu
 		log.Printf("Telling speaker %d to turn off the LED\n", speaker)
 		system.TurnLEDOff(speaker)
 	}
+	return nil
+}
+
+func updateSpeakerZoneID(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	database.SetSpeakerToZoneByID(speaker, attr.ZoneID)
 	return nil
 }
 

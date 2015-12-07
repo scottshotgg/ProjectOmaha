@@ -82,14 +82,19 @@ func addSpeakerToDefaultZone(speakerID int8) {
 	}
 }
 
-// SetSpeakerToZone moves the given speaker to the zone with the given name
-func SetSpeakerToZone(speaker *ControllerStatus, zoneName string) {
+// SetSpeakerToZoneByName moves the given speaker to the zone with the given name
+func SetSpeakerToZoneByName(speaker *ControllerStatus, zoneName string) {
 	zoneID, _ := getZoneID(zoneName)
+	SetSpeakerToZoneByID(speaker, zoneID)
+}
+
+// SetSpeakerToZoneByID moves the given speaker to the zone with the given name
+func SetSpeakerToZoneByID(speaker *ControllerStatus, zoneID int8) {
 	// update zoneToSpeaker table
 	_, err := DB.Exec(`UPDATE zoneToSpeaker 
 		SET zoneID = ?
 		WHERE speakerID = ?
-		`, zoneID)
+		`, zoneID, speaker.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
