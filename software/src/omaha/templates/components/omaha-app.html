@@ -36,7 +36,11 @@
           @apply(--layout-vertical)
         }
       }
-
+      paper-drawer-panel {
+        --paper-drawer-panel-left-drawer-container: {
+          z-index: 2;
+        };
+      }
     </style>
     <paper-drawer-panel id="panel">
       <omaha-drawer id="drawer" drawer selected="{{selected}}"></omaha-drawer>
