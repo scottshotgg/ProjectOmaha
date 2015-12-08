@@ -12,6 +12,7 @@
 
 <link rel="import" href="/components/speaker-icon.html">
 <link rel="import" href="/components/help-panel.html">
+<link rel="import" href="/components/speaker-tooltip.html">
 <dom-module id="open-map-controller">
   <template>
     <style>
@@ -38,14 +39,15 @@
     </style>
     <div id="map" class="map">
     </div>
-    <paper-card id="popup">
-      <div><paper-button on-click="_selectSpeaker">speaker</paper-button></div>
-      <div><paper-button on-click="_selectZone">zone</paper-button></div>
+    <paper-card id="popup">  
+      <speaker-tooltip on-speakerselected="_selectSpeaker" on-zoneselected="_selectZone" speaker="{{selected}}"></speaker-tooltip>
     </paper-card>
+
     <paper-card id="test">
       <div>Status: Broken :(</div>
     </paper-card>
     <help-panel></help-panel>
+
   </template>
   <script>
     
@@ -76,12 +78,10 @@
       
       _selectSpeaker: function() {
         this._hideOverlay();
-        this.fire('speakerselected', {speaker: this.selected});
       },
       
       _selectZone: function() {
         this._hideOverlay();
-        this.fire('zoneselected', {zone: this.selected.zone});
       },
       
       _hideOverlay: function() {
@@ -238,6 +238,7 @@
             }
         });
         map.addInteraction(select);
+
         select.on('select', function(e) {
             if(e.selected.length > 0) {
               console.log("Selected");

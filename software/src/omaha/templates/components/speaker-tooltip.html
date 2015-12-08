@@ -1,0 +1,43 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+
+
+<dom-module id="speaker-tooltip">
+  <template>
+    <style>
+      :host {
+      }
+      paper-button {
+        background-color: #4285f4;
+        color: #fff;
+        margin-top: 5px;
+        width: 100%;
+      }
+    </style>
+    <div>
+      Volume: <span>{{speaker.volumeLevel}}</span>
+    </div>
+    <div>
+      <paper-button on-click="_selectSpeaker">speaker</paper-button>
+      <paper-button on-click="_selectZone">zone</paper-button>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'speaker-tooltip',
+
+      attributes: {
+        speaker: Object
+      },
+
+      _selectSpeaker: function() {
+        this.fire('speakerselected', {speaker: this.speaker});
+      },
+
+      _selectZone: function() {
+        this.fire('zoneselected', {zone: this.speaker.zone});
+      }
+    });
+  </script>
+</dom-module>
