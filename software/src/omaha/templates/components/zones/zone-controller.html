@@ -9,7 +9,7 @@
 <link rel="import" href="/components/light-controller.html">
 <link rel="import" href="/components/averaging-controller.html">
 <!--<link rel="import" href="/components/map-controller.html">-->
-<dom-module id="speaker-controller">
+<dom-module id="zone-controller">
   <template>
     <style>
      :host {
@@ -67,7 +67,7 @@
     <div id="radio-container" class="layout horizontal">
       <paper-radio-group selected="{{mode}}" id="mode">
         <paper-radio-button name="volume" class="flex">Volume</paper-radio-button>
-        <paper-radio-button name="averaging" class="flex">Averaging</paper-radio-button>
+        <!--<paper-radio-button name="averaging" class="flex">Averaging</paper-radio-button>-->
         <paper-radio-button name="light" class="flex">LED</paper-radio-button>
       </paper-radio-group>
     </div>
@@ -75,13 +75,6 @@
       <neon-animatable page="light" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
           <light-controller id="light" led-on="{{ledOn}}"></light-controller>
-        </simple-fit>
-      </neon-animatable>
-
-
-      <neon-animatable page="averaging" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <simple-fit class="container">
-          <averaging-controller id="averaging" speaker-id="[[speakerId]]" averaging="[[averaging]]"></averaging-controller>
         </simple-fit>
       </neon-animatable>
       <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
@@ -101,16 +94,16 @@
   </template>
   <script>
     Polymer({
-      is: 'speaker-controller',
+      is: 'zone-controller',
 
       behaviors: [
         Polymer.NeonAnimatableBehavior
       ],
 
       properties: {
-        speaker: {
+        zone: {
           type: Object,
-          observer: "_speakerUpdated"
+          observer: "_zoneUpdated"
         },
 
         isReady: {
@@ -123,10 +116,6 @@
           value: "volume"
         },
 
-        speakerId: {
-          type: Number,
-          value: 0
-        },
         ledOn: {
           type: Boolean,
           value: true,
@@ -161,32 +150,42 @@
           This is because _ledUpdate is triggered when initially setting values received from the server
         */
         if(this.isReady) {
-          var updatedAttributes = ["led"];
-          var attributeValues = {
-            "led": this.ledOn,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
+          var self = this;
+          self.zone.speakers.forEach(function(speaker){
+            speaker.ledOn = self.ledOn;
+            var updatedAttributes = ["led"];
+            var attributeValues = {
+              "led": self.ledOn,
+            };
+            self.$.speakerUpdateAjax.body = {
+              "updatedAttributes": updatedAttributes, 
+              "attributeValues": attributeValues,
+              "speaker": speaker.id
+            };
+            self.$.speakerUpdateAjax.generateRequest();
+          });
+          
         }
       },
 
       _volumeUpdate: function() {
         if(this.isReady) {
-          var updatedAttributes = ["volume"];
-          var attributeValues = {
-            "volume": this.volume,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
+          var self = this;
+          self.zone.speakers.forEach(function(speaker){
+            speaker.volumeLevel = self.volume;
+            var updatedAttributes = ["volume"];
+            var attributeValues = {
+              "volume": self.volume,
+            };
+            self.$.speakerUpdateAjax.body = {
+              "updatedAttributes": updatedAttributes, 
+              "attributeValues": attributeValues,
+              "speaker": speaker.id
+            };
+            self.$.speakerUpdateAjax.generateRequest();
+          });
         }
+
       },
 
       _logResponse: function(event, data) {
@@ -194,14 +193,13 @@
       },
 
       _initializeStatus: function(speaker) {
-        this.speakerId = speaker.id;
-        this.ledOn = speaker.ledOn;
-        this.volume = speaker.volumeLevel;
+        this.ledOn = true;
+        this.volume = 0;
       },
 
-      _speakerUpdated: function() {
+      _zoneUpdated: function() {
         this.isReady = false;
-        this._initializeStatus(this.speaker);
+        this._initializeStatus();
         this.isReady = true;
       },
 
