@@ -1,0 +1,221 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+  <link rel="stylesheet" href="jquery-ui-1.11.4.css">
+  <script type="text/javascript" src="jquery-1.10.2.js"></script>
+  <!--<script type="text/javascript" src="jquery-2.2.0.js"></script>-->
+  <script type="text/javascript" src="jquery-ui-1.11.4.js"></script>
+  <script type="text/javascript" src="jquery.ui.touch-punch.js"></script>
+
+<dom-module id="equalizer-controller">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #slider {
+        width: 100%;
+        height: 100%;
+        margin-bottom: calc(.03 * 100vh);
+      }
+     
+      paper-slider {
+        width: 100%;
+        height: 100%;
+        /*transform: rotate(-90deg);*/
+      }
+
+      paper-card {
+        width: 100%;
+        height: 120%;    /* This was 100%, cahnge back if needed */
+      }
+
+      .paper-card .card-content {
+        padding: 0px;
+        height: 150%;
+      }
+      
+      paper-button {
+        background-color: #3367d6;
+        color: #fff;
+        margin-top: 10px;
+      }
+
+      .header.paper-card .title-text.paper-card {
+        padding: 0px;
+      }
+
+    </style>
+
+   <paper-card heading="Equalizer" elevation="4">
+      <div class="card-content">
+        <div id="slider" class="layout horizontal">
+          <div id="custom_container"> 
+            <div class="custom one" id="one"> <input id="text1" readonly/> <div class="custom_slider" value={{"internalEqualizer1"}}></div></div>
+            <div class="custom two"> <input id="text2" readonly/> <div class="custom_slider" value={{"equalizer2"}}></div></div>
+            <div class="custom three"> <input id="text3" readonly/> <div class="custom_slider" value={{"equalizer3"}}></div></div>
+            <div class="custom four"> <input id="text4" readonly/> <div class="custom_slider" value={{"equalizer4"}}></div></div>
+            <div class="custom five"> <input id="text5" readonly/> <div class="custom_slider" value={{"equalizer5"}}></div></div>
+            <div class="custom six"> <input id="text6" readonly/> <div class="custom_slider" value={{"equalizer6"}}></div></div>
+            <div class="custom seven"> <input id="text7" readonly/> <div class="custom_slider" value={{"equalizer7"}}></div></div>
+            <div class="custom eight"> <input id="text8" readonly/> <div class="custom_slider" value={{"equalizer8"}}></div></div>
+            <div class="custom nine"> <input id="text9" readonly/> <div class="custom_slider" value={{"equalizer9"}}></div></div>
+            <div class="custom ten"> <input id="text10" readonly/> <div class="custom_slider" value={{"equalizer10"}}></div></div>
+            <div class="custom eleven"> <input id="text11" readonly/> <div class="custom_slider" value={{"equalizer11"}}></div></div>
+            <div class="custom twelve"> <input id="text12" readonly/> <div class="custom_slider" value={{"equalizer12"}}></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <paper-button on-click="_setEqualizerClicked">set equalizer</paper-button>
+      </div>
+    </paper-card>
+    <paper-toast id="toast">Equalizer set to <span>{{equalizer1}}</span></paper-toast>
+  </template>
+  <script>
+    Polymer({
+      is: 'equalizer-controller',
+      
+      properties: {
+        internalEqualizer1: Number,
+
+        equalizer1: {
+          type: Number,
+          notify: true,
+          observer: '_setInternalEqualizer'
+        },
+
+        speakerId: {
+          type: Number
+        }
+      },
+
+      _setInternalEqualizer1: function(equalizer1) {
+        this.internalEqualizer1 = equalizer1;
+      },
+      
+      _setEqualizerClicked: function() {
+        this.$.equalizer1 = this.internalEqualizer1;
+        this.$.toast.show();
+      },
+      /*
+      decrementVolume: function() {
+        this.$.volume2.decrement();
+        this.$.volume2._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      incrementVolume: function() {
+        this.$.volume2.increment();
+        this.$.volume2._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },*/
+      
+      resetKnob: function(elem) {
+        elem.prevTimeout = 0;
+        elem.$.volume2._resetKnob();
+      },
+
+      ready: function() {
+        this.internalVolume = this.volume;
+      }
+    });
+  </script>
+  <script>
+
+  var MIN_WIDTH_SUPPORTED = 0;
+  var MIN_HEIGHT_SUPPORTED = 0;
+  //console.log(navigator);
+
+  if($(window).width() > MIN_WIDTH_SUPPORTED && $(window).height() > MIN_HEIGHT_SUPPORTED) {    // You should instead make this function alawys run but make the element hide on this if
+    $(function() {
+      $( ".custom > .custom_slider" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: 0,
+        max: 20,
+        value: 10,
+        slide: function( event, ui) {
+          var inputs = document.getElementsByClassName("custom");
+
+          console.log($(inputs[0]).find(".ui-slider-handle").value);
+
+          $( "#text1" ).val( $(inputs[0]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text2" ).val( $(inputs[1]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text3" ).val( $(inputs[2]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text4" ).val( $(inputs[3]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text5" ).val( $(inputs[4]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text6" ).val( $(inputs[5]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text7" ).val( $(inputs[6]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text8" ).val( $(inputs[7]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text9" ).val( $(inputs[8]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text10" ).val( $(inputs[9]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text11" ).val( $(inputs[10]).find(".ui-slider-range-min").prop("clientHeight")/20);
+          $( "#text12" ).val( $(inputs[11]).find(".ui-slider-range-min").prop("clientHeight")/20);
+        }
+      });
+
+      //$('.ui-slider-handle').draggable();
+      $( "#text1" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      //$("custon_container").on("tap",function(){
+        //$(this).hide();
+     // });
+      $( "#text2" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text3" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text4" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text5" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text6" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text7" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text8" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text9" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text10" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text11" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+      $( "#text12" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+    });
+  } else {
+      console.log("there is not enough space to display the equalizer");
+
+      window.onload = function(){
+        // Use this for loading a different thing when the window loads and the viewport is too small
+      };      
+    }
+  $(window).resize(function() {
+    if($(window).width() < MIN_WIDTH_SUPPORTED || $(window).height() < MIN_HEIGHT_SUPPORTED){
+      console.log($(window).width());
+      /*var custom_container = document.getElementById("custom_container");
+      //custom_container.style.visibility = "hidden";
+      var customs = document.getElementsByClassName("custom");
+      console.log(customs);
+      for (i in customs) {
+        //document.getElementById("one").style.width = "30px";
+        //document.getElementById("custom_container").style.width = "350px";
+      }*/
+    } else {
+      var custom_container = document.getElementById("custom_container");
+      custom_container.style.visibility = "visible";
+    }
+  });
+
+</script>
+</dom-module>

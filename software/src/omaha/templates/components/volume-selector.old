@@ -3,6 +3,7 @@
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider-vertical/paper-slider-vertical.html">
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
@@ -13,17 +14,24 @@
       :host {
         display: block;
       }
+
+      #slider {
+        /*width: 100px;*/
+      }
       
       paper-card {
-        width: 100%
+        width: 100%;
+        height: 500px;
       }
      
       paper-slider {
-        width: 100%;
+        width: 400px;
+        height: 250px;
+        /*transform: rotate(-90deg);*/
       }
       
       paper-button {
-        background-color: #3367d6;
+        background-color: #4285f4;
         color: #fff;
         margin-top: 10px;
         width: 100%;
@@ -32,13 +40,20 @@
    <paper-card heading="Volume" elevation="4">
       <div class="card-content">
         <div id="slider" class="layout horizontal">
-          <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
-          <paper-slider id="volume2" pin min="0" max="100" value="{{internalVolume}}"></paper-slider>
-          <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
+          <!--<paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button-->
+          <paper-slider id="volume2" pin min="0" expand="true" max="100" value="{{internalVolume}}"></paper-slider>
+          <paper-slider id="volume2" pin min="0" expand="true" max="100" value="{{internalVolume1}}"></paper-slider>
+          <paper-slider id="volume2" pin min="0" expand="true" max="100" value="{{internalVolume2}}"></paper-slider>
+          <paper-slider id="volume2" pin min="0" expand="true" max="100" value="{{internalVolume3}}"></paper-slider>
+          <paper-slider id="volume2" pin min="0" expand="true" max="100" value="{{internalVolume4}}"></paper-slider>
+          <paper-slider id="volume2" pin min="0" expand="true" max="100" value="{{internalVolume5}}"></paper-slider>
+          <paper-slider id="volume2" pin min="0" expand="true" max="100" value="{{internalVolume6}}"></paper-slider>
+          <!--<paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>-->
         </div>
       </div>
       <div class="card-actions">
         <paper-button on-click="_setVolumeClicked">set volume</paper-button>
+        <paper-button on-click="_setVolumeClicked">set something else</paper-button>
       </div>
     </paper-card>
     <paper-toast id="toast">Volume set to <span>{{volume}}</span></paper-toast>

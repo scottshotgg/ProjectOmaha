@@ -8,6 +8,8 @@
 <link rel="import" href="/components/volume-selector.html">
 <link rel="import" href="/components/light-controller.html">
 <link rel="import" href="/components/averaging-controller.html">
+<link rel="import" href="/components/equalizer-controller.html">
+
 <!--<link rel="import" href="/components/map-controller.html">-->
 <dom-module id="speaker-controller">
   <template>
@@ -26,10 +28,14 @@
       
       volume-selector {
         width: 30%;
+      }
+
+      equalizer-controller {
+        width: 50%;
         min-width: 300px;
       }
 
-      @media (min-width: 500px) {
+      @media (min-width: 601px) {
         paper-radio-group {
           @apply(--layout-vertical);
         }
@@ -44,7 +50,7 @@
         }
       }
 
-      @media (max-width: 499px) {
+      @media (max-width: 600px) {
         paper-radio-group {
           @apply(--layout-horizontal)
         }
@@ -60,35 +66,45 @@
         volume-selector, light-controller {
           margin-top: 20px;
         }
-
       }
+
+      /* Make the client cache the map and check on load of something like that */
 
     </style>
     <div id="radio-container" class="layout horizontal">
-      <paper-radio-group selected="{{mode}}" id="mode">
-        <paper-radio-button name="volume" class="flex">Volume</paper-radio-button>
-        <paper-radio-button name="averaging" class="flex">Averaging</paper-radio-button>
-        <paper-radio-button name="light" class="flex">LED</paper-radio-button>
+      <paper-radio-group id="mode" selected="{{mode}}">
+        <paper-radio-button id="volumeButton" name="volume" class="flex">Volume</paper-radio-button>
+        <paper-radio-button id="averagingButton" name="averaging" class="flex">Averaging</paper-radio-button>
+        <paper-radio-button id="lightButton" name="light" class="flex">LED</paper-radio-button>
+        <paper-radio-button id="equalizerButton" name="equalizer" class="flex">Equalizer</paper-radio-button>
       </paper-radio-group>
     </div>
     <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
+
       <neon-animatable page="light" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
           <light-controller id="light" led-on="{{ledOn}}"></light-controller>
         </simple-fit>
       </neon-animatable>
 
-
       <neon-animatable page="averaging" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
           <averaging-controller id="averaging" speaker-id="[[speakerId]]" averaging="[[averaging]]"></averaging-controller>
         </simple-fit>
       </neon-animatable>
+
       <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <simple-fit class="container">
           <volume-selector id="volume" volume="{{volume}}"></volume-selector>
         </simple-fit>
       </neon-animatable>
+
+      <neon-animatable page="equalizer" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
+        <simple-fit class="container">
+          <equalizer-controller id="equalizer" equalizer="{{equalizer}}"></equalizer-controller>
+        </simple-fit>
+      </neon-animatable>
+
     </neon-animated-pages>
     <iron-ajax
           id="speakerUpdateAjax"
@@ -211,5 +227,48 @@
         this.isReady = true;
       }
     });
+
+  if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    console.log(navigator.userAgent);
+    console.log("This is a mobile browser - changing display pattern");
+
+      window.onload = function() {
+        // Use this for loading a different thing when the window loads and the viewport is too small
+        var radio_group = document.getElementById("mode")
+        console.log(radio_group);
+        radio_group.style.float = "left";
+
+        var radio_buttons = [];
+        radio_buttons[0] = document.getElementById("volumeButton");
+        radio_buttons[1] = document.getElementById("lightButton");
+        radio_buttons[2] = document.getElementById("averagingButton");
+        radio_buttons[3] = document.getElementById("equalizerButton");
+        console.log(radio_buttons);
+
+        for (i in radio_buttons) {
+          radio_buttons[i].style.float = "left";
+        }
+
+        Polymer.updateStyles(); // may or may not need this
+
+      };
+  }
+/*
+paper-radio-group {
+          @apply(--layout-horizontal)
+        }
+        paper-radio-button {
+          @apply(--layout-vertical);
+          @apply(--layout-center);
+        }
+
+        #radio-container {
+          @apply(--layout-vertical)
+        }
+
+        volume-selector, light-controller {
+          margin-top: 20px;
+        }*/
+
   </script>
 </dom-module>
