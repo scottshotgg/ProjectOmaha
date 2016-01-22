@@ -36,10 +36,13 @@ func HandleControllerMessages() {
 	}
 }
 
-func getMessageHeader(zone, id, size int8) []byte {
-	header := make([]byte, size)
+func getMessageHeader(id, size int8) []byte {
+	/*header := make([]byte, size)
 	header[0] = byte(zone) // zone ID
-	header[1] = byte(id)   // speaker ID
+	header[1] = byte(id)   // speaker ID*/
+	header := make([]byte, size)
+	header[0] = byte(id) // zone ID
+
 	return header
 }
 

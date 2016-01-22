@@ -20,9 +20,9 @@ func IsLEDOn(this *database.ControllerStatus) bool {
 }
 
 func TurnLEDOn(this *database.ControllerStatus) error {
-	data := getMessageHeader(0, this.ID, 4)
-	data[2] = Commands.TurnLEDOn
-	data[3] = 0x01
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.TurnLEDOn
+	data[2] = 0x01
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = true
@@ -38,9 +38,9 @@ func TurnLEDOn(this *database.ControllerStatus) error {
 }
 
 func TurnLEDOff(this *database.ControllerStatus) error {
-	data := getMessageHeader(0, this.ID, 4)
-	data[2] = Commands.TurnLEDOff
-	data[3] = 0x00
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.TurnLEDOff
+	data[2] = 0x00
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.LEDOn = false
@@ -59,9 +59,9 @@ type LEDStatusResponse struct {
 }
 
 func GetLEDStatusFromController(this *database.ControllerStatus) (bool, error) {
-	data := getMessageHeader(0, this.ID, 4)
-	data[2] = Commands.GetLEDStatus
-	data[3] = 0x00
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.GetLEDStatus
+	data[2] = 0x00
 
 	ch := make(chan interface{})
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
@@ -84,9 +84,9 @@ func GetLEDStatusFromController(this *database.ControllerStatus) (bool, error) {
 }
 
 func SetVolume(this *database.ControllerStatus, volumeLevel int8) error {
-	data := getMessageHeader(0, this.ID, 4)
-	data[2] = Commands.SetVolume
-	data[3] = byte(volumeLevel)
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.SetVolume
+	data[2] = byte(volumeLevel)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.VolumeLevel = volumeLevel
@@ -105,9 +105,9 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 		return 0, nil
 	}
 
-	data := getMessageHeader(0, this.ID, 4)
-	data[2] = Commands.GetVolume
-	data[3] = 0x00
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.GetVolume
+	data[2] = 0x00
 
 	// status.SendData(filter) commented out until filter is created
 
@@ -117,9 +117,9 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 
 /*
 func SetMusicVolume(this *database.ControllerStatus, musicVolumeLevel int8) error {
-	data := getMessageHeader(0, this.ID, 4)
-	data[2] = Commands.SetMusicVolume
-	data[3] = byte(musicVolumeLevel)
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.SetMusicVolume
+	data[2] = byte(musicVolumeLevel)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		this.VolumeLevel = volumeLevel
@@ -135,9 +135,9 @@ func SetMusicVolume(this *database.ControllerStatus, musicVolumeLevel int8) erro
 */
 
 func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
-	data := getMessageHeader(0, this.ID, 4)
-	data[2] = Commands.SetAveragingFilter
-	data[3] = byte(mode)
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.SetAveragingFilter
+	data[2] = byte(mode)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		if status.IsDebug() {
@@ -169,9 +169,9 @@ func (status *SystemStatus) ResetMicrocontroller() (int, error) {
 		return 0, nil
 	}
 
-	data := getMessageHeader(0, 0, 4)
+	data := getMessageHeader(0, 4)
+	data[1] = 0x00
 	data[2] = 0x00
-	data[3] = 0x00
 
 	return 0, nil
 
@@ -182,9 +182,9 @@ func GetAveragingMode(this *database.ControllerStatus) (int, error) {
 		return 0, nil
 	}
 
-	data := getMessageHeader(0, 0, 4)
-	data[2] = 0x61
-	data[3] = 0x00
+	data := getMessageHeader(0, 4)
+	data[1] = 0x61
+	data[2] = 0x00
 
 	b := []byte{0x00}
 	status.ReadData(b)
@@ -211,9 +211,9 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 		return 0, nil
 	}*/
 
-	data := getMessageHeader(0, this.ID, 4)	// zone, id
-	data[2] = byte(band)		// Cannot use a command to do this
-	data[3] = byte(level * 2 + 80)
+	data := getMessageHeader(this.ID, 3)	// zone, id
+	data[1] = byte(band)		// Cannot use a command to do this
+	data[2] = byte(level * 2 + 80)
 
 	req := &ControllerRequest{ Data: data, OnWrite: func() interface{} {
 		if status.IsDebug() {
