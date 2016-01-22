@@ -235,17 +235,17 @@ func SaveSpeaker(speaker *ControllerStatus) {
 	}
 }
 
-//make a command to save the band
+// make a command to save the band
 
-func SaveBand(speaker *ControllerStatus, band int, level, int) {
+func SaveBand(speaker *ControllerStatus, band int, level int) {
 	_, err := DB.Exec(`
 		UPDATE speaker
 		SET
-			band? = ?
+			band` + band + ` = ?		
 		WHERE speakerID = ?
-	`, speaker.VolumeLevel, speaker.ID)
-	if err != nil {
-		log.Fatal(err)
+	`, level, speaker.ID)		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if err != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(err)			
 	}
 }
 

@@ -68,12 +68,13 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 		}
 		//constantsInts = append(constantsInts, int8(intParse))
 
-		if(int8(intParse) != speaker.Equalizer[k]) {
+		if(int8(intParse) != speaker.Equalizer[k]) {			// change this to pull from the db, it might already do that
 			log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
 			system.SetEqualizerConstant(speaker, int8(intParse), int8(k))
 			speaker.Equalizer[k] = int8(intParse)
 			log.Printf("You changed band %d to level %d", k, intParse)
-			log.Println(speaker.Equalizer[k])
+			log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+			database.Saveband(speaker, k, intParse)
 		}
 		k++
 
@@ -124,7 +125,7 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, attr := range speakerRequest.UpdatedAttributes {
-		err = speakerUpdateHandlers[attr](&speakerRequest.AttributeValues, controller)
+		err = speakerUpdateHandlers[attr](&speakerRequest.AttributeValues, controller)		// change these names to be more goddamn consistent, this code is fucking hard to read
 
 		if err != nil {
 			w.Write(getGenericErrorResponse(err.Error()))
