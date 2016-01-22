@@ -36,7 +36,7 @@ func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		If we're at the same IP address as the server, the host should be ::1 (ipv6 localhost)
 	*/
 	switch {
-	case host == "::1":
+	case host == "::1":		// this currently only works on chrome for some reason
 		/*
 			The request is coming from the server. Let it through by default.
 		*/
