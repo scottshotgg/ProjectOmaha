@@ -1,0 +1,12 @@
+This is a todo file:
+
+1.	Make the sliders turn red if they are in a range that is unacceptable
+2.	Make music checkbox
+3.	Fix music slider
+4.	Test equalizer
+5.	Look at Growraf
+6.	Add music and volume into the database
+7.	Add equalizer loading from former database values
+8.	Add equalizer presets
+9.	Add music and volume presets
+10. Add color chaning for the whole UI (???)

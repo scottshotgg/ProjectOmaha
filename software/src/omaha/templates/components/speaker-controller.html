@@ -95,7 +95,7 @@
 
       <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <simple-fit class="container">
-          <volume-selector id="volume" volume="{{volumeLevel}}"></volume-selector>
+          <volume-selector id="volume" volume="{{volumeLevel}}" musicVolume="{{musicLevel}}"></volume-selector>
         </simple-fit>
       </neon-animatable>
 
@@ -157,6 +157,11 @@
           value: 0,
           observer: '_volumeUpdate'
         },
+        musicLevel: {
+          type: Number,
+          value: 0,
+          observer: '_musicUpdate'
+        },
         equalizerone: {
           type: String,
           value: "there isnt anything in here jk :^)",
@@ -204,6 +209,20 @@
           var updatedAttributes = ["volume"];
           var attributeValues = {
             "volume": this.volumeLevel,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+      _musicUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["music"];
+          var attributeValues = {
+            "music": this.musicLevel,
           };
           this.$.speakerUpdateAjax.body = {
             "updatedAttributes": updatedAttributes, 

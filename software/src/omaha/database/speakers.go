@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"omaha/util"
+	"strconv"
 )
 
 // createSpeakerTable creates the speaker table in the database
@@ -217,7 +218,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	if err != nil {
 		log.Fatal(err)
 	}
-	speaker := &ControllerStatus{X: x, Y: y, VolumeLevel: volumeLevel, ID: speakerID}
+	speaker := &ControllerStatus{X: x, Y: y, VolumeLevel: volumeLevel, ID: speakerID, Equalizer: [21]int{band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}}
 	return speaker
 }
 
@@ -238,14 +239,16 @@ func SaveSpeaker(speaker *ControllerStatus) {
 // make a command to save the band
 
 func SaveBand(speaker *ControllerStatus, band int, level int) {
-	_, err := DB.Exec(`
-		UPDATE speaker
-		SET
-			band` + band + ` = ?		
-		WHERE speakerID = ?
-	`, level, speaker.ID)		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if err != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
-		log.Fatal(err)			
+
+	var stringOfStatement string = "UPDATE speaker SET band" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+
+	_, errr := DB.Exec(stringOfStatement, level, speaker.ID)		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
 	}
 }
 

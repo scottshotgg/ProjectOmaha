@@ -114,6 +114,24 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 	return 0, nil
 }
 
+
+func SetMusicVolume(this *database.ControllerStatus, musicVolumeLevel int8) error {
+	data := getMessageHeader(0, this.ID, 4)
+	data[2] = Commands.SetMusicVolume
+	data[3] = byte(musicVolumeLevel)
+
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		this.VolumeLevel = volumeLevel
+		if status.IsDebug() {
+			log.Printf("Set music volume to %d\n", volumeLevel)
+		}
+		return nil
+	}}
+	MessageChan <- req
+
+	return nil
+}
+
 func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 	data := getMessageHeader(0, this.ID, 4)
 	data[2] = Commands.SetAveragingFilter
@@ -193,7 +211,7 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 
 	data := getMessageHeader(0, this.ID, 4)	// zone, id
 	data[2] = byte(band)		// Cannot use a command to do this
-	data[3] = byte(level + 40)
+	data[3] = byte(level * 2 + 80)
 
 	req := &ControllerRequest{ Data: data, OnWrite: func() interface{} {
 		if status.IsDebug() {

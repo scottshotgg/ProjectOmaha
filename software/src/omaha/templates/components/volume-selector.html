@@ -35,6 +35,14 @@
           <paper-slider id="volume2" pin min="0" max="100" value="{{internalVolume}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
+
+        <h1 id="musicVolume"> Music Volume </h1>
+
+        <div id="slide2" class="layout horizontal">
+          <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
+          <paper-slider id="volume3" pin min="0" max="100" value="{{internalVolume2}}"></paper-slider>
+          <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
+        </div>
       </div>
       <div class="card-actions">
         <paper-button on-click="_setVolumeClicked">set volume</paper-button>
@@ -48,8 +56,15 @@
       
       properties: {
         internalVolume: Number,
+        internalVolume2: Number,
 
         volume: {     // I think this 
+          type: Number,
+          notify: true,
+          observer: '_setInternalVolume'
+        },
+
+        musicVolume: {     // I think this 
           type: Number,
           notify: true,
           observer: '_setInternalVolume'
@@ -62,11 +77,13 @@
 
       _setInternalVolume: function(volume) {
         this.internalVolume = volume;
+        this.internalVolume2 = this.musicVolume;
         console.log("_setInternalVolume");
       },
       
       _setVolumeClicked: function() {
         this.volume = this.internalVolume;
+        this.musicVolume = this.internalVolume2;
         this.$.toast.show();
         console.log("_setVolumeClicked");
       },

@@ -18,19 +18,21 @@ type speakerPutRequest struct {
 }
 
 type speakerAttributes struct {
-	Volume    int8 `json:"volume"`
-	Averaging int8 `json:"averaging"`
-	LED       bool `json:"led"` 
-	Equalizer string `json:"equalizer"`
-	ZoneID int8 `json:"zoneId"`
+	Volume    	int8 	`json:"volume"`
+	Music		int8 	`json:"musicVolume"`
+	Averaging 	int8 	`json:"averaging"`
+	LED       	bool 	`json:"led"` 
+	Equalizer 	string	`json:"equalizer"`
+	ZoneID 		int8 	`json:"zoneId"`
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error {
-	"volume":    updateSpeakerVolume,
-	"averaging": updateSpeakerAveragingMode,
-	"led":       updateSpeakerLED,
-	"equalizer": updateSpeakerEqualizer,
-	"zoneId": updateSpeakerZoneID,
+	"volume":		updateSpeakerVolume,
+	"music":		updateSpeakerMusic,
+	"averaging":	updateSpeakerAveragingMode,
+	"led":       	updateSpeakerLED,
+	"equalizer": 	updateSpeakerEqualizer,
+	"zoneId": 		updateSpeakerZoneID,
 }
 
 func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerStatus) error {
@@ -39,6 +41,16 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 		system.SetVolume(speaker, attr.Volume) 
 	} else {
 		return errors.New("Invalid volume")
+	}
+	return nil
+}
+
+func updateSpeakerMusic(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	if attr.Music >= 0 && attr.Music <= 100 {
+		log.Printf("Telling speaker %d to set music to %d\n", speaker.ID, attr.Music)
+		system.SetMusicVolume(speaker, attr.Music) 
+	} else {
+		return errors.New("Invalid music volume")
 	}
 	return nil
 }
@@ -55,6 +67,7 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.Contr
 
 func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	constants := strings.Fields(attr.Equalizer)
+	//log.Println(constants)
 
 	if(len(constants) < 21) {
 		return errors.New("Invalid amount of constants")
@@ -68,20 +81,20 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 		}
 		//constantsInts = append(constantsInts, int8(intParse))
 
-		if(int8(intParse) != speaker.Equalizer[k]) {			// change this to pull from the db, it might already do that
+		if(intParse != speaker.Equalizer[k]) {			// change this to pull from the db, it might already do that
 			log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
 			system.SetEqualizerConstant(speaker, int8(intParse), int8(k))
-			speaker.Equalizer[k] = int8(intParse)
+			speaker.Equalizer[k] = intParse
 			log.Printf("You changed band %d to level %d", k, intParse)
 			log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.Saveband(speaker, k, intParse)
+			database.SaveBand(speaker, k, intParse)
 		}
 		k++
 
 		//log.Println("constantsInts: ", constantsInts)
 	}
 
-	log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
+	//log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
 
 	return nil
 }
