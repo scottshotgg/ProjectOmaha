@@ -18,4 +18,4 @@ build/
 bin/
 
 # DB file
-software/src/omaha/omaha.db
+#software/src/omaha/omaha.db
