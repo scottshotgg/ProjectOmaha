@@ -28,6 +28,7 @@
     "paper-dialog": "PolymerElements/paper-dialog#~1.0.2",
     "paper-progress": "PolymerElements/paper-progress#~1.0.7",
     "paper-drawer-panel": "PolymerElements/paper-drawer-panel#~1.0.4",
-    "paper-listbox": "polymerelements/paper-listbox#~1.0.0"
+    "paper-listbox": "polymerelements/paper-listbox#~1.0.0",
+    "paper-checkbox": "PolymerElements/paper-checkbox#~1.1.0"
   }
 }

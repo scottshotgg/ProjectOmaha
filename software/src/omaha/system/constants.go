@@ -24,7 +24,7 @@ func init() { // Can we not just set these up ^ there so that we don't
 	// have to write all the commands out twice?
 	Commands.SetVolume = byte('S')
 	Commands.GetVolume = byte('s')
-	Commands.SetMusicVolume = byte('')		// Change this to something when we figure out wtf is going on
+	//Commands.SetMusicVolume = byte('')		// Change this to something when we figure out wtf is going on
 	Commands.AreYouAlive = byte('U')
 	Commands.ResetSpeaker = byte('R')
 	Commands.ResetFIFO = byte('r')

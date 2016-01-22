@@ -39,6 +39,8 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 	if attr.Volume >= 0 && attr.Volume <= 100 {
 		log.Printf("Telling speaker %d to set volume to %d\n", speaker.ID, attr.Volume)
 		system.SetVolume(speaker, attr.Volume) 
+		speaker.VolumeLevel = attr.Volume
+		database.SaveVolume(speaker)
 	} else {
 		return errors.New("Invalid volume")
 	}
@@ -48,7 +50,7 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 func updateSpeakerMusic(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	if attr.Music >= 0 && attr.Music <= 100 {
 		log.Printf("Telling speaker %d to set music to %d\n", speaker.ID, attr.Music)
-		system.SetMusicVolume(speaker, attr.Music) 
+		//system.SetMusicVolume(speaker, attr.Music) 
 	} else {
 		return errors.New("Invalid music volume")
 	}
@@ -59,6 +61,8 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.Contr
 	if attr.Averaging > 0 && attr.Averaging <= 20 {
 		log.Printf("Telling speaker %d to set averaging mode to %d\n", speaker.ID, attr.Averaging)
 		system.SetAveragingMode(speaker, attr.Averaging)
+		speaker.AveragingMode = attr.Averaging
+		database.SaveAveraging(speaker)
 	} else {
 		return errors.New("Invalid averaging mode")
 	}
@@ -82,11 +86,11 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 		//constantsInts = append(constantsInts, int8(intParse))
 
 		if(intParse != speaker.Equalizer[k]) {			// change this to pull from the db, it might already do that
-			log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
 			system.SetEqualizerConstant(speaker, int8(intParse), int8(k))
 			speaker.Equalizer[k] = intParse
-			log.Printf("You changed band %d to level %d", k, intParse)
-			log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+			//log.Printf("You changed band %d to level %d", k, intParse)
+		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
 			database.SaveBand(speaker, k, intParse)
 		}
 		k++
@@ -94,7 +98,7 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 		//log.Println("constantsInts: ", constantsInts)
 	}
 
-	//log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
+	log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
 
 	return nil
 }

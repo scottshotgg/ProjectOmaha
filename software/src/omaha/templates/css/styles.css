@@ -141,7 +141,7 @@ paper-card {
   margin-left: 4%;
 }
 
-#musicVolume {
+#musicvolume {
   font-size: 24px;
   margin-top: calc(0.05 * 100vh);
 }

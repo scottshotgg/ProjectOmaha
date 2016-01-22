@@ -115,6 +115,7 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 }
 
 
+/*
 func SetMusicVolume(this *database.ControllerStatus, musicVolumeLevel int8) error {
 	data := getMessageHeader(0, this.ID, 4)
 	data[2] = Commands.SetMusicVolume
@@ -131,6 +132,7 @@ func SetMusicVolume(this *database.ControllerStatus, musicVolumeLevel int8) erro
 
 	return nil
 }
+*/
 
 func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 	data := getMessageHeader(0, this.ID, 4)

@@ -6,6 +6,7 @@
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<!--<link rel="import" href="/bower_components/paper-checkbox//paper-checkbox.html">-->
 
 <dom-module id="volume-selector">
   <template>
@@ -30,15 +31,18 @@
     </style>
    <paper-card heading="Volume" elevation="4">
       <div class="card-content">
+
         <div id="slider" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
           <paper-slider id="volume2" pin min="0" max="100" value="{{internalVolume}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
 
-        <h1 id="musicVolume"> Music Volume </h1>
+        <!--<paper-checkbox> Music </paper-checkbox>-->
+        
+        <h1 id="musicvolume"> Music Volume </h1>
 
-        <div id="slide2" class="layout horizontal">
+        <div id="slider2" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
           <paper-slider id="volume3" pin min="0" max="100" value="{{internalVolume2}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
@@ -56,15 +60,8 @@
       
       properties: {
         internalVolume: Number,
-        internalVolume2: Number,
 
         volume: {     // I think this 
-          type: Number,
-          notify: true,
-          observer: '_setInternalVolume'
-        },
-
-        musicVolume: {     // I think this 
           type: Number,
           notify: true,
           observer: '_setInternalVolume'
@@ -75,10 +72,28 @@
         }
       },
 
+     /* properties: {
+        internalVolume2: Number,
+
+         musicVolume: {
+          type: Number,
+          notify: true,
+          observer: '_setInternalMusicVolume'
+        },
+
+        speakerId: {
+          type: Number
+        }
+      },
+*/
       _setInternalVolume: function(volume) {
         this.internalVolume = volume;
-        this.internalVolume2 = this.musicVolume;
         console.log("_setInternalVolume");
+      },
+
+       _setInternalMusicVolume: function(musicVolume) {
+        this.internalVolume2 = this.musicVolume;
+        console.log("_setInternalMusicVolume");
       },
       
       _setVolumeClicked: function() {

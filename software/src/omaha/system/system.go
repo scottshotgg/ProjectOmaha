@@ -44,7 +44,7 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 		if err != nil {
 			log.Println(err)
 		}
-		database.SaveSpeaker(controller)
+		//database.SaveVolume(controller)
 	}
 	return &status
 }
