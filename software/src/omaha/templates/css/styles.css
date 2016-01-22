@@ -107,9 +107,6 @@ paper-card {
   position: relative;
   top: 0px;
   width: 2%;
-
-  /* try this first when importing the code */
-
   display: inline-block; 
   height: calc(.4 * 100vh);
   margin-left: 1.25%;
@@ -135,6 +132,7 @@ paper-card {
   width: calc(.028 * 100vw);
   color: #3367d6;
   text-align: center;
+  /* Make this a percentage */
   margin-left: calc(50% - .022 * 100vw);
   margin-bottom: 100%; /* This as 20 */
 }
@@ -142,6 +140,8 @@ paper-card {
 .custom.one {
   margin-left: 4%;
 }
+
+/* this header shit doesnt do anything */
 
 #header {
   height: 100px;
@@ -165,3 +165,5 @@ paper-card {
   position: relative;
   top: 25px;
 }
+
+/* end of shit not doing anything */
