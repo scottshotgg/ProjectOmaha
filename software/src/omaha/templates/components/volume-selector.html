@@ -26,7 +26,6 @@
         background-color: #3367d6;
         color: #fff;
         margin-top: 10px;
-        width: 100%;
       }
     </style>
    <paper-card heading="Volume" elevation="4">
@@ -50,7 +49,7 @@
       properties: {
         internalVolume: Number,
 
-        volume: {
+        volume: {     // I think this 
           type: Number,
           notify: true,
           observer: '_setInternalVolume'
@@ -63,11 +62,13 @@
 
       _setInternalVolume: function(volume) {
         this.internalVolume = volume;
+        console.log("_setInternalVolume");
       },
       
       _setVolumeClicked: function() {
         this.volume = this.internalVolume;
         this.$.toast.show();
+        console.log("_setVolumeClicked");
       },
       
       decrementVolume: function() {
@@ -103,6 +104,7 @@
 
       ready: function() {
         this.internalVolume = this.volume;
+        console.log("I am ready " + this.internalVolume);
       }
     });
   </script>

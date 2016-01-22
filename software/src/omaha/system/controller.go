@@ -131,7 +131,7 @@ func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 }
 
 func (status *SystemStatus) ResetFIFO() (int, error) { // This function resets the FIFO on the micrcontrollers if one ever gets stuck
-	if status.debug {
+	if status.debug {		// may not be implemented
 		return 0, nil
 	}
 
@@ -181,6 +181,27 @@ func (status *SystemStatus) SendCoefficientInformation(equalizedGain int8, decib
 
 	// status.SendData(byte(decibal))
 	// status.SendData(byte(equalizedGain))
+
+	return 0, nil
+}
+
+func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8) (int, error) {
+
+	/*if status.debug {
+		return 0, nil
+	}*/
+
+	data := getMessageHeader(0, this.ID, 4)	// zone, id
+	data[2] = byte(band)		// Cannot use a command to do this
+	data[3] = byte(level + 40)
+
+	req := &ControllerRequest{ Data: data, OnWrite: func() interface{} {
+		if status.IsDebug() {
+			log.Printf("Set band %-2d mode to %3ddB (-40)   |   Packet contents: %2d", band, level, data)
+		}
+		return nil
+	}}
+	MessageChan <- req	
 
 	return 0, nil
 }

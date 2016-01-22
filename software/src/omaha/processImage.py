@@ -11,6 +11,7 @@ def parseCircle(circle):
     y = int(circle.pt[1])
     cv2.circle(orig, (x, y), int(circle.size/2), (0, 255, 0), 2)
     cv2.rectangle(orig, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255),-1)
+    print(x + ", " + y)
     return {"x": x, "y": y}
 
 # merge blobs that are intersecting
@@ -53,7 +54,7 @@ if __name__ == "__main__":
         detector = cv2.MSER()
     else:
         detector = cv2.MSER_create()
-    
+
     fs = detector.detect(mask)
     fs.sort(key = lambda x: -x.size)
     

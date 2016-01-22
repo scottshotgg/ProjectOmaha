@@ -77,13 +77,13 @@ paper-card {
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
   background: #3367d6;
-  border-radius: 20px;
+  border-radius: 30px;
   border: 2px solid #d3d3d3;
   /*
   margin-bottom: -15px;
   margin-left: -5px;
   */
-  margin-bottom: calc(-.012 * 100vh);
+  margin-bottom: calc(-.012 * 100vw);
   margin-left: calc(-.005 * 100vw);
 
   width: calc(.022 * 100vw);
@@ -94,24 +94,34 @@ paper-card {
   background: #3367d6;
 }
 
+#custom_container {
+  position: relative;
+  top: calc(10%);
+  width: 100%; 
+  /* height: 100vh; */
+  margin: 0px;
+  height: 100%;
+}
+
 .custom {
   position: relative;
   top: 0px;
-  width: 4%;
+  width: 2%;
 
   /* try this first when importing the code */
 
   display: inline-block; 
   height: calc(.4 * 100vh);
-  margin-left: 1.5%;
-  margin-right: 1.5%;
+  margin-left: 1.25%;
+  margin-right: 1.25%;
+  float: left;
 }
 
 .custom > .custom_slider {
   height: 90%;
-  margin-bottom: calc(.005 * 100vh); /* This was 25 */
-  margin-left: calc(.004 * 100vw);
-  width: 70%;
+  /*margin-bottom: calc(.005 * 100vw); */ /* This was 25 */
+  /*margin-left: calc(.004 * 100vw);*/
+  width: 60%;
   /*width: 50px; /* Change this back */
 }
 
@@ -121,27 +131,16 @@ paper-card {
   */
   border: 0;
   font-weight: bold; 
-  font-size: calc(.05 * 100vw);
-  width: calc(.06 * 100vw);
-  color: #4285f4;
+  font-size: calc(.018 * 100vw);
+  width: calc(.028 * 100vw);
+  color: #3367d6;
   text-align: center;
-  margin-left: calc(50% - .011 * 100vw);
-  margin-bottom: calc(.04 * 100vh); /* This as 20 */
+  margin-left: calc(50% - .022 * 100vw);
+  margin-bottom: 100%; /* This as 20 */
 }
 
 .custom.one {
-  /*margin-left: calc(40% - .175 * 100vw);
-*/
-}
-
-#custom_container {
-  position: relative;
-  top: calc(10%);
-  width: calc(.45 * 100vw);
-   width: 100%; 
-  /* height: 100vh; */
-  margin: 0px;
-  
+  margin-left: 4%;
 }
 
 #header {

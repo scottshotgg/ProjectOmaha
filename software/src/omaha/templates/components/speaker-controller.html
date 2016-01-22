@@ -27,15 +27,15 @@
       }
       
       volume-selector {
-        width: 30%;
+        width: 70%;
       }
 
       equalizer-controller {
-        width: 50%;
+        width: 90%;
         min-width: 300px;
       }
 
-      @media (min-width: 601px) {
+      @media (min-width: 769px) {
         paper-radio-group {
           @apply(--layout-vertical);
         }
@@ -50,7 +50,7 @@
         }
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 768px) {
         paper-radio-group {
           @apply(--layout-horizontal)
         }
@@ -95,13 +95,13 @@
 
       <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <simple-fit class="container">
-          <volume-selector id="volume" volume="{{volume}}"></volume-selector>
+          <volume-selector id="volume" volume="{{volumeLevel}}"></volume-selector>
         </simple-fit>
       </neon-animatable>
 
       <neon-animatable page="equalizer" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <simple-fit class="container">
-          <equalizer-controller id="equalizer" equalizer="{{equalizer}}"></equalizer-controller>
+          <equalizer-controller id="equalizer" equalizer="{{equalizerone}}"></equalizer-controller>
         </simple-fit>
       </neon-animatable>
 
@@ -116,6 +116,10 @@
           debounce-duration="300"></iron-ajax>
   </template>
   <script>
+  /*console.log(screen.orientation.angle);
+  $( window ).on( "orientationchange", function( event ) {
+  $( "#orientation" ).text( "This device is in " + event.orientation + " mode!" );
+});*/
     Polymer({
       is: 'speaker-controller',
 
@@ -148,10 +152,15 @@
           value: true,
           observer: '_ledUpdate'
         },
-        volume: {
+        volumeLevel: {    // this shit and all the other shitters were volumeone for some reason ??? changed to volumeLevel
           type: Number,
           value: 0,
           observer: '_volumeUpdate'
+        },
+        equalizerone: {
+          type: String,
+          value: "there isnt anything in here jk :^)",
+          observer: '_equalizerUpdate'
         },
 
         animationConfig: {
@@ -194,7 +203,22 @@
         if(this.isReady) {
           var updatedAttributes = ["volume"];
           var attributeValues = {
-            "volume": this.volume,
+            "volume": this.volumeLevel,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+
+      _equalizerUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["equalizer"];
+          var attributeValues = {
+            "equalizer": this.equalizerone,
           };
           this.$.speakerUpdateAjax.body = {
             "updatedAttributes": updatedAttributes, 
@@ -213,6 +237,7 @@
         this.speakerId = speaker.id;
         this.ledOn = speaker.ledOn;
         this.volume = speaker.volumeLevel;
+        this.equalizer = speaker.equalizerone;
       },
 
       _speakerUpdated: function() {
