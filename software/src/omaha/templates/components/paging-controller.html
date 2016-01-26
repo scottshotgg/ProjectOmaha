@@ -1,0 +1,145 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<!--<link rel="import" href="/bower_components/paper-checkbox//paper-checkbox.html">-->
+
+<dom-module id="paging-controller">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      
+      paper-card {
+        width: 100%
+      }
+     
+      paper-slider {
+        width: 100%;
+      }
+      
+      paper-button {
+        background-color: #3367d6;
+        color: #fff;
+        margin-top: 10px;
+      }
+    </style>
+   <paper-card heading="Fade Time" elevation="4">
+      <div class="card-content">
+
+        <div id="fadetime" class="layout horizontal">
+          <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
+          <paper-slider id="fadetime" pin min="0" max="100" value="{{internalTime}}"></paper-slider>
+          <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
+        </div>
+
+        <!--<paper-checkbox> Music </paper-checkbox>-->
+        
+        <h1 id="musicvolume"> Fade Level </h1>
+
+        <div id="fadelevel" class="layout horizontal">
+          <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
+          <paper-slider id="fadelevel" pin min="0" max="100" value="{{internalLevel}}"></paper-slider>
+          <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
+        </div>
+      </div>
+      <div class="card-actions">
+        <paper-button on-click="_setPagingClicked">set paging</paper-button>
+      </div>
+    </paper-card>
+    <paper-toast id="toast">Paging set to <span>{{fadetime, fadelevel}}</span></paper-toast>
+  </template>
+  <script>
+    Polymer({
+      is: 'paging-controller',
+      
+      properties: {
+        internalTime: Number,
+
+        paging: {     // I think this 
+          type: Number,
+          notify: true,
+          observer: '_setPagingClicked'
+        },
+
+        speakerId: {
+          type: Number
+        }
+      },
+
+     /* properties: {
+        internalLevel: Number,
+
+         level: {
+          type: Number,
+          notify: true,
+          observer: '_setInternalLevel'
+        },
+
+        speakerId: {
+          type: Number
+        }
+      },
+*/
+      _setInternalPaging: function(paging) {
+        this.internalTime = paging;
+        console.log("_setInternalPaging");
+      },
+
+       _setInternalLevel: function(level) {
+        this.internalLevel = this.level;
+        console.log("_setInternalLevel");
+      },
+      
+      _setPagingClicked: function() {
+        this.paging = this.internalTime;
+        this.level = this.internalLevel;
+        this.$.toast.show();
+        console.log("_setPagingClicked");
+      },
+      
+      /*
+      decrementVolume: function() {
+        this.$.volume2.decrement();
+        this.$.volume2._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      incrementVolume: function() {
+        this.$.volume2.increment();
+        this.$.volume2._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      */
+      
+      resetKnob: function(elem) {
+        elem.prevTimeout = 0;
+        elem.$.volume2._resetKnob();
+      },
+
+      ready: function() {
+        this.internalTime = this.paging;
+        console.log("I am ready " + this.internalTime);
+      }
+    });
+  </script>
+</dom-module>

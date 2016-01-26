@@ -14,6 +14,7 @@ type ControllerStatus struct {
 	Y				int  		`json:"y"`
 	AveragingMode	int8 		`json:"averagingMode"`
 	Equalizer[21]	int			`json:["equalizer"]`
+	PagingLevel		int8			`json:"pagingLevel"`
 	/*
 	Band0			int			`json:"band0"`	
 	Band1			int			`json:"band1"`	

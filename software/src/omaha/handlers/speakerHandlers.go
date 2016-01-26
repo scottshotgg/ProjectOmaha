@@ -24,6 +24,7 @@ type speakerAttributes struct {
 	LED       	bool 	`json:"led"` 
 	Equalizer 	string	`json:"equalizer"`
 	ZoneID 		int8 	`json:"zoneId"`
+	Paging		int8	`json:"paging"`
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error {
@@ -32,6 +33,7 @@ var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.Contro
 	"averaging":	updateSpeakerAveragingMode,
 	"led":       	updateSpeakerLED,
 	"equalizer": 	updateSpeakerEqualizer,
+	"paging":		updateSpeakerPaging,
 	"zoneId": 		updateSpeakerZoneID,
 }
 
@@ -100,6 +102,18 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 
 	log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
 
+	return nil
+}
+
+func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	if attr.Paging >= 0 && attr.Paging <= 100 {
+		log.Printf("Telling speaker %d to set paging to %d\n", speaker.ID, attr.Paging)
+	//	system.SetPaging(speaker, attr.Paging) 
+		//speaker.PagingLevel = attr.Paging
+		//database.SaveVolume(speaker)
+	} else {
+		return errors.New("Invalid paging")
+	}
 	return nil
 }
 

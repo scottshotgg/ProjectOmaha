@@ -226,6 +226,23 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 	return 0, nil
 }
 
+func (status *SystemStatus) SetPaging(this *database.ControllerStatus, pagingLevel int8) error {
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.SetPaging
+	data[2] = byte(pagingLevel)
+
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		this.PagingLevel = pagingLevel
+		if status.IsDebug() {
+			log.Printf("Set volume to %d\n", pagingLevel)
+		}
+		return nil
+	}}
+	MessageChan <- req
+
+	return nil
+}
+
 func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) { // Equalized gain or just raw gain and equalization can be done in here
 	if status.debug {
 		return m

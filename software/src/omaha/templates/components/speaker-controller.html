@@ -9,6 +9,7 @@
 <link rel="import" href="/components/light-controller.html">
 <link rel="import" href="/components/averaging-controller.html">
 <link rel="import" href="/components/equalizer-controller.html">
+<link rel="import" href="/components/paging-controller.html">
 
 <!--<link rel="import" href="/components/map-controller.html">-->
 <dom-module id="speaker-controller">
@@ -27,6 +28,10 @@
       }
       
       volume-selector {
+        width: 70%;
+      }
+      
+      paging-controller {
         width: 70%;
       }
 
@@ -77,6 +82,7 @@
         <paper-radio-button id="averagingButton" name="averaging" class="flex">Averaging</paper-radio-button>
         <paper-radio-button id="lightButton" name="light" class="flex">LED</paper-radio-button>
         <paper-radio-button id="equalizerButton" name="equalizer" class="flex">Equalizer</paper-radio-button>
+        <paper-radio-button id="pagingButton" name="paging" class="flex">Paging</paper-radio-button>
       </paper-radio-group>
     </div>
     <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
@@ -102,6 +108,12 @@
       <neon-animatable page="equalizer" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <simple-fit class="container">
           <equalizer-controller id="equalizer" equalizer="{{equalizerone}}"></equalizer-controller>
+        </simple-fit>
+      </neon-animatable>
+
+      <neon-animatable page="paging" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
+        <simple-fit class="container">
+          <paging-controller id="paging" paging="{{pagingLevel}}"></paging-controller>
         </simple-fit>
       </neon-animatable>
 
@@ -166,6 +178,11 @@
           type: String,
           value: "there isnt anything in here jk :^)",
           observer: '_equalizerUpdate'
+        },
+        pagingLevel: {
+          type: Number,
+          value: 0,
+          observer: '_pagingUpdate'
         },
 
         animationConfig: {
@@ -239,6 +256,21 @@
           var updatedAttributes = ["equalizer"];
           var attributeValues = {
             "equalizer": this.equalizerone,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+
+      _pagingUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["paging"];
+          var attributeValues = {
+            "paging": this.pagingLevel,
           };
           this.$.speakerUpdateAjax.body = {
             "updatedAttributes": updatedAttributes, 

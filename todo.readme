@@ -18,3 +18,4 @@ This is a todo file:
 14. At some point add the debug thing back in to the equalizer, don't forget!
 15. Compile the code and test it on the Pi2, it will probably run much better 
 16. Finalize database variable typing (int -> int8, mostly)
+17. Fix OpenLayer click event shit
