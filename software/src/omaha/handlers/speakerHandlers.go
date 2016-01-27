@@ -18,7 +18,7 @@ type speakerPutRequest struct {
 }
 
 type speakerAttributes struct {
-	Volume    	int8 	`json:"volume"`
+	Volume    	string 	`json:"volume"`
 	Music		int8 	`json:"musicVolume"`
 	Averaging 	int8 	`json:"averaging"`
 	LED       	bool 	`json:"led"` 
@@ -33,19 +33,62 @@ var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.Contro
 	"averaging":	updateSpeakerAveragingMode,
 	"led":       	updateSpeakerLED,
 	"equalizer": 	updateSpeakerEqualizer,
-	"paging":		updateSpeakerPaging,
+	"fadelevel":	updateSpeakerFadeLevel,
+	"fadetime":		updateSpeakerFadeTime,
 	"zoneId": 		updateSpeakerZoneID,
 }
 
 func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerStatus) error {
-	if attr.Volume >= 0 && attr.Volume <= 100 {
-		log.Printf("Telling speaker %d to set volume to %d\n", speaker.ID, attr.Volume)
-		system.SetVolume(speaker, attr.Volume) 
-		speaker.VolumeLevel = attr.Volume
-		database.SaveVolume(speaker)
+
+	volumes := strings.Fields(attr.Volume)
+	//log.Println(attr.Volume)
+	//log.Println(volumes)
+
+	var volumeArray [3] int8
+
+	if(len(volumes) < 3) {
+		return errors.New("Invalid amount of volumes")
+	}
+
+	var k = 0
+	for _, i := range volumes {
+		intParse, err := strconv.Atoi(i)
+		if err != nil {
+			panic(err)		// test if this returns
+		}
+
+		volumeArray[k] = int8(intParse)
+		// log.Printf("You changed band %d to level %d", k, intParse)
+		// log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+		//}
+		k++
+	}
+
+	if volumeArray[0] >= 0 && volumeArray[0] <= 100 && volumeArray[1] >= 0 && volumeArray[1] <= 100 && volumeArray[2] >= 0 && volumeArray[2] <= 100 {
+		//log.Printf("Telling speaker %d to set volume to %d\n", speaker.ID, attr.Volume)
+		
+		//log.Println(speaker.VolumeLevel)
+
+		if(volumeArray[0] != speaker.VolumeLevel[0]) {
+			system.SetVolume(speaker, volumeArray[0]) 	
+			database.SaveVolume(speaker)		// we can optimize this by reducing the generality of the function
+		}
+		if(volumeArray[1] != speaker.VolumeLevel[1]) {
+			system.SetMusicVolume(speaker, volumeArray[1])
+			database.SaveVolume(speaker)
+		}
+		if(volumeArray[2] != speaker.VolumeLevel[2]) {
+			system.SetPaging(speaker, volumeArray[2], 0)		// 0 means volume adjustment
+			database.SaveVolume(speaker)
+		}
+		//if(l != 0) {
+		//database.SaveVolume(speaker)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
+		//}
+
 	} else {
 		return errors.New("Invalid volume")
 	}
+
 	return nil
 }
 
@@ -72,7 +115,7 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.Contr
 }
 
 func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.ControllerStatus) error {
-	constants := strings.Fields(attr.Equalizer)
+	constants := strings.Fields(attr.Equalizer)		// do not publish this function without checking for type/value errors
 	//log.Println(constants)
 
 	if(len(constants) < 21) {
@@ -90,12 +133,12 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 		if(intParse != speaker.Equalizer[k]) {			// change this to pull from the db, it might already do that
 			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
 			system.SetEqualizerConstant(speaker, int8(intParse), int8(k))
-			speaker.Equalizer[k] = intParse
+			speaker.Equalizer[k] = intParse	// this needs checking
 			//log.Printf("You changed band %d to level %d", k, intParse)
 		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
 			database.SaveBand(speaker, k, intParse)
 		}
-		k++
+			k++
 
 		//log.Println("constantsInts: ", constantsInts)
 	}
@@ -105,7 +148,19 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 	return nil
 }
 
-func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+func updateSpeakerFadeLevel(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	if attr.Paging >= 0 && attr.Paging <= 100 {
+		log.Printf("Telling speaker %d to set paging to %d\n", speaker.ID, attr.Paging)
+	//	system.SetPaging(speaker, attr.Paging) 
+		//speaker.PagingLevel = attr.Paging
+		//database.SaveVolume(speaker)
+	} else {
+		return errors.New("Invalid paging")
+	}
+	return nil
+}
+
+func updateSpeakerFadeTime(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	if attr.Paging >= 0 && attr.Paging <= 100 {
 		log.Printf("Telling speaker %d to set paging to %d\n", speaker.ID, attr.Paging)
 	//	system.SetPaging(speaker, attr.Paging) 

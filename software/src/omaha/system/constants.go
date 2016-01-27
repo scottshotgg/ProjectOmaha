@@ -3,6 +3,8 @@ package system
 var Commands struct {
 	SetVolume          	byte
 	GetVolume          	byte
+	SetMusicVolume		byte
+	SetPaging			byte
 	AreYouAlive        	byte // Nto sure how to implement this, could split off another thread and make a ticker, http://stackoverflow.com/questions/16466320/is-there-a-way-to-do-repetitive-tasks-at-intervals-in-golang
 	ResetSpeaker       	byte
 	ResetFIFO          	byte
@@ -18,14 +20,14 @@ var Commands struct {
 	InitializeFilter   	byte
 	SetID              	byte
 	GetID              	byte
-	SetPaging			byte
 }
 
 func init() { // Can we not just set these up ^ there so that we don't
 	// have to write all the commands out twice?
 	Commands.SetVolume = byte('S')
 	Commands.GetVolume = byte('s')
-	//Commands.SetMusicVolume = byte('')		// Change this to something when we figure out wtf is going on
+	Commands.SetMusicVolume = byte('M')		// Change this to something when we figure out wtf is going on
+	Commands.SetPaging = byte('P')
 	Commands.AreYouAlive = byte('U')
 	Commands.ResetSpeaker = byte('R')
 	Commands.ResetFIFO = byte('r')
@@ -41,5 +43,4 @@ func init() { // Can we not just set these up ^ there so that we don't
 	Commands.InitializeFilter = byte('f')
 	Commands.SetID = byte('W')
 	Commands.GetID = byte('w')
-	Commands.SetPaging = byte('P')
 }

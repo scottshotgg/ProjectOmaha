@@ -40,14 +40,23 @@
 
         <!--<paper-checkbox> Music </paper-checkbox>-->
         
-        <h1 id="musicvolume"> Fade Level </h1>
+        <h1 id="fadelevelabel"> Fade Level </h1>
 
         <div id="fadelevel" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
           <paper-slider id="fadelevel" pin min="0" max="100" value="{{internalLevel}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
+
+        <h1 id="pagingvolume"> Paging Volume </h1>
+
+        <div id="slider2" class="layout horizontal">
+          <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
+          <paper-slider id="volume4" pin min="0" max="100" value="{{internalVolume2}}"></paper-slider>
+          <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
+        </div>
       </div>
+
       <div class="card-actions">
         <paper-button on-click="_setPagingClicked">set paging</paper-button>
       </div>

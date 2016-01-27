@@ -39,12 +39,20 @@
         </div>
 
         <!--<paper-checkbox> Music </paper-checkbox>-->
-        
+
         <h1 id="musicvolume"> Music Volume </h1>
 
         <div id="slider2" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
           <paper-slider id="volume3" pin min="0" max="100" value="{{internalVolume2}}"></paper-slider>
+          <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
+        </div>
+
+        <h1 id="pagingvolume"> Paging Volume </h1>
+
+        <div id="slider2" class="layout horizontal">
+          <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
+          <paper-slider id="volume4" pin min="0" max="100" value="{{internalVolume3}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
       </div>
@@ -59,20 +67,37 @@
       is: 'volume-selector',
       
       properties: {
-        internalVolume: Number,
+        internalVolume: String,
 
         volume: {     // I think this 
-          type: Number,
+          type: String,
           notify: true,
           observer: '_setInternalVolume'
         },
+
+        internalVolume2: String,
+
+         musicVolume: {
+          type: String,
+          notify: true,
+          observer: '_setInternalMusicVolume'
+        },
+
+        /*internalVolume3: Number,
+
+        pagingVolume: {
+          type: Number,
+          notify: true,
+          observer: '_setInternalMusicVolume'
+        },*/
 
         speakerId: {
           type: Number
         }
       },
 
-     /* properties: {
+      /*
+      properties: {
         internalVolume2: Number,
 
          musicVolume: {
@@ -85,20 +110,27 @@
           type: Number
         }
       },
-*/
+      */
+
       _setInternalVolume: function(volume) {
         this.internalVolume = volume;
         console.log("_setInternalVolume");
       },
 
-       _setInternalMusicVolume: function(musicVolume) {
+      // dont know if we even need these observers
+      /* _setInternalMusicVolume: function(musicVolume) {
         this.internalVolume2 = this.musicVolume;
         console.log("_setInternalMusicVolume");
       },
+
+       _setInternalPagingVolume: function(pagingVolume) {
+        this.internalVolume3 = this.musicVolume;
+        console.log("_setInternalPagingVolume");
+      },*/
       
       _setVolumeClicked: function() {
-        this.volume = this.internalVolume;
-        this.musicVolume = this.internalVolume2;
+        this.volume = this.internalVolume + " " + this.internalVolume2 + " " + this.internalVolume3;
+        //this.musicVolume = this.internalVolume2;
         this.$.toast.show();
         console.log("_setVolumeClicked");
       },
@@ -136,7 +168,8 @@
 
       ready: function() {
         this.internalVolume = this.volume;
-        console.log("I am ready " + this.internalVolume);
+        this.internalVolume2 = this.musicVolume;
+        console.log("I am ready " + this.internalVolume + " " + this.internalVolume2 + " " + this.internalVolume3);
       }
     });
   </script>

@@ -159,30 +159,23 @@
           type: Number,
           value: 0
         },
+
         ledOn: {
           type: Boolean,
           value: true,
           observer: '_ledUpdate'
         },
+
         volumeLevel: {    // this shit and all the other shitters were volumeone for some reason ??? changed to volumeLevel
-          type: Number,
-          value: 0,
+          type: String,
+          value: "0",
           observer: '_volumeUpdate'
         },
-        musicLevel: {
-          type: Number,
-          value: 0,
-          observer: '_musicUpdate'
-        },
+
         equalizerone: {
           type: String,
           value: "there isnt anything in here jk :^)",
           observer: '_equalizerUpdate'
-        },
-        pagingLevel: {
-          type: Number,
-          value: 0,
-          observer: '_pagingUpdate'
         },
 
         animationConfig: {
@@ -234,21 +227,7 @@
           };
           this.$.speakerUpdateAjax.generateRequest();
         }
-        console.log("I'm in!");
-      },
-      _musicUpdate: function() {
-        if(this.isReady) {
-          var updatedAttributes = ["music"];
-          var attributeValues = {
-            "music": this.musicLevel,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
-        }
+        console.log("_volumeUpdate " + this.volumeLevel);
       },
 
       _equalizerUpdate: function() {
@@ -256,21 +235,6 @@
           var updatedAttributes = ["equalizer"];
           var attributeValues = {
             "equalizer": this.equalizerone,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
-        }
-      },
-
-      _pagingUpdate: function() {
-        if(this.isReady) {
-          var updatedAttributes = ["paging"];
-          var attributeValues = {
-            "paging": this.pagingLevel,
           };
           this.$.speakerUpdateAjax.body = {
             "updatedAttributes": updatedAttributes, 

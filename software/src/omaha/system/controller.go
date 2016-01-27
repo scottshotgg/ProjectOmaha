@@ -89,7 +89,7 @@ func SetVolume(this *database.ControllerStatus, volumeLevel int8) error {
 	data[2] = byte(volumeLevel)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		this.VolumeLevel = volumeLevel
+		this.VolumeLevel[0] = volumeLevel
 		if status.IsDebug() {
 			log.Printf("Set volume to %d\n", volumeLevel)
 		}
@@ -114,17 +114,15 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 	return 0, nil
 }
 
-
-/*
 func SetMusicVolume(this *database.ControllerStatus, musicVolumeLevel int8) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetMusicVolume
 	data[2] = byte(musicVolumeLevel)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		this.VolumeLevel = volumeLevel
+		this.VolumeLevel[1] = musicVolumeLevel
 		if status.IsDebug() {
-			log.Printf("Set music volume to %d\n", volumeLevel)
+			log.Printf("Set music volume to %d\n", musicVolumeLevel)
 		}
 		return nil
 	}}
@@ -132,7 +130,28 @@ func SetMusicVolume(this *database.ControllerStatus, musicVolumeLevel int8) erro
 
 	return nil
 }
-*/
+
+// put a getter here
+
+func SetPaging(this *database.ControllerStatus, pagingVolumeLevel int8, pagingType int8) error {
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.SetPaging
+
+	// we could either check here, but i dont think this is the appropriate place for that
+	// make the check where this is called 
+	data[2] = byte(pagingVolumeLevel)
+
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		this.VolumeLevel[2] = pagingVolumeLevel
+		if status.IsDebug() {
+			log.Printf("Set paging volume to %d\n", pagingVolumeLevel)
+		}
+		return nil
+	}}
+	MessageChan <- req
+
+	return nil
+}
 
 func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 	data := getMessageHeader(this.ID, 3)

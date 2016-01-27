@@ -35,7 +35,7 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 			log.Println(err)
 		}
 
-		controller.VolumeLevel, err = GetVolumeFromController(controller)
+	//	controller.VolumeLevel, err = GetVolumeFromController(controller)		fix this at some later time but not now
 		if err != nil {
 			log.Println(err)
 		}

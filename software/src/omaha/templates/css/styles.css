@@ -115,7 +115,7 @@ paper-card {
 }
 
 .custom > .custom_slider {
-  height: 90%;
+  height: 80%;
   /*margin-bottom: calc(.005 * 100vw); */ /* This was 25 */
   /*margin-left: calc(.004 * 100vw);*/
   width: 60%;
@@ -137,12 +137,41 @@ paper-card {
   margin-bottom: 100%; /* This as 20 */
 }
 
+.custom > .bands {
+    /*
+  color: #f6931f; 
+  */
+  border: 0;
+  font-weight: bold; 
+  font-size: calc(.012 * 100vw);
+  width: calc(.035 * 100vw);
+  color: #3367d6;
+  text-align: center;
+  /* Make this a percentage */
+  margin-left: calc(50% - .022 * 100vw);
+  margin-top: 100%; /* This as 20 */
+}
+
+#onek {
+  
+}
+
 .custom.one {
   margin-left: 4%;
 }
 
 #musicvolume {
   font-size: 24px;
+  margin-top: calc(0.05 * 100vh);
+}
+
+#pagingvolume {
+  font-size: 24px;
+  margin-top: calc(0.05 * 100vh);
+}
+
+#fadelevelabel { 
+  font-size: 24px;    /*  all these need to be calculated   */
   margin-top: calc(0.05 * 100vh);
 }
 
