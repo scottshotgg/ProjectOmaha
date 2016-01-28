@@ -19,30 +19,31 @@ type speakerPutRequest struct {
 
 type speakerAttributes struct {
 	Volume    	string 	`json:"volume"`
-	Music		int8 	`json:"musicVolume"`
+	//Music		int8 	`json:"musicVolume"`
 	Averaging 	int8 	`json:"averaging"`
 	LED       	bool 	`json:"led"` 
 	Equalizer 	string	`json:"equalizer"`
 	ZoneID 		int8 	`json:"zoneId"`
-	Paging		int8	`json:"paging"`
+	Paging		string	`json:"paging"`
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error {
 	"volume":		updateSpeakerVolume,
-	"music":		updateSpeakerMusic,
+	//"music":		updateSpeakerMusic,
 	"averaging":	updateSpeakerAveragingMode,
 	"led":       	updateSpeakerLED,
 	"equalizer": 	updateSpeakerEqualizer,
-	"fadelevel":	updateSpeakerFadeLevel,
-	"fadetime":		updateSpeakerFadeTime,
+	//"fadelevel":	updateSpeakerFadeLevel,
+	//"fadetime":		updateSpeakerFadeTime,
+	"paging":		updateSpeakerPaging,
 	"zoneId": 		updateSpeakerZoneID,
 }
 
 func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 
 	volumes := strings.Fields(attr.Volume)
-	//log.Println(attr.Volume)
-	//log.Println(volumes)
+	log.Println(attr.Volume)
+	log.Println(volumes)
 
 	var volumeArray [3] int8
 
@@ -67,23 +68,24 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 	if volumeArray[0] >= 0 && volumeArray[0] <= 100 && volumeArray[1] >= 0 && volumeArray[1] <= 100 && volumeArray[2] >= 0 && volumeArray[2] <= 100 {
 		//log.Printf("Telling speaker %d to set volume to %d\n", speaker.ID, attr.Volume)
 		
-		//log.Println(speaker.VolumeLevel)
+		log.Println(speaker.VolumeLevel)
 
 		if(volumeArray[0] != speaker.VolumeLevel[0]) {
-			system.SetVolume(speaker, volumeArray[0]) 	
-			database.SaveVolume(speaker)		// we can optimize this by reducing the generality of the function
+			speaker.VolumeLevel[0] = volumeArray[0]
+			system.SetVolume(speaker) 	
 		}
 		if(volumeArray[1] != speaker.VolumeLevel[1]) {
-			system.SetMusicVolume(speaker, volumeArray[1])
-			database.SaveVolume(speaker)
+			speaker.VolumeLevel[1] = volumeArray[1]
+			system.SetMusicVolume(speaker)
 		}
 		if(volumeArray[2] != speaker.VolumeLevel[2]) {
-			system.SetPaging(speaker, volumeArray[2], 0)		// 0 means volume adjustment
-			database.SaveVolume(speaker)
+			speaker.VolumeLevel[2] = volumeArray[2]
+			system.SetPaging(speaker)		// 0 means volume adjustment
 		}
 		//if(l != 0) {
-		//database.SaveVolume(speaker)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
+		defer database.SaveVolume(speaker)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
 		//}
+		//log.Println(speaker.VolumeLevel)
 
 	} else {
 		return errors.New("Invalid volume")
@@ -91,7 +93,7 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 
 	return nil
 }
-
+/*
 func updateSpeakerMusic(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	if attr.Music >= 0 && attr.Music <= 100 {
 		log.Printf("Telling speaker %d to set music to %d\n", speaker.ID, attr.Music)
@@ -101,6 +103,7 @@ func updateSpeakerMusic(attr *speakerAttributes, speaker *database.ControllerSta
 	}
 	return nil
 }
+*/
 
 func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	if attr.Averaging > 0 && attr.Averaging <= 20 {
@@ -148,6 +151,7 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 	return nil
 }
 
+/*
 func updateSpeakerFadeLevel(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	if attr.Paging >= 0 && attr.Paging <= 100 {
 		log.Printf("Telling speaker %d to set paging to %d\n", speaker.ID, attr.Paging)
@@ -169,6 +173,65 @@ func updateSpeakerFadeTime(attr *speakerAttributes, speaker *database.Controller
 	} else {
 		return errors.New("Invalid paging")
 	}
+	return nil
+}
+*/
+
+func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+
+	pagings := strings.Fields(attr.Paging)
+	//log.Println(attr.Volume)
+	//log.Println(volumes)
+
+	var pagingArray [3] int8
+
+	if(len(pagings) < 3) {
+		return errors.New("Invalid amount of pagings")
+	}
+
+	var k = 0
+	for _, i := range pagings {
+		intParse, err := strconv.Atoi(i)
+		if err != nil {
+			panic(err)		// test if this returns
+		}
+
+		pagingArray[k] = int8(intParse)
+		// log.Printf("You changed band %d to level %d", k, intParse)
+		// log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+		//}
+		k++
+	}
+
+	if pagingArray[0] >= 0 && pagingArray[0] <= 100 && pagingArray[1] >= 0 && pagingArray[1] <= 100 && pagingArray[2] >= 0 && pagingArray[2] <= 100 {
+		//log.Printf("Telling speaker %d to set volume to %d\n", speaker.ID, attr.Volume)
+		
+		//log.Println(speaker.VolumeLevel)
+
+		if(pagingArray[0] != speaker.PagingLevel[0]) {
+			speaker.PagingLevel[0] = pagingArray[0]
+			system.SetFadeTime(speaker) 	
+			database.SaveFade(speaker)		// we can optimize this by reducing the generality of the function
+		}
+		if(pagingArray[1] != speaker.PagingLevel[1]) {
+			speaker.PagingLevel[1] = pagingArray[1]
+			system.SetFadeLevel(speaker)
+			database.SaveFade(speaker)
+		}
+		if(pagingArray[2] != speaker.VolumeLevel[2]) {
+			speaker.VolumeLevel[2] = pagingArray[2]
+			system.SetPaging(speaker)		// 0 means volume adjustment
+			database.SaveVolume(speaker)
+		}
+		//if(l != 0) {
+		//database.SaveVolume(speaker)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
+		//}
+		log.Println(pagingArray)
+
+	} else {
+		return errors.New("Invalid volume")
+	}
+
 	return nil
 }
 

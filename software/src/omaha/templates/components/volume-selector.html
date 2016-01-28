@@ -44,7 +44,7 @@
 
         <div id="slider2" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
-          <paper-slider id="volume3" pin min="0" max="100" value="{{internalVolume2}}"></paper-slider>
+          <paper-slider id="volume3" pin min="0" max="100" value="{{internalMusicVolume}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
 
@@ -52,7 +52,7 @@
 
         <div id="slider2" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
-          <paper-slider id="volume4" pin min="0" max="100" value="{{internalVolume3}}"></paper-slider>
+          <paper-slider id="volume4" pin min="0" max="100" value="{{internalPagingVolume}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
       </div>
@@ -75,13 +75,15 @@
           observer: '_setInternalVolume'
         },
 
-        internalVolume2: String,
+       /*
+        internaMusiclVolume: String,
 
          musicVolume: {
           type: String,
           notify: true,
           observer: '_setInternalMusicVolume'
         },
+        */
 
         /*internalVolume3: Number,
 
@@ -117,6 +119,13 @@
         console.log("_setInternalVolume");
       },
 
+      /*
+      _setInternalMusicVolume: function(musicVolume) {
+        this.internalMusicVolume = musicVolume;
+        console.log("_setInternalMusicVolume");
+      },
+      */
+
       // dont know if we even need these observers
       /* _setInternalMusicVolume: function(musicVolume) {
         this.internalVolume2 = this.musicVolume;
@@ -129,11 +138,14 @@
       },*/
       
       _setVolumeClicked: function() {
-        this.volume = this.internalVolume + " " + this.internalVolume2 + " " + this.internalVolume3;
+        this.volume = this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume;
         //this.musicVolume = this.internalVolume2;
         this.$.toast.show();
         console.log("_setVolumeClicked");
       },
+
+
+        // change these to work for all the sliders
       
       decrementVolume: function() {
         this.$.volume2.decrement();
@@ -168,8 +180,7 @@
 
       ready: function() {
         this.internalVolume = this.volume;
-        this.internalVolume2 = this.musicVolume;
-        console.log("I am ready " + this.internalVolume + " " + this.internalVolume2 + " " + this.internalVolume3);
+        console.log("I am ready " + this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume);
       }
     });
   </script>

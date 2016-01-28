@@ -10,6 +10,7 @@ import (
 )
 
 // createSpeakerTable creates the speaker table in the database
+// tab this shit over if you get bored
 func createSpeakerTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE speaker (
@@ -20,6 +21,8 @@ func createSpeakerTable() {
 			volumeLevel INTEGER,
 			musicLevel INTEGER,
 			pagingLevel INTEGER,
+			fadeTime INTEGER,
+			fadeLevel INTEGER,
 			averagingMode INTEGER,
 			band0 INTEGER,
 			band1 INTEGER,
@@ -58,6 +61,8 @@ func GetAllSpeakers() []*ControllerStatus {
 			volumeLevel,
 			musicLevel,
 			pagingLevel,
+			fadeTime,
+			fadeLevel,
 			averagingMode INTEGER,
 			band0,
 			band1,
@@ -95,6 +100,8 @@ func GetAllSpeakers() []*ControllerStatus {
 		var volumeLevel int8
 		var musicLevel int8
 		var pagingLevel int8
+		var fadeTime int8
+		var fadeLevel int8
 		var averagingMode int8
 		var band0 int
 		var band1 int
@@ -122,6 +129,8 @@ func GetAllSpeakers() []*ControllerStatus {
 			&volumeLevel, 
 			&musicLevel,
 			&pagingLevel,
+			&fadeTime,
+			&fadeLevel,
 			&averagingMode,
 			&band0,
 			&band1,
@@ -154,6 +163,8 @@ func GetAllSpeakers() []*ControllerStatus {
 		speaker.VolumeLevel[0] = int8(volumeLevel)
 		speaker.VolumeLevel[1] = int8(musicLevel)
 		speaker.VolumeLevel[2] = int8(pagingLevel)
+		speaker.PagingLevel[0] = int8(fadeTime)
+		speaker.PagingLevel[1] = int8(fadeLevel)
 		// might need an averaging setter here later
 		speakers = append(speakers, speaker)
 	}
@@ -165,6 +176,8 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var volumeLevel int8
 	var musicLevel int8
 	var pagingLevel int8
+	var fadeTime int8
+	var fadeLevel int8
 	var averagingMode int8
 	var x int
 	var y int
@@ -194,6 +207,8 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		SELECT x, y, volumeLevel,
 			musicLevel,
 			pagingLevel,
+			fadeTime,
+			fadeLevel,
 			averagingMode, 
 			band0,
 			band1,
@@ -222,6 +237,8 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&volumeLevel,
 			&musicLevel,
 			&pagingLevel,
+			&fadeTime,
+			&fadeLevel,
 			&averagingMode,
 			&band0,
 			&band1,
@@ -246,16 +263,17 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&band20)
 	if err != nil {
 		log.Fatal(err)
-	}
-	speaker := &ControllerStatus{X: x, Y: y, VolumeLevel: [3]int8{volumeLevel, musicLevel, pagingLevel}, AveragingMode: averagingMode, ID: speakerID, Equalizer: [21]int{band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}}
+	}// the paging level might be able to be collapsed into one variable
+	speaker := &ControllerStatus{X: x, Y: y, VolumeLevel: [3]int8{volumeLevel, musicLevel, pagingLevel}, PagingLevel: [2]int8{fadeTime, fadeLevel}, AveragingMode: averagingMode, ID: speakerID, Equalizer: [21]int{band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}}
 	//log.Println(speaker.VolumeLevel)
 	//log.Println(speaker.Equalizer)
 	return speaker
 }
 
 // SaveSpeaker saves the speaker provided to the database
-// make this a general thing that will insert some stuff, hack for now 
+// reduce the generality if performance wanes and we need it
 func SaveVolume(speaker *ControllerStatus) {
+	log.Println("Saving this shit yo")
 	_, err := DB.Exec(`
 		UPDATE speaker
 		SET
@@ -264,6 +282,21 @@ func SaveVolume(speaker *ControllerStatus) {
 			pagingLevel = ?
 		WHERE speakerID = ?
 	`, speaker.VolumeLevel[0], speaker.VolumeLevel[1], speaker.VolumeLevel[2], speaker.ID)	// the volumeLevel needs to change
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(speaker)
+}
+
+func SaveFade(speaker *ControllerStatus) {
+	log.Println(speaker)
+	_, err := DB.Exec(`
+		UPDATE speaker
+		SET
+			fadeTime = ?,
+			fadeLevel = ?
+		WHERE speakerID = ?
+	`, speaker.PagingLevel[0], speaker.PagingLevel[1], speaker.ID)	// the volumeLevel needs to change
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -101,7 +101,7 @@
 
       <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <simple-fit class="container">
-          <volume-selector id="volume" volume="{{volumeLevel}}"></volume-selector>
+          <volume-selector id="volume" volume="{{volumeLevel}}" musicVolume="{{musicVolumeLevel}}"></volume-selector>
         </simple-fit>
       </neon-animatable>
 
@@ -172,6 +172,20 @@
           observer: '_volumeUpdate'
         },
 
+        /*
+        musicVolumeLevel: {
+          type: Number,
+          value: 0,
+          observer: '_musicVolumeUpdate'
+        },
+        */
+
+        pagingLevel: {
+          type: String,
+          value: "0",
+          observer: '_pagingUpdate'
+        },
+
         equalizerone: {
           type: String,
           value: "there isnt anything in here jk :^)",
@@ -229,6 +243,40 @@
         }
         console.log("_volumeUpdate " + this.volumeLevel);
       },
+
+      _pagingUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["paging"];
+          var attributeValues = {
+            "paging": this.pagingLevel,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+        console.log("_pagingUpdate " + this.pagingLevel);
+      },
+
+      /*
+      _musicVolumeUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["musicVolume"];
+          var attributeValues = {
+            "musicVolume": this.musicVolumeLevel,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+        console.log("_musicVolumeLevel " + this.musicVolumeLevel);
+      },
+      */
 
       _equalizerUpdate: function() {
         if(this.isReady) {

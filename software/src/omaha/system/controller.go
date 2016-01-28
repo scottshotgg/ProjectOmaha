@@ -83,15 +83,15 @@ func GetLEDStatusFromController(this *database.ControllerStatus) (bool, error) {
 	return response.ledOn, nil
 }
 
-func SetVolume(this *database.ControllerStatus, volumeLevel int8) error {
+func SetVolume(this *database.ControllerStatus) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetVolume
-	data[2] = byte(volumeLevel)
+	data[2] = byte(this.VolumeLevel[0])
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		this.VolumeLevel[0] = volumeLevel
+		//this.VolumeLevel[0] = volumeLevel		this did not make sense at the time and was not useful
 		if status.IsDebug() {
-			log.Printf("Set volume to %d\n", volumeLevel)
+			log.Printf("Set volume to %d\n", this.VolumeLevel[0])
 		}
 		return nil
 	}}
@@ -114,15 +114,15 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 	return 0, nil
 }
 
-func SetMusicVolume(this *database.ControllerStatus, musicVolumeLevel int8) error {
+func SetMusicVolume(this *database.ControllerStatus) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetMusicVolume
-	data[2] = byte(musicVolumeLevel)
+	data[2] = byte(this.VolumeLevel[1])
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		this.VolumeLevel[1] = musicVolumeLevel
+		//this.VolumeLevel[1] = musicVolumeLevel
 		if status.IsDebug() {
-			log.Printf("Set music volume to %d\n", musicVolumeLevel)
+			log.Printf("Set music volume to %d\n", this.VolumeLevel[1])
 		}
 		return nil
 	}}
@@ -133,18 +133,59 @@ func SetMusicVolume(this *database.ControllerStatus, musicVolumeLevel int8) erro
 
 // put a getter here
 
-func SetPaging(this *database.ControllerStatus, pagingVolumeLevel int8, pagingType int8) error {
+func SetPaging(this *database.ControllerStatus) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetPaging
 
 	// we could either check here, but i dont think this is the appropriate place for that
 	// make the check where this is called 
-	data[2] = byte(pagingVolumeLevel)
+	data[2] = byte(this.VolumeLevel[2])
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		this.VolumeLevel[2] = pagingVolumeLevel
+		//this.VolumeLevel[2] = pagingVolumeLevel	
+
 		if status.IsDebug() {
-			log.Printf("Set paging volume to %d\n", pagingVolumeLevel)
+			log.Printf("Set paging volume to %d\n", this.VolumeLevel[2])
+		}
+		return nil
+	}}
+	MessageChan <- req
+
+	return nil
+}
+
+func SetFadeTime(this *database.ControllerStatus) error {
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.SetFadeTime
+
+	// we could either check here, but i dont think this is the appropriate place for that
+	// make the check where this is called 
+	data[2] = byte(this.PagingLevel[0])
+
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		//this.PagingLevel[0] = pagingFadeTime
+		if status.IsDebug() {
+			log.Printf("Set paging fade time to %d\n", this.PagingLevel[0])
+		}
+		return nil
+	}}
+	MessageChan <- req
+
+	return nil
+}
+
+func SetFadeLevel(this *database.ControllerStatus) error {
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.SetFadeLevel
+
+	// we could either check here, but i dont think this is the appropriate place for that
+	// make the check where this is called 
+	data[2] = byte(this.PagingLevel[1])
+
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		//this.PagingLevel[1] = pagingFadeLevel
+		if status.IsDebug() {
+			log.Printf("Set paging fade level to %d\n", this.PagingLevel[1])
 		}
 		return nil
 	}}
@@ -245,6 +286,7 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 	return 0, nil
 }
 
+/*
 func (status *SystemStatus) SetPaging(this *database.ControllerStatus, pagingLevel int8) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetPaging
@@ -261,6 +303,7 @@ func (status *SystemStatus) SetPaging(this *database.ControllerStatus, pagingLev
 
 	return nil
 }
+*/
 
 func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) { // Equalized gain or just raw gain and equalization can be done in here
 	if status.debug {

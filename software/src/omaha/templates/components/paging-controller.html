@@ -34,7 +34,7 @@
 
         <div id="fadetime" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
-          <paper-slider id="fadetime" pin min="0" max="100" value="{{internalTime}}"></paper-slider>
+          <paper-slider id="fadetime" pin min="0" max="100" value="{{internalFadeTime}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
 
@@ -44,7 +44,7 @@
 
         <div id="fadelevel" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
-          <paper-slider id="fadelevel" pin min="0" max="100" value="{{internalLevel}}"></paper-slider>
+          <paper-slider id="fadelevel" pin min="0" max="100" value="{{internalFadeLevel}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
 
@@ -52,7 +52,7 @@
 
         <div id="slider2" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
-          <paper-slider id="volume4" pin min="0" max="100" value="{{internalVolume2}}"></paper-slider>
+          <paper-slider id="volume4" pin min="0" max="100" value="{{internalPagingVolume}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
       </div>
@@ -61,19 +61,19 @@
         <paper-button on-click="_setPagingClicked">set paging</paper-button>
       </div>
     </paper-card>
-    <paper-toast id="toast">Paging set to <span>{{fadetime, fadelevel}}</span></paper-toast>
+    <paper-toast id="toast">Paging set to <span>{{paging}}</span></paper-toast>
   </template>
   <script>
     Polymer({
       is: 'paging-controller',
       
       properties: {
-        internalTime: Number,
+        internalFadeTime: String,
 
         paging: {     // I think this 
-          type: Number,
+          type: String,
           notify: true,
-          observer: '_setPagingClicked'
+          observer: '_setInternalPaging'
         },
 
         speakerId: {
@@ -96,21 +96,24 @@
       },
 */
       _setInternalPaging: function(paging) {
-        this.internalTime = paging;
+        this.internalFadeTime = paging;
         console.log("_setInternalPaging");
       },
 
-       _setInternalLevel: function(level) {
+      /*
+      _setInternalLevel: function(level) {
         this.internalLevel = this.level;
         console.log("_setInternalLevel");
       },
+      */
       
       _setPagingClicked: function() {
-        this.paging = this.internalTime;
-        this.level = this.internalLevel;
+        this.paging = this.internalFadeTime + " " + this.internalFadeLevel + " " + this.internalPagingVolume;
         this.$.toast.show();
         console.log("_setPagingClicked");
       },
+
+      // change these to work for all the sliders
       
       /*
       decrementVolume: function() {
@@ -138,16 +141,23 @@
           func(elem);
         }, 500);
       },
-      */
+      
       
       resetKnob: function(elem) {
         elem.prevTimeout = 0;
         elem.$.volume2._resetKnob();
       },
 
+      */
+
       ready: function() {
-        this.internalTime = this.paging;
-        console.log("I am ready " + this.internalTime);
+
+        //this.internalVolume = this.volume;
+        //console.log("I am ready " + this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume);
+
+
+        this.internalFadeTime = this.paging;
+        console.log("I am ready from paging " + this.internalFadeTime);
       }
     });
   </script>
