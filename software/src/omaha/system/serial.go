@@ -80,7 +80,7 @@ func (status *SystemStatus) ReadData(buffer []byte) bool {
 	return true
 }
 
-func (status *SystemStatus) InitializePort(serialPort bool) {
+func (status *SystemStatus) InitializePort() {
 	/*	options := serial.OpenOptions{
 		PortName:        "/dev/ttyUSB0",
 		BaudRate:        9600,
@@ -89,20 +89,12 @@ func (status *SystemStatus) InitializePort(serialPort bool) {
 		MinimumReadSize: 1,
 	}*/
 
-	if!(serialPort) {
-		c := &serial.Config{Name: "/dev/ttyAMA0", Baud: 9600, ReadTimeout: time.Second} // Probably want a half a second. This is plenty for the microcontroller to have time to respond
-		s, err := serial.OpenPort(c)                                                    // If it hasn't responded by now then it isn't going to most likely
-		if err != nil {                                                                 // Actually, you can't do this, for some reason it has to be an int value and cant be a floating value
-		log.Fatal(err)
-		}
-	} else {
-		c := &serial.Config{Name: "/dev/ttyUSB0", Baud: 9600, ReadTimeout: time.Second} // Probably want a half a second. This is plenty for the microcontroller to have time to respond
-		s, err := serial.OpenPort(c)                                                    // If it hasn't responded by now then it isn't going to most likely
-		if err != nil {                                                                 // Actually, you can't do this, for some reason it has to be an int value and cant be a floating value
+	c := &serial.Config{Name: "/dev/ttyAMA0", Baud: 9600, ReadTimeout: time.Second} // Probably want a half a second. This is plenty for the microcontroller to have time to respond
+	s, err := serial.OpenPort(c)                                                    // If it hasn't responded by now then it isn't going to most likely
+	if err != nil {                                                                 // Actually, you can't do this, for some reason it has to be an int value and cant be a floating value
 		log.Fatal(err)
 	}
 
-	}
 	log.Println("Hello " + c.Name)
 
 	status.Port = s

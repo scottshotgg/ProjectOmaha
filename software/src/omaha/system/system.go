@@ -19,10 +19,10 @@ func (status *SystemStatus) IsDebug() bool {
 	return status.debug
 }
 
-func InitializeSystemStatus(isDebug bool, serialPort bool) *SystemStatus {
+func InitializeSystemStatus(isDebug bool) *SystemStatus {
 	status.debug = isDebug
 	if !isDebug {
-		status.InitializePort(serialPort)
+		status.InitializePort()
 	}
 
 	controllers := database.GetAllSpeakers()

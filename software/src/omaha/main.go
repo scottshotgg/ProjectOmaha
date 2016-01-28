@@ -12,7 +12,6 @@ import (
 func main() {
 	// initialization
 	var debug = flag.Bool("d", false, "help me!!!")
-	var serialPort = flag.Bool("s", false, "Something went wrong and this is a message from: main.go")
 	flag.Parse()
 	initializeLogger()
 	go system.HandleControllerMessages()
@@ -20,7 +19,7 @@ func main() {
 	database.InitDB()
 	defer database.DB.Close()
 
-	system.InitializeSystemStatus(*debug, serialPort)
+	system.InitializeSystemStatus(*debug)
 	if !(*debug) {
 		status := system.GetSystemStatus()
 		defer status.Port.Close()
