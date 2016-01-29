@@ -170,6 +170,11 @@ paper-card {
   margin-top: calc(0.05 * 100vh);
 }
 
+#soundmaskingvolume {
+  font-size: 24px;
+  margin-top: calc(0.05 * 100vh);
+}
+
 #fadelevelabel { 
   font-size: 24px;    /*  all these need to be calculated   */
   margin-top: calc(0.05 * 100vh);

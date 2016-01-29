@@ -154,6 +154,23 @@ func SetPaging(this *database.ControllerStatus, pagingData int8) error {
 	return nil
 }
 
+func SetSoundMaskingVolume(this *database.ControllerStatus) error {
+	data := getMessageHeader(this.ID, 3)
+	data[1] = Commands.SetSoundMaskingVolume
+	data[2] = byte(this.VolumeLevel[3])
+
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		//this.VolumeLevel[1] = musicVolumeLevel
+		if status.IsDebug() {
+			log.Printf("Set sound masking volume to %d\n", this.VolumeLevel[3])
+		}
+		return nil
+	}}
+	MessageChan <- req
+
+	return nil
+}
+
 /*
 
 func SetFadeTime(this *database.ControllerStatus) error {

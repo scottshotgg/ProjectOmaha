@@ -45,9 +45,9 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 	log.Println(attr.Volume)
 	log.Println(volumes)
 
-	var volumeArray [3] int8
+	var volumeArray [4] int8
 
-	if(len(volumes) < 3) {
+	if(len(volumes) < 4) {
 		return errors.New("Invalid amount of volumes")
 	}
 
@@ -65,7 +65,7 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 		k++
 	}
 
-	if volumeArray[0] >= 0 && volumeArray[0] <= 100 && volumeArray[1] >= 0 && volumeArray[1] <= 100 && volumeArray[2] >= 0 && volumeArray[2] <= 100 {
+	if volumeArray[0] >= 0 && volumeArray[0] <= 100 && volumeArray[1] >= 0 && volumeArray[1] <= 100 && volumeArray[2] >= 0 && volumeArray[2] <= 100 && volumeArray[3] >= 0 && volumeArray[3] <= 100 {
 		//log.Printf("Telling speaker %d to set volume to %d\n", speaker.ID, attr.Volume)
 		
 		log.Println(speaker.VolumeLevel)
@@ -81,6 +81,10 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 		if(volumeArray[2] != speaker.VolumeLevel[2]) {
 			speaker.VolumeLevel[2] = volumeArray[2]
 			system.SetPaging(speaker, volumeArray[2])		// 0 means volume adjustment
+		}
+		if(volumeArray[3] != speaker.VolumeLevel[3]) {
+			speaker.VolumeLevel[3] = volumeArray[3]
+			system.SetSoundMaskingVolume(speaker)		// 0 means volume adjustment
 		}
 		//if(l != 0) {
 		defer database.SaveVolume(speaker)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
