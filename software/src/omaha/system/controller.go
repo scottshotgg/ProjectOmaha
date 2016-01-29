@@ -133,13 +133,13 @@ func SetMusicVolume(this *database.ControllerStatus) error {
 
 // put a getter here
 
-func SetPaging(this *database.ControllerStatus) error {
+func SetPaging(this *database.ControllerStatus, pagingData int8) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetPaging
 
 	// we could either check here, but i dont think this is the appropriate place for that
 	// make the check where this is called 
-	data[2] = byte(this.VolumeLevel[2])
+	data[2] = byte(pagingData)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		//this.VolumeLevel[2] = pagingVolumeLevel	
@@ -153,6 +153,8 @@ func SetPaging(this *database.ControllerStatus) error {
 
 	return nil
 }
+
+/*
 
 func SetFadeTime(this *database.ControllerStatus) error {
 	data := getMessageHeader(this.ID, 3)
@@ -193,6 +195,7 @@ func SetFadeLevel(this *database.ControllerStatus) error {
 
 	return nil
 }
+*/
 
 func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 	data := getMessageHeader(this.ID, 3)

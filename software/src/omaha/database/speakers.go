@@ -273,7 +273,6 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 // SaveSpeaker saves the speaker provided to the database
 // reduce the generality if performance wanes and we need it
 func SaveVolume(speaker *ControllerStatus) {
-	log.Println("Saving this shit yo")
 	_, err := DB.Exec(`
 		UPDATE speaker
 		SET

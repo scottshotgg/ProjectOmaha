@@ -31,8 +31,8 @@ func init() { // Can we not just set these up ^ there so that we don't
 
 	Commands.SetMusicVolume = byte('M')		// Change this to something when we figure out wtf is going on
 	Commands.SetPaging = byte('P')
-	Commands.SetFadeTime = byte(' ')
-	Commands.SetFadeLevel = byte(' ')
+	//Commands.SetFadeTime = byte(' ')
+	//Commands.SetFadeLevel = byte(' ')
 
 	Commands.AreYouAlive = byte('U')
 	Commands.ResetSpeaker = byte('R')

@@ -80,7 +80,7 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 		}
 		if(volumeArray[2] != speaker.VolumeLevel[2]) {
 			speaker.VolumeLevel[2] = volumeArray[2]
-			system.SetPaging(speaker)		// 0 means volume adjustment
+			system.SetPaging(speaker, volumeArray[2])		// 0 means volume adjustment
 		}
 		//if(l != 0) {
 		defer database.SaveVolume(speaker)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
@@ -210,17 +210,17 @@ func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerSt
 
 		if(pagingArray[0] != speaker.PagingLevel[0]) {
 			speaker.PagingLevel[0] = pagingArray[0]
-			system.SetFadeTime(speaker) 	
+			system.SetPaging(speaker, pagingArray[0] + 101) 	
 			database.SaveFade(speaker)		// we can optimize this by reducing the generality of the function
 		}
-		if(pagingArray[1] != speaker.PagingLevel[1]) {
+		if(pagingArray[1] != speaker.PagingLevel[1] && pagingArray[1] != 0) {
 			speaker.PagingLevel[1] = pagingArray[1]
-			system.SetFadeLevel(speaker)
+			system.SetPaging(speaker, pagingArray[1])
 			database.SaveFade(speaker)
 		}
 		if(pagingArray[2] != speaker.VolumeLevel[2]) {
 			speaker.VolumeLevel[2] = pagingArray[2]
-			system.SetPaging(speaker)		// 0 means volume adjustment
+			system.SetPaging(speaker, pagingArray[2])		// 0 means volume adjustment
 			database.SaveVolume(speaker)
 		}
 		//if(l != 0) {
