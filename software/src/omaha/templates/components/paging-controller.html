@@ -59,6 +59,7 @@
 
       <div class="card-actions">
         <paper-button on-click="_setPagingClicked">set paging</paper-button>
+        <paper-button on-click="_sendPageClicked">send page</paper-button>
       </div>
     </paper-card>
     <paper-toast id="toast">Paging set to <span>{{paging}}</span></paper-toast>
@@ -111,6 +112,10 @@
         this.paging = this.internalFadeTime + " " + this.internalFadeLevel + " " + this.internalPagingVolume;
         this.$.toast.show();
         console.log("_setPagingClicked");
+      },
+
+      _sendPageClicked: function() {
+        // fix this
       },
 
       // change these to work for all the sliders

@@ -88,6 +88,8 @@ func SetVolume(this *database.ControllerStatus) error {
 	data[1] = Commands.SetVolume
 	data[2] = byte(this.VolumeLevel[0])
 
+	log.Println("Packet contents: ", data)
+	
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		//this.VolumeLevel[0] = volumeLevel		this did not make sense at the time and was not useful
 		if status.IsDebug() {
@@ -119,6 +121,8 @@ func SetMusicVolume(this *database.ControllerStatus) error {
 	data[1] = Commands.SetMusicVolume
 	data[2] = byte(this.VolumeLevel[1])
 
+	log.Println("Packet contents: ", data)
+
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		//this.VolumeLevel[1] = musicVolumeLevel
 		if status.IsDebug() {
@@ -141,6 +145,8 @@ func SetPaging(this *database.ControllerStatus, pagingData int8) error {
 	// make the check where this is called 
 	data[2] = byte(pagingData)
 
+	log.Println("Packet contents: ", data)
+	
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		//this.VolumeLevel[2] = pagingVolumeLevel	
 
@@ -159,6 +165,8 @@ func SetSoundMaskingVolume(this *database.ControllerStatus) error {
 	data[1] = Commands.SetSoundMaskingVolume
 	data[2] = byte(this.VolumeLevel[3])
 
+	log.Println("Packet contents: ", data)
+	
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		//this.VolumeLevel[1] = musicVolumeLevel
 		if status.IsDebug() {
@@ -219,6 +227,8 @@ func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 	data[1] = Commands.SetAveragingFilter
 	data[2] = byte(mode)
 
+	log.Println("Packet contents: ", data)
+	
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		if status.IsDebug() {
 			log.Printf("Set averaging mode to %d\n", mode)
