@@ -17,6 +17,13 @@ type speakerPutRequest struct {
 	Speaker           int8              `json:"speaker"`
 }
 
+type speakerGetRequest struct {
+	UpdatedAttributes []string          `json:"updatedAttributes"`
+	AttributeValues   speakerAttributes `json:"attributeValues"`
+	Speaker           int8              `json:"speaker"`
+
+}
+
 type speakerAttributes struct {
 	Volume    	string 	`json:"volume"`
 	//Music		int8 	`json:"musicVolume"`
@@ -286,5 +293,10 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	w.Write(getGenericSuccessResponse())
+}
+
+func SpeakerGetHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("This the SpeakerGetHandler and I guess I'm working")
 	w.Write(getGenericSuccessResponse())
 }

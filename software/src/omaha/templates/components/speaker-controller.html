@@ -118,6 +118,7 @@
       </neon-animatable>
 
     </neon-animated-pages>
+
     <iron-ajax
           id="speakerUpdateAjax"
           url="/system/speaker/"
@@ -125,13 +126,16 @@
           content-type="application/json"
           handle-as="json"
           on-response="_logResponse"
-          debounce-duration="300"></iron-ajax>
+          debounce-duration="300">
+    </iron-ajax>
+
   </template>
   <script>
   /*console.log(screen.orientation.angle);
   $( window ).on( "orientationchange", function( event ) {
   $( "#orientation" ).text( "This device is in " + event.orientation + " mode!" );
 });*/
+
     Polymer({
       is: 'speaker-controller',
 
@@ -239,6 +243,7 @@
             "attributeValues": attributeValues,
             "speaker": this.speakerId
           };
+          console.log(this.$, this, "this is the stuff yo")
           this.$.speakerUpdateAjax.generateRequest();
         }
         console.log("_volumeUpdate " + this.volumeLevel);
@@ -316,6 +321,9 @@
         this.isReady = true;
       }
     });
+
+    console.log(Polymer.dom);
+
 
   if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     console.log(navigator.userAgent);

@@ -146,7 +146,7 @@ func SetPaging(this *database.ControllerStatus, pagingData int8) error {
 	data[2] = byte(pagingData)
 
 	log.Println("Packet contents: ", data)
-	
+
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		//this.VolumeLevel[2] = pagingVolumeLevel	
 
@@ -305,6 +305,8 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 	data[1] = byte(band)		// Cannot use a command to do this
 	data[2] = byte(level * 2 + 80)
 
+	log.Println("Packet contents: ", data)
+	
 	req := &ControllerRequest{ Data: data, OnWrite: func() interface{} {
 		if status.IsDebug() {
 			log.Printf("Set band %-2d mode to %3ddB (-40)   |   Packet contents: %2d", band, level, data)

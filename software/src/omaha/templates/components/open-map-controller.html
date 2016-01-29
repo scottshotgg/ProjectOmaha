@@ -48,6 +48,16 @@
     </paper-card>
     <help-panel></help-panel>
 
+    <iron-ajax
+          id="frontendSpeakerUpdateAjax"
+          url="/system/backtofront/"
+          method="GET"
+          content-type="application/json"
+          handle-as="json"
+          on-response="_logResponse"
+          debounce-duration="300">
+    </iron-ajax>
+
   </template>
   <script>
     
@@ -78,6 +88,22 @@
       
       _selectSpeaker: function() {
         this._hideOverlay();
+        // here is where we should pass it to the backend i think and quickly get the information
+        // this is working
+            console.log(this.$, "this is in the thing that you added")
+            //if(this.isReady) {
+              console.log("I am in the open-map-controller and am ready")
+              var updatedAttributes = ["speaker"];
+              var attributeValues = {
+                "volume": this.volumeLevel,
+              };
+              this.$.frontendSpeakerUpdateAjax.body = {
+                "updatedAttributes": updatedAttributes, 
+                "attributeValues": attributeValues,
+                "speaker": this.speakerId
+              };
+              this.$.frontendSpeakerUpdateAjax.generateRequest();
+           // }
       },
       
       _selectZone: function() {
@@ -137,7 +163,7 @@
 
         var style = {}
         var allColors = [
-          '#795548',
+          /*'#795548',
           '#ff5722',
           '#ff9800',
           '#ffc107',
@@ -152,11 +178,12 @@
           '#673ab7',
           '#9c27b0',
           '#e91e63',
-          '#f44336'
+          '#f44336'*/
+          '#3367d6'
         ];
         
         var unusedColors = [
-          '#795548',
+          /*'#795548',
           '#ff5722',
           '#ff9800',
           '#ffc107',
@@ -171,7 +198,8 @@
           '#673ab7',
           '#9c27b0',
           '#e91e63',
-          '#f44336'
+          '#f44336'*/
+          '#3367d6'
         ];
         var colorMap = {};
         
@@ -244,6 +272,7 @@
               console.log("Selected");
               var speaker = e.selected[0].getProperties().speaker
               console.log(speaker);
+
               mapController.selected = speaker;
               // get the point's coordinate
               var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
