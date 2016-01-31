@@ -1,0 +1,5 @@
+Set the GOPATH to /Users/scottgaydos/Desktop/SD/ProjectOmaha/software
+
+Go to that directory and run:
+export GOPATH=`pwd`
+or run the command and replace `pwd` with the software directory

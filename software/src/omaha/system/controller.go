@@ -151,7 +151,7 @@ func SetPaging(this *database.ControllerStatus, pagingData int8) error {
 		//this.VolumeLevel[2] = pagingVolumeLevel	
 
 		if status.IsDebug() {
-			log.Printf("Set paging volume to %d\n", this.VolumeLevel[2])
+			log.Printf("Set paging data to %d\n", pagingData)		// here is what I modified
 		}
 		return nil
 	}}
