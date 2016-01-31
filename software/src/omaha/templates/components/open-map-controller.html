@@ -282,6 +282,20 @@
               // make sure the overlay is hidden
               mapController._hideOverlay();
             }
+
+            var frontendSpeakerUpdateAjax = document.getElementById("frontendSpeakerUpdateAjax");
+            console.log("If I do say myself, this is a pretty snazzy way to go about doing this!" + frontendSpeakerUpdateAjax);
+            
+            var updatedAttributes = ["speaker"];
+            var attributeValues = {
+              "volume": this.volumeLevel,
+            };
+            frontendSpeakerUpdateAjax.body = {
+              "updatedAttributes": updatedAttributes, 
+              "attributeValues": attributeValues,
+              "speaker": this.speakerId
+            };
+            frontendSpeakerUpdateAjax.generateRequest();
             
         });
         
