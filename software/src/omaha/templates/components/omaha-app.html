@@ -108,10 +108,12 @@
 
       _speakerSelected: function(e) {
         var speaker = e.detail.speaker;
+        console.log(speaker);     // just testing
         if(speaker === undefined) {
           this.$.dialog.open();
         } else {
           this.$.controller.speaker = speaker;
+          console.log(this.$.controller.speaker);
           this.$.nav.showBackArrow();
           this.selected = "speakerController";
         }

@@ -305,7 +305,8 @@
       _initializeStatus: function(speaker) {
         this.speakerId = speaker.id;
         this.ledOn = speaker.ledOn;
-        this.volume = speaker.volumeLevel;
+        console.log(document.getElementById('speaker-controller'));
+        this.volume = speaker.VolumeLevel[0];
         this.equalizer = speaker.equalizerone;
       },
 
@@ -322,10 +323,11 @@
       }
     });
 
+    //console.log(speaker);
     console.log(Polymer.dom);
 
 
-  if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  /*if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     console.log(navigator.userAgent);
     console.log("This is a mobile browser - changing display pattern");
 
@@ -349,7 +351,7 @@
         Polymer.updateStyles(); // may or may not need this
 
       };
-  }
+  }*/
 /*
 paper-radio-group {
           @apply(--layout-horizontal)

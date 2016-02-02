@@ -40,7 +40,7 @@
     <div id="map" class="map">
     </div>
     <paper-card id="popup">  
-      <speaker-tooltip on-speakerselected="_selectSpeaker" on-zoneselected="_selectZone" speaker="{{selected}}"></speaker-tooltip>
+      <speaker-tooltip id="speaker-tooltip" on-speakerselected="_selectSpeaker" on-zoneselected="_selectZone" speaker="{{selected}}"></speaker-tooltip>
     </paper-card>
 
     <paper-card id="test">
@@ -50,8 +50,8 @@
 
     <iron-ajax
           id="frontendSpeakerUpdateAjax"
-          url="/system/backtofront/"
-          method="GET"
+          url="/system/backtofront/ids=105"
+          method="POST"
           content-type="application/json"
           handle-as="json"
           on-response="_logResponse"
@@ -90,7 +90,7 @@
         this._hideOverlay();
         // here is where we should pass it to the backend i think and quickly get the information
         // this is working
-            console.log(this.$, "this is in the thing that you added")
+           /* console.log(this.$, "this is in the thing that you added")
             //if(this.isReady) {
               console.log("I am in the open-map-controller and am ready")
               var updatedAttributes = ["speaker"];
@@ -103,7 +103,7 @@
                 "speaker": this.speakerId
               };
               this.$.frontendSpeakerUpdateAjax.generateRequest();
-           // }
+           // }*/
       },
       
       _selectZone: function() {
@@ -112,6 +112,15 @@
       
       _hideOverlay: function() {
         this.overlay.setPosition(undefined);
+      },
+
+      _logResponse: function(event, data) {
+        console.log(data.response);
+        var a = document.getElementById('speaker-tooltip');
+        a.speaker.VolumeLevel[0] = data.response.volume;
+        console.log(a.speaker.VolumeLevel[0]);
+        //speaker.volumeLevel = data.response.volume;
+        //console.log(speaker.volumeLevel);
       },
 
       renderMap: function() {
@@ -271,7 +280,20 @@
             if(e.selected.length > 0) {
               console.log("Selected");
               var speaker = e.selected[0].getProperties().speaker
-              console.log(speaker);
+              console.log(e)
+              console.log(speaker.VolumeLevel);
+
+
+
+              var frontendSpeakerUpdateAjax = document.getElementById("frontendSpeakerUpdateAjax");
+              console.log("If I do say myself sir, this is a pretty snazzy way to go about doing this!");
+              frontendSpeakerUpdateAjax.body = {
+                "speaker": speaker.id
+              };
+              console.log("frontendSpeakerUpdateAjax ", frontendSpeakerUpdateAjax.body);
+              frontendSpeakerUpdateAjax.generateRequest(); 
+
+
 
               mapController.selected = speaker;
               // get the point's coordinate
@@ -282,21 +304,6 @@
               // make sure the overlay is hidden
               mapController._hideOverlay();
             }
-
-            var frontendSpeakerUpdateAjax = document.getElementById("frontendSpeakerUpdateAjax");
-            console.log("If I do say myself, this is a pretty snazzy way to go about doing this!" + frontendSpeakerUpdateAjax);
-            
-            var updatedAttributes = ["speaker"];
-            var attributeValues = {
-              "volume": this.volumeLevel,
-            };
-            frontendSpeakerUpdateAjax.body = {
-              "updatedAttributes": updatedAttributes, 
-              "attributeValues": attributeValues,
-              "speaker": this.speakerId
-            };
-            frontendSpeakerUpdateAjax.generateRequest();
-            
         });
         
         var hoverInteraction = new ol.interaction.Select({

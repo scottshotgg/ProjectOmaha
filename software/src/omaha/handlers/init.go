@@ -17,7 +17,7 @@ func InitializeHandlers() {
 
 	http.Handle("/system/", GenericHandler{GET: SystemStatusHandler})
 	http.Handle("/system/speaker/", GenericHandler{PUT: SpeakerPutHandler})
-	http.Handle("/system/backtofront/", GenericHandler{GET: SpeakerGetHandler})
+	http.Handle("/system/backtofront/", GenericHandler{POST: SpeakerGetHandler})
 
 	http.Handle("/system/zone/", GenericHandler{POST: ZonePostHandler})
 

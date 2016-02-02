@@ -18,10 +18,7 @@ type speakerPutRequest struct {
 }
 
 type speakerGetRequest struct {
-	UpdatedAttributes []string          `json:"updatedAttributes"`
-	AttributeValues   speakerAttributes `json:"attributeValues"`
 	Speaker           int8              `json:"speaker"`
-
 }
 
 type speakerAttributes struct {
@@ -221,7 +218,7 @@ func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerSt
 
 		if(pagingArray[0] != speaker.PagingLevel[0]) {
 			speaker.PagingLevel[0] = pagingArray[0]
-			system.SetPaging(speaker, pagingArray[0] + 101) 	
+			system.SetPaging(speaker, pagingArray[0] + 101) 	// offset tells the mcu to set fade time	
 			database.SaveFade(speaker)		// we can optimize this by reducing the generality of the function
 		}
 		if(pagingArray[1] != speaker.PagingLevel[1] && pagingArray[1] != 0) {
@@ -231,7 +228,7 @@ func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerSt
 		}
 		if(pagingArray[2] != speaker.VolumeLevel[2]) {
 			speaker.VolumeLevel[2] = pagingArray[2]
-			system.SetPaging(speaker, pagingArray[2])		// 0 means volume adjustment
+			system.SetPaging(speaker, pagingArray[2])
 			database.SaveVolume(speaker)
 		}
 		//if(l != 0) {
@@ -297,6 +294,25 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SpeakerGetHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("This the SpeakerGetHandler and I guess I'm working")
-	w.Write(getGenericSuccessResponse())
+	status := system.GetSystemStatus()
+	speakerRequest := &speakerGetRequest{}
+	err := json.NewDecoder(r.Body).Decode(speakerRequest)
+	log.Println(speakerRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("SpeakerGetHandler json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	type speakerResponse struct {
+	Volume	int8   `json:"volume"`
+	Err     string `json:"err"`
+}
+
+	response, _ := json.Marshal(speakerResponse{Volume: 10})
+
+	w.Write(response)
 }
