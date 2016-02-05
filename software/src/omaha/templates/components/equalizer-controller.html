@@ -6,11 +6,11 @@
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
-  <link rel="stylesheet" href="jquery-ui-1.11.4.css">
-  <script type="text/javascript" src="jquery-1.10.2.js"></script>
-  <!--<script type="text/javascript" src="jquery-2.2.0.js"></script>-->
-  <script type="text/javascript" src="jquery-ui-1.11.4.js"></script>
-  <script type="text/javascript" src="jquery.ui.touch-punch.js"></script>
+<link rel="stylesheet" href="jquery-ui-1.11.4.css">
+<script src="jquery-1.10.2.js"></script>
+<!--<script src="jquery-2.2.0.js"></script>-->
+<script src="jquery-ui-1.11.4.js"></script>
+<script src="jquery.ui.touch-punch.js"></script>
 
 <dom-module id="equalizer-controller">
   <template>
@@ -83,6 +83,7 @@
     <paper-toast id="toast">Equalizer set to <span>{{iirConstantsString}}</span></paper-toast>
   </template>
   <script>
+
   var iirConstants = [];
   for(loopVar = 0; loopVar < 21; loopVar++) { // watch out! we got a static over here
     iirConstants[loopVar] = 0;
@@ -152,7 +153,7 @@
       },
 
       ready: function() {
-        this.internalEqualizer = this.iirConstantsString;
+        this.internalEqualizer = this.iirConstantsString;   // does this need to be equalizer?
       }
     });
 
@@ -486,9 +487,9 @@
   } else {
       console.log("there is not enough space to display the equalizer");
 
-      window.onload = function(){
+      //window.onload = function(){
         // Use this for loading a different thing when the window loads and the viewport is too small
-      };      
+      //};      
     }
   $(window).resize(function() {
     if($(window).width() < MIN_WIDTH_SUPPORTED || $(window).height() < MIN_HEIGHT_SUPPORTED){

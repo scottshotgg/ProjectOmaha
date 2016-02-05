@@ -41,7 +41,7 @@ type ControllerStatus struct {
 }
 
 type Zone struct {
-	VolumeLevel int8                `json:"-"`
+	VolumeLevel int8                `json:"-"`		// what is this ???
 	ID          int8                `json:"zoneID"`
 	Name        string              `json:"name"`
 	Speakers    []*ControllerStatus `json:"speakers"`

@@ -25,4 +25,4 @@ This is a todo file:
 
 
 
-21. PERTINENT: somthing fucked up with this clicks on speaker-controller
+21. 2016/02/04 17:19:01 speakerHandlers.go:271: SpeakerPutHandler json decoding error: json: cannot unmarshal number into Go value of type string

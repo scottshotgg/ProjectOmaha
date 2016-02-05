@@ -113,9 +113,21 @@
           this.$.dialog.open();
         } else {
           this.$.controller.speaker = speaker;
-          console.log(this.$.controller.speaker);
+          console.log(this.$);
           this.$.nav.showBackArrow();
           this.selected = "speakerController";
+          var controller = document.getElementById('controller');
+          console.log(document.getElementById('volume'));
+          controller.volumeLevel = this.$.controller.speaker.VolumeLevel[0] + " " + this.$.controller.speaker.VolumeLevel[1];
+          controller.musicLevel = this.$.controller.speaker.VolumeLevel[1];
+          controller.pagingLevel = this.$.controller.speaker.VolumeLevel[2];
+          controller.maskingLevel = this.$.controller.speaker.VolumeLevel[3];
+          console.log(controller.musicLevel);
+
+          //You were working here on this shit and trying to figure out how to get the music volume into the thing
+
+
+         // this.$.controller.speaker.volumeLevel = ; 
         }
       },
       

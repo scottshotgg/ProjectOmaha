@@ -17,8 +17,19 @@ type speakerPutRequest struct {
 	Speaker           int8              `json:"speaker"`
 }
 
+type speakerResponse struct {
+	Volume			int8		`json:"volume"`
+	Music 			int8		`json:"music"`
+	Paging 			int8		`json:"paging"`
+	Masking 		int8		`json:"masking"`
+	Averaging 		int8		`json:"averaging"`
+	Equalizer[21]	int8		`json:["equalizer"]`
+	Err     		string 	`json:"err"`
+	Speaker			int8	`json:"speaker"`
+}
+
 type speakerGetRequest struct {
-	Speaker           int8              `json:"speaker"`
+	Speaker		int8	`json:"speaker"`
 }
 
 type speakerAttributes struct {
@@ -276,6 +287,7 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 
 	controller := database.GetSpeaker(speakerRequest.Speaker)
 	log.Println(controller)
+
 	if controller == nil {
 		w.Write(getGenericErrorResponse("Invalid speaker ID from request"))		// print out the request identifier here
 		return
@@ -295,8 +307,12 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 
 func SpeakerGetHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
+
 	speakerRequest := &speakerGetRequest{}
 	err := json.NewDecoder(r.Body).Decode(speakerRequest)
+	controller := database.GetSpeaker(speakerRequest.Speaker)
+	log.Println(controller)
+
 	log.Println(speakerRequest)
 
 	if err != nil {
@@ -306,13 +322,19 @@ func SpeakerGetHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
-
-	type speakerResponse struct {
-	Volume	int8   `json:"volume"`
-	Err     string `json:"err"`
-}
-
-	response, _ := json.Marshal(speakerResponse{Volume: 10})
+	//speakerRequest.Volume = 
+	//log.Println(Volume)
+	//response, _ := json.Marshal()
+	speakerResponse := fillSpeakerResponse(controller)
+	//speakerResponse := speakerResponse{Volume: controller.VolumeLevel[0]}
+	response, _ := json.Marshal(speakerResponse)
 
 	w.Write(response)
+}
+
+func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse {
+
+	speakerResponse := speakerResponse{Volume: controller.VolumeLevel[0], Music: controller.VolumeLevel[1], Paging: controller.VolumeLevel[2], Masking: controller.VolumeLevel[3]}
+
+	return speakerResponse
 }

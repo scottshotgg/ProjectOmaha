@@ -116,9 +116,12 @@
 
       _logResponse: function(event, data) {
         console.log(data.response);
-        var a = document.getElementById('speaker-tooltip');
+        var a = document.getElementById('speaker-tooltip');   // I guess I'll just keep this as 'a'
         a.speaker.VolumeLevel[0] = data.response.volume;
-        console.log(a.speaker.VolumeLevel[0]);
+        a.speaker.VolumeLevel[1] = data.response.music;
+        a.speaker.VolumeLevel[2] = data.response.paging;
+        a.speaker.VolumeLevel[3] = data.response.masking;
+        console.log(a.speaker.VolumeLevel);
         //speaker.volumeLevel = data.response.volume;
         //console.log(speaker.volumeLevel);
       },

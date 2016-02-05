@@ -101,7 +101,7 @@
 
       <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
         <simple-fit class="container">
-          <volume-selector id="volume" volume="{{volumeLevel}}" musicVolume="{{musicVolumeLevel}}"></volume-selector>
+          <volume-selector id="volume" volume="{{volumeLevel}}" musicVolume="{{musicLevel}}"></volume-selector>
         </simple-fit>
       </neon-animatable>
 
@@ -176,13 +176,12 @@
           observer: '_volumeUpdate'
         },
 
-        /*
-        musicVolumeLevel: {
+        
+        musicLevel: {
           type: Number,
-          value: 0,
-          observer: '_musicVolumeUpdate'
+          value: 0
         },
-        */
+        
 
         pagingLevel: {
           type: String,
@@ -211,6 +210,10 @@
             }
           }
         }
+      },
+
+      _speakerSelected: function() {
+          console.log("this shit is working");
       },
 
       _ledUpdate: function() {
@@ -322,7 +325,6 @@
       }
     });
 
-    //console.log(speaker);
     console.log(Polymer.dom);
 
 
@@ -367,6 +369,9 @@ paper-radio-group {
         volume-selector, light-controller {
           margin-top: 20px;
         }*/
+
+          var controller = document.getElementsByClassName('controller');
+          console.log("hiiii", controller);
 
   </script>
 </dom-module>
