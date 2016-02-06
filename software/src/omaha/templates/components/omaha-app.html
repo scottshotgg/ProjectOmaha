@@ -116,22 +116,27 @@
           this.$.controller.speaker = speaker;
           console.log(this.$.speaker);
           this.$.nav.showBackArrow();
-          this.selected = "speakerController";      // all this shit needs to go elsewhere on another listener
 
+          this.selected = "speakerController";      // Don't put this in another listener because if someone clicks on the speaker and just wants to view, no sense in sending everything
+
+          // Get controller object
           var controller = document.getElementById('controller');
 
+          // Set volume levels
           document.getElementById('volume2').value = this.$.controller.speaker.VolumeLevel[0];
           document.getElementById('volume3').value = this.$.controller.speaker.VolumeLevel[1];
           document.getElementById('volume4').value = this.$.controller.speaker.VolumeLevel[2];
           document.getElementById('volume5').value = this.$.controller.speaker.VolumeLevel[3];
 
-          var average = document.getElementById('menu');
-          average.selected = this.$.controller.speaker.AveragingMode - 1;
+          // Set averaging mode
+          document.getElementById('menu').selected = this.$.controller.speaker.AveragingMode - 1;
 
+          // Set paging levels
           document.getElementById('pagingvolume').value = this.$.controller.speaker.VolumeLevel[2];
           document.getElementById("fadetime").value = this.$.controller.speaker.FadeTime;
           document.getElementById("fadelevel").value = this.$.controller.speaker.FadeLevel;
 
+          // Set equalizer bands
           var sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
           var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
           for (i in controller.speaker.Equalizer) {

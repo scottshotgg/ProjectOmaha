@@ -21,8 +21,10 @@ This is a todo file:
 17. Fix OpenLayer click event shit
 18. Use line chart from Chart.js to chart the spectrum and then give discrete values	✅
 19. What can we use progres bars for? 
-20. make log for all users that logs ips, speakers ids, and what they are doing on it
+20. Make log for all users that logs ips, speakers ids, and what they are doing on it
+21. Make it visible to the user who is controlling the speaker at that time
 
 
-
-21. 2016/02/04 17:19:01 speakerHandlers.go:271: SpeakerPutHandler json decoding error: json: cannot unmarshal number into Go value of type string
+NEXT WEEK:
+	a. Complete the presets; able to add, load them, graph maybe (Chart.js)
+	b. Look into loading the information onto the tooltip, preload maybe, morph the loading to preload most common speakers
