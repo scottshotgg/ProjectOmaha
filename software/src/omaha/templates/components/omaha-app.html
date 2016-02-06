@@ -100,6 +100,7 @@
         'nav.toggledrawer': '_toggleDrawer',
         'mapcontroller.speakerselected': '_speakerSelected',
         'mapcontroller.zoneselected': '_zoneSelected'
+        // put a mapcontroller.logresponse thing here
       },
 
       _showMap: function() {
@@ -113,21 +114,32 @@
           this.$.dialog.open();
         } else {
           this.$.controller.speaker = speaker;
-          console.log(this.$);
+          console.log(this.$.speaker);
           this.$.nav.showBackArrow();
-          this.selected = "speakerController";
+          this.selected = "speakerController";      // all this shit needs to go elsewhere on another listener
+
           var controller = document.getElementById('controller');
-          console.log(document.getElementById('volume'));
-          controller.volumeLevel = this.$.controller.speaker.VolumeLevel[0] + " " + this.$.controller.speaker.VolumeLevel[1];
-          controller.musicLevel = this.$.controller.speaker.VolumeLevel[1];
-          controller.pagingLevel = this.$.controller.speaker.VolumeLevel[2];
-          controller.maskingLevel = this.$.controller.speaker.VolumeLevel[3];
-          console.log(controller.musicLevel);
 
-          //You were working here on this shit and trying to figure out how to get the music volume into the thing
+          document.getElementById('volume2').value = this.$.controller.speaker.VolumeLevel[0];
+          document.getElementById('volume3').value = this.$.controller.speaker.VolumeLevel[1];
+          document.getElementById('volume4').value = this.$.controller.speaker.VolumeLevel[2];
+          document.getElementById('volume5').value = this.$.controller.speaker.VolumeLevel[3];
 
+          var average = document.getElementById('menu');
+          average.selected = this.$.controller.speaker.AveragingMode - 1;
 
-         // this.$.controller.speaker.volumeLevel = ; 
+          document.getElementById('pagingvolume').value = this.$.controller.speaker.VolumeLevel[2];
+          document.getElementById("fadetime").value = this.$.controller.speaker.FadeTime;
+          document.getElementById("fadelevel").value = this.$.controller.speaker.FadeLevel;
+
+          var sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+          var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+          for (i in controller.speaker.Equalizer) {
+            sliders[i].style.height = "" + (controller.speaker.Equalizer[i] + 40) * 2 + "%";
+            handles[i].style.bottom = "" + (controller.speaker.Equalizer[i] + 40) * 2 + "%";
+            $("#text" + (parseInt(i) + 1)).val(controller.speaker.Equalizer[i]);
+            iirConstants[i] = controller.speaker.Equalizer[i];
+          }
         }
       },
       

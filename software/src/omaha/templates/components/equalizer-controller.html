@@ -51,7 +51,7 @@
       <div class="card-content">
         <div id="slider" class="layout horizontal">
           <div id="custom_container"> 
-            <div class="custom one"> <input id="text1" readonly/> <div class="custom_slider" value={{"internalEqualizer"}}></div><input class="bands" value="80" readonly/></div>
+            <div class="custom one"> <input id="text1" readonly/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" value="80" readonly/></div>
             <div class="custom two"> <input id="text2" readonly/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
             <div class="custom three"> <input id="text3" readonly/> <div class="custom_slider" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
             <div class="custom four"> <input id="text4" readonly/><div class="custom_slider" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
@@ -85,10 +85,12 @@
   <script>
 
   var iirConstants = [];
+
   for(loopVar = 0; loopVar < 21; loopVar++) { // watch out! we got a static over here
     iirConstants[loopVar] = 0;
   }
   console.log(iirConstants);
+
     Polymer({
       is: 'equalizer-controller',
       
@@ -228,6 +230,7 @@
         value: 0,
         slide: function( event, ui) {
           $( "#text2" ).val( ui.value);
+          console.log(ui.value);
           iirConstants[1] = ui.value;
           //console.log(iirConstants[1] + " - | - " + ui.value);
         }

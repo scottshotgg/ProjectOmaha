@@ -32,7 +32,7 @@
    <paper-card heading="Fade Time" elevation="4">
       <div class="card-content">
 
-        <div id="fadetime" class="layout horizontal">
+        <div id="slider" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
           <paper-slider id="fadetime" pin min="0" max="100" value="{{internalFadeTime}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
@@ -42,17 +42,17 @@
         
         <h1 id="fadelevelabel"> Fade Level </h1>
 
-        <div id="fadelevel" class="layout horizontal">
+        <div id="slider2" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
           <paper-slider id="fadelevel" pin min="0" max="100" value="{{internalFadeLevel}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
 
-        <h1 id="pagingvolume"> Paging Volume </h1>
+        <h1 id="pagingvolumelabel"> Paging Volume </h1>
 
-        <div id="slider2" class="layout horizontal">
+        <div id="slider3" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
-          <paper-slider id="volume4" pin min="1" max="100" value="{{internalPagingVolume}}"></paper-slider>
+          <paper-slider id="pagingvolume" pin min="1" max="100" value="{{internalPagingVolume}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
       </div>

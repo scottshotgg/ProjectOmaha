@@ -28,7 +28,7 @@
       }
       
       paper-button {
-        background-color: #4285f4;
+        background-color: #4285f4;      /* This is not needed and for some reason is still here */
         color: #fff;
         margin-top: 10px;
       }
@@ -36,7 +36,7 @@
     <paper-card heading="Averaging Mode">
       <div class="card-content">
         <paper-dropdown-menu no-label-float label="Averaging mode:">
-          <paper-menu id="menu" class="dropdown-content">
+          <paper-menu id="menu" class="dropdown-content" value="0">
             <paper-item>Mode 1</paper-item>
             <paper-item>Mode 2</paper-item>
             <paper-item>Mode 3</paper-item>
@@ -59,6 +59,7 @@
             <paper-item>Mode 20</paper-item>
           </paper-menu>
         </paper-dropdown-menu>
+        <span>{{value}}</span>
       </div>
     </paper-card>
     <!--<paper-toast id="toast">Averaging mode set to <span>{{volume}}</span></paper-toast>-->
@@ -88,6 +89,12 @@
       
       _selectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
         console.log(this.speakerId);    // This says the speakerId is undefined
+
+        var menu = document.getElementById('menu');
+
+        //menu.averaging = this.$.menu.selected + 1;
+
+        console.log(this.$.menu.selected + 1);
 
           // Need to put a toast thing here like we have on the volume selector page
           var updatedAttributes = ["averaging"];

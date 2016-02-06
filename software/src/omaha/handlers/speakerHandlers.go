@@ -23,9 +23,11 @@ type speakerResponse struct {
 	Paging 			int8		`json:"paging"`
 	Masking 		int8		`json:"masking"`
 	Averaging 		int8		`json:"averaging"`
-	Equalizer[21]	int8		`json:["equalizer"]`
-	Err     		string 	`json:"err"`
-	Speaker			int8	`json:"speaker"`
+	FadeTime		int8		`json:"fadetime"`
+	FadeLevel		int8		`json:"fadelevel"`
+	Equalizer[21]	int			`json:["equalizer"]`
+	Err     		string 		`json:"err"`
+	Speaker			int8		`json:"speaker"`
 }
 
 type speakerGetRequest struct {
@@ -325,16 +327,16 @@ func SpeakerGetHandler(w http.ResponseWriter, r *http.Request) {
 	//speakerRequest.Volume = 
 	//log.Println(Volume)
 	//response, _ := json.Marshal()
-	speakerResponse := fillSpeakerResponse(controller)
+	//speakerResponse := fillSpeakerResponse(controller)
 	//speakerResponse := speakerResponse{Volume: controller.VolumeLevel[0]}
-	response, _ := json.Marshal(speakerResponse)
+	response, _ := json.Marshal(fillSpeakerResponse(controller))
 
 	w.Write(response)
 }
 
 func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse {
 
-	speakerResponse := speakerResponse{Volume: controller.VolumeLevel[0], Music: controller.VolumeLevel[1], Paging: controller.VolumeLevel[2], Masking: controller.VolumeLevel[3]}
+	speakerResponse := speakerResponse{Volume: controller.VolumeLevel[0], Music: controller.VolumeLevel[1], Paging: controller.VolumeLevel[2], Masking: controller.VolumeLevel[3], Averaging: controller.AveragingMode, FadeTime: controller.PagingLevel[0], FadeLevel: controller.PagingLevel[1], Equalizer: [21]int{controller.Equalizer[0], controller.Equalizer[1], controller.Equalizer[2], controller.Equalizer[3], controller.Equalizer[4], controller.Equalizer[5], controller.Equalizer[6], controller.Equalizer[7], controller.Equalizer[8], controller.Equalizer[9], controller.Equalizer[10], controller.Equalizer[11], controller.Equalizer[12], controller.Equalizer[13], controller.Equalizer[14], controller.Equalizer[15], controller.Equalizer[16], controller.Equalizer[17], controller.Equalizer[18], controller.Equalizer[19], controller.Equalizer[20]}}
 
 	return speakerResponse
 }

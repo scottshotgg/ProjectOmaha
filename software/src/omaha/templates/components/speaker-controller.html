@@ -80,18 +80,11 @@
       <paper-radio-group id="mode" selected="{{mode}}">
         <paper-radio-button id="volumeButton" name="volume" class="flex">Volume</paper-radio-button>
         <paper-radio-button id="averagingButton" name="averaging" class="flex">Averaging</paper-radio-button>
-        <paper-radio-button id="lightButton" name="light" class="flex">LED</paper-radio-button>
         <paper-radio-button id="equalizerButton" name="equalizer" class="flex">Equalizer</paper-radio-button>
         <paper-radio-button id="pagingButton" name="paging" class="flex">Paging</paper-radio-button>
       </paper-radio-group>
     </div>
     <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
-
-      <neon-animatable page="light" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <simple-fit class="container">
-          <light-controller id="light" led-on="{{ledOn}}"></light-controller>
-        </simple-fit>
-      </neon-animatable>
 
       <neon-animatable page="averaging" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
@@ -175,7 +168,6 @@
           value: "0",
           observer: '_volumeUpdate'
         },
-
         
         musicLevel: {
           type: Number,
@@ -191,7 +183,7 @@
 
         equalizerone: {
           type: String,
-          value: "there isnt anything in here jk :^)",
+          value: "0",
           observer: '_equalizerUpdate'
         },
 
@@ -324,8 +316,6 @@
         this.isReady = true;
       }
     });
-
-    console.log(Polymer.dom);
 
 
   /*if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {

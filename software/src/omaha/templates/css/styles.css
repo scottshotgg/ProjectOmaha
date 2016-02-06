@@ -165,7 +165,7 @@ paper-card {
   margin-top: calc(0.05 * 100vh);
 }
 
-#pagingvolume {
+#pagingvolumelabel {
   font-size: 24px;
   margin-top: calc(0.05 * 100vh);
 }
