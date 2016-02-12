@@ -1,0 +1,113 @@
+/*
+//	Source code that provides initiailzation as well as interrupt service routines for the timers and the ADC.
+//	This is confidential code and is written by Matthew Kramer of the University of Texas at Dallas Applied Research Center for Speech Privacy Systems
+//
+//
+//
+//
+//
+//
+//
+*/
+
+
+
+
+#include "timers.h"
+#include "F2806x_Cla_defines.h"
+
+int fir = 0;
+
+//variables that are declared in main. Trying to declare these variables in other scopes leads to instability
+extern 	float 		lfsr_Array		[ARRAYSIZE];			//contains the array of unfiltered whitenoise generated from the Linear feedback shift register
+extern  float  		filteredArray	[ARRAYSIZE];			//contains filtered FIR
+extern  float		outputFromCLA;							//filtered by equalizer
+extern  float		inputToCLA;								//to be filtred by equalizer
+
+extern  FIR_FP		firFP;									//FIR filter structures
+extern  FIR_FP_Handle 			hnd_firFP;
+
+extern  int			ADCReading_music;						//music and paging readings
+extern  int			ADCReading_paging;
+
+//local variables
+		int 		scalar 				= 0;				//scalar used for PWM. This essentially allows the duty cycle of the PWM to be scalled accordingly based off of numerical values
+		int			k 					= 0;				//count variable used for indexing lfsr array
+
+void initializeTimers(){
+
+	EALLOW;
+	GpioCtrlRegs.GPAMUX1.bit.GPIO12 = 0; //added for timing interrupts properly. will remove
+	GpioCtrlRegs.GPADIR.bit.GPIO12 = 1;
+	GpioCtrlRegs.GPAMUX1.bit.GPIO3 = 0;
+	GpioCtrlRegs.GPADIR.bit.GPIO3 = 1;
+	GpioCtrlRegs.GPAMUX1.bit.GPIO5 = 0;
+	GpioCtrlRegs.GPADIR.bit.GPIO5 = 1;
+	PieVectTable.TINT0 = &cpu_timer0_isr;
+	PieVectTable.TINT1 = &cpu_timer1_isr;
+	PieVectTable.TINT2 = &cpu_timer2_isr;
+	EDIS;
+	//the following functions are provided by TI and are located in ./source/F2806x_CpuTimers.c
+	InitCpuTimers();
+	ConfigCpuTimer(&CpuTimer0, 80, 500000/(SAMPLERATE));		// timer that fires accordingly to the sample rate. Many things happen in this ISR
+	ConfigCpuTimer(&CpuTimer1, 80, 1000000/(ADCSAMPLERATE));	// timer that fires for the ADC to ambient noise readings.
+	ConfigCpuTimer(&CpuTimer2, 80, 3000);						// used for the trasmitt enable pin on the RS485 converter.
+	CpuTimer0Regs.TCR.all = 0x4000; 							// Use write-only instruction to set TSS bit = 0
+	CpuTimer1Regs.TCR.all = 0x4000;
+	EALLOW;
+	PieCtrlRegs.PIEIER1.bit.INTx7 = 1;
+	PieCtrlRegs.PIEIER1.bit.INTx1  = 1;
+	EDIS;
+	IER |= M_INT1;
+	IER |= M_INT13;
+	IER |= M_INT14;
+	scalar = 4000/PERIOD;	///4000 possible pwm duty cycles giving rise to approx 12 bits of resolution.
+							//(4000 rounds better than 4096 in base 10, integer division used)
+}
+
+__interrupt void cpu_timer0_isr(void){
+
+	//AdcRegs.ADCSOCFRC1.all = 0x0001; //this will jump down to adca1_ISR below (not needed now)
+	Cla1ForceTask2();				   //get the CLA working on the equalizer.
+	if(fir){
+		hnd_firFP->input = lfsr_Array[k];  //FIR filter to take whitenoise and generate more plesent pinknoise. This is default noise before equalization
+		hnd_firFP->calc(&firFP);
+		filteredArray[k] = hnd_firFP->output; //array of filtered samples
+	}
+	else filteredArray[k] = lfsr_Array[k];
+	PieCtrlRegs.PIEACK.all |= PIEACK_GROUP1; // Acknowledge this __interrupt to receive more __interrupts from group 1
+	inputToCLA = ((int)filteredArray[k]); //inputToCla is set to new value to be filtred on next round
+	k++;
+
+	if(k == ARRAYSIZE)
+		k = 0;
+}
+
+__interrupt	void cpu_timer1_isr(void){
+
+}
+
+__interrupt	void cpu_timer2_isr(void){
+
+	CpuTimer2Regs.TCR.all = 0x0000; //hault timer. Wont run again until needed
+	GpioDataRegs.GPACLEAR.bit.GPIO5 = 1; //used for SCIB TX. Turn off until needed again
+	GpioDataRegs.GPACLEAR.bit.GPIO3 = 1;  //used for SCIA TX. Turn off until needed again
+}
+
+
+__interrupt void adc_isr(){
+
+	while(AdcRegs.ADCINTFLG.bit.ADCINT1 == 0);			//wait for the ADC to be finished
+				AdcRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;
+
+	ADCReading_music = AdcResult.ADCRESULT0;
+	ADCReading_paging = AdcResult.ADCRESULT1;
+	AdcRegs.ADCINTFLGCLR.bit.ADCINT1 = 1; 		//clear INT1 flag
+	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;		//clear ackknowledge interrupt
+
+}
+
+
+
+
+

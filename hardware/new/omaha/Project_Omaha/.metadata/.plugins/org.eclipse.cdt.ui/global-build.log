@@ -1,0 +1,408 @@
+
+**** Build of configuration Debug for project test ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source_TI/DSP28xxx_SectionCopy_nonBIOS.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/DSP28xxx_SectionCopy_nonBIOS.pp" --obj_directory="source_TI"  "../source_TI/DSP28xxx_SectionCopy_nonBIOS.asm"
+'Finished building: ../source_TI/DSP28xxx_SectionCopy_nonBIOS.asm'
+' '
+'Building file: ../source_TI/F2806x_Adc.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_Adc.pp" --obj_directory="source_TI"  "../source_TI/F2806x_Adc.c"
+'Finished building: ../source_TI/F2806x_Adc.c'
+' '
+'Building file: ../source_TI/F2806x_CodeStartBranch.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_CodeStartBranch.pp" --obj_directory="source_TI"  "../source_TI/F2806x_CodeStartBranch.asm"
+'Finished building: ../source_TI/F2806x_CodeStartBranch.asm'
+' '
+'Building file: ../source_TI/F2806x_CpuTimers.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_CpuTimers.pp" --obj_directory="source_TI"  "../source_TI/F2806x_CpuTimers.c"
+'Finished building: ../source_TI/F2806x_CpuTimers.c'
+' '
+'Building file: ../source_TI/F2806x_DBGIER.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_DBGIER.pp" --obj_directory="source_TI"  "../source_TI/F2806x_DBGIER.asm"
+'Finished building: ../source_TI/F2806x_DBGIER.asm'
+' '
+'Building file: ../source_TI/F2806x_DefaultIsr.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_DefaultIsr.pp" --obj_directory="source_TI"  "../source_TI/F2806x_DefaultIsr.c"
+'Finished building: ../source_TI/F2806x_DefaultIsr.c'
+' '
+'Building file: ../source_TI/F2806x_EPwm.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_EPwm.pp" --obj_directory="source_TI"  "../source_TI/F2806x_EPwm.c"
+'Finished building: ../source_TI/F2806x_EPwm.c'
+' '
+'Building file: ../source_TI/F2806x_GlobalVariableDefs.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_GlobalVariableDefs.pp" --obj_directory="source_TI"  "../source_TI/F2806x_GlobalVariableDefs.c"
+'Finished building: ../source_TI/F2806x_GlobalVariableDefs.c'
+' '
+'Building file: ../source_TI/F2806x_Gpio.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_Gpio.pp" --obj_directory="source_TI"  "../source_TI/F2806x_Gpio.c"
+'Finished building: ../source_TI/F2806x_Gpio.c'
+' '
+'Building file: ../source_TI/F2806x_PieCtrl.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_PieCtrl.pp" --obj_directory="source_TI"  "../source_TI/F2806x_PieCtrl.c"
+'Finished building: ../source_TI/F2806x_PieCtrl.c'
+' '
+'Building file: ../source_TI/F2806x_PieVect.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_PieVect.pp" --obj_directory="source_TI"  "../source_TI/F2806x_PieVect.c"
+'Finished building: ../source_TI/F2806x_PieVect.c'
+' '
+'Building file: ../source_TI/F2806x_Sci.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_Sci.pp" --obj_directory="source_TI"  "../source_TI/F2806x_Sci.c"
+'Finished building: ../source_TI/F2806x_Sci.c'
+' '
+'Building file: ../source_TI/F2806x_SysCtrl.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_SysCtrl.pp" --obj_directory="source_TI"  "../source_TI/F2806x_SysCtrl.c"
+'Finished building: ../source_TI/F2806x_SysCtrl.c'
+' '
+'Building file: ../source_TI/F2806x_usDelay.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/F2806x_usDelay.pp" --obj_directory="source_TI"  "../source_TI/F2806x_usDelay.asm"
+'Finished building: ../source_TI/F2806x_usDelay.asm'
+' '
+'Building file: ../source_TI/FIR_f32.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source_TI/FIR_f32.pp" --obj_directory="source_TI"  "../source_TI/FIR_f32.asm"
+'Finished building: ../source_TI/FIR_f32.asm'
+' '
+'Building file: ../source/Cla_Funcs.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/Cla_Funcs.pp" --obj_directory="source"  "../source/Cla_Funcs.c"
+'Finished building: ../source/Cla_Funcs.c'
+' '
+'Building file: ../source/communication.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/communication.pp" --obj_directory="source"  "../source/communication.c"
+'Finished building: ../source/communication.c'
+' '
+'Building file: ../source/eq.cla'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/eq.pp" --obj_directory="source"  "../source/eq.cla"
+'Finished building: ../source/eq.cla'
+' '
+'Building file: ../source/main.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/main.pp" --obj_directory="source"  "../source/main.c"
+'Finished building: ../source/main.c'
+' '
+'Building file: ../source/timers.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/timers.pp" --obj_directory="source"  "../source/timers.c"
+'Finished building: ../source/timers.c'
+' '
+'Building file: ../source/whiteNoise.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/whiteNoise.pp" --obj_directory="source"  "../source/whiteNoise.c"
+'Finished building: ../source/whiteNoise.c'
+' '
+'Building file: ../cla_source/CLASinCosTable.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLASinCosTable.pp" --obj_directory="cla_source"  "../cla_source/CLASinCosTable.asm"
+'Finished building: ../cla_source/CLASinCosTable.asm'
+' '
+'Building file: ../cla_source/CLAcos.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAcos.pp" --obj_directory="cla_source"  "../cla_source/CLAcos.asm"
+'Finished building: ../cla_source/CLAcos.asm'
+' '
+'Building file: ../cla_source/CLAexp10.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAexp10.pp" --obj_directory="cla_source"  "../cla_source/CLAexp10.asm"
+'Finished building: ../cla_source/CLAexp10.asm'
+' '
+'Building file: ../cla_source/CLAexpTable.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAexpTable.pp" --obj_directory="cla_source"  "../cla_source/CLAexpTable.asm"
+'Finished building: ../cla_source/CLAexpTable.asm'
+' '
+'Building file: ../cla_source/CLAsin.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAsin.pp" --obj_directory="cla_source"  "../cla_source/CLAsin.asm"
+'Finished building: ../cla_source/CLAsin.asm'
+' '
+'Building file: ../cla_source/CLAsqrt.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAsqrt.pp" --obj_directory="cla_source"  "../cla_source/CLAsqrt.asm"
+'Finished building: ../cla_source/CLAsqrt.asm'
+' '
+'Building target: test.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"test.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="test_linkInfo.xml" --rom_model -o "test.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source/CLASinCosTable.obj" "./cla_source/CLAcos.obj" "./cla_source/CLAexp10.obj" "./cla_source/CLAexpTable.obj" "./cla_source/CLAsin.obj" "./cla_source/CLAsqrt.obj" "../Final.cmd"  -l"libc.a" 
+<Linking>
+warning #10247-D: creating output section "DevEmuRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "CsmPwlFile" without a SECTIONS specification
+warning #10247-D: creating output section "CpuTimer0RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "CpuTimer2RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "CpuTimer1RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "ScibRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "SciaRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "AdcResultFile" without a SECTIONS specification
+warning #10247-D: creating output section "CsmRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "PieCtrlRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "GpioDataRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "GpioIntRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "SysCtrlRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "EPwm4RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "EPwm5RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "EPwm3RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "EPwm1RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "EPwm2RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "Cla1RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "EPwm8RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "GpioCtrlRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "EPwm7RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "EPwm6RegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "AdcRegsFile" without a SECTIONS specification
+warning #10247-D: creating output section "PieVectTableFile" without a SECTIONS specification
+'Finished building target: test.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project test ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building target: test.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"test.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="test_linkInfo.xml" --rom_model -o "test.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source/CLASinCosTable.obj" "./cla_source/CLAcos.obj" "./cla_source/CLAexp10.obj" "./cla_source/CLAexpTable.obj" "./cla_source/CLAsin.obj" "./cla_source/CLAsqrt.obj" "../F2806x_Headers_nonBIOS.cmd" "../Final.cmd"  -l"libc.a" 
+<Linking>
+'Finished building target: test.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../cla_source_TI/CLASinCosTable.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source_TI/CLASinCosTable.pp" --obj_directory="cla_source_TI"  "../cla_source_TI/CLASinCosTable.asm"
+'Finished building: ../cla_source_TI/CLASinCosTable.asm'
+' '
+'Building file: ../cla_source_TI/CLAcos.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source_TI/CLAcos.pp" --obj_directory="cla_source_TI"  "../cla_source_TI/CLAcos.asm"
+'Finished building: ../cla_source_TI/CLAcos.asm'
+' '
+'Building file: ../cla_source_TI/CLAexp10.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source_TI/CLAexp10.pp" --obj_directory="cla_source_TI"  "../cla_source_TI/CLAexp10.asm"
+'Finished building: ../cla_source_TI/CLAexp10.asm'
+' '
+'Building file: ../cla_source_TI/CLAexpTable.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source_TI/CLAexpTable.pp" --obj_directory="cla_source_TI"  "../cla_source_TI/CLAexpTable.asm"
+'Finished building: ../cla_source_TI/CLAexpTable.asm'
+' '
+'Building file: ../cla_source_TI/CLAsin.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source_TI/CLAsin.pp" --obj_directory="cla_source_TI"  "../cla_source_TI/CLAsin.asm"
+'Finished building: ../cla_source_TI/CLAsin.asm'
+' '
+'Building file: ../cla_source_TI/CLAsqrt.asm'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source_TI/CLAsqrt.pp" --obj_directory="cla_source_TI"  "../cla_source_TI/CLAsqrt.asm"
+'Finished building: ../cla_source_TI/CLAsqrt.asm'
+' '
+'Building target: Project_Omaha_1.0.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"Project_Omaha_1.0.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="Project_Omaha_1.0_linkInfo.xml" --rom_model -o "Project_Omaha_1.0.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source_TI/CLASinCosTable.obj" "./cla_source_TI/CLAcos.obj" "./cla_source_TI/CLAexp10.obj" "./cla_source_TI/CLAexpTable.obj" "./cla_source_TI/CLAsin.obj" "./cla_source_TI/CLAsqrt.obj" "../F2806x_Headers_nonBIOS.cmd" "../Final.cmd"  -l"libc.a" 
+<Linking>
+'Finished building target: Project_Omaha_1.0.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source/main.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/main.pp" --obj_directory="source"  "../source/main.c"
+'Finished building: ../source/main.c'
+' '
+'Building target: Project_Omaha_1.0.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"Project_Omaha_1.0.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="Project_Omaha_1.0_linkInfo.xml" --rom_model -o "Project_Omaha_1.0.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source_TI/CLASinCosTable.obj" "./cla_source_TI/CLAcos.obj" "./cla_source_TI/CLAexp10.obj" "./cla_source_TI/CLAexpTable.obj" "./cla_source_TI/CLAsin.obj" "./cla_source_TI/CLAsqrt.obj" "../F2806x_Headers_nonBIOS.cmd" "../Final.cmd"  -l"libc.a" 
+<Linking>
+'Finished building target: Project_Omaha_1.0.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+gmake: Nothing to be done for `all'.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source/main.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/main.pp" --obj_directory="source"  "../source/main.c"
+'Finished building: ../source/main.c'
+' '
+'Building file: ../source/timers.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/timers.pp" --obj_directory="source"  "../source/timers.c"
+"../source/timers.c", line 78: error #171: expected a declaration
+At end of source: warning #12-D: parsing restarts here after previous syntax error
+1 error detected in the compilation of "../source/timers.c".
+
+>> Compilation failure
+gmake: *** [source/timers.obj] Error 1
+gmake: Target `all' not remade because of errors.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source/timers.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/timers.pp" --obj_directory="source"  "../source/timers.c"
+'Finished building: ../source/timers.c'
+' '
+'Building target: Project_Omaha_1.0.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"Project_Omaha_1.0.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="Project_Omaha_1.0_linkInfo.xml" --rom_model -o "Project_Omaha_1.0.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source_TI/CLASinCosTable.obj" "./cla_source_TI/CLAcos.obj" "./cla_source_TI/CLAexp10.obj" "./cla_source_TI/CLAexpTable.obj" "./cla_source_TI/CLAsin.obj" "./cla_source_TI/CLAsqrt.obj" "../F2806x_Headers_nonBIOS.cmd" "../Final.cmd"  -l"libc.a" 
+<Linking>
+'Finished building target: Project_Omaha_1.0.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source/eq.cla'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/eq.pp" --obj_directory="source"  "../source/eq.cla"
+'Finished building: ../source/eq.cla'
+' '
+'Building target: Project_Omaha_1.0.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"Project_Omaha_1.0.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="Project_Omaha_1.0_linkInfo.xml" --rom_model -o "Project_Omaha_1.0.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source_TI/CLASinCosTable.obj" "./cla_source_TI/CLAcos.obj" "./cla_source_TI/CLAexp10.obj" "./cla_source_TI/CLAexpTable.obj" "./cla_source_TI/CLAsin.obj" "./cla_source_TI/CLAsqrt.obj" "../F2806x_Headers_nonBIOS.cmd" "../Final.cmd"  -l"libc.a" 
+<Linking>
+'Finished building target: Project_Omaha_1.0.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source/communication.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/communication.pp" --obj_directory="source"  "../source/communication.c"
+'Finished building: ../source/communication.c'
+' '
+'Building file: ../source/timers.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/timers.pp" --obj_directory="source"  "../source/timers.c"
+'Finished building: ../source/timers.c'
+' '
+'Building target: Project_Omaha_1.0.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"Project_Omaha_1.0.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="Project_Omaha_1.0_linkInfo.xml" --rom_model -o "Project_Omaha_1.0.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source_TI/CLASinCosTable.obj" "./cla_source_TI/CLAcos.obj" "./cla_source_TI/CLAexp10.obj" "./cla_source_TI/CLAexpTable.obj" "./cla_source_TI/CLAsin.obj" "./cla_source_TI/CLAsqrt.obj" "../F2806x_Headers_nonBIOS.cmd" "../Final.cmd"  -l"libc.a" 
+<Linking>
+'Finished building target: Project_Omaha_1.0.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+gmake: Nothing to be done for `all'.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source/communication.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/communication.pp" --obj_directory="source"  "../source/communication.c"
+'Finished building: ../source/communication.c'
+' '
+'Building file: ../source/main.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/main.pp" --obj_directory="source"  "../source/main.c"
+"../source/main.c", line 243: error #29: expected an expression
+
+"../source/main.c", line 243: error #66: expected a ";"
+>> Compilation failure
+2 errors detected in the compilation of "../source/main.c".
+gmake: *** [source/main.obj] Error 1
+'Building file: ../source/timers.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/timers.pp" --obj_directory="source"  "../source/timers.c"
+'Finished building: ../source/timers.c'
+' '
+gmake: Target `all' not remade because of errors.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source/main.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/main.pp" --obj_directory="source"  "../source/main.c"
+'Finished building: ../source/main.c'
+' '
+'Building target: Project_Omaha_1.0.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"Project_Omaha_1.0.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="Project_Omaha_1.0_linkInfo.xml" --rom_model -o "Project_Omaha_1.0.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source_TI/CLASinCosTable.obj" "./cla_source_TI/CLAcos.obj" "./cla_source_TI/CLAexp10.obj" "./cla_source_TI/CLAexpTable.obj" "./cla_source_TI/CLAsin.obj" "./cla_source_TI/CLAsqrt.obj" "../F2806x_Headers_nonBIOS.cmd" "../Final.cmd"  -l"libc.a" 
+<Linking>
+'Finished building target: Project_Omaha_1.0.out'
+' '
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+gmake: Nothing to be done for `all'.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+gmake: Nothing to be done for `all'.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source/eq.cla'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/eq.pp" --obj_directory="source"  "../source/eq.cla"
+'Finished building: ../source/eq.cla'
+' '
+'Building target: Project_Omaha_1.0.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"Project_Omaha_1.0.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="Project_Omaha_1.0_linkInfo.xml" --rom_model -o "Project_Omaha_1.0.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source_TI/CLASinCosTable.obj" "./cla_source_TI/CLAcos.obj" "./cla_source_TI/CLAexp10.obj" "./cla_source_TI/CLAexpTable.obj" "./cla_source_TI/CLAsin.obj" "./cla_source_TI/CLAsqrt.obj" "../F2806x_Headers_nonBIOS.cmd" "../Final.cmd"  -l"libc.a" 
+<Linking>
+'Finished building target: Project_Omaha_1.0.out'
+' '
+
+**** Build Finished ****

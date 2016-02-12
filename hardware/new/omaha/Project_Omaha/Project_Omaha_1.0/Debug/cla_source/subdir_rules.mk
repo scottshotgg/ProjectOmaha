@@ -1,0 +1,48 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Each subdirectory must supply rules for building sources it contributes
+cla_source/CLASinCosTable.obj: ../cla_source/CLASinCosTable.asm $(GEN_OPTS) $(GEN_HDRS)
+	@echo 'Building file: $<'
+	@echo 'Invoking: C2000 Compiler'
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLASinCosTable.pp" --obj_directory="cla_source" $(GEN_OPTS__FLAG) "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+cla_source/CLAcos.obj: ../cla_source/CLAcos.asm $(GEN_OPTS) $(GEN_HDRS)
+	@echo 'Building file: $<'
+	@echo 'Invoking: C2000 Compiler'
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAcos.pp" --obj_directory="cla_source" $(GEN_OPTS__FLAG) "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+cla_source/CLAexp10.obj: ../cla_source/CLAexp10.asm $(GEN_OPTS) $(GEN_HDRS)
+	@echo 'Building file: $<'
+	@echo 'Invoking: C2000 Compiler'
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAexp10.pp" --obj_directory="cla_source" $(GEN_OPTS__FLAG) "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+cla_source/CLAexpTable.obj: ../cla_source/CLAexpTable.asm $(GEN_OPTS) $(GEN_HDRS)
+	@echo 'Building file: $<'
+	@echo 'Invoking: C2000 Compiler'
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAexpTable.pp" --obj_directory="cla_source" $(GEN_OPTS__FLAG) "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+cla_source/CLAsin.obj: ../cla_source/CLAsin.asm $(GEN_OPTS) $(GEN_HDRS)
+	@echo 'Building file: $<'
+	@echo 'Invoking: C2000 Compiler'
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAsin.pp" --obj_directory="cla_source" $(GEN_OPTS__FLAG) "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+cla_source/CLAsqrt.obj: ../cla_source/CLAsqrt.asm $(GEN_OPTS) $(GEN_HDRS)
+	@echo 'Building file: $<'
+	@echo 'Invoking: C2000 Compiler'
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/test/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="cla_source/CLAsqrt.pp" --obj_directory="cla_source" $(GEN_OPTS__FLAG) "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+

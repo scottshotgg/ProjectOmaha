@@ -1,0 +1,115 @@
+/*
+ *  This file is written for the CLA of the F28377S and is a CLA source file.
+ *	This file contains the IIR filter enviornment. This is used for manual mode in the sound masking system
+ *	The IIR filter is entirely separated from the main CPU and all variables are local to the CLA. The CPU
+ *	Passes vital information such as changes that need to be made to the IIR filter and the samples that need
+ *	to be filtered. The CLA both adjusts the IIR filter as well as executes the IIR filter algorithum
+ *
+ *	SOUND_MASKING program written for F28377S MCU for Univerity of Texas at Dallas Applied Research Center and Speech Privacy Systems
+ * 	Written by Matt Kramer and Scott Gayados
+ *
+ */
+
+#include "Cla_Shared.h"
+#include "constants.h"
+#include "CLAmath.h"
+
+
+//These variables are seen only by the CLA
+
+float outArray [NUM_BAND + 1];
+float delayReg [NUM_BAND] [3];
+float a_co [NUM_BAND] [3];
+float b_co [NUM_BAND] [3];
+float avg;
+int avg_count;
+float Q;
+float A;
+float sin, cos;
+float alpha;
+float w0;
+float CLAoutScale;
+float temp;
+//float sin, cos;
+//inputToCLA, outputFromCLA, decibel and decade are floats shared with the CPU and CLA
+//inputToCLA, decibel and decade will be provided by the CPU for the CLA
+//outputFromCLA is the final filtered output from the CLA
+
+interrupt void Cla1Task1 (void){ //task 1 will adjust the filter
+
+	A = CLAexp10(decibel/40);																// the Q factor is scaleable depending on much gain is desiered.
+	Q = 4.0;
+	w0 = 2*PI*bandfreq[band]/AUDSAMPLERATE;
+	sin = CLAsin(w0);
+	cos = CLAcos(w0);
+	alpha = sin/(2*Q);
+	a_co [band] [0] = 1 + alpha/A;
+	a_co [band] [1] = -2*cos/(a_co [band] [0]);
+	a_co [band] [2] = (1 - alpha/A)/(a_co [band] [0]);
+	b_co [band] [0] = (1 + alpha*A)/(a_co [band] [0]);
+	b_co [band] [1] = -2*cos/(a_co [band] [0]);
+	b_co [band] [2] = (1 - alpha*A)/(a_co [band] [0]);
+	outArray[band] = 0;
+	delayReg [band] [0] = 0;
+	delayReg [band] [1] = 0;
+	delayReg [band] [2] = 0;
+
+}
+
+interrupt void Cla1Task2 (void){ //task 2 will execute the filter
+
+	int i;
+
+	outArray[0] = inputToCLA;
+
+	for(i = NUM_BAND - 1; i >= 0; i--){
+
+		outArray [i + 1] = (b_co [i][0])*(outArray[i]) + (delayReg[i] [0]);		 							// y[n] = b0*x[n] + d1
+		delayReg [i] [0] = (b_co[i][1])*(outArray[i]) - (a_co[i][1])*(outArray[i + 1]) + (delayReg[i][1]); 	// d1 = b1*x[n] - a1*y[n] + d2
+		delayReg [i] [1] = (b_co[i][2])*(outArray[i]) - (a_co[i][2])*(outArray[i + 1]); 					// d2 = b2*x[n] - a2*y[n]
+	}
+
+
+
+	outputFromCLA = outArray[NUM_BAND]/CLAoutScale;															// prevent overflow with CLAoutScale
+
+	if(outputFromCLA > 2000)
+		CLAoutScale += .01;
+	else if(outputFromCLA < -2000)
+		CLAoutScale += .01;
+}
+
+
+interrupt void Cla1Task3 (void){ //Task 3 will initialize the variables
+
+	outputFromCLA = 0;
+	CLAoutScale = .01;
+	int i;
+	for(i = 0; i < NUM_BAND; i++){
+
+		temp = 0;
+		if(i < 3)
+			temp = 10;
+		if(i > 14)
+			temp = -12;
+		A = CLAexp10(temp/40);
+		Q = 1.4;
+		w0 = 2*PI*bandfreq[i]/AUDSAMPLERATE;
+		sin = CLAsin(w0);
+		cos = CLAcos(w0);
+		alpha = sin/(2*Q);
+		a_co [i] [0] = 1 + alpha/A;
+		a_co [i] [1] = -2*cos/(a_co [i] [0]);
+		a_co [i] [2] = (1 - alpha/A)/(a_co [i] [0]);
+		b_co [i] [0] = (1 + alpha*A)/(a_co [i] [0]);
+		b_co [i] [1] = -2*cos/(a_co [i] [0]);
+		b_co [i] [2] = (1 - alpha*A)/(a_co [i] [0]);
+		outArray[i] = 0;
+		delayReg [i] [0] = 0;
+		delayReg [i] [1] = 0;
+		delayReg [i] [2] = 0;
+
+	}
+		outArray[NUM_BAND] = 0;
+}
+

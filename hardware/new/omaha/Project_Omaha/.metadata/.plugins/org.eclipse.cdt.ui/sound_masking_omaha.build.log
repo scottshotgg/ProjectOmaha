@@ -1,0 +1,36 @@
+
+**** Build of configuration Debug for project sound_masking_omaha ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../hello.cpp'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/sound_masking_omaha/include" -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="hello.pp"  "../hello.cpp"
+'Finished building: ../hello.cpp'
+' '
+'Building file: ../main.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/sound_masking_omaha/include" -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="main.pp"  "../main.c"
+"../main.c", line 13: error #41: expected an identifier
+"../main.c", line 14: error #41: expected an identifier
+"../main.c", line 15: error #41: expected an identifier
+"../main.c", line 38: error #20: identifier "cla1_task1_isr" is undefined
+"../main.c", line 39: error #20: identifier "cla1_task2_isr" is undefined
+"../main.c", line 40: error #20: identifier "cla1_task3_isr" is undefined
+"../main.c", line 56: error #20: identifier "Cla1Prog_Start" is undefined
+"../main.c", line 98: error #20: identifier "CLA_PROG_ENABLE" is undefined
+"../main.c", line 98: error #20: identifier "CLARAM0_ENABLE" is undefined
+"../main.c", line 98: error #20: identifier "CLARAM1_ENABLE" is undefined
+"../main.c", line 98: error #20: identifier "CLARAM2_ENABLE" is undefined
+"../main.c", line 98: error #20: identifier "CLA_RAM1CPUE" is undefined
+"../main.c", line 104: error #41: expected an identifier
+"../main.c", line 108: error #528: a parameter may not have void type
+"../main.c", line 109: error #18: expected a ")"
+"../main.c", line 110: error #171: expected a declaration
+At end of source: warning #12-D: parsing restarts here after previous syntax error
+16 errors detected in the compilation of "../main.c".
+
+>> Compilation failure
+gmake: *** [main.obj] Error 1
+gmake: Target `all' not remade because of errors.
+
+**** Build Finished ****

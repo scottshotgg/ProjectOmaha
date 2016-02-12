@@ -92,19 +92,19 @@
         </simple-fit>
       </neon-animatable>
 
-      <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
+      <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
           <volume-selector id="volume" volume="{{volumeLevel}}" musicVolume="{{musicLevel}}"></volume-selector>
         </simple-fit>
       </neon-animatable>
 
-      <neon-animatable page="equalizer" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
+      <neon-animatable page="equalizer" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
-          <equalizer-controller id="equalizer" equalizer="{{equalizerone}}"></equalizer-controller>
+          <equalizer-controller id="equalizer" speaker-id="[[speakerId]]" speaker="[[speaker]]" equalizer="{{equalizerone}}"></equalizer-controller>
         </simple-fit>
       </neon-animatable>
 
-      <neon-animatable page="paging" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
+      <neon-animatable page="paging" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
           <paging-controller id="paging" paging="{{pagingLevel}}"></paging-controller>
         </simple-fit>

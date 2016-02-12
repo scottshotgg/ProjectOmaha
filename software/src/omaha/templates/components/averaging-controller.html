@@ -4,6 +4,7 @@
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
@@ -20,23 +21,48 @@
       }
       
       paper-card {
-        width: 100%
+        width: 100%;
+        text-align: center;
       }
       
       paper-dropdown-menu {
         margin: 0px 25px 5px;
+        overflow-x: hidden;
+        width: 170px;
+        text-align: center;
       }
       
       paper-button {
         background-color: #4285f4;      /* This is not needed and for some reason is still here */
         color: #fff;
         margin-top: 10px;
+        text-align: center;
       }
+
+      paper-input {
+        text-align: center;
+      }
+
+      paper-item {
+        width: 80px;
+        text-align: center;
+      }
+
+      iron-dropdown {
+        overflow: hidden;
+        text-align: center;
+      }
+
+      dropdown-content style-scope paper-menu-button x-scope paper-material-0 {
+        overflow: hidden;   /* solve the overflow shit */
+      }
+
     </style>
+
     <paper-card heading="Averaging Mode">
       <div class="card-content">
-        <paper-dropdown-menu no-label-float label="Averaging mode:">
-          <paper-menu id="menu" class="dropdown-content" value="0">
+        <paper-dropdown-menu no-label-float style="overflow; hidden;" label="Averaging Mode:">
+          <paper-listbox id="menu" class="dropdown-content" value="0">
             <paper-item>Mode 1</paper-item>
             <paper-item>Mode 2</paper-item>
             <paper-item>Mode 3</paper-item>
@@ -57,7 +83,7 @@
             <paper-item>Mode 18</paper-item>
             <paper-item>Mode 19</paper-item>
             <paper-item>Mode 20</paper-item>
-          </paper-menu>
+          </paper-listbox>
         </paper-dropdown-menu>
         <span>{{value}}</span>
       </div>
@@ -73,6 +99,9 @@
       debounce-duration="300"></iron-ajax>
   </template>
   <script>
+
+    
+
     Polymer({
       is: 'averaging-controller',
 

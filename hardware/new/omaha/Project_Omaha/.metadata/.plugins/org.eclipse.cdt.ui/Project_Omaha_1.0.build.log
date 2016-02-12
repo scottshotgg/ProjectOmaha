@@ -1,0 +1,17 @@
+
+**** Build of configuration Debug for project Project_Omaha_1.0 ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../source/eq.cla'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include_TI" --include_path="C:/Users/mwk130030/Desktop/Project_Omaha/Project_Omaha_1.0/include" --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/eq.pp" --obj_directory="source"  "../source/eq.cla"
+'Finished building: ../source/eq.cla'
+' '
+'Building target: Project_Omaha_1.0.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -O4 --opt_for_speed=5 --fp_mode=relaxed --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"Project_Omaha_1.0.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="Project_Omaha_1.0_linkInfo.xml" --rom_model -o "Project_Omaha_1.0.out" "./source_TI/DSP28xxx_SectionCopy_nonBIOS.obj" "./source_TI/F2806x_Adc.obj" "./source_TI/F2806x_CodeStartBranch.obj" "./source_TI/F2806x_CpuTimers.obj" "./source_TI/F2806x_DBGIER.obj" "./source_TI/F2806x_DefaultIsr.obj" "./source_TI/F2806x_EPwm.obj" "./source_TI/F2806x_GlobalVariableDefs.obj" "./source_TI/F2806x_Gpio.obj" "./source_TI/F2806x_PieCtrl.obj" "./source_TI/F2806x_PieVect.obj" "./source_TI/F2806x_Sci.obj" "./source_TI/F2806x_SysCtrl.obj" "./source_TI/F2806x_usDelay.obj" "./source_TI/FIR_f32.obj" "./source/Cla_Funcs.obj" "./source/communication.obj" "./source/eq.obj" "./source/main.obj" "./source/timers.obj" "./source/whiteNoise.obj" "./cla_source_TI/CLASinCosTable.obj" "./cla_source_TI/CLAcos.obj" "./cla_source_TI/CLAexp10.obj" "./cla_source_TI/CLAexpTable.obj" "./cla_source_TI/CLAsin.obj" "./cla_source_TI/CLAsqrt.obj" "../F2806x_Headers_nonBIOS.cmd" "../Final.cmd"  -l"libc.a" 
+<Linking>
+'Finished building target: Project_Omaha_1.0.out'
+' '
+
+**** Build Finished ****

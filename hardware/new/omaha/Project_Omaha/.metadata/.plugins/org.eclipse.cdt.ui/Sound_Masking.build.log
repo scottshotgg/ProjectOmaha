@@ -1,0 +1,43 @@
+
+**** Build of configuration CPU1_RAM for project Sound_Masking ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building target: Sound_Masking.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --tmu_support=tmu0 --cla_support=cla1 --vcu_support=vcu2 --opt_for_speed=4 --fp_reassoc=on --fp_mode=relaxed -g --define=CPU1 --diag_warning=225 --display_error_number --diag_suppress=10068 -z -m"Sound_Masking.map" --stack_size=0x100 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/" -i"C:/Users/Matt/F2837xS_headers/cmd" --reread_libs --define=CLA_C=1 --display_error_number --xml_link_info="Sound_Masking_linkInfo.xml" --rom_model -o "Sound_Masking.out" "./main.obj" "./timers.obj" "./whiteNoise.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj" "../28069_RAM_lnk.cmd"  -l"rts2800_fpu32.lib" -l"F2837xS_RAM_CLA_lnk_cpu1.cmd" -l"F2837xS_Headers_nonBIOS.cmd" -l"libc.a" 
+<Linking>
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 20: error #10263: 
+   BEGIN memory range has already been specified
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 20: error #10264: 
+   BEGIN memory range overlaps existing memory range BEGIN
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 21: error #10263: 
+
+   RAMM0 memory range has already been specified
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 21: error #10264: 
+>> Compilation failure
+   RAMM0 memory range overlaps existing memory range RAMM0
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 26: error #10263: 
+   RESET memory range has already been specified
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 26: error #10264: 
+   RESET memory range overlaps existing memory range RESET
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 30: error #10263: 
+   BOOT_RSVD memory range has already been specified
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 30: error #10264: 
+   BOOT_RSVD memory range overlaps existing memory range BOOT_RSVD
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 31: error #10263: 
+   RAMM1 memory range has already been specified
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 31: error #10264: 
+   RAMM1 memory range overlaps existing memory range RAMM1
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: 
+   RAMGS0 memory range overlaps existing memory range RAML5
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: 
+   RAMGS0 memory range overlaps existing memory range RAML6
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: 
+   RAMGS0 memory range overlaps existing memory range RAML7
+"C:/Users/mwk130030/Desktop/Project_Omaha/Sound_Masking/CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: 
+   RAMGS0 memory range overlaps existing memory range RAML8
+error #10010: errors encountered during linking; "Sound_Masking.out" not built
+gmake: *** [Sound_Masking.out] Error 1
+gmake: Target `all' not remade because of errors.
+
+**** Build Finished ****

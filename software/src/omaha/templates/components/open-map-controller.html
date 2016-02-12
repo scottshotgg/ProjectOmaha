@@ -117,6 +117,7 @@
       _logResponse: function(event, data) {
         console.log(data.response);
         var a = document.getElementById('speaker-tooltip');   // I guess I'll just keep this as 'a'
+        
         a.speaker.VolumeLevel[0] = data.response.volume;
         a.speaker.VolumeLevel[1] = data.response.music;
         a.speaker.VolumeLevel[2] = data.response.paging;
@@ -125,15 +126,25 @@
         a.speaker.FadeTime = data.response.fadetime;
         a.speaker.FadeLevel = data.response.fadelevel;
 
-        for (i in data.response.Equalizer) {
-          a.speaker.Equalizer[i] = data.response.Equalizer[i];
-          console.log(i, data.response.Equalizer[i]);
+        console.log("Response:", data.response);
+        console.log("Speaker:", a.speaker);
+        a.speaker.PresetNames = [0];
+        a.speaker.Current = [0];
+
+        for (i in data.response.PresetNames) {
+          a.speaker.PresetNames[i] = data.response.PresetNames[i];
+          console.log(i, data.response.PresetNames[i]);
         }
-        console.log(a.speaker);
+
+        for (i in data.response.Current) {
+          a.speaker.Current[i] = data.response.Current[i];    // why does this have to be lower case
+          console.log(i, data.response.Current[i]);
+        }
+        console.log("Speaker", a.speaker);
         //speaker.volumeLevel = data.response.volume;
         //console.log(speaker.volumeLevel);
       },
-
+    
       renderMap: function() {
         var mapController = this;
         var container = document.getElementById('popup');
@@ -292,7 +303,7 @@
               console.log("Selected");
               var speaker = e.selected[0].getProperties().speaker
               console.log(e)
-              console.log(speaker.VolumeLevel);
+              console.log(speaker);
 
 
 

@@ -1,0 +1,89 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+CMD_SRCS += \
+../F2806x_Headers_nonBIOS.cmd \
+../Final.cmd 
+
+ASM_SRCS += \
+../DSP28xxx_SectionCopy_nonBIOS.asm \
+../F2806x_CodeStartBranch.asm \
+../FIR_f32.asm 
+
+CLA_SRCS += \
+../eq.cla 
+
+C_SRCS += \
+../Cla_Funcs.c \
+../communication.c \
+../main.c \
+../timers.c \
+../whiteNoise.c 
+
+OBJS += \
+./Cla_Funcs.obj \
+./DSP28xxx_SectionCopy_nonBIOS.obj \
+./F2806x_CodeStartBranch.obj \
+./FIR_f32.obj \
+./communication.obj \
+./eq.obj \
+./main.obj \
+./timers.obj \
+./whiteNoise.obj 
+
+ASM_DEPS += \
+./DSP28xxx_SectionCopy_nonBIOS.pp \
+./F2806x_CodeStartBranch.pp \
+./FIR_f32.pp 
+
+CLA_DEPS += \
+./eq.pp 
+
+C_DEPS += \
+./Cla_Funcs.pp \
+./communication.pp \
+./main.pp \
+./timers.pp \
+./whiteNoise.pp 
+
+CLA_DEPS__QUOTED += \
+"eq.pp" 
+
+C_DEPS__QUOTED += \
+"Cla_Funcs.pp" \
+"communication.pp" \
+"main.pp" \
+"timers.pp" \
+"whiteNoise.pp" 
+
+OBJS__QUOTED += \
+"Cla_Funcs.obj" \
+"DSP28xxx_SectionCopy_nonBIOS.obj" \
+"F2806x_CodeStartBranch.obj" \
+"FIR_f32.obj" \
+"communication.obj" \
+"eq.obj" \
+"main.obj" \
+"timers.obj" \
+"whiteNoise.obj" 
+
+ASM_DEPS__QUOTED += \
+"DSP28xxx_SectionCopy_nonBIOS.pp" \
+"F2806x_CodeStartBranch.pp" \
+"FIR_f32.pp" 
+
+C_SRCS__QUOTED += \
+"../Cla_Funcs.c" \
+"../communication.c" \
+"../main.c" \
+"../timers.c" \
+"../whiteNoise.c" 
+
+ASM_SRCS__QUOTED += \
+"../DSP28xxx_SectionCopy_nonBIOS.asm" \
+"../F2806x_CodeStartBranch.asm" \
+"../FIR_f32.asm" 
+
+

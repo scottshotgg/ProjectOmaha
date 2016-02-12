@@ -90,6 +90,8 @@ func GetAllSpeakers() []*ControllerStatus {
 
 		FROM speaker
 	`)
+
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -106,6 +108,8 @@ func GetAllSpeakers() []*ControllerStatus {
 		var fadeTime int8
 		var fadeLevel int8
 		var averagingMode int8
+		// var currentMode int
+		// var whichPreset int
 		var band0 int
 		var band1 int
 		var band2 int
@@ -127,6 +131,8 @@ func GetAllSpeakers() []*ControllerStatus {
 		var band18 int
 		var band19 int
 		var band20 int
+
+		// in here get the presets that go along with the speakers and use those variables 
 
 		if err := rows.Scan(&speakerID, &x, &y, 
 			&volumeLevel, 
@@ -189,6 +195,8 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var averagingMode int8
 	var x int
 	var y int
+	var name string		// might need to make a catch for this
+	var whichPreset int
 	var band0 int
 	var band1 int
 	var band2 int
@@ -218,7 +226,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			soundMaskingLevel,
 			fadeTime,
 			fadeLevel,
-			averagingMode, 
+			averagingMode,
 			band0,
 			band1,
 			band2,
@@ -238,7 +246,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			band16,
 			band17,
 			band18,
-			band19,
+			band19,			
 			band20
 		FROM speaker
 		WHERE speakerID=?;
@@ -273,10 +281,120 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&band20)
 	if err != nil {
 		log.Fatal(err)
-	}// the paging level might be able to be collapsed into one variable
-	speaker := &ControllerStatus{X: x, Y: y, VolumeLevel: [4]int8{volumeLevel, musicLevel, pagingLevel, soundMaskingLevel}, PagingLevel: [2]int8{fadeTime, fadeLevel}, AveragingMode: averagingMode, ID: speakerID, Equalizer: [21]int{band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}}
-	//log.Println(speaker.VolumeLevel)
-	//log.Println(speaker.Equalizer)
+	}
+	speaker := &ControllerStatus{X: x, Y: y, VolumeLevel: [4]int8{volumeLevel, musicLevel, pagingLevel, soundMaskingLevel}, PagingLevel: [2]int8{fadeTime, fadeLevel}, AveragingMode: averagingMode, ID: speakerID, Current: [21]int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}}
+
+
+	rows, err := DB.Query(`
+	SELECT 	name, whichPreset, 
+			band0,
+			band1,
+			band2,
+			band3,
+			band4,
+			band5,
+			band6,
+			band7,
+			band8,
+			band9,
+			band10,
+			band11,
+			band12,
+			band13,
+			band14,
+			band15,
+			band16,
+			band17,
+			band18,
+			band19,			
+			band20
+	FROM EqualizerPresets
+	WHERE speakerID=?;
+	`, speakerID)
+
+	defer rows.Close()
+
+	for rows.Next() {
+
+		err = rows.Scan(&name, &whichPreset, 
+				&band0,
+				&band1,
+				&band2,
+				&band3,
+				&band4,
+				&band5,
+				&band6,
+				&band7,
+				&band8,
+				&band9,
+				&band10,
+				&band11,
+				&band12,
+				&band13,
+				&band14,
+				&band15,
+				&band16,
+				&band17,
+				&band18,
+				&band19,
+				&band20)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		/*
+		log.Println(name, whichPreset, 
+				band0,
+				band1,
+				band2,
+				band3,
+				band4,
+				band5,
+				band6,
+				band7,
+				band8,
+				band9,
+				band10,
+				band11,
+				band12,
+				band13,
+				band14,
+				band15,
+				band16,
+				band17,
+				band18,
+				band19,
+				band20)
+		*/
+			//constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
+			speaker.PresetNames = append(speaker.PresetNames, name)
+			speaker.Equalizer = append(speaker.Equalizer, []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
+			log.Println(speaker.PresetNames, speaker.Equalizer)		// make sure that the two arrays are the same size
+
+		//log.Println("current", current)
+
+		// make current the one that is stored in the speaker table
+		/*
+		if(current == 0) {
+			constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
+			speaker.Equalizer  = append(speaker.Equalizer, constants)
+		} else {
+			speaker.Current = [21]int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
+			log.Println("hi from current:", speaker.Current)
+		}
+		*/
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// it is pulling from here but we need to figure out a way to distinguish which one should be loaded
+
+	//speaker.Equalizer = constant in Current
+	// might not need to append if we have the current in 
+	//log.Println(speaker.VolumeLevel
 	return speaker
 }
 

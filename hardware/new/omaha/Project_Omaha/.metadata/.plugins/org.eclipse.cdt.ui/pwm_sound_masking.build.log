@@ -1,0 +1,116 @@
+
+**** Build of configuration Debug for project pwm_sound_masking ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building target: pwm_sound_masking.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --tmu_support=tmu0 --cla_support=cla1 --vcu_support=vcu2 --advice:performance=all -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"pwm_sound_masking.map" --stack_size=0x200 --warn_sections -i"C:/Users/mwk130030/Desktop/Project_Omaha/pwm_sound_masking/CPU1_RAM" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="pwm_sound_masking_linkInfo.xml" --rom_model -o "pwm_sound_masking.out" "./main.obj" "./source/F2837xS_Adc.obj" "./source/F2837xS_CodeStartBranch.obj" "./source/F2837xS_CpuTimers.obj" "./source/F2837xS_DBGIER.obj" "./source/F2837xS_DefaultISR.obj" "./source/F2837xS_Dma.obj" "./source/F2837xS_ECap.obj" "./source/F2837xS_EPwm.obj" "./source/F2837xS_EQep.obj" "./source/F2837xS_Emif.obj" "./source/F2837xS_GlobalVariableDefs.obj" "./source/F2837xS_Gpio.obj" "./source/F2837xS_I2C.obj" "./source/F2837xS_Mcbsp.obj" "./source/F2837xS_PieCtrl.obj" "./source/F2837xS_PieVect.obj" "./source/F2837xS_Sci.obj" "./source/F2837xS_Spi.obj" "./source/F2837xS_SysCtrl.obj" "./source/F2837xS_TempSensorConv.obj" "./source/F2837xS_Upp.obj" "./source/F2837xS_sci_io.obj" "./source/F2837xS_sdfm_drivers.obj" "./source/F2837xS_struct.obj" "./source/F2837xS_usDelay.obj" "./source/FIR_f32.obj" "./include/examples_setup.obj" "../CPU1_RAM/source/F2837xS_Adc.obj" "../CPU1_RAM/source/F2837xS_CodeStartBranch.obj" "../CPU1_RAM/source/F2837xS_CpuTimers.obj" "../CPU1_RAM/source/F2837xS_DBGIER.obj" "../CPU1_RAM/source/F2837xS_DefaultISR.obj" "../CPU1_RAM/source/F2837xS_Dma.obj" "../CPU1_RAM/source/F2837xS_ECap.obj" "../CPU1_RAM/source/F2837xS_EPwm.obj" "../CPU1_RAM/source/F2837xS_EQep.obj" "../CPU1_RAM/source/F2837xS_Emif.obj" "../CPU1_RAM/source/F2837xS_GlobalVariableDefs.obj" "../CPU1_RAM/source/F2837xS_Gpio.obj" "../CPU1_RAM/source/F2837xS_I2C.obj" "../CPU1_RAM/source/F2837xS_Mcbsp.obj" "../CPU1_RAM/source/F2837xS_PieCtrl.obj" "../CPU1_RAM/source/F2837xS_PieVect.obj" "../CPU1_RAM/source/F2837xS_Sci.obj" "../CPU1_RAM/source/F2837xS_Spi.obj" "../CPU1_RAM/source/F2837xS_SysCtrl.obj" "../CPU1_RAM/source/F2837xS_TempSensorConv.obj" "../CPU1_RAM/source/F2837xS_Upp.obj" "../CPU1_RAM/source/F2837xS_sci_io.obj" "../CPU1_RAM/source/F2837xS_sdfm_drivers.obj" "../CPU1_RAM/source/F2837xS_struct.obj" "../CPU1_RAM/source/F2837xS_usDelay.obj" "../CPU1_RAM/source/FIR_f32.obj" "../CPU1_RAM/eq.obj" "../CPU1_RAM/main.obj" "../CPU1_RAM/include/examples_setup.obj" "../28377S_FLASH_lnk.cmd" "../CPU1_RAM/F2837xS_Headers_nonBIOS.cmd" "../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd" "../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd" "../CPU1_FLASH/F2837xS_Headers_nonBIOS.cmd"  
+<Linking>
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 20: error #10263: BEGIN memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 21: error #10263: RAMM0 memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 21: error #10264: RAMM0 memory range overlaps existing memory range RAMM0
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 24: error #10263: RAMLS4 memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 24: error #10264: RAMLS4 memory range overlaps existing memory range RAMLS4
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 26: error #10263: RESET memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 26: error #10264: RESET memory range overlaps existing memory range RESET
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 30: error #10263: BOOT_RSVD memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 30: error #10264: BOOT_RSVD memory range overlaps existing memory range BOOT_RSVD
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 31: error #10263: RAMM1 memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 31: error #10264: RAMM1 memory range overlaps existing memory range RAMM1
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10263: RAMGS0 memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS0
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS1
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS2
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS3
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS4
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS5
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS6
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS7
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS8
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 39: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS9
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 49: error #10263: RAMGS10 memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 49: error #10264: RAMGS10 memory range overlaps existing memory range RAMGS10
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 49: error #10264: RAMGS10 memory range overlaps existing memory range RAMGS11
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 51: error #10263: RAMGS12 memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 51: error #10264: RAMGS12 memory range overlaps existing memory range RAMGS12
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 52: error #10263: RAMGS13 memory range has already been specified
+"../CPU1_RAM/F2837xS_RAM_CLA_lnk_cpu1.cmd", line 52: error #10264: RAMGS13 memory range overlaps existing memory range RAMGS13
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 20: error #10263: BEGIN memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 20: error #10263: BEGIN memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 20: error #10264: BEGIN memory range overlaps existing memory range BEGIN
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 21: error #10263: RAMM0 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 21: error #10264: RAMM0 memory range overlaps existing memory range RAMM0
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 21: error #10263: RAMM0 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 21: error #10264: RAMM0 memory range overlaps existing memory range RAMM0
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 22: error #10263: RAMD0 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 22: error #10264: RAMD0 memory range overlaps existing memory range RAMD0
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 23: error #10263: RAMLS4 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 23: error #10264: RAMLS4 memory range overlaps existing memory range RAMLS4
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 23: error #10263: RAMLS4 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 23: error #10264: RAMLS4 memory range overlaps existing memory range RAMLS4
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 24: error #10263: RAMLS5 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 24: error #10264: RAMLS5 memory range overlaps existing memory range RAMLS5
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 25: error #10263: RAMGS14 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 25: error #10264: RAMGS14 memory range overlaps existing memory range RAMGS14
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 26: error #10263: RAMGS15 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 26: error #10264: RAMGS15 memory range overlaps existing memory range RAMGS15
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 27: error #10263: RESET memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 27: error #10264: RESET memory range overlaps existing memory range RESET
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 27: error #10263: RESET memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 27: error #10264: RESET memory range overlaps existing memory range RESET
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 30: error #10263: FLASHA memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 30: error #10264: FLASHA memory range overlaps existing memory range FLASHA
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 31: error #10263: FLASHB memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 31: error #10264: FLASHB memory range overlaps existing memory range FLASHB
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 32: error #10263: FLASHC memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 32: error #10264: FLASHC memory range overlaps existing memory range FLASHC
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 33: error #10263: FLASHD memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 33: error #10264: FLASHD memory range overlaps existing memory range FLASHD
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 34: error #10263: FLASHE memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 34: error #10264: FLASHE memory range overlaps existing memory range FLASHE
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 35: error #10263: FLASHF memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 35: error #10264: FLASHF memory range overlaps existing memory range FLASHF
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 36: error #10263: FLASHG memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 36: error #10264: FLASHG memory range overlaps existing memory range FLASHG
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 37: error #10263: FLASHH memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 37: error #10264: FLASHH memory range overlaps existing memory range FLASHH
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 38: error #10263: FLASHI memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 38: error #10264: FLASHI memory range overlaps existing memory range FLASHI
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 39: error #10263: FLASHJ memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 39: error #10264: FLASHJ memory range overlaps existing memory range FLASHJ
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 40: error #10263: FLASHK memory range has already been specified
+
+>> Compilation failure
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 40: error #10264: FLASHK memory range overlaps existing memory range FLASHK
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 41: error #10263: FLASHL memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 41: error #10264: FLASHL memory range overlaps existing memory range FLASHL
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 42: error #10263: FLASHM memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 42: error #10264: FLASHM memory range overlaps existing memory range FLASHM
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 43: error #10263: FLASHN memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 43: error #10264: FLASHN memory range overlaps existing memory range FLASHN
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 47: error #10263: BOOT_RSVD memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 47: error #10264: BOOT_RSVD memory range overlaps existing memory range BOOT_RSVD
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 47: error #10263: BOOT_RSVD memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 47: error #10264: BOOT_RSVD memory range overlaps existing memory range BOOT_RSVD
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 48: error #10263: RAMM1 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 48: error #10264: RAMM1 memory range overlaps existing memory range RAMM1
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 48: error #10263: RAMM1 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 48: error #10264: RAMM1 memory range overlaps existing memory range RAMM1
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 50: error #10263: RAMLS0 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 50: error #10264: RAMLS0 memory range overlaps existing memory range RAMLS0
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 51: error #10263: RAMLS1 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 51: error #10264: RAMLS1 memory range overlaps existing memory range RAMLS1
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 52: error #10263: RAMLS2 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 52: error #10264: RAMLS2 memory range overlaps existing memory range RAMLS2
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 53: error #10263: RAMLS3 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 53: error #10264: RAMLS3 memory range overlaps existing memory range RAMLS3
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 56: error #10263: RAMGS0 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 56: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS0
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 56: error #10263: RAMGS0 memory range has already been specified
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 56: error #10264: RAMGS0 memory range overlaps existing memory range RAMGS0
+"../CPU1_FLASH/2837xS_FLASH_CLA_lnk_cpu1.cmd", line 57: error #10264: RAMGS1 memory range overlaps existing memory range RAMGS0
+fatal error #99900: error limit reached; 100 errors detected
+gmake: *** [pwm_sound_masking.out] Error 1
+gmake: Target `all' not remade because of errors.
+
+**** Build Finished ****

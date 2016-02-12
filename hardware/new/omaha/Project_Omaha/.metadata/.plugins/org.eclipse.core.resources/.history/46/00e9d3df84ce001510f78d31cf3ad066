@@ -1,0 +1,9 @@
+#ifndef _WHITE_NOISE_H_
+#define _WHITE_NOISE_H_
+
+#include "constants.h"
+
+
+void 	loadWhiteNoiseSamples(int startingSample, int length);
+
+#endif

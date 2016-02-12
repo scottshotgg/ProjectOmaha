@@ -1,0 +1,164 @@
+
+**** Build of configuration Debug for project Example_2805xClaAdcFirFlash ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building target: Example_2805xClaAdcFirFlash.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --cla_support=cla0 -g --define="_DEBUG" --define="LARGE_MODEL" --quiet --verbose_diagnostics --diag_warning=225 --display_error_number --diag_suppress=10063 --issue_remarks --output_all_syms --cdebug_asm_data -z -m"Example_2805xClaAdcFirFlash.map" --stack_size=0x380 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"C:/ti/controlSUITE/device_support/f2805x/v104/F2805x_examples_ccsv5/cla_adc_fir_flash" -i"C:/ti/controlSUITE/device_support/f2805x/v104/F2805x_common/lib" -i"C:/ti/controlSUITE/libs/math/IQmath/v160/lib" --reread_libs --verbose_diagnostics --issue_remarks --xml_link_info="Example_2805xClaAdcFirFlash_linkInfo.xml" --entry_point=code_start --rom_model -o "Example_2805xClaAdcFirFlash.out" "./CLA_FIR.obj" "./Example_2805xClaAdcFirFlash.obj" "./F2805x_Adc.obj" "./F2805x_CodeStartBranch.obj" "./F2805x_DefaultIsr.obj" "./F2805x_GlobalVariableDefs.obj" "./F2805x_Gpio.obj" "./F2805x_PieCtrl.obj" "./F2805x_PieVect.obj" "./F2805x_SysCtrl.obj" "./F2805x_usDelay.obj" "C:/ti/controlSUITE/device_support/f2805x/v104/F2805x_headers/cmd/F2805x_Headers_nonBIOS.cmd"  -l"rts2800_ml.lib" -l"IQmath.lib" 
+warning #10247-D: creating output section "Cla1Prog" without a SECTIONS
+   specification
+warning #10247-D: creating output section ".text" without a SECTIONS
+   specification
+warning #10247-D: creating output section ".cinit" without a SECTIONS
+   specification
+warning #10247-D: creating output section "Cla1ToCpuMsgRAM" without a SECTIONS
+   specification
+warning #10247-D: creating output section ".ebss" without a SECTIONS
+   specification
+warning #10247-D: creating output section "CpuToCla1MsgRAM" without a SECTIONS
+   specification
+warning #10247-D: creating output section "ramfuncs" without a SECTIONS
+   specification
+warning #10247-D: creating output section "codestart" without a SECTIONS
+   specification
+warning #10247-D: creating output section ".econst" without a SECTIONS
+   specification
+warning #10247-D: creating output section ".reset" without a SECTIONS
+   specification
+error #10265: no valid memory range(NULL) available for placement of ".text"
+error #10099-D: program will not fit into available memory.  placement with
+   alignment/blocking fails for section ".text" size 0x74f page 0
+error #10099-D: program will not fit into available memory.  run placement with
+   alignment/blocking fails for section ".stack" size 0x380 page 1.  Available
+   memory ranges:
+   DEV_EMU      size: 0x105        unused: 0xfb         max hole: 0xfb
+   SYS_PWR_CTL   size: 0x3          unused: 0x0          max hole: 0x0
+   FLASH_REGS   size: 0x60         unused: 0x58         max hole: 0x58
+   ADC_RESULT   size: 0x20         unused: 0x10         max hole: 0x10
+   DCSM_Z1      size: 0x30         unused: 0xc          max hole: 0xc
+   DCSM_Z2      size: 0x30         unused: 0xc          max hole: 0xc
+   DCSM_COMMON   size: 0x10         unused: 0x8          max hole: 0x8
+   CPU_TIMER0   size: 0x8          unused: 0x0          max hole: 0x0
+   CPU_TIMER1   size: 0x8          unused: 0x0          max hole: 0x0
+   CPU_TIMER2   size: 0x8          unused: 0x0          max hole: 0x0
+   PIE_CTRL     size: 0x20         unused: 0x6          max hole: 0x6
+   PIE_VECT     size: 0x100        unused: 0x0          max hole: 0x0
+   CLA1         size: 0x80         unused: 0x40         max hole: 0x40
+   ECANA        size: 0x40         unused: 0xc          max hole: 0xc
+   ECANA_LAM    size: 0x40         unused: 0x0          max hole: 0x0
+   ECANA_MOTS   size: 0x40         unused: 0x0          max hole: 0x0
+   ECANA_MOTO   size: 0x40         unused: 0x0          max hole: 0x0
+   ECANA_MBOX   size: 0x100        unused: 0x0          max hole: 0x0
+   ANASUBSYS    size: 0x100        unused: 0x0          max hole: 0x0
+   EPWM1        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM2        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM3        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM4        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM5        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM6        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM7        size: 0x40         unused: 0x0          max hole: 0x0
+   ECAP1        size: 0x20         unused: 0x0          max hole: 0x0
+   EQEP1        size: 0x40         unused: 0x1e         max hole: 0x1e
+   GPIOCTRL     size: 0x40         unused: 0x0          max hole: 0x0
+   GPIODAT      size: 0x20         unused: 0x0          max hole: 0x0
+   GPIOINT      size: 0x20         unused: 0x0          max hole: 0x0
+   SYSTEM       size: 0x20         unused: 0x0          max hole: 0x0
+   SPIA         size: 0x10         unused: 0x0          max hole: 0x0
+   SCIA         size: 0x10         unused: 0x0          max hole: 0x0
+   NMIINTRUPT   size: 0x10         unused: 0xa          max hole: 0xa
+   XINTRUPT     size: 0x10         unused: 0x5          max hole: 0x5
+   ADC          size: 0x80         unused: 0x31         max hole: 0x31
+   SCIB         size: 0x10         unused: 0x0          max hole: 0x0
+   SCIC         size: 0x10         unused: 0x0          max hole: 0x0
+   I2CA         size: 0x40         unused: 0x1e         max hole: 0x1e
+   DCSM_OTP_Z2   size: 0x6          unused: 0x0          max hole: 0x0
+   DCSM_OTP_Z1   size: 0x6          unused: 0x0          max hole: 0x0       
+error #10099-D: program will not fit into available memory.  run placement with
+   alignment/blocking fails for section ".ebss" size 0x210 page 1.  Available
+   memory ranges:
+   DEV_EMU      size: 0x105        unused: 0xfb         max hole: 0xfb
+   SYS_PWR_CTL   size: 0x3          unused: 0x0          max hole: 0x0
+   FLASH_REGS   size: 0x60         unused: 0x58         max hole: 0x58
+   ADC_RESULT   size: 0x20         unused: 0x10         max hole: 0x10
+   DCSM_Z1      size: 0x30         unused: 0xc          max hole: 0xc
+   DCSM_Z2      size: 0x30         unused: 0xc          max hole: 0xc
+   DCSM_COMMON   size: 0x10         unused: 0x8          max hole: 0x8
+   CPU_TIMER0   size: 0x8          unused: 0x0          max hole: 0x0
+   CPU_TIMER1   size: 0x8          unused: 0x0          max hole: 0x0
+   CPU_TIMER2   size: 0x8          unused: 0x0          max hole: 0x0
+   PIE_CTRL     size: 0x20         unused: 0x6          max hole: 0x6
+   PIE_VECT     size: 0x100        unused: 0x0          max hole: 0x0
+   CLA1         size: 0x80         unused: 0x40         max hole: 0x40
+   ECANA        size: 0x40         unused: 0xc          max hole: 0xc
+   ECANA_LAM    size: 0x40         unused: 0x0          max hole: 0x0
+   ECANA_MOTS   size: 0x40         unused: 0x0          max hole: 0x0
+   ECANA_MOTO   size: 0x40         unused: 0x0          max hole: 0x0
+   ECANA_MBOX   size: 0x100        unused: 0x0          max hole: 0x0
+   ANASUBSYS    size: 0x100        unused: 0x0          max hole: 0x0
+   EPWM1        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM2        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM3        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM4        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM5        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM6        size: 0x40         unused: 0x0          max hole: 0x0
+   EPWM7        size: 0x40         unused: 0x0          max hole: 0x0
+   ECAP1        size: 0x20         unused: 0x0          max hole: 0x0
+   EQEP1        size: 0x40         unused: 0x1e         max hole: 0x1e
+   GPIOCTRL     size: 0x40         unused: 0x0          max hole: 0x0
+   GPIODAT      size: 0x20         unused: 0x0          max hole: 0x0
+   GPIOINT      size: 0x20         unused: 0x0          max hole: 0x0
+   SYSTEM       size: 0x20         unused: 0x0          max hole: 0x0
+   SPIA         size: 0x10         unused: 0x0          max hole: 0x0
+   SCIA         size: 0x10         unused: 0x0          max hole: 0x0
+   NMIINTRUPT   size: 0x10         unused: 0xa          max hole: 0xa
+   XINTRUPT     size: 0x10         unused: 0x5          max hole: 0x5
+   ADC          size: 0x80         unused: 0x31         max hole: 0x31
+   SCIB         size: 0x10         unused: 0x0          max hole: 0x0
+   SCIC         size: 0x10         unused: 0x0          max hole: 0x0
+   I2CA         size: 0x40         unused: 0x1e         max hole: 0x1e
+   DCSM_OTP_Z2   size: 0x6          unused: 0x0          max hole: 0x0
+   DCSM_OTP_Z1   size: 0x6          unused: 0x0          max hole: 0x0       
+error #10099-D: program will not fit into available memory.  placement with
+   alignment/blocking fails for section ".econst" size 0x100 page 0.  Available
+   memory ranges:
+
+error #10099-D: program will not fit into available memory.  placement with
+   alignment/blocking fails for section "Cla1Prog" size 0x70 page 0.  Available
+   memory ranges:
+
+error #10099-D: program will not fit into available memory.  placement with
+   alignment/blocking fails for section "ramfuncs" size 0x4d page 0.  Available
+   memory ranges:
+
+error #10099-D: program will not fit into available memory.  placement with
+   alignment/blocking fails for section ".cinit" size 0x23 page 0.  Available
+   memory ranges:
+
+error #10099-D: program will not fit into available memory.  placement with
+   alignment/blocking fails for section ".reset" size 0x2 page 0.  Available
+   memory ranges:
+
+error #10099-D: program will not fit into available memory.  placement with
+   alignment/blocking fails for section "codestart" size 0x2 page 0.  Available
+   memory ranges:
+
+
+ undefined           first referenced                 
+  symbol                 in file                      
+ ---------           ----------------                 
+ _Cla1funcsLoadSize  ./Example_2805xClaAdcFirFlash.obj
+
+>> Compilation failure
+ _Cla1funcsLoadStart ./Example_2805xClaAdcFirFlash.obj
+ _Cla1funcsRunStart  ./Example_2805xClaAdcFirFlash.obj
+ _RamfuncsLoadSize   ./Example_2805xClaAdcFirFlash.obj
+ _RamfuncsLoadStart  ./Example_2805xClaAdcFirFlash.obj
+ _RamfuncsRunStart   ./Example_2805xClaAdcFirFlash.obj
+
+error #10234-D: unresolved symbols remain
+error #10010: errors encountered during linking;
+   "Example_2805xClaAdcFirFlash.out" not built
+gmake: *** [Example_2805xClaAdcFirFlash.out] Error 1
+gmake: Target `all' not remade because of errors.
+
+**** Build Finished ****

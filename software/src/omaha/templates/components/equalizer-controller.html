@@ -6,6 +6,11 @@
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 <link rel="stylesheet" href="jquery-ui-1.11.4.css">
 <script src="jquery-1.10.2.js"></script>
 <!--<script src="jquery-2.2.0.js"></script>-->
@@ -38,7 +43,7 @@
       paper-button {
         background-color: #3367d6;
         color: #fff;
-        margin-top: 10px;
+        margin-top: 1px;
       }
 
       .header.paper-card .title-text.paper-card {
@@ -49,7 +54,7 @@
 
    <paper-card heading="Equalizer" elevation="4">
       <div class="card-content">
-        <div id="slider" class="layout horizontal">
+        <div id="sliderequalizer" class="layout horizontal">
           <div id="custom_container"> 
             <div class="custom one"> <input id="text1" readonly/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" value="80" readonly/></div>
             <div class="custom two"> <input id="text2" readonly/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
@@ -78,6 +83,18 @@
 
       <div class="card-actions">
         <paper-button on-click="_setEqualizerClicked">set equalizer</paper-button>
+        <paper-dropdown-menu id="equalizerDropdown" no-label-float label="Equalizer Preset:">
+          <paper-listbox attr-for-selected="value" selected="{{selection}}" id="equalizerMenu" class="dropdown-content" value="0">
+            <paper-item value="Armstrong">Armstrong</paper-item>
+            <paper-item value="Bold Beranek Newman">Bold Beranek Newman</paper-item>
+            <paper-item value="Cambridge">Cambridge</paper-item>
+            <paper-item value="Close Office (43?)">Close Office (43?)</paper-item>
+            <paper-item value="Soft dB Default">Soft dB Default</paper-item>
+            <paper-item value="Soft dB Mellow">Soft dB Mellow</paper-item>
+            <paper-item value="custom">custom</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <span>{{value}}</span>
       </div>
     </paper-card>
     <paper-toast id="toast">Equalizer set to <span>{{iirConstantsString}}</span></paper-toast>
@@ -96,15 +113,17 @@
       
       properties: {
         internalEqualizer: String,
+        speakerId: {
+          type: Number
+        },
+        speaker: {
+          type: Object
+        },
 
         equalizer: {
           type: String,
           notify: true,
           observer: '_setInternalEqualizer'
-        },
-
-        speakerId: {
-          type: Number
         }
       },
 
@@ -148,6 +167,46 @@
           func(elem);
         }, 500);
       },*/
+
+      listeners: {
+        'equalizerMenu.iron-select': '_presetSelectionChanged'
+      },
+      
+      _presetSelectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
+        console.log(this.speakerId);    // This says the speakerId is undefined
+
+        var menu = document.getElementById('equalizerMenu');
+
+        console.log(this.speaker);
+
+
+        //if(this.$.menu.selected + 1)
+
+        //menu.averaging = this.$.menu.selected + 1;
+
+        var selected = this.$.equalizerMenu.selected.toLowerCase().valueOf(); 
+
+        for (var i = 0; i < this.speaker.PresetNames.length; i++) {
+          console.log("\"" + this.$.equalizerMenu.selected.toLowerCase().valueOf() + "\"", " \"" + this.speaker.PresetNames[i].toLowerCase() + "\"");
+          if(selected == this.speaker.PresetNames[i].toLowerCase().valueOf()) {
+            console.log("hi");
+          }
+        }
+
+
+          // Need to put a toast thing here like we have on the volume selector page
+         /*
+          var updatedAttributes = ["averaging"];
+          var attributeValues = {
+            "averaging": this.$.menu.selected + 1
+          };
+          this.$.selectModeAjax.body = {              // might use this to put in the database
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,                        
+            "speaker": this.speakerId     // You can see that this is getting zero in the terminal from the print in  speakerHandlers.go. This is because the value for this.speakerId is undefined for some reason. When I hardcoded 107 it worked fine, which is expected. Just not sure why this is getting undefined....
+          };
+          this.$.selectModeAjax.generateRequest();
+      */},
       
       resetKnob: function(elem) {
         elem.prevTimeout = 0;

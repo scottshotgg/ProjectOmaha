@@ -1,0 +1,173 @@
+/*
+ *
+ *  Author: Matthew Kramer
+ *  Revision 1.0 (8 February 2016)
+ *
+ *  THIS CODE IS CONFIDENTIAL AND FOR THE EYES OF A SELECT FEW
+ *
+ * 	CLA_Funcs.c version 1.0
+ *
+ *	Source code which contains CLA initialization functions as well as the ISR handlers for when the CLA completes a task
+ *
+ *	The CPU will tell the CLA to execute a task (via interrupt), the CLA will then execute the task while the CPU continues to work, once the CLA is finished, it throws an interrupt back at the cpu
+ *
+ *	Cla1Task* 		functions contain the actual CLA program
+ *	cla1_task*_isr	functions contain the program that the cpu will execute after the cla is complete with its task
+ *
+ *	The CLA programs are located in eq.cla
+ *
+ *	Three Tasks are written for the CLA. Their priority decreases as the Task number increases (Task 1 highest priority)
+ *	Task 1 is used when the user wants to modify the equalizer. It adjusts the BIquad filter structure that corresponds to the appropiate band
+ *	Task 2 is used for executing the filter.
+ *	Task 3 is used for initializing CLA variables. All biquad structures have a gain of 0db initially. Cla variables cannot be initialized at compile time.
+ *
+ *	Task 1's CPU ISR does nothing
+ *	Task 2's CPU ISR does volume adjustment, mixes the soundmasking with the music/paging,
+ *
+ *
+ *
+ *	Cla_init initializes CLA
+ *
+ *
+*/
+
+#include "Cla_Shared.h"
+#include "DSP28x_Project.h"
+#include "constants.h"
+#include "timers.h"
+extern uint16_t Cla1funcsRunStart, Cla1funcsLoadStart, Cla1funcsLoadSize;
+extern uint16_t Cla1mathTablesRunStart, Cla1mathTablesLoadStart, Cla1mathTablesLoadSize;
+extern uint16_t Cla1Prog_Start;
+
+extern int 		scalar;
+extern int		ADCReading_music;
+extern int 		ADCReading_paging;
+extern float 	Sfactor;
+extern float	Mfactor;
+extern float 	Vfactor;
+extern float	initialS;
+extern float 	fadeTo;
+int		   		hrpwm;
+int		   		pwm;
+int				music;
+int				masking;
+int				mixed;
+extern int		count;
+extern int		paging;
+extern int		hasFaded;
+extern int		fadeConstant;
+void fade(float toValue, int rate);
+void unFade(float toValue, int rate);
+
+
+
+void Cla_Init(){
+
+	EALLOW;
+	memcpy(&Cla1funcsRunStart, &Cla1funcsLoadStart, (Uint32)&Cla1funcsLoadSize);					//CLA code is written in flash. Copy it over to RAM for execution
+	memcpy(&Cla1mathTablesRunStart, &Cla1mathTablesLoadStart, (Uint32)&Cla1mathTablesLoadSize);		//Math tables the CLA needs for sin, cos and exp functions. Again needs to be copied from FLASH to RAM for execution
+	Cla1Regs.MMEMCFG.bit.PROGE = 1;																	//let the CLA know everything has been copied over
+	Cla1Regs.MVECT1 = (Uint16)((Uint32)&Cla1Task1 - (Uint32)&Cla1Prog_Start);						//Map out locations of CLA program space
+	Cla1Regs.MVECT2 = (Uint16)((Uint32)&Cla1Task2 - (Uint32)&Cla1Prog_Start);
+	Cla1Regs.MVECT3 = (Uint16)((Uint32)&Cla1Task3 - (Uint32)&Cla1Prog_Start);
+	Cla1Regs.MPISRCSEL1.bit.PERINT1SEL = CLA_INT1_NONE;												//Currently Cla tasks are called by calling the function "CLA1ForceTask*"
+	Cla1Regs.MPISRCSEL1.bit.PERINT2SEL = CLA_INT2_NONE;
+	Cla1Regs.MPISRCSEL1.bit.PERINT3SEL = CLA_INT3_NONE;
+	PieVectTable.CLA1_INT1 = &cla1_task1_isr;														//map out ISRs for the CLA
+	PieVectTable.CLA1_INT2 = &cla1_task2_isr;
+	PieVectTable.CLA1_INT3 = &cla1_task3_isr;
+	Cla1Regs.MIER.all = 0x0007;
+	PieCtrlRegs.PIEIER11.all = 0x0007;
+	IER |= (M_INT11);
+	Cla1Regs.MMEMCFG.all |= CLA_PROG_ENABLE | CLARAM0_ENABLE | CLARAM1_ENABLE | CLARAM2_ENABLE | CLA_RAM0CPUE;
+	Cla1Regs.MCTL.bit.IACKE = 1;
+	EDIS;
+
+}
+
+__interrupt void cla1_task1_isr(void){ //
+
+
+	PieCtrlRegs.PIEACK.all |= M_INT11;
+
+}
+
+__interrupt void cla1_task2_isr(void){ //After the CLA has finished adjusting filter this will be called
+			//percentage variable percentge of sound masking vs music. .1 = 10% soundmasking
+	masking = outputFromCLA*Sfactor;
+	GpioDataRegs.GPATOGGLE.bit.GPIO12 = 1;
+	if(paging){
+		music = (ADCReading_paging - 2047);
+		if(!hasFaded)
+			fade(fadeTo, fadeConstant);
+	}
+
+	else
+			music = (ADCReading_music - 2047)*Mfactor;
+
+	if(!paging && hasFaded){
+		unFade(initialS, fadeConstant);
+		music = (ADCReading_paging - 2047)*1.3;
+	}
+
+	if ( music < 0 && masking < 0 ) {
+
+	mixed = (music + masking) - ((music * masking)/(-2000));
+	}
+	else if ( music > 0 && masking > 0 ) {
+
+	mixed = (music + masking) - ((music * masking)/(2000));
+	}
+	else {
+
+	mixed = music + masking;
+	}
+
+	mixed = (mixed*Vfactor + 2000);
+	pwm = (mixed)/scalar;
+	hrpwm = ((( (float)mixed/scalar - pwm)*92));
+	EPwm2Regs.CMPA.half.CMPA = pwm;         // set duty 50% initially
+
+	EPwm2Regs.CMPA.half.CMPAHR = hrpwm << 8;
+	PieCtrlRegs.PIEACK.all |= M_INT11;
+
+}
+
+__interrupt void cla1_task3_isr(void){ //After the CLA initializes this will be called.
+	// Acknowledge the end-of-task interrupt for task 3
+	PieCtrlRegs.PIEACK.all |= M_INT11;
+
+}
+
+
+void fade(float toValue, int rate){
+
+
+	if(count == rate){
+		count = 0;
+		if(Sfactor > toValue)
+			Sfactor = Sfactor - .01*initialS;
+		else{
+			hasFaded = 1;
+			count = -1;
+		}
+	}
+	else;
+	count++;
+}
+
+void unFade(float toValue, int rate){
+
+	if(count == rate){
+		count = 0;
+		if(Sfactor < toValue)
+			Sfactor = Sfactor + .01*initialS;
+		else{
+			hasFaded = 0;
+			count = -1;
+			Sfactor = initialS;
+		}
+	}
+	else;
+	count++;
+}

@@ -1,0 +1,16 @@
+
+**** Build of configuration Debug for project Example_2806xClaAdcFirFlash ****
+
+"C:\\ti\\ccsv6\\utils\\bin\\gmake" -k all 
+'Building file: ../Example_2806xClaAdcFirFlash.c'
+'Invoking: C2000 Compiler'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" --include_path="/packages/ti/xdais" --include_path="C:/ti/controlSUITE/device_support/f2806x/v150/F2806x_headers/include" --include_path="C:/ti/controlSUITE/device_support/f2806x/v150/F2806x_common/include" --include_path="C:/ti/controlSUITE/libs/math/IQmath/v160/include" --include_path="C:/ti/controlSUITE/libs/math/FPUfastRTS/V100/include" -g --define="_DEBUG" --define="LARGE_MODEL" --quiet --diag_warning=225 --verbose_diagnostics --issue_remarks --diag_suppress=10063 --cdebug_asm_data --output_all_syms --preproc_with_compile --preproc_dependency="Example_2806xClaAdcFirFlash.pp"  "../Example_2806xClaAdcFirFlash.c"
+'Finished building: ../Example_2806xClaAdcFirFlash.c'
+' '
+'Building target: Example_2806xClaAdcFirFlash.out'
+'Invoking: C2000 Linker'
+"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/bin/cl2000" -v28 -ml -mt --float_support=fpu32 --cla_support=cla0 --vcu_support=vcu0 -g --define="_DEBUG" --define="LARGE_MODEL" --quiet --diag_warning=225 --verbose_diagnostics --issue_remarks --diag_suppress=10063 --cdebug_asm_data --output_all_syms -z -m"Example_2806xClaAdcFirFlash.map" --stack_size=0x200 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_6.4.6/include" -i"C:/ti/controlSUITE/device_support/f2806x/v150/F2806x_common/lib" -i"C:/ti/controlSUITE/libs/math/IQmath/v160/lib" -i"C:/ti/controlSUITE/libs/math/FPUfastRTS/V100/lib" --priority --reread_libs --verbose_diagnostics --issue_remarks --xml_link_info="Example_2806xClaAdcFirFlash_linkInfo.xml" --entry_point=code_start --rom_model -o "Example_2806xClaAdcFirFlash.out" -l"rts2800_fpu32_fast_supplement.lib" -l"rts2800_fpu32.lib" "./CLA_FIR.obj" "./Example_2806xClaAdcFirFlash.obj" "./F2806x_Adc.obj" "./F2806x_CodeStartBranch.obj" "./F2806x_DefaultIsr.obj" "./F2806x_GlobalVariableDefs.obj" "./F2806x_Gpio.obj" "./F2806x_PieCtrl.obj" "./F2806x_PieVect.obj" "./F2806x_SysCtrl.obj" "./F2806x_usDelay.obj" "../F28069_CLA_lnk.cmd" "C:/ti/controlSUITE/device_support/f2806x/v150/F2806x_headers/cmd/F2806x_Headers_nonBIOS.cmd"  -l"IQmath_fpu32.lib" 
+'Finished building target: Example_2806xClaAdcFirFlash.out'
+' '
+
+**** Build Finished ****

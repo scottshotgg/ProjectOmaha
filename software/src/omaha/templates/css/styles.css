@@ -20,7 +20,7 @@ section {
   margin: 20px;
 }
 
-a, a:hover {
+a, a:h1 {
   text-decoration: none;
 }
 
@@ -129,12 +129,17 @@ paper-card {
   border: 0;
   font-weight: bold; 
   font-size: calc(.018 * 100vw);
-  width: calc(.028 * 100vw);
+  /*width: calc(.028 * 100vw);*/
+  width: 220%;
   color: #3367d6;
   text-align: center;
   /* Make this a percentage */
   margin-left: calc(50% - .022 * 100vw);
   margin-bottom: 100%; /* This as 20 */
+}
+
+#equalizerMenu {
+  width: 230px;
 }
 
 .custom > .bands {
@@ -150,10 +155,6 @@ paper-card {
   /* Make this a percentage */
   margin-left: calc(50% - .022 * 100vw);
   margin-top: 100%; /* This as 20 */
-}
-
-#onek {
-  
 }
 
 .custom.one {
@@ -182,27 +183,5 @@ paper-card {
 
 /* this header shit doesnt do anything */
 
-#header {
-  height: 100px;
-  margin: -10px;
-  background: #4285f4;
-}
-
-#header nav.top {
-  color: #a6abab;
-  background: #4285f4;
-  z-index: -1;
-  height: 100%;
-}
-
-#square {
-  width: 80%;
-  left: 10%;
-  height: 50px;
-  background: #4285d5;
-  z-index: 1;
-  position: relative;
-  top: 25px;
-}
 
 /* end of shit not doing anything */

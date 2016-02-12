@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="257" key="DIALOG_WIDTH"/>
+		<item value="661" key="DIALOG_Y_ORIGIN"/>
+		<item value="380" key="DIALOG_HEIGHT"/>
+		<item value="979" key="DIALOG_X_ORIGIN"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="true" key="wrap"/>
+		<item value="false" key="isRegEx"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="false" key="wholeword"/>
+		<item value="Gpio" key="selection"/>
+		<list key="findhistory">
+			<item value="gpio"/>
+			<item value="== 1"/>
+			<item value="scia"/>
+			<item value="(16 - 11)"/>
+			<item value="(16 - 13)"/>
+			<item value="(16 - 14)"/>
+			<item value="&gt;&gt; (16 - 16)"/>
+			<item value="(16 - 16)"/>
+		</list>
+		<list key="replacehistory">
+			<item value="5"/>
+			<item value="3"/>
+			<item value="2"/>
+			<item value=""/>
+			<item value="CurrentAddress"/>
+			<item value="carrybit"/>
+			<item value="lfsr_"/>
+			<item value="lfsr_4"/>
+		</list>
+	</section>
+</section>

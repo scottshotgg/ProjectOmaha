@@ -25,7 +25,9 @@ type speakerResponse struct {
 	Averaging 		int8		`json:"averaging"`
 	FadeTime		int8		`json:"fadetime"`
 	FadeLevel		int8		`json:"fadelevel"`
-	Equalizer[21]	int			`json:["equalizer"]`
+	Equalizer[][]	int			`json:["equalizer"]`
+	PresetNames[]	string		`json:["presetNames"]`
+	Current[21]		int			`json:["current"]` 
 	Err     		string 		`json:"err"`
 	Speaker			int8		`json:"speaker"`
 }
@@ -142,6 +144,10 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 	constants := strings.Fields(attr.Equalizer)		// do not publish this function without checking for type/value errors
 	//log.Println(constants)
 
+	for i := range speaker.Equalizer {
+		log.Println(speaker.Equalizer[i])
+	}
+
 	if(len(constants) < 21) {
 		return errors.New("Invalid amount of constants")
 	}
@@ -154,10 +160,10 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 		}
 		//constantsInts = append(constantsInts, int8(intParse))
 
-		if(intParse != speaker.Equalizer[k]) {			// change this to pull from the db, it might already do that
+		if(intParse != speaker.Current[k]) {			// change this to pull from the db, it might already do that
 			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
 			system.SetEqualizerConstant(speaker, int8(intParse), int8(k))
-			speaker.Equalizer[k] = intParse	// this needs checking
+			speaker.Current[k] = intParse	// this needs checking
 			//log.Printf("You changed band %d to level %d", k, intParse)
 		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
 			database.SaveBand(speaker, k, intParse)
@@ -336,7 +342,7 @@ func SpeakerGetHandler(w http.ResponseWriter, r *http.Request) {
 
 func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse {
 
-	speakerResponse := speakerResponse{Volume: controller.VolumeLevel[0], Music: controller.VolumeLevel[1], Paging: controller.VolumeLevel[2], Masking: controller.VolumeLevel[3], Averaging: controller.AveragingMode, FadeTime: controller.PagingLevel[0], FadeLevel: controller.PagingLevel[1], Equalizer: [21]int{controller.Equalizer[0], controller.Equalizer[1], controller.Equalizer[2], controller.Equalizer[3], controller.Equalizer[4], controller.Equalizer[5], controller.Equalizer[6], controller.Equalizer[7], controller.Equalizer[8], controller.Equalizer[9], controller.Equalizer[10], controller.Equalizer[11], controller.Equalizer[12], controller.Equalizer[13], controller.Equalizer[14], controller.Equalizer[15], controller.Equalizer[16], controller.Equalizer[17], controller.Equalizer[18], controller.Equalizer[19], controller.Equalizer[20]}}
-
+	speakerResponse := speakerResponse{Volume: controller.VolumeLevel[0], Music: controller.VolumeLevel[1], Paging: controller.VolumeLevel[2], Masking: controller.VolumeLevel[3], Averaging: controller.AveragingMode, FadeTime: controller.PagingLevel[0], FadeLevel: controller.PagingLevel[1], Current: [21]int{controller.Current[0], controller.Current[1], controller.Current[2], controller.Current[3], controller.Current[4], controller.Current[5], controller.Current[6], controller.Current[7], controller.Current[8], controller.Current[9], controller.Current[10], controller.Current[11], controller.Current[12], controller.Current[13], controller.Current[14], controller.Current[15], controller.Current[16], controller.Current[17], controller.Current[18], controller.Current[19], controller.Current[20]}, Equalizer: controller.Equalizer, PresetNames: controller.PresetNames}
+	log.Println(controller)
 	return speakerResponse
 }

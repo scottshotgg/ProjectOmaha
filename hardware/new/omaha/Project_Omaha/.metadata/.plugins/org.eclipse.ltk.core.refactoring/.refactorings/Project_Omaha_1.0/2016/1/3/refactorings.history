@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;test/28065_RAM_CLA_C_lnk_WORKS.c&apos; to &apos;28065_RAM_CLA_C_lnk_WORKS.TXT&apos;" description="Rename resource &apos;28065_RAM_CLA_C_lnk_WORKS.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="28065_RAM_CLA_C_lnk_WORKS.c" name="28065_RAM_CLA_C_lnk_WORKS.TXT" stamp="1452703629966" updateReferences="true"/>
+</session>

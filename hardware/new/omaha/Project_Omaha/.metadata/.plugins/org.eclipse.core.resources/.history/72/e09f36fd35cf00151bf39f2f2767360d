@@ -1,0 +1,216 @@
+/*
+ *
+ *  Author: Matthew Kramer
+ *  Revision 1.0 (8 February 2016)
+ *
+ *  THIS CODE IS CONFIDENTIAL AND FOR THE EYES OF A SELECT FEW
+ *
+ * 	communication.c version 1.0
+ *
+ *	Source code that is used for interperating communications protocol
+ *
+ *	COMMUNICATIONS DIAGRAM
+ *
+ *	To Previous Speaker/Master Controller                                               To Next Speaker
+ *					 __________				 ________ ...             ...________              __________
+ *	A<------------->|A		 R0|----------->|SCIA RX                      SCIB RX|<-----------|R0	    A|<------------->A
+ *					|  SP-3485 |			|             TMS320F28069           |			  |  SP-3485 |
+ *	B<------------->|B   DE/!RE|<-----------|GPIO 3                        GPIO 5|----------->|DE/!RE   B|<------------->B
+ *					|		   |			|                                    |            |		     |
+ *					|        DI|<-----------|SCIA TX                      SCIB TX|----------->|DI        |
+ *					|__________|			|________ ...             ...________|			  |__________|
+ *  initializeSCI
+ *
+ *
+ *
+*/
+
+
+
+#include "communication.h"
+
+int j;
+extern int unitID;				//left
+extern float decibel;
+extern int band;
+extern float Sfactor;
+extern float Mfactor;
+extern float Vfactor;
+extern float initialS;
+extern float seconds;
+extern float fadeTo;
+extern int   paging;
+extern int fadeConstant;
+extern char receivedChar	[BUFFERSIZE];
+
+void initializeSCI(){
+
+	InitSciaGpio();     //GPIO 28 is RX, GPIO 29 is TX functions provided by TI located in ./source/F2806x_Sci.c
+	InitScibGpio();		//GPIO 11 is RX, GPIO 9 is TX
+	EALLOW;
+	PieVectTable.SCIRXINTA = &SciaRxFifoIsr;	//tie interrupts to their handler functions
+	PieVectTable.SCIRXINTB = &ScibRxFifoIsr;
+	EDIS;
+
+	//INITIALIZE SCIA
+	SciaRegs.SCICCR.all = 0x0007;   // 1 stop bit,  No loopback, No parity,8 char bits, async mode, idle-line protocol
+	SciaRegs.SCICTL1.all = 0x0003;  // enable TX, RX, internal SCICLK, Disable RX ERR, SLEEP, TXWAKE
+	SciaRegs.SCICTL2.all = 0x0003;
+	SciaRegs.SCICTL2.bit.TXINTENA =1;
+	SciaRegs.SCICTL2.bit.RXBKINTENA =1;
+	SciaRegs.SCIFFRX.all = 0x0022;
+	SciaRegs.SCIFFTX.bit.SCIFFENA = 1;
+
+	SciaRegs.SCIFFRX.bit.RXFFIL = BUFFERSIZE;
+	SciaRegs.SCIFFCT.all = 0x00;
+	SciaRegs.SCIHBAUD = 0x0000; //baud rate of 9600 @ 200mhz, 2400 at 50mhz
+	SciaRegs.SCILBAUD = 86;
+	SciaRegs.SCICTL1.all = 0x0023;  // Relinquish SCI from Reset
+	SciaRegs.SCIFFRX.bit.RXFIFORESET = 1;
+	PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block
+	PieCtrlRegs.PIEIER9.bit.INTx1 = 1;     // PIE Group 9, INT1
+
+	//INITIALIZE SCIB
+	ScibRegs.SCICCR.all = 0x0007;   // 1 stop bit,  No loopback, No parity,8 char bits, async mode, idle-line protocol
+	ScibRegs.SCICTL1.all = 0x0003;  // enable TX, RX, internal SCICLK, Disable RX ERR, SLEEP, TXWAKE
+	ScibRegs.SCICTL2.all = 0x0003;
+	ScibRegs.SCICTL2.bit.TXINTENA = 1;
+	ScibRegs.SCICTL2.bit.RXBKINTENA = 1;
+	ScibRegs.SCIFFRX.all= 0x0022;
+	ScibRegs.SCIFFTX.bit.SCIFFENA = 1;
+	ScibRegs.SCIFFRX.bit.RXFFIL = BUFFERSIZE;
+	ScibRegs.SCIFFCT.all = 0x00;
+	ScibRegs.SCIHBAUD =  0x0000;;
+	ScibRegs.SCILBAUD = 86;
+	ScibRegs.SCICTL1.all = 0x0023;  // Relinquish SCI from Reset
+	ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
+	PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block		// Do these need to change?
+	PieCtrlRegs.PIEIER9.bit.INTx3 = 1;     // PIE Group 9, INT1
+
+	IER |= 0x100; // Enable CPU INT
+}
+
+void SciaRxFifoIsr(){
+
+	for(j = 0; j < BUFFERSIZE; j++){	 //load up received characters
+
+			receivedChar[j] = SciaRegs.SCIRXBUF.all;
+		}
+	addressCheck();
+	SciaRegs.SCIFFRX.bit.RXFFOVRCLR=1;   // Clear Overflow flag
+	SciaRegs.SCIFFRX.bit.RXFFINTCLR=1;   // Clear Interrupt flag
+	PieCtrlRegs.PIEACK.all |= PIEACK_GROUP9;       // Issue PIE ack
+}
+
+void ScibRxFifoIsr(){
+
+	SciaRegs.SCITXBUF = ScibRegs.SCIRXBUF.all;		// This message is moving from a unit to the master controller, pass it along.
+	ScibRegs.SCIFFRX.bit.RXFFOVRCLR=1;   // Clear Overflow flag
+	ScibRegs.SCIFFRX.bit.RXFFINTCLR=1;   // Clear Interrupt flag
+	PieCtrlRegs.PIEACK.all |= PIEACK_GROUP9;       // Issue PIE ack
+}
+
+void addressCheck(){ //read 1st byte recieved and determine who the message is for
+
+	if(receivedChar[0] == 1){ //message is intended for the current unit.
+
+		readCommand();//interpret the message. After this the message will be terminated.
+	}
+
+	else{ //message needs to be transmitted along
+
+		GpioDataRegs.GPADAT.bit.GPIO5 = 1;  //used for SCIB TX. Turn on to transmit message
+		CpuTimer2Regs.PRD.all = 240000; 	//80MHZ * 3000ns = 240,000 clock cycle period
+		CpuTimer2Regs.TCR.bit.TRB = 1;		//reload above period into register
+		CpuTimer2Regs.TCR.bit.TSS = 1;		//reset timer
+		CpuTimer2Regs.TCR.all = 0x4000; 	//start timer 2 to turn off TX select bit after 3ms
+		if(receivedChar[0] == '0'){ //Message is intended for all units and should be interpreted and passed along
+
+			readCommand(); //interpret
+
+			for(j = 0; j < BUFFERSIZE; j++) //pass message along
+				ScibRegs.SCITXBUF = receivedChar[j];
+		}
+		else{
+
+			receivedChar[0] = receivedChar[0] - 1; //decrement address by 1
+			for(j = 0; j < BUFFERSIZE; j++) //pass message along
+				ScibRegs.SCITXBUF = receivedChar[j];
+		}
+	}
+}
+
+
+void readCommand(){
+
+	switch(receivedChar[1]){ //2nd byte contains command
+
+		case 'S':	//set volume command
+			if(receivedChar[2] > 100 || receivedChar[2] < 0) //check to make sure volume level is valid.
+				return;
+			Vfactor = (float)receivedChar[2]/100;
+			break;
+
+		case 's':	//request volume command, will be used later when speaker can automatically adjust volume.
+			SciaRegs.SCITXBUF = unitID;
+			SciaRegs.SCITXBUF = Vfactor*100;
+			break;
+
+		case 'u': //unitID set, this unitID will only be used for the master controller to distinguish where a message from a speaker originated from
+			unitID = receivedChar[2];
+			break;
+
+		case 'k':
+			SciaRegs.SCITXBUF = 'A';
+
+		case 'W':
+			if(receivedChar[2] > 100 || receivedChar[2] < 0)
+				return;
+			else{
+				Sfactor = (float)receivedChar[2]/100;
+				fadeTo = (float) fadeTo*Sfactor/initialS;
+				initialS = Sfactor;
+				fadeConstant = (seconds)*AUDSAMPLERATE/((float)(initialS - fadeTo)*100);
+			}
+			break;
+
+		case 'M':
+			if(receivedChar[2] > 0 && receivedChar[2] < 101)
+				Mfactor = (float)receivedChar[2]/100;
+			else;
+			break;
+
+		case 'P':
+			if(receivedChar[2] == 0 && !paging) //paging is off and now being turned on
+				paging = 1;
+
+			else if(receivedChar[2] == 201 && paging) //paging is on and now being turned off.
+				paging = 0;
+
+			else if(receivedChar[2] > 0 && receivedChar[2] <= 100){ //adjust what percentage current value to fade to
+				fadeTo =  ((float)receivedChar[2]/100)*initialS;
+				fadeConstant = (seconds)*AUDSAMPLERATE/((float)(initialS - fadeTo)*100);
+			}
+			else if(receivedChar[2] > 100 && receivedChar[2] < 201){ //adjust how long it takes to fade.
+
+				seconds = (float)(receivedChar[2] - 101)/10;
+				fadeConstant = (seconds)*AUDSAMPLERATE/((float)(initialS - fadeTo)*100);
+			}
+			else;
+			break;
+
+		default:
+			if(receivedChar[1] < 0 || receivedChar[1] >= NUM_BAND)
+				return;
+			else{
+				band = receivedChar[1];
+				if(receivedChar[2] > 100)
+					return;
+				else{
+					decibel = (receivedChar[2] - 80)/2;
+					Cla1ForceTask1();
+				}
+			break;
+			}
+	}
+}
