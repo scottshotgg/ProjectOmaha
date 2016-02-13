@@ -130,6 +130,7 @@
         console.log("Speaker:", a.speaker);
         a.speaker.PresetNames = [0];
         a.speaker.Current = [0];
+        a.speaker.Equalizer = [0];
 
         for (i in data.response.PresetNames) {
           a.speaker.PresetNames[i] = data.response.PresetNames[i];
@@ -140,6 +141,12 @@
           a.speaker.Current[i] = data.response.Current[i];    // why does this have to be lower case
           console.log(i, data.response.Current[i]);
         }
+
+        for(i in data.response.Equalizer) {
+          a.speaker.Equalizer[i] = data.response.Equalizer[i];
+          console.log(data.response.Equalizer[i]);
+        }
+
         console.log("Speaker", a.speaker);
         //speaker.volumeLevel = data.response.volume;
         //console.log(speaker.volumeLevel);

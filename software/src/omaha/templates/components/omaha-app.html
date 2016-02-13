@@ -149,11 +149,14 @@
           var sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
           var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
           for (i in controller.speaker.current) {
-            sliders[i].style.height = "" + (controller.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
-            handles[i].style.bottom = "" + (controller.speaker.Current[i] + 40) * 2 + "%";
+            sliders[i].style.height = (controller.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
+            handles[i].style.bottom = (controller.speaker.Current[i] + 40) * 2 + "%";
             $("#text" + (parseInt(i) + 1)).val(controller.speaker.Current[i]);
             iirConstants[i] = controller.speaker.Current[i];
           }
+
+
+
         }
       },
       
