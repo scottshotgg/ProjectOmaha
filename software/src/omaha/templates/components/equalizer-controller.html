@@ -85,7 +85,7 @@
         <paper-button on-click="_setEqualizerClicked">set equalizer</paper-button>
         <paper-dropdown-menu id="equalizerMenu" no-label-float label="Equalizer Preset:">
           <paper-listbox id="equalizerListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
-            <paper-item value="Currently Applied">Current</paper-item>
+            <paper-item value="Currently Applied">Currently Applied</paper-item>
             <paper-item value="Add New Preset">Add New Preset</paper-item>
             <paper-item value="Armstrong">Armstrong</paper-item>
             <paper-item value="Bold Beranek Newman">Bold Beranek Newman</paper-item>
@@ -111,6 +111,7 @@
     temp.innerHTML = "<paper-item id=" + "custom555" + " value=" + "custom555" + ">" + "custom555" + "</paper-item>";
     document.getElementById("equalizerListbox").appendChild(temp);    // This is not adding to the correct spot, the div is off or something so the Polymer click event is not listening to the button
     // !!!!!!!!!!!! FIX THIS !!!!!!!!!!!!
+
   });
   
 
@@ -153,8 +154,11 @@
         this.iirConstantsString = iirConstants.join(", ");  // this is for the toast message
         this.$.toast.show();
         console.log("_setEqualizerClicked");
-        
         console.log(iirConstants);
+        
+        for (var i = 0; i < this.speaker.Current.length; i++) { 
+          this.speaker.Current[i] = iirConstants[i];
+        }
       },
       /*
       decrementVolume: function() {
@@ -197,7 +201,7 @@
 
         //menu.averaging = this.$.menu.selected + 1;
 
-        var selected = this.$.equalizerListbox.selected.toLowerCase().valueOf().replace("\n", "");   // do this for all whitespace characters
+        var selected = this.$.equalizerListbox.selected.valueOf().toLowerCase().replace("\n", "");   // do this for all whitespace characters
         var associtationLink = -1;
 
         var sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
@@ -207,11 +211,11 @@
           this.$.toasty.text = "Currently applied constants loaded!";
           this.$.toasty.show();
 
-          for (var i = 0; i < controller.speaker.Current.length; i++) {
-            sliders[i].style.height = (controller.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
-            handles[i].style.bottom = (controller.speaker.Current[i] + 40) * 2 + "%";
-            $("#text" + (parseInt(i) + 1)).val(controller.speaker.Current[i]);
-            iirConstants[i] = controller.speaker.Current[i];
+          for (var i = 0; i < this.speaker.Current.length; i++) { 
+            sliders[i].style.height = (this.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
+            handles[i].style.bottom = (this.speaker.Current[i] + 40) * 2 + "%";
+            $("#text" + (parseInt(i) + 1)).val(this.speaker.Current[i]);
+            iirConstants[i] = this.speaker.Current[i];
           }
         } else if(selected == "add new preset") {
             console.log("Adding new preset coming soon...");
@@ -231,14 +235,16 @@
               this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded!";
               this.$.toasty.show();
 
-              if(selected == this.speaker.PresetNames[i].toLowerCase().replace("\n", "")) {
+              if(selected == this.speaker.PresetNames[i].valueOf().toLowerCase().replace("\n", "")) {
                 console.log("Speaker " + this.speakerId + " selected " + selected);
                 // show a toast here with the preset applied message
                 associtationLink = i;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
+                break;    // this is for efficiency reasons, better to keep it this way if it works
               }
             }
 
-            for (var i = 0; i < this.speaker.Equalizer[associtationLink].length; i++) {
+            // need to check whether associationLink is -1 here
+            for (var i = 0; i < this.speaker.Equalizer[associtationLink].length; i++) {   // add associationLink back if this fucks up
               sliders[i].style.height = (this.speaker.Equalizer[associtationLink][i] + 40) * 2 + "%";    // why does this have to be lower case
               handles[i].style.bottom = (this.speaker.Equalizer[associtationLink][i] + 40) * 2 + "%";
               $("#text" + (parseInt(i) + 1)).val(this.speaker.Equalizer[associtationLink][i]);
