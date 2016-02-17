@@ -28,3 +28,6 @@ This is a todo file:
 NEXT WEEK:
 	a. Complete the presets; able to add, load them, graph maybe (Chart.js)
 	b. Look into loading the information onto the tooltip, preload maybe, morph the loading to preload most common speakers
+
+
+	map hashing, lasso tool

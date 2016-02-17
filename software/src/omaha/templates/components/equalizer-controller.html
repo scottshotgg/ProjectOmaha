@@ -85,15 +85,16 @@
         <paper-button on-click="_setEqualizerClicked">set equalizer</paper-button>
         <paper-dropdown-menu id="equalizerMenu" no-label-float label="Equalizer Preset:">
           <paper-listbox id="equalizerListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
-            <paper-item value="Currently Applied">Currently Applied</paper-item>
-            <paper-item value="Add New Preset">Add New Preset</paper-item>
-            <paper-item value="Armstrong">Armstrong</paper-item>
-            <paper-item value="Bold Beranek Newman">Bold Beranek Newman</paper-item>
-            <paper-item value="Cambridge">Cambridge</paper-item>
-            <paper-item value="Close Office (43?)">Close Office (43?)</paper-item>
-            <paper-item value="Soft dB Default">Soft dB Default</paper-item>
-            <paper-item value="Soft dB Mellow">Soft dB Mellow</paper-item>
-            <paper-item id="custom" value="custom">custom</paper-item>
+
+            <!--<template if="{{this.speaker.Response}}">
+              <paper-dropdown-menu selected="{{selected}}">
+                <template repeat="{{label in this.speaker.PresetNames}}">
+                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
+                </template>
+              </paper-dropdown-menu>  
+            </template>-->
+              <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
+              <paper-item id="Add New Preset" value="Add New Preset">Add New Preset</paper-item>   
           </paper-listbox>
         </paper-dropdown-menu>
         <span>{{value}}</span>
@@ -101,18 +102,26 @@
     </paper-card>
     <paper-toast id="toast">Equalizer set to <span>{{iirConstantsString}}</span></paper-toast>
     <paper-toast id="toasty" text="varaitic toast message, if you are seeing this, please dial 867-5309, nah but just tell me bro"></paper-toast>
+
+    <iron-ajax
+          id="addPresetAjax"
+          url="/system/addPreset/"
+          method="PUT"
+          content-type="application/json"
+          handle-as="json"
+          on-response="_logResponse"
+          debounce-duration="300">
+    </iron-ajax>
+
   </template>
   <script>
 
   //var fragment = create("<paper-item id=" + "name" + " value=" + "custom" + ">" + "custom" + "</paper-item>"); 
   $(document).ready(function() {
-    console.log(document.getElementById("custom"));
-    temp = document.createElement("paper-item");
-    temp.innerHTML = "<paper-item id=" + "custom555" + " value=" + "custom555" + ">" + "custom555" + "</paper-item>";
-    document.getElementById("equalizerListbox").appendChild(temp);    // This is not adding to the correct spot, the div is off or something so the Polymer click event is not listening to the button
-    // !!!!!!!!!!!! FIX THIS !!!!!!!!!!!!
 
-  });
+  })
+
+  //PresetNames[] = {"hi", "my", "name", "is", "scott"};
   
 
   //document.getElementById("custom").appendChild(temp);
@@ -159,6 +168,10 @@
         for (var i = 0; i < this.speaker.Current.length; i++) { 
           this.speaker.Current[i] = iirConstants[i];
         }
+      },
+
+      _logResponse: function(event, data) {
+        console.log("shuddup");
       },
       /*
       decrementVolume: function() {
@@ -222,6 +235,19 @@
             //this.$.toasty.text = "Add New Preset";
             this.$.toasty.text = "Custom presets coming soon!";
             this.$.toasty.show();
+
+            var addPresetAjax = document.getElementById("addPresetAjax");
+            console.log(addPresetAjax);
+            var stringforshit = iirConstants.join(" ");
+            var name = "shit";
+            this.$.addPresetAjax.body = {
+              "name": name,
+              "constants": stringforshit,
+              "speaker": this.speakerId
+            };
+            console.log("addPresetAjax:", addPresetAjax);
+            this.$.addPresetAjax.generateRequest();
+
           /*    need to do something here to add the presets in, probably just make a handler
             for (var i = 0; i < controller.speaker.Current.length; i++) {
               sliders[i].style.height = "" + (controller.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
@@ -244,6 +270,7 @@
             }
 
             // need to check whether associationLink is -1 here
+            // the undefined error is coming from the fact that sometiems the associationLink is not set because the value is not 
             for (var i = 0; i < this.speaker.Equalizer[associtationLink].length; i++) {   // add associationLink back if this fucks up
               sliders[i].style.height = (this.speaker.Equalizer[associtationLink][i] + 40) * 2 + "%";    // why does this have to be lower case
               handles[i].style.bottom = (this.speaker.Equalizer[associtationLink][i] + 40) * 2 + "%";

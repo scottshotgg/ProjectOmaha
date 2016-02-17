@@ -36,6 +36,12 @@ type speakerGetRequest struct {
 	Speaker		int8	`json:"speaker"`
 }
 
+type addPresetData struct {
+	name		string	`json:"name"`
+	constants	string	`json:"constants"`
+	speaker		int		`json:"speaker"`
+}
+
 type speakerAttributes struct {
 	Volume    	string 	`json:"volume"`
 	//Music		int8 	`json:"musicVolume"`
@@ -285,6 +291,7 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	speakerRequest := &speakerPutRequest{}
 	err := json.NewDecoder(r.Body).Decode(speakerRequest)
+	log.Println(speakerRequest)
 	if err != nil {
 		if status.IsDebug() {
 			log.Printf("SpeakerPutHandler json decoding error: %s\n", err)
@@ -345,4 +352,25 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 	speakerResponse := speakerResponse{Volume: controller.VolumeLevel[0], Music: controller.VolumeLevel[1], Paging: controller.VolumeLevel[2], Masking: controller.VolumeLevel[3], Averaging: controller.AveragingMode, FadeTime: controller.PagingLevel[0], FadeLevel: controller.PagingLevel[1], Current: [21]int{controller.Current[0], controller.Current[1], controller.Current[2], controller.Current[3], controller.Current[4], controller.Current[5], controller.Current[6], controller.Current[7], controller.Current[8], controller.Current[9], controller.Current[10], controller.Current[11], controller.Current[12], controller.Current[13], controller.Current[14], controller.Current[15], controller.Current[16], controller.Current[17], controller.Current[18], controller.Current[19], controller.Current[20]}, Equalizer: controller.Equalizer, PresetNames: controller.PresetNames}
 	log.Println(controller)
 	return speakerResponse
+}
+
+func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+
+	addPresetRequest := &addPresetData{}
+	err := json.NewDecoder(r.Body).Decode(addPresetRequest)
+	//controller := database.GetSpeaker(speakerRequest.Speaker)
+	//log.Println(controller)
+
+	log.Println(addPresetRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("SpeakerGetHandler json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	w.Write(getGenericSuccessResponse())
 }

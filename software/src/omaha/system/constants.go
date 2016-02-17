@@ -3,10 +3,8 @@ package system
 var Commands struct {
 	SetVolume          		byte
 	GetVolume          		byte
-
 	SetSoundMaskingVolume	byte
 	GetSoundMaskingVolume	byte
-	
 	SetMusicVolume			byte
 	SetPaging				byte
 	SetFadeTime				byte
