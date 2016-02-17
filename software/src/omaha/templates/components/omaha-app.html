@@ -161,10 +161,10 @@
           var motherPolymer = Polymer.dom(listbox).children; 
 
           // remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
-          if(motherPolymer.length > 2) {    // change that 2 to something that is not so fragile
+          //if(motherPolymer.length > 2) {    // change that 2 to something that is not so fragile      // dont even need to check, think of the numerical analysis of checking
             for(var i = motherPolymer.length - 1; i > 1; i--)
               Polymer.dom(listbox).removeChild(motherPolymer[i]);
-          }
+          //}
 
           // injecting the paper-items for the presets
           for (i in controller.speaker.PresetNames) {
