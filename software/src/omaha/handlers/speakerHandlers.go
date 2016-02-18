@@ -37,9 +37,9 @@ type speakerGetRequest struct {
 }
 
 type addPresetData struct {
+	speaker		int		`json:"speaker"`
 	name		string	`json:"name"`
 	constants	string	`json:"constants"`
-	speaker		int		`json:"speaker"`
 }
 
 type speakerAttributes struct {
@@ -357,10 +357,12 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
+	log.Println(r)
+
 	addPresetRequest := &addPresetData{}
 	err := json.NewDecoder(r.Body).Decode(addPresetRequest)
 	//controller := database.GetSpeaker(speakerRequest.Speaker)
-	//log.Println(controller)
+	log.Println(r.Body)
 
 	log.Println(addPresetRequest)
 

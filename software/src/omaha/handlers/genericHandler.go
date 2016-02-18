@@ -49,6 +49,7 @@ func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	/*
 		Generic stuff goes here
 	*/
+		
 	if req.Method == "GET" && this.GET != nil {
 		this.GET(w, req)
 	} else if req.Method == "POST" && this.POST != nil {

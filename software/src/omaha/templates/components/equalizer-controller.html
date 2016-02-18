@@ -101,7 +101,7 @@
       </div>
     </paper-card>
     <paper-toast id="toast">Equalizer set to <span>{{iirConstantsString}}</span></paper-toast>
-    <paper-toast id="toasty" text="varaitic toast message, if you are seeing this, please dial 867-5309, nah but just tell me bro"></paper-toast>
+    <paper-toast id="toasty" text="varaitic toast message this is, seeing this you are, please dial 867-5309 you should; nah but just tell me bro"></paper-toast>
 
     <iron-ajax
           id="addPresetAjax"
@@ -239,13 +239,15 @@
             var addPresetAjax = document.getElementById("addPresetAjax");
             console.log(addPresetAjax);
             var stringforshit = iirConstants.join(" ");
-            var name = "shit";
+            var name = "shitwhythefuckisntthisworking";
+
             this.$.addPresetAjax.body = {
+              "speaker": this.speakerId,
               "name": name,
-              "constants": stringforshit,
-              "speaker": this.speakerId
+              "constants": stringforshit
             };
-            console.log("addPresetAjax:", addPresetAjax);
+
+            console.log("addPresetAjax:", addPresetAjax.body);
             this.$.addPresetAjax.generateRequest();
 
           /*    need to do something here to add the presets in, probably just make a handler

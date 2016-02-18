@@ -137,6 +137,11 @@
             "attributeValues": attributeValues,                        
             "speaker": this.speakerId     // You can see that this is getting zero in the terminal from the print in  speakerHandlers.go. This is because the value for this.speakerId is undefined for some reason. When I hardcoded 107 it worked fine, which is expected. Just not sure why this is getting undefined....
           };
+
+          var selectModeAjax = document.getElementById("selectModeAjax");
+          console.log(selectModeAjax);
+
+          console.log(this.$.selectModeAjax.body);
           this.$.selectModeAjax.generateRequest();
       },
 
