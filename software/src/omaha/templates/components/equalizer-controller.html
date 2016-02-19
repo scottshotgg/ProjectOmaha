@@ -6,6 +6,7 @@
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="/bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
@@ -50,6 +51,15 @@
         padding: 0px;
       }
 
+      paper-input {
+        margin-top: 0px;
+      }
+
+      .message {
+        color: var(--paper-red-500);
+        size: 5px;
+      }
+
     </style>
 
    <paper-card heading="Equalizer" elevation="4">
@@ -81,6 +91,21 @@
         </div>
       </div>
 
+      <!-- entry-animation="scale-up-animation" exit-animation="fade-out-animation" -->
+    <paper-dialog id="dialog" heading="this is a title" entry-animation="scale-up-animation"
+              exit-animation="fade-out-animation" modal="true">
+      <h1>Add Preset</h1>
+      <div>Enter the new preset name below</div>
+
+      <div class="message">{{err}}</font></div>
+      <paper-input id="popupInput" label="" placeholder="Enter Name for Preset" text-align="center"></paper-input>
+      <div class="buttons">
+
+      <paper-button dialog-dismiss>Cancel</paper-button>    <!-- Something needs to go here -->
+      <paper-button ondialog-confirm on-click="_acceptPressed">Create</paper-button>
+    </div>
+    </paper-dialog>
+
       <div class="card-actions">
         <paper-button on-click="_setEqualizerClicked">set equalizer</paper-button>
         <paper-dropdown-menu id="equalizerMenu" no-label-float label="Equalizer Preset:">
@@ -101,7 +126,7 @@
       </div>
     </paper-card>
     <paper-toast id="toast">Equalizer set to <span>{{iirConstantsString}}</span></paper-toast>
-    <paper-toast id="toasty" text="varaitic toast message this is, seeing this you are, please dial 867-5309 you should; nah but just tell me bro"></paper-toast>
+    <paper-toast id="toasty" z-index: "60" text="varaitic toast message this is, seeing this you are, please dial 867-5309 you should; nah but just tell me bro"></paper-toast>
 
     <iron-ajax
           id="addPresetAjax"
@@ -200,6 +225,36 @@
         }, 500);
       },*/
 
+      _acceptPressed: function(event) {
+
+        var name = this.$.popupInput.value;
+        var ifvar = 0;
+
+          for(var i = 0; i < this.speaker.PresetNames.length; i++) {
+            if(name.valueOf().toLowerCase().replace("\n", "") == this.speaker.PresetNames[i].valueOf().toLowerCase()) {
+              console.log("same name dude");
+              ifvar++;
+            }
+        }
+
+        if(ifvar > 0) {
+          this.err = "Invalid name: Name already taken, please enter another";
+          this.$.toasty.text = this.err;
+          this.$.toasty.show();
+        } else {
+          this.$.addPresetAjax.body = {
+            "speaker": this.speakerId,
+            "name": name,
+            "constants": iirConstants.join(" ")
+          };
+
+          console.log("addPresetAjax:", addPresetAjax.body);
+          this.$.addPresetAjax.generateRequest();
+
+          this.$.dialog.toggle();
+        }
+      },
+
       listeners: {
         'equalizerListbox.iron-select': '_presetSelectionChanged'
       },
@@ -238,17 +293,100 @@
 
             var addPresetAjax = document.getElementById("addPresetAjax");
             console.log(addPresetAjax);
-            var stringforshit = iirConstants.join(" ");
-            var name = "shitwhythefuckisntthisworking";
+            //var name = "shitwhythefuckisntthisworking";
 
-            this.$.addPresetAjax.body = {
-              "speaker": this.speakerId,
-              "name": name,
-              "constants": stringforshit
-            };
+             this.$.dialog.toggle();
 
-            console.log("addPresetAjax:", addPresetAjax.body);
-            this.$.addPresetAjax.generateRequest();
+            // main overlay container
+            /*$('<div id="msg_overlay">').css({
+                "width": "100%",
+                "height": "100%",
+                "background" : "#000",
+                //"background": "#3367d6",
+                "position" : "fixed", 
+                "top": "0", 
+                "left": "0", 
+                "zIndex": "50", 
+                "MsFilter": "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)", 
+                "filter": "alpha(opacity=60)",
+                "MozOpacity": 0.5,
+                "KhtmlOpacity": 0.5,
+                "opacity": 0.5
+
+            }).appendTo(document.body);*/
+
+
+          /* <div class="flex company">Create Zone</div>
+              <div class="message">{{err}}</div>
+              <div class="success">{{successMsg}}</div>
+              <form on-iron-form-submit="_submit" is="iron-form" id="form">
+                <paper-input id="name" name="name" label="Zone Name" required></paper-input>
+                <paper-button raised on-click="_submit">Create Zone</paper-button>
+                <paper-progress id="progress" value="100"></paper-progress>
+                <!-- We should be able to press enter to submit. This button with type submit is required to do so. -->
+                <button class="hidden" type="submit">I should be hidden</button>
+              </form>*/
+
+
+              //console.log(($(window).height / 2) - (document.getElementById(card_title).height - 2), ($(window).width / 2) - (document.getElementById(card_title).width - 2));
+
+            /*$('<paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation"><h2>Header</h2><div>Dialog body</div></paper-dialog>').css({
+                "width": "100",
+                "height": "100",
+                //"background" : "#000",
+                //"background": "#3367d6",
+                "position": "fixed", 
+                "top": "0",
+                "left": "0",
+                "zIndex": "51", 
+
+            }).appendTo(document.body);*/
+
+            /*temp = document.createElement("paper-card");
+            //temp.setAttribute("value", controller.speaker.PresetNames[i].valueOf().replace("\n", ""));
+            temp.setAttribute("id", "card_title");
+            temp.setAttribute("width", "auto");
+            temp.setAttribute("height", "auto");
+            temp.setAttribute("position", "fixed");
+            temp.setAttribute("top", "0");
+            temp.setAttribute("left", "0");
+            // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
+            temp.innerHTML = "<paper-button raised>Raised button</paper-button>";
+
+            $("card_title").append("<paper-button raised>Raised button</paper-button>");*/
+
+           /* console.log(($(window).height() / 2) - (document.getElementById("card_title").offsetHeight / 2), ($(window).width() / 2) - (document.getElementById("card_title").offsetWidth / 2));
+
+
+            document.getElementById("card_title").style.top = ($(window).height() / 2) - (document.getElementById("card_title").offsetHeight / 2) + "px";
+            document.getElementById("card_title").style.left = ($(window).width() / 2) - (document.getElementById("card_title").offsetWidth / 2) + "px";
+
+
+            $('<paper-button raised>Button</paper-button>').css({
+                "width": "auto",
+                "height": "auto",
+                //"background" : "#000",
+                //"background": "#3367d6",
+                "position": "fixed", 
+                "top": "auto",
+                "left": "auto",
+                "zIndex": "51", 
+
+            }).appendTo(document.getElementById("card_title"));*/
+
+
+
+            //console.log(document.getElementById("card_title").offsetWidth);
+
+            /*
+            $(document.getElementById("msg_overlay")).remove();
+
+            var person = prompt("Please enter your name", "Harry Potter");
+            if (person != null) {
+                document.getElementById("demo").innerHTML =
+                "Hello " + person + "! How are you today?";
+            }
+            */
 
           /*    need to do something here to add the presets in, probably just make a handler
             for (var i = 0; i < controller.speaker.Current.length; i++) {
@@ -263,7 +401,7 @@
               this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded!";
               this.$.toasty.show();
 
-              if(selected == this.speaker.PresetNames[i].valueOf().toLowerCase().replace("\n", "")) {
+              if(selected == this.speaker.PresetNames[i].valueOf().toLowerCase()) {
                 console.log("Speaker " + this.speakerId + " selected " + selected);
                 // show a toast here with the preset applied message
                 associtationLink = i;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check

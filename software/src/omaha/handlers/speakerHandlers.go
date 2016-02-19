@@ -37,9 +37,9 @@ type speakerGetRequest struct {
 }
 
 type addPresetData struct {
-	speaker		int		`json:"speaker"`
-	name		string	`json:"name"`
-	constants	string	`json:"constants"`
+	Speaker		int8		`json:"speaker"`
+	Name		string	`json:"name"`
+	Constants	string	`json:"constants"`
 }
 
 type speakerAttributes struct {
@@ -291,6 +291,10 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	speakerRequest := &speakerPutRequest{}
 	err := json.NewDecoder(r.Body).Decode(speakerRequest)
+
+	log.Println(r)
+	log.Println(r.Body)
+
 	log.Println(speakerRequest)
 	if err != nil {
 		if status.IsDebug() {
@@ -357,14 +361,9 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
-	log.Println(r)
-
 	addPresetRequest := &addPresetData{}
 	err := json.NewDecoder(r.Body).Decode(addPresetRequest)
 	//controller := database.GetSpeaker(speakerRequest.Speaker)
-	log.Println(r.Body)
-
-	log.Println(addPresetRequest)
 
 	if err != nil {
 		if status.IsDebug() {
@@ -375,4 +374,31 @@ func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(getGenericSuccessResponse())
+
+	log.Println(addPresetRequest)
+
+	// make a split string fucntion when you fee like it
+
+	//constants := strings.Fields(addPresetRequest.Constants)		// do not publish this function without checking for type/value errors
+	//log.Println(constants)
+	/*var constantsInts [21] int8
+
+	if(len(constants) < 21) {
+		return //errors.New("Invalid amount of constants")
+	}
+
+	var k = 0
+	for _, i := range constants {
+		intParse, err := strconv.Atoi(i)
+		if err != nil {
+			panic(err)		// test if this returns
+		}
+
+			constantsInts[k] = int8(intParse)	// this needs checking
+		}
+			k++*/
+
+		//log.Println("constantsInts: ", constantsInts)
+
+	database.SavePreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
 }

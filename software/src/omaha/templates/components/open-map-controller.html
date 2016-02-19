@@ -133,7 +133,7 @@
         a.speaker.Equalizer = [0];
 
         for (i in data.response.PresetNames) {
-          a.speaker.PresetNames[i] = data.response.PresetNames[i];
+          a.speaker.PresetNames[i] = data.response.PresetNames[i].replace("\n", "");
           console.log(i, data.response.PresetNames[i]);
         }
 
