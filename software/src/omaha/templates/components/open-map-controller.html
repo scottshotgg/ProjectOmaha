@@ -188,6 +188,7 @@
 
         var locations = this.controllers;
         var features = new Array(locations.length);
+        console.log(locations);
         for(var i = 0; i < features.length; i++) {
             var coordinates = [locations[i].x, 1700-locations[i].y];
             var point = new ol.geom.Point(coordinates);

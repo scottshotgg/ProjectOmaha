@@ -102,7 +102,7 @@
       <div class="buttons">
 
       <paper-button dialog-dismiss>Cancel</paper-button>    <!-- Something needs to go here -->
-      <paper-button ondialog-confirm on-click="_acceptPressed">Create</paper-button>
+      <paper-button ondialog-confirm on-click="_acceptPressed">Add</paper-button>
     </div>
     </paper-dialog>
 
@@ -227,11 +227,11 @@
 
       _acceptPressed: function(event) {
 
-        var name = this.$.popupInput.value;
+        var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
         var ifvar = 0;
 
           for(var i = 0; i < this.speaker.PresetNames.length; i++) {
-            if(name.valueOf().toLowerCase().replace("\n", "") == this.speaker.PresetNames[i].valueOf().toLowerCase()) {
+            if(name.toLowerCase() == this.speaker.PresetNames[i].valueOf().toLowerCase()) {
               console.log("same name dude");
               ifvar++;
             }
@@ -246,12 +246,25 @@
             "speaker": this.speakerId,
             "name": name,
             "constants": iirConstants.join(" ")
+            // Maybe we should add a currently applied thing in here or something
           };
 
           console.log("addPresetAjax:", addPresetAjax.body);
           this.$.addPresetAjax.generateRequest();
 
           this.$.dialog.toggle();
+
+          this.$.toasty.text = "Added preset: " + name;
+          this.$.toasty.show();
+
+          temp = document.createElement("paper-item");
+          temp.setAttribute("value", name);
+          temp.setAttribute("id", name);
+          // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
+          temp.innerHTML = name;
+          Polymer.dom(this.$.equalizerListbox).appendChild(temp);
+          var selected = this.$.equalizerListbox.selected = name;
+
         }
       },
 

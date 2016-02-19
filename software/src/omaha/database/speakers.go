@@ -11,6 +11,7 @@ import (
 
 // createSpeakerTable creates the speaker table in the database
 // tab this shit over if you get bored
+// make one of these for the presets also
 func createSpeakerTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE speaker (
@@ -518,7 +519,7 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			band18,
 			band19,			
 			band20)
-		VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+		VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		`)
 	if err != nil {
 		return nil, err
@@ -562,5 +563,7 @@ func getSpeakerLocations() []speakerLocation {
 	rawJSON, _ := ioutil.ReadFile(util.GetOmahaPath() + "/templates/css/speakerLocations.txt")
 	speakerLocs := &speakerLocationsJSON{}
 	json.Unmarshal(rawJSON, speakerLocs)
+	log.Println("Getting speakers....")
+	log.Println(speakerLocs)
 	return speakerLocs.SpeakerLocations
 }
