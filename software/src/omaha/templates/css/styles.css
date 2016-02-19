@@ -103,6 +103,10 @@ paper-card {
   background: #3367d6;
 }
 
+.header.paper-card .title-text.paper-card {
+  padding-bottom: 0px;
+}
+
 #custom_container {
   position: relative;
   top: calc(10%);
@@ -124,14 +128,15 @@ paper-card {
 }
 
 .custom > .custom_slider {
-  height: 80%;
+  /*height: calc(.35 * 100vh);*/
+  height: calc(105% - .08 * 100vw);
   /*margin-bottom: calc(.005 * 100vw); */ /* This was 25 */
   /*margin-left: calc(.004 * 100vw);*/
   width: 60%;
   /*width: 50px; /* Change this back */
 }
 
-.custom > input {
+.custom > .level {
   /*
   color: #f6931f; 
   */
@@ -145,6 +150,9 @@ paper-card {
   /* Make this a percentage */
   margin-left: calc(50% - .022 * 100vw);
   margin-bottom: 100%; /* This as 20 */
+  margin-top: 0%;
+
+  /*max-height: calc(.02 * 100vh); */
 }
 
 #equalizerListbox {
@@ -165,6 +173,7 @@ paper-card {
   /* Make this a percentage */
   margin-left: calc(50% - .022 * 100vw);
   margin-top: 100%; /* This as 20 */
+  margin-bottom: 0%;
 }
 
 .custom.one {

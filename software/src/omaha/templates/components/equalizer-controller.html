@@ -20,6 +20,7 @@
 
 <dom-module id="equalizer-controller">
   <template>
+
     <style>
       :host {
         display: block;
@@ -27,13 +28,13 @@
 
       #slider {
         width: 100%;
-        height: 85%;
+        height: calc(85% - .3 * 100vw);
         margin-bottom: calc(.03 * 100vh);
       }
 
       paper-card {
         width: 100%;
-         height: 60%;   /* This was 100%, cahnge back if needed */
+        height: calc(60% + calc(.6 * 100vw));   /* This was 100%, cahnge back if needed */
       }
 
       .paper-card .card-content {
@@ -47,10 +48,6 @@
         margin-top: 1px;
       }
 
-      .header.paper-card .title-text.paper-card {
-        padding: 0px;
-      }
-
       paper-input /deep/ #input {
         margin-top: 0px;
         text-align: center;
@@ -61,33 +58,37 @@
         size: 5px;
       }
 
+      paper-dropdown-menu {
+        text-align: center;
+      }
+
     </style>
 
    <paper-card heading="Equalizer" elevation="4">
       <div class="card-content">
         <div id="sliderequalizer" class="layout horizontal">
           <div id="custom_container"> 
-            <div class="custom one"> <input id="text1" readonly/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" value="80" readonly/></div>
-            <div class="custom two"> <input id="text2" readonly/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
-            <div class="custom three"> <input id="text3" readonly/> <div class="custom_slider" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
-            <div class="custom four"> <input id="text4" readonly/><div class="custom_slider" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
-            <div class="custom five"> <input id="text5" readonly/> <div class="custom_slider" value={{"equalizer5"}}></div><input class="bands" value="200" readonly/></div>
-            <div class="custom six"> <input id="text6" readonly/> <div class="custom_slider" value={{"equalizer6"}}></div><input class="bands" value="250" readonly/></div>
-            <div class="custom seven"> <input id="text7" readonly/> <div class="custom_slider" value={{"equalizer7"}}></div><input class="bands" value="315" readonly/></div>
-            <div class="custom eight"> <input id="text8" readonly/> <div class="custom_slider" value={{"equalizer8"}}></div><input class="bands" value="400" readonly/></div>
-            <div class="custom nine"> <input id="text9" readonly/> <div class="custom_slider" value={{"equalizer9"}}></div><input class="bands" value="500" readonly/></div>
-            <div class="custom ten"> <input id="text10" readonly/> <div class="custom_slider" value={{"equalizer10"}}></div><input class="bands" value="630" readonly/></div>
-            <div class="custom eleven"> <input id="text11" readonly/> <div class="custom_slider" value={{"equalizer11"}}></div><input class="bands" value="800" readonly/></div>
-            <div class="custom twelve"> <input id="text12" readonly/> <div class="custom_slider" value={{"equalizer12"}}></div><input class="bands" value="1k" readonly/></div>
-            <div class="custom thirteen"> <input id="text13" readonly/> <div class="custom_slider" value={{"equalizer13"}}></div><input class="bands" value="1.25k" readonly/></div>
-            <div class="custom fourteen"> <input id="text14" readonly/> <div class="custom_slider" value={{"equalizer14"}}></div><input class="bands" value="1.6k" readonly/></div>
-            <div class="custom fifteen"> <input id="text15" readonly/> <div class="custom_slider" value={{"equalizer15"}}></div><input class="bands" value="2k" readonly/></div>
-            <div class="custom sixteen"> <input id="text16" readonly/> <div class="custom_slider" value={{"equalizer16"}}></div><input class="bands" value="2.5k" readonly/></div>
-            <div class="custom seventeen"> <input id="text17" readonly/> <div class="custom_slider" value={{"equalizer17"}}></div><input class="bands" value="3.15k" readonly/></div>
-            <div class="custom eighteen"> <input id="text18" readonly/> <div class="custom_slider" value={{"equalizer18"}}></div><input class="bands" value="4k" readonly/></div>
-            <div class="custom nineteen"> <input id="text19" readonly/> <div class="custom_slider" value={{"equalizer19"}}></div><input class="bands" value="5k" readonly/></div>
-            <div class="custom twenty"> <input id="text20" readonly/> <div class="custom_slider" value={{"equalizer20"}}></div><input class="bands" value="6.3k" readonly/></div>
-            <div class="custom twentyone"> <input id="text21" readonly/> <div class="custom_slider" value={{"equalizer21"}></div><input class="bands" value="8k" readonly/></div>
+            <div class="custom one"> <input id="text1" class="level" readonly/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
+            <div class="custom two"> <input id="text2" class="level" readonly/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
+            <div class="custom three"> <input id="text3" class="level" readonly/> <div class="custom_slider" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
+            <div class="custom four"> <input id="text4" class="level" readonly/><div class="custom_slider" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
+            <div class="custom five"> <input id="text5" class="level" readonly/> <div class="custom_slider" value={{"equalizer5"}}></div><input class="bands" value="200" readonly/></div>
+            <div class="custom six"> <input id="text6" class="level" readonly/> <div class="custom_slider" value={{"equalizer6"}}></div><input class="bands" value="250" readonly/></div>
+            <div class="custom seven"> <input id="text7" class="level" readonly/> <div class="custom_slider" value={{"equalizer7"}}></div><input class="bands" value="315" readonly/></div>
+            <div class="custom eight"> <input id="text8" class="level" readonly/> <div class="custom_slider" value={{"equalizer8"}}></div><input class="bands" value="400" readonly/></div>
+            <div class="custom nine"> <input id="text9" class="level" readonly/> <div class="custom_slider" value={{"equalizer9"}}></div><input class="bands" value="500" readonly/></div>
+            <div class="custom ten"> <input id="text10" class="level" readonly/> <div class="custom_slider" value={{"equalizer10"}}></div><input class="bands" value="630" readonly/></div>
+            <div class="custom eleven"> <input id="text11" class="level" readonly/> <div class="custom_slider" value={{"equalizer11"}}></div><input class="bands" value="800" readonly/></div>
+            <div class="custom twelve"> <input id="text12" class="level" readonly/> <div class="custom_slider" value={{"equalizer12"}}></div><input class="bands" value="1k" readonly/></div>
+            <div class="custom thirteen"> <input id="text13" class="level" readonly/> <div class="custom_slider" value={{"equalizer13"}}></div><input class="bands" value="1.25k" readonly/></div>
+            <div class="custom fourteen"> <input id="text14" class="level" readonly/> <div class="custom_slider" value={{"equalizer14"}}></div><input class="bands" value="1.6k" readonly/></div>
+            <div class="custom fifteen"> <input id="text15" class="level" readonly/> <div class="custom_slider" value={{"equalizer15"}}></div><input class="bands" value="2k" readonly/></div>
+            <div class="custom sixteen"> <input id="text16" class="level" readonly/> <div class="custom_slider" value={{"equalizer16"}}></div><input class="bands" value="2.5k" readonly/></div>
+            <div class="custom seventeen"> <input id="text17" class="level" readonly/> <div class="custom_slider" value={{"equalizer17"}}></div><input class="bands" value="3.15k" readonly/></div>
+            <div class="custom eighteen"> <input id="text18" class="level" readonly/> <div class="custom_slider" value={{"equalizer18"}}></div><input class="bands" value="4k" readonly/></div>
+            <div class="custom nineteen"> <input id="text19" class="level" readonly/> <div class="custom_slider" value={{"equalizer19"}}></div><input class="bands" value="5k" readonly/></div>
+            <div class="custom twenty"> <input id="text20" class="level" readonly/> <div class="custom_slider" value={{"equalizer20"}}></div><input class="bands" value="6.3k" readonly/></div>
+            <div class="custom twentyone"> <input id="text21" class="level" readonly/> <div class="custom_slider" value={{"equalizer21"}></div><input class="bands" value="8k" readonly/></div>
           </div>
         </div>
       </div>
@@ -99,10 +100,10 @@
       <div>Enter the new preset name below</div>
 
       <div class="message">{{err}}</font></div>
-      <paper-input id="popupInput" class="retard" label="" placeholder="Enter Name for Preset" text-align="center"></paper-input>
+      <paper-input id="popupInput" label="" placeholder="Enter Name for Preset" text-align="center"></paper-input>
       <div class="buttons">
 
-      <paper-button dialog-dismiss>Cancel</paper-button>    <!-- Something needs to go here -->
+      <paper-button dialog-dismiss on-click="_cancelPressed">Cancel</paper-button>    <!-- Something needs to go here -->
       <paper-button ondialog-confirm on-click="_acceptPressed">Add</paper-button>
     </div>
     </paper-dialog>
@@ -144,8 +145,9 @@
 
   //var fragment = create("<paper-item id=" + "name" + " value=" + "custom" + ">" + "custom" + "</paper-item>"); 
   $(document).ready(function() {
-
   })
+
+  
 
 //  document.getElementById(equalizerListbox).selected = "Currently Applied";
 
@@ -232,15 +234,17 @@
 
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
         var ifvar = 0;
-
+        if(this.speaker.PresetNames.length > 0) {
           for(var i = 0; i < this.speaker.PresetNames.length; i++) {
             if(name.toLowerCase() == this.speaker.PresetNames[i].valueOf().toLowerCase()) {
               console.log("same name dude");
               ifvar++;
             }
+          }
         }
 
         if(ifvar > 0) {
+          console.log("we are in here right now");
           this.err = "Invalid name: Name already taken, please enter another";
           this.$.toasty.text = this.err;
           this.$.toasty.show();
@@ -251,6 +255,8 @@
             "constants": iirConstants.join(" ")
             // Maybe we should add a currently applied thing in here or something
           };
+
+          console.log(iirConstants.join(" "));
 
           console.log("addPresetAjax:", addPresetAjax.body);
           this.$.addPresetAjax.generateRequest();
@@ -266,9 +272,28 @@
           // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
           temp.innerHTML = name;
           Polymer.dom(this.$.equalizerListbox).appendChild(temp);
-          this.$.equalizerListbox.selected = name;
 
+          var length = this.speaker.Equalizer.length;
+          console.log(length);
+
+          console.log(iirConstants);
+
+          //for(var i = 0; i < this.speaker.Equalizer.length; i++) {
+            this.speaker.Equalizer.push(iirConstants);
+          //}
+
+          this.speaker.PresetNames[this.speaker.PresetNames.length] = name;
+
+          console.log(this.speaker.Equalizer.length);
+
+          this.$.equalizerListbox.selected = name;
+          this.$.toasty.text = "";
+          this.$.popupInput.value = "";
         }
+      },
+
+      _cancelPressed: function(event) {
+        // make something that will capture the last thing clicked and keep track of that and change it to that when they click cancel
       },
 
       listeners: {
@@ -285,8 +310,7 @@
 
         //menu.averaging = this.$.menu.selected + 1;
 
-        var selected = this.$.equalizerListbox.selected.valueOf().toLowerCase().replace("\n", "");   // do this for all whitespace characters
-        var associtationLink = -1;
+        var selected = this.$.equalizerListbox.selected.valueOf().toLowerCase().replace("\n", "");   // do this for all whitespace character
 
         var sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
         var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
@@ -297,143 +321,39 @@
 
           for (var i = 0; i < this.speaker.Current.length; i++) { 
             sliders[i].style.height = (this.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
+            console.log(this);
             handles[i].style.bottom = (this.speaker.Current[i] + 40) * 2 + "%";
             $("#text" + (parseInt(i) + 1)).val(this.speaker.Current[i]);
-            iirConstants[i] = this.speaker.Current[i];
+            iirConstants[i] = this.speaker.Current[i];       
           }
         } else if(selected == "add new preset") {
-            console.log("Adding new preset coming soon...");
-            //this.$.toasty.text = "Add New Preset";
-            this.$.toasty.text = "Custom presets coming soon!";
-            this.$.toasty.show();
-
             var addPresetAjax = document.getElementById("addPresetAjax");
             console.log(addPresetAjax);
-            //var name = "shitwhythefuckisntthisworking";
-
-             this.$.dialog.toggle();
-
-            // main overlay container
-            /*$('<div id="msg_overlay">').css({
-                "width": "100%",
-                "height": "100%",
-                "background" : "#000",
-                //"background": "#3367d6",
-                "position" : "fixed", 
-                "top": "0", 
-                "left": "0", 
-                "zIndex": "50", 
-                "MsFilter": "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)", 
-                "filter": "alpha(opacity=60)",
-                "MozOpacity": 0.5,
-                "KhtmlOpacity": 0.5,
-                "opacity": 0.5
-
-            }).appendTo(document.body);*/
-
-
-          /* <div class="flex company">Create Zone</div>
-              <div class="message">{{err}}</div>
-              <div class="success">{{successMsg}}</div>
-              <form on-iron-form-submit="_submit" is="iron-form" id="form">
-                <paper-input id="name" name="name" label="Zone Name" required></paper-input>
-                <paper-button raised on-click="_submit">Create Zone</paper-button>
-                <paper-progress id="progress" value="100"></paper-progress>
-                <!-- We should be able to press enter to submit. This button with type submit is required to do so. -->
-                <button class="hidden" type="submit">I should be hidden</button>
-              </form>*/
-
-
-              //console.log(($(window).height / 2) - (document.getElementById(card_title).height - 2), ($(window).width / 2) - (document.getElementById(card_title).width - 2));
-
-            /*$('<paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation"><h2>Header</h2><div>Dialog body</div></paper-dialog>').css({
-                "width": "100",
-                "height": "100",
-                //"background" : "#000",
-                //"background": "#3367d6",
-                "position": "fixed", 
-                "top": "0",
-                "left": "0",
-                "zIndex": "51", 
-
-            }).appendTo(document.body);*/
-
-            /*temp = document.createElement("paper-card");
-            //temp.setAttribute("value", controller.speaker.PresetNames[i].valueOf().replace("\n", ""));
-            temp.setAttribute("id", "card_title");
-            temp.setAttribute("width", "auto");
-            temp.setAttribute("height", "auto");
-            temp.setAttribute("position", "fixed");
-            temp.setAttribute("top", "0");
-            temp.setAttribute("left", "0");
-            // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
-            temp.innerHTML = "<paper-button raised>Raised button</paper-button>";
-
-            $("card_title").append("<paper-button raised>Raised button</paper-button>");*/
-
-           /* console.log(($(window).height() / 2) - (document.getElementById("card_title").offsetHeight / 2), ($(window).width() / 2) - (document.getElementById("card_title").offsetWidth / 2));
-
-
-            document.getElementById("card_title").style.top = ($(window).height() / 2) - (document.getElementById("card_title").offsetHeight / 2) + "px";
-            document.getElementById("card_title").style.left = ($(window).width() / 2) - (document.getElementById("card_title").offsetWidth / 2) + "px";
-
-
-            $('<paper-button raised>Button</paper-button>').css({
-                "width": "auto",
-                "height": "auto",
-                //"background" : "#000",
-                //"background": "#3367d6",
-                "position": "fixed", 
-                "top": "auto",
-                "left": "auto",
-                "zIndex": "51", 
-
-            }).appendTo(document.getElementById("card_title"));*/
-
-
-
-            //console.log(document.getElementById("card_title").offsetWidth);
-
-            /*
-            $(document.getElementById("msg_overlay")).remove();
-
-            var person = prompt("Please enter your name", "Harry Potter");
-            if (person != null) {
-                document.getElementById("demo").innerHTML =
-                "Hello " + person + "! How are you today?";
-            }
-            */
-
-          /*    need to do something here to add the presets in, probably just make a handler
-            for (var i = 0; i < controller.speaker.Current.length; i++) {
-              sliders[i].style.height = "" + (controller.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
-              handles[i].style.bottom = "" + (controller.speaker.Current[i] + 40) * 2 + "%";
-              $("#text" + (parseInt(i) + 1)).val(controller.speaker.Current[i]);
-              iirConstants[i] = controller.speaker.Current[i];
-            }
-          */
-        } else {
-            for (var i = 0; i < this.speaker.PresetNames.length; i++) {
-              this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded!";
-              this.$.toasty.show();
-
-              if(selected == this.speaker.PresetNames[i].valueOf().toLowerCase()) {
+            this.$.dialog.toggle();
+        } else if(this.speaker.PresetNames.length > 0) {
+            var associationLink = -1;
+            console.log(this.speaker.PresetNames);
+            for (k in this.speaker.PresetNames) {
+              if(selected == this.speaker.PresetNames[k].valueOf().toLowerCase()) {
+                this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded!";
+                this.$.toasty.show();
                 console.log("Speaker " + this.speakerId + " selected " + selected);
                 // show a toast here with the preset applied message
-                associtationLink = i;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
+                associationLink = k;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
+                console.log("associationLink", associationLink);
                 break;    // this is for efficiency reasons, better to keep it this way if it works
               }
             }
-
-            // need to check whether associationLink is -1 here
-            // the undefined error is coming from the fact that sometiems the associationLink is not set because the value is not 
-            for (var i = 0; i < this.speaker.Equalizer[associtationLink].length; i++) {   // add associationLink back if this fucks up
-              sliders[i].style.height = (this.speaker.Equalizer[associtationLink][i] + 40) * 2 + "%";    // why does this have to be lower case
-              handles[i].style.bottom = (this.speaker.Equalizer[associtationLink][i] + 40) * 2 + "%";
-              $("#text" + (parseInt(i) + 1)).val(this.speaker.Equalizer[associtationLink][i]);
-              iirConstants[i] = this.speaker.Equalizer[associtationLink][i];
+            if(associationLink != -1) {
+                console.log(this.speaker.Equalizer.length);
+                for (var j = 0; j < this.speaker.Equalizer[0].length; j++) {   // add associationLink back if this fucks up
+                  sliders[j].style.height = (this.speaker.Equalizer[associationLink][j] + 40) * 2 + "%";    // why does this have to be lower case
+                  handles[j].style.bottom = (this.speaker.Equalizer[associationLink][j] + 40) * 2 + "%";
+                  $("#text" + (parseInt(j) + 1)).val(this.speaker.Equalizer[associationLink][j]);
+                  iirConstants[j] = this.speaker.Equalizer[associationLink][j];
+                }
             }
-        }
+          }
 
           // Need to put a toast thing here like we have on the volume selector page
          /*
@@ -797,6 +717,8 @@
   $(window).resize(function() {
     if($(window).width() < MIN_WIDTH_SUPPORTED || $(window).height() < MIN_HEIGHT_SUPPORTED){
       console.log($(window).width());
+
+console.log(document.getElementById("eighty").offsetWidth);
       /*var custom_container = document.getElementById("custom_container");
       //custom_container.style.visibility = "hidden";
       var customs = document.getElementsByClassName("custom");

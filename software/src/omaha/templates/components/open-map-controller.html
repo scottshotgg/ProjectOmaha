@@ -128,9 +128,9 @@
 
         console.log("Response:", data.response);
         console.log("Speaker:", a.speaker);
-        a.speaker.PresetNames = [0];
-        a.speaker.Current = [0];
-        a.speaker.Equalizer = [0];
+        a.speaker.PresetNames = [];
+        a.speaker.Current = [];
+        a.speaker.Equalizer = [];
 
         for (i in data.response.PresetNames) {
           a.speaker.PresetNames[i] = data.response.PresetNames[i].replace("\n", "");

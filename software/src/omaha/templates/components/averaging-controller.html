@@ -35,14 +35,19 @@
       }
       
       paper-button {
-        background-color: #4285f4;      /* This is not needed and for some reason is still here */
+        background-color: #3367d6;      /* This is not needed and for some reason is still here */
         color: #fff;
         margin-top: 10px;
         text-align: center;
       }
 
-      paper-input {
+      paper-input /deep/ #input {
         text-align: center;
+      }
+
+      paper-slider {
+        width: 100%;
+        /*margin-top: calc(.075 * 100vh);    /* this offset fucks everything up */
       }
 
       paper-item {
@@ -59,11 +64,15 @@
         overflow: hidden;   /* solve the overflow shit */
       }
 
+      #invis {
+        visibility: hidden;
+      }
+
     </style>
 
-    <paper-card heading="Averaging Mode">
+    <paper-card heading="Comfort"><h6 style="margin: 0;">what else to call it</h6>
       <div class="card-content">
-        <paper-dropdown-menu no-label-float style="overflow; hidden;" label="Averaging Mode:">
+        <!--<paper-dropdown-menu no-label-float style="overflow; hidden;" label="Averaging Mode:">
           <paper-listbox id="menu" class="dropdown-content" value="0">
             <paper-item>Mode 1</paper-item>
             <paper-item>Mode 2</paper-item>
@@ -85,9 +94,26 @@
             <paper-item>Mode 18</paper-item>
             <paper-item>Mode 19</paper-item>
             <paper-item>Mode 20</paper-item>
-          </paper-listbox>
+          </paper-listbox>-->
         </paper-dropdown-menu>
+        <div id=ec_encap class="layout vertical">
+          <div id="ec_style_div" class="layout horizontal">
+            <h4>Effectiveness</h4>
+            <paper-slider id="invis" pin min="0" max="100" step="5"></paper-slider>
+            <h4>Comfort</h4>
+          </div>
+          <div id="ec_div" class="layout horizontal">
+            <paper-icon-button icon="remove" on-click="decrementEC"></paper-icon-button>
+            <paper-slider id="effectiveness" pin min="1" max="20" step="1" value="{{effectivenessComfort}}"></paper-slider>       
+            <paper-icon-button icon="add" on-click="incrementEC"></paper-icon-button>
+          <!-- might need to change this is 0 is not an acceptable value -->
+          </div>
+        </div>
+
         <span>{{value}}</span>
+      </div>
+      <div class="card-actions">
+        <paper-button on-click="_selectionChanged">set comfort</paper-button>
       </div>
     </paper-card>
     <!--<paper-toast id="toast">Averaging mode set to <span>{{volume}}</span></paper-toast>-->
@@ -114,9 +140,9 @@
           }
       },
        
-      listeners: {
+      /*listeners: {
         'menu.iron-select': '_selectionChanged'
-      },
+      },*/
       
       _selectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
         console.log(this.speakerId);    // This says the speakerId is undefined
@@ -125,12 +151,12 @@
 
         //menu.averaging = this.$.menu.selected + 1;
 
-        console.log(this.$.menu.selected + 1);
+        //console.log(this.$.menu.selected + 1);
 
           // Need to put a toast thing here like we have on the volume selector page
           var updatedAttributes = ["averaging"];
           var attributeValues = {
-            "averaging": this.$.menu.selected + 1
+            "averaging": this.effectivenessComfort
           };
           this.$.selectModeAjax.body = {
             "updatedAttributes": updatedAttributes, 
@@ -147,7 +173,38 @@
 
       _logResponse: function(event, data) {
         console.log(data.response);
-      }
+      },
+
+      decrementEC: function() {
+        this.$.effectiveness.decrement();
+        this.$.effectiveness._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      incrementEC: function() {
+        this.$.effectiveness.increment();
+        this.$.effectiveness._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+
+      resetKnob: function(elem) {
+        elem.prevTimeout = 0;
+        elem.$.effectiveness._resetKnob();
+      },
       
     });
   </script>
