@@ -51,8 +51,9 @@
         padding: 0px;
       }
 
-      paper-input {
+      paper-input /deep/ #input {
         margin-top: 0px;
+        text-align: center;
       }
 
       .message {
@@ -98,7 +99,7 @@
       <div>Enter the new preset name below</div>
 
       <div class="message">{{err}}</font></div>
-      <paper-input id="popupInput" label="" placeholder="Enter Name for Preset" text-align="center"></paper-input>
+      <paper-input id="popupInput" class="retard" label="" placeholder="Enter Name for Preset" text-align="center"></paper-input>
       <div class="buttons">
 
       <paper-button dialog-dismiss>Cancel</paper-button>    <!-- Something needs to go here -->
@@ -146,10 +147,12 @@
 
   })
 
+//  document.getElementById(equalizerListbox).selected = "Currently Applied";
+
   //PresetNames[] = {"hi", "my", "name", "is", "scott"};
   
 
-  //document.getElementById("custom").appendChild(temp);
+  //document.getElementById("custom").appendChild(temp);    make this work
 
   var iirConstants = [];
 
@@ -263,7 +266,7 @@
           // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
           temp.innerHTML = name;
           Polymer.dom(this.$.equalizerListbox).appendChild(temp);
-          var selected = this.$.equalizerListbox.selected = name;
+          this.$.equalizerListbox.selected = name;
 
         }
       },
