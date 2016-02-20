@@ -33,23 +33,27 @@ type speakerResponse struct {
 }
 
 type speakerGetRequest struct {
-	Speaker		int8	`json:"speaker"`
+	Speaker		int8		`json:"speaker"`
 }
 
 type addPresetData struct {
 	Speaker		int8		`json:"speaker"`
-	Name		string	`json:"name"`
-	Constants	string	`json:"constants"`
+	Name		string		`json:"name"`
+	Constants	string		`json:"constants"`
+}
+
+type pagingRequest struct {
+	Speaker		int8	`json:"speaker"`
 }
 
 type speakerAttributes struct {
-	Volume    	string 	`json:"volume"`
-	//Music		int8 	`json:"musicVolume"`
-	Averaging 	int8 	`json:"averaging"`
-	LED       	bool 	`json:"led"` 
-	Equalizer 	string	`json:"equalizer"`
-	ZoneID 		int8 	`json:"zoneId"`
-	Paging		string	`json:"paging"`
+	Volume    	string 		`json:"volume"`
+	//Music		int8 		`json:"musicVolume"`
+	Averaging 	int8 		`json:"averaging"`
+	LED       	bool 		`json:"led"` 
+	Equalizer 	string		`json:"equalizer"`
+	ZoneID 		int8 		`json:"zoneId"`
+	Paging		string		`json:"paging"`
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error {
@@ -367,16 +371,47 @@ func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if status.IsDebug() {
-			log.Printf("SpeakerGetHandler json decoding error: %s\n", err)
+			log.Printf("AddPresetHandler json decoding error: %s\n", err)
 		}
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
 
-	w.Write(getGenericSuccessResponse())
-
 	log.Println(addPresetRequest)
 
+	database.SavePreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
+func PagingRequestHandler(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+
+	// It is NOT a GET request, but the struct that is used is identical to the one that would have been used for 
+	// this, so why reinvent the wheel
+	pagingRequest := &speakerGetRequest{}
+	err := json.NewDecoder(r.Body).Decode(pagingRequest)
+	//controller := database.GetSpeaker(speakerRequest.Speaker)
+
+	log.Println("Making a paging request", pagingRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("pagingRequest json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	err := SendPagingRequest(pagingRequest)
+	
+	if err != nil {
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	w.Write(getGenericSuccessResponse())
+}
 	// make a split string fucntion when you fee like it
 
 	//constants := strings.Fields(addPresetRequest.Constants)		// do not publish this function without checking for type/value errors
@@ -399,6 +434,3 @@ func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 			k++*/
 
 		//log.Println("constantsInts: ", constantsInts)
-
-	database.SavePreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
-}

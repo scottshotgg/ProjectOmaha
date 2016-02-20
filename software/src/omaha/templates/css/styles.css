@@ -129,7 +129,7 @@ paper-card {
 
 .custom > .custom_slider {
   /*height: calc(.35 * 100vh);*/
-  height: calc(100% - .08 * 100vw);
+  height: calc(100% - .07 * 100vw);
   /*margin-bottom: calc(.005 * 100vw); */ /* This was 25 */
   /*margin-left: calc(.004 * 100vw);*/
   width: 60%;

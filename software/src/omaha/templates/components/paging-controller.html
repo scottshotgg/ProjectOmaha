@@ -63,6 +63,18 @@
       </div>
     </paper-card>
     <paper-toast id="toast">Paging set to <span>{{paging}}</span></paper-toast>
+    <paper-toast id="toasty">Making a paging request to speaker <span>{{speakerId}}</span></paper-toast>
+    
+    <iron-ajax
+          id="pagingRequest"
+          url="/system/pagingRequest/"
+          method="POST"
+          content-type="application/json"
+          handle-as="json"
+          on-response="_logResponse"
+          debounce-duration="300">
+    </iron-ajax>
+
   </template>
   <script>
     Polymer({
@@ -71,14 +83,18 @@
       properties: {
         internalFadeTime: String,
 
-        paging: {     // I think this 
-          type: String,
-          notify: true,
-          observer: '_setInternalPaging'
+        speaker: {
+          type: Object
         },
 
         speakerId: {
           type: Number
+        },
+
+        paging: {     // I think this 
+          type: String,
+          notify: true,
+          observer: '_setInternalPaging'
         }
       },
 
@@ -115,7 +131,17 @@
       },
 
       _sendPageClicked: function() {
-        // fix this
+        this.$.pagingRequest.body = {
+            "speaker": this.speakerId
+        };
+        this.$.pagingRequest.generateRequest();
+
+        console.log("Making a paging request ", this.speakerId, this.$.pagingRequest.body);
+        this.$.toasty.show();
+      },
+
+      _logResponse: function(event, data) {
+        console.log(data.response);
       },
 
       // change these to work for all the sliders

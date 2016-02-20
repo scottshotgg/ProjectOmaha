@@ -146,9 +146,8 @@
   //var fragment = create("<paper-item id=" + "name" + " value=" + "custom" + ">" + "custom" + "</paper-item>"); 
   $(document).ready(function() {
   })
-
   
-
+  var lastSelected = 0;
 //  document.getElementById(equalizerListbox).selected = "Currently Applied";
 
   //PresetNames[] = {"hi", "my", "name", "is", "scott"};
@@ -168,9 +167,11 @@
       
       properties: {
         internalEqualizer: String,
+
         speakerId: {
           type: Number
         },
+
         speaker: {
           type: Object
         },
@@ -191,7 +192,7 @@
         
         this.equalizer = iirConstants.join(" ");  // this gets sent to the backend because Go's Fields(String) function works only with whitespaces
         this.iirConstantsString = iirConstants.join(", ");  // this is for the toast message
-        this.$.toast.show();
+        //this.$.toast.show();
         console.log("_setEqualizerClicked");
         console.log(iirConstants);
         
@@ -231,14 +232,13 @@
       },*/
 
       _acceptPressed: function(event) {
-
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
         var ifvar = 0;
         if(this.speaker.PresetNames.length > 0) {
           for(var i = 0; i < this.speaker.PresetNames.length; i++) {
             if(name.toLowerCase() == this.speaker.PresetNames[i].valueOf().toLowerCase()) {
               console.log("same name dude");
-              ifvar++;
+              ifvar++;    // make more checks dummy
             }
           }
         }
@@ -248,6 +248,7 @@
           this.err = "Invalid name: Name already taken, please enter another";
           this.$.toasty.text = this.err;
           this.$.toasty.show();
+          console.log("4");
         } else {
           this.$.addPresetAjax.body = {
             "speaker": this.speakerId,
@@ -263,8 +264,11 @@
 
           this.$.dialog.toggle();
 
-          this.$.toasty.text = "Added preset: " + name;
+          this.$.toasty.text = "Added preset: " + name + " Equalizer set to: " + iirConstants.join(", ");
+          console.log(this.$.toasty.text);
+
           this.$.toasty.show();
+          console.log("1");
 
           temp = document.createElement("paper-item");
           temp.setAttribute("value", name);
@@ -279,21 +283,29 @@
           console.log(iirConstants);
 
           //for(var i = 0; i < this.speaker.Equalizer.length; i++) {
-            this.speaker.Equalizer.push(iirConstants);
+          var iirConstantsCopy = $.extend(true, iirConstants);
+
+          console.log("iirConstantsCopy: ", iirConstantsCopy);
+          this.speaker.Equalizer.push(iirConstantsCopy);
           //}
 
           this.speaker.PresetNames[this.speaker.PresetNames.length] = name;
 
-          console.log(this.speaker.Equalizer.length);
+          console.log(this.speaker.Equalizer);
 
           this.$.equalizerListbox.selected = name;
-          this.$.toasty.text = "";
+          //this.$.toasty.text = "";
           this.$.popupInput.value = "";
         }
       },
 
       _cancelPressed: function(event) {
         // make something that will capture the last thing clicked and keep track of that and change it to that when they click cancel
+
+        this.$.equalizerListbox.selected = -1;
+
+        console.log(lastSelected);
+
       },
 
       listeners: {
@@ -301,6 +313,7 @@
       },
       
       _presetSelectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
+
         console.log(this.speakerId);    // This says the speakerId is undefined
 
         //var menu = document.getElementById('equalizerMenu');
@@ -316,8 +329,12 @@
         var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
 
         if(selected == "currently applied") {
-          this.$.toasty.text = "Currently applied constants loaded!";
+          this.$.toasty.text = "Currently applied constants loaded!" + " Equalizer set to: " + iirConstants.join(", ");
           this.$.toasty.show();
+
+          console.log("2");
+
+          lastSelected = this.$.equalizerListbox.selected;
 
           for (var i = 0; i < this.speaker.Current.length; i++) { 
             sliders[i].style.height = (this.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
@@ -331,12 +348,13 @@
             console.log(addPresetAjax);
             this.$.dialog.toggle();
         } else if(this.speaker.PresetNames.length > 0) {
+            lastSelected = this.$.equalizerListbox.selected;
             var associationLink = -1;
-            console.log(this.speaker.PresetNames);
             for (k in this.speaker.PresetNames) {
               if(selected == this.speaker.PresetNames[k].valueOf().toLowerCase()) {
-                this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded!";
+                this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded!" + " Equalizer set to: " + iirConstants.join(", ");
                 this.$.toasty.show();
+                console.log("3");
                 console.log("Speaker " + this.speakerId + " selected " + selected);
                 // show a toast here with the preset applied message
                 associationLink = k;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
