@@ -85,7 +85,7 @@ paper-card {
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-  background: #3367d6;
+  background: #3f51b5;
   border-radius: 30px;
   border: 2px solid #d3d3d3;
   /*
@@ -100,7 +100,7 @@ paper-card {
 }
 
 .ui-widget-header {
-  background: #3367d6;
+  background: #3f51b5;
 }
 
 .header.paper-card .title-text.paper-card {
@@ -145,7 +145,7 @@ paper-card {
   font-size: calc(.018 * 100vw);
   /*width: calc(.028 * 100vw);*/
   width: 220%;
-  color: #3367d6;
+  color: #3f51b5;
   text-align: center;
   /* Make this a percentage */
   margin-left: calc(50% - .022 * 100vw);
@@ -168,7 +168,7 @@ paper-card {
   font-weight: bold; 
   font-size: calc(.012 * 100vw);
   width: calc(.035 * 100vw);
-  color: #3367d6;
+  color: #3f51b5;
   text-align: center;
   /* Make this a percentage */
   margin-left: calc(50% - .022 * 100vw);
@@ -198,6 +198,22 @@ paper-card {
 #fadelevelabel { 
   font-size: 24px;    /*  all these need to be calculated   */
   margin-top: calc(0.05 * 100vh);
+}
+
+.paper-progress-1 #primaryProgress.paper-progress {
+  background-color: #3f51b5;
+}
+
+.paper-slider-0 #sliderKnobInner.paper-slider {
+    background-color: #3f51b5;
+}
+
+.paper-slider-0 paper-ripple.paper-slider {
+    color: #3f51b5;
+}
+
+.paper-slider-0 #sliderKnobInner.paper-slider::before {
+    background-color: #3f51b5;
 }
 
 /* this header shit doesnt do anything */
