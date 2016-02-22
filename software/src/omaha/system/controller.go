@@ -318,16 +318,16 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 	return 0, nil
 }
 
-func SendPagingRequest() {
+func SendPagingRequest(ID int8) (error) {
 	if status.debug {
-		return 0, nil
+		return nil
 	}
 
-	data := getMessageHeader(this.ID, 3)
+	data := getMessageHeader(ID, 3)
 	data[1] = Commands.SetPaging		// Cannot use a command to do this
 	data[2] = 1		// Need to see what this needs to be, either 0 or 1, mcu cna check for the toggle
 
-	return 0, nil
+	return nil
 }
 
 /*

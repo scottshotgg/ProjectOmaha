@@ -403,7 +403,7 @@ func PagingRequestHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := SendPagingRequest(pagingRequest)
+	err = system.SendPagingRequest(pagingRequest.Speaker)
 	
 	if err != nil {
 		w.Write(getGenericErrorResponse(err.Error()))

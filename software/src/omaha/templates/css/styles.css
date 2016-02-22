@@ -121,7 +121,7 @@ paper-card {
   top: 0px;
   width: 2%;
   display: inline-block; 
-  height: calc(.4 * 100vh);
+  height: calc(.6 * 100vh);
   margin-left: 1.25%;
   margin-right: 1.25%;
   float: left;
