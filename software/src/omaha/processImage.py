@@ -38,7 +38,7 @@ if __name__ == "__main__":
     hsv = cv2.cvtColor(origCopy, cv2.COLOR_BGR2HSV)
     # define range of blue color in HSV
     lower_blue = np.array([98, 100, 100])
-    upper_blue = np.array([120, 255, 255])
+    upper_blue = np.array([130, 255, 255])
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
     # get rid of the specks in the image
     mask = cv2.medianBlur(mask, 7)
