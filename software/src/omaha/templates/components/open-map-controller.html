@@ -88,6 +88,7 @@
       
       _selectSpeaker: function() {
         this._hideOverlay();
+
         //var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
         // here is where we should pass it to the backend i think and quickly get the information
         // this is working
@@ -112,8 +113,10 @@
       },
       
       _hideOverlay: function() {
-        //this.overlay.setPosition([0, 0]);
-        this.overlay.setPosition(undefined);
+        //this.overlay.setPosition([this.overlay.B.position[0] + 50, this.overlay.B.position[1] + 50]);
+        console.log(this.overlay);
+        //this.overlay.hide();
+        //this.overlay.setPosition(undefined);
       },
 
       _logResponse: function(event, data) {

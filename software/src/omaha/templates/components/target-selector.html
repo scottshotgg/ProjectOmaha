@@ -169,13 +169,13 @@
       }
     });
 
-    var dataArray = [42,42,47,53,54,51,46,47,46,45,40,37,38,40,41,39,38.5,34.5,32,30,30];
+    var dataArray = [42, 42, 47, 53, 54, 51, 46, 47, 46, 45, 40, 37, 38, 40, 41, 39, 38.5, 34.5, 32, 30, 30];
 
     var data = {
-      labels: ["80","100","125","160","200","250","315","400","500","630","800","1k","1.25k","1.6k","2k","2.5k","3.15k","4k","5k","6.3k","8k"],
+      labels: ["80", "100", "125", "160", "200", "250", "315", "400", "500", "630", "800", "1k", "1.25k", "1.6k", "2k", "2.5k", "3.15k", "4k", "5k", "6.3k", "8k"],
       datasets: [
         {
-          fillColor: "rgba(33,67,214,0.25)",
+          fillColor: "rgba(33, 67, 214, 0.25)",
           strokeColor: "#3367d6",
           pointColor: "#fff",
           pointStrokeColor: "#3367d6",  
@@ -183,15 +183,31 @@
         }
       ]
     }
+    var canvas;
   $(document).ready(function() {
-    var canvas = document.getElementById("myChart");
+    canvas = document.getElementById("myChart");
     console.log(canvas);
     var me = $(canvas).offsetParent(); // use this when using a container
     //console.log(me)
     var width = $(window).width();
     console.log(width)
     canvas.width = $(window).width() * .8;
-    canvas.height = .98 * $(window).height() / 1.65;
+    canvas.height = $(window).height() / 1.7;
+
+    var myChart = document.getElementById("myChart").getContext("2d");
+    new Chart(myChart).Line(data, {
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+        scaleStepWidth: 10,
+        scaleShowLabels: true,
+      scaleFontSize: 12
+    });
+  });
+
+  $(window).resize(function() {
+    canvas.width = $(window).width() * .8;
+    canvas.height = $(window).height() / 1.7;
 
     var myChart = document.getElementById("myChart").getContext("2d");
     new Chart(myChart).Line(data, {
