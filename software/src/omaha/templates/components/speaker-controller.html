@@ -7,6 +7,7 @@
 <link rel="import" href="/components/simple-fit.html">
 <link rel="import" href="/components/volume-selector.html">
 <link rel="import" href="/components/light-controller.html">
+<link rel="import" href="/components/target-selector.html">
 <link rel="import" href="/components/averaging-controller.html">
 <link rel="import" href="/components/equalizer-controller.html">
 <link rel="import" href="/components/paging-controller.html">
@@ -87,6 +88,7 @@
       <paper-radio-group id="mode" selected="{{mode}}">
         <paper-radio-button id="volumeButton" name="volume" class="flex">Volume</paper-radio-button>
         <paper-radio-button id="averagingButton" name="averaging" class="flex">Comfort</paper-radio-button>
+        <paper-radio-button id="targetButton" name="target" class="flex">Target</paper-radio-button>
         <paper-radio-button id="equalizerButton" name="equalizer" class="flex">Equalizer</paper-radio-button>
         <paper-radio-button id="pagingButton" name="paging" class="flex">Paging</paper-radio-button>
       </paper-radio-group>
@@ -102,6 +104,12 @@
       <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
           <volume-selector id="volume" volume="{{volumeLevel}}" musicVolume="{{musicLevel}}"></volume-selector>
+        </simple-fit>
+      </neon-animatable>
+
+      <neon-animatable page="target" id="target-selector" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+        <simple-fit class="container">
+          <target-selector id="target" speaker-id="[[speakerId]]" speaker="[[speaker]]" target="{{target}}"></target-selector> <!-- Don't know if we need the speakerId anymore -->
         </simple-fit>
       </neon-animatable>
 

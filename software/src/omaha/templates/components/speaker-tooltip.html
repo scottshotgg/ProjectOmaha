@@ -16,9 +16,19 @@
         width: 100%;
       }
 
+      paper-card {
+        text-align: left;
+      }
+
     </style>
     <div>
-      <b>Volume: <span>{{speaker.VolumeLevel}}</span></b>
+      <b id="name"></b>
+      <br>
+      <b id="speaker"></b>
+      <br>
+      <b id="zone"></b>
+      <br>
+      <b id="volume"></b>
     </div>
     <div>
       <paper-button on-click="_selectSpeaker">speaker</paper-button>
@@ -28,6 +38,7 @@
     </div>
   </template>
   <script>
+
     Polymer({
       is: 'speaker-tooltip',
 

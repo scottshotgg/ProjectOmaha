@@ -59,7 +59,7 @@ func createSpeakerTable() {
 // GetAllSpeakers gets all speakers from the database and returns them as a slice of ControllerStatus objects
 func GetAllSpeakers() []*ControllerStatus {
 	rows, err := DB.Query(`
-		SELECT speakerID, x, y, 
+		SELECT speakerID, name, x, y,  
 			volumeLevel,
 			musicLevel,
 			pagingLevel,
@@ -102,6 +102,7 @@ func GetAllSpeakers() []*ControllerStatus {
 		var speakerID int
 		var x int
 		var y int
+		var name string
 		var volumeLevel int8
 		var musicLevel int8
 		var pagingLevel int8
@@ -135,7 +136,7 @@ func GetAllSpeakers() []*ControllerStatus {
 
 		// in here get the presets that go along with the speakers and use those variables 
 
-		if err := rows.Scan(&speakerID, &x, &y, 
+		if err := rows.Scan(&speakerID, &name, &x, &y,
 			&volumeLevel, 
 			&musicLevel,
 			&pagingLevel,
@@ -171,6 +172,7 @@ func GetAllSpeakers() []*ControllerStatus {
 		speaker.X = x
 		speaker.Y = y
 		speaker.ID = int8(speakerID)
+		speaker.Name = name
 
 		speaker.VolumeLevel[0] = int8(volumeLevel)
 		speaker.VolumeLevel[1] = int8(musicLevel)
@@ -196,7 +198,8 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var averagingMode int8
 	var x int
 	var y int
-	var name string		// might need to make a catch for this
+	var name string
+	var presetName string		// might need to make a catch for this
 	var whichPreset int
 	var band0 int
 	var band1 int
@@ -221,7 +224,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var band20 int
 
 	err := DB.QueryRow(`
-		SELECT x, y, volumeLevel,
+		SELECT name, x, y, volumeLevel,
 			musicLevel,
 			pagingLevel,
 			soundMaskingLevel,
@@ -251,7 +254,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			band20
 		FROM speaker
 		WHERE speakerID=?;
-		`, speakerID).Scan(&x, &y, 
+		`, speakerID).Scan(&name, &x, &y,
 			&volumeLevel,
 			&musicLevel,
 			&pagingLevel,
@@ -283,7 +286,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	if err != nil {
 		log.Fatal(err)
 	}
-	speaker := &ControllerStatus{X: x, Y: y, VolumeLevel: [4]int8{volumeLevel, musicLevel, pagingLevel, soundMaskingLevel}, PagingLevel: [2]int8{fadeTime, fadeLevel}, AveragingMode: averagingMode, ID: speakerID, Current: [21]int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}}
+	speaker := &ControllerStatus{Name: name, X: x, Y: y, VolumeLevel: [4]int8{volumeLevel, musicLevel, pagingLevel, soundMaskingLevel}, PagingLevel: [2]int8{fadeTime, fadeLevel}, AveragingMode: averagingMode, ID: speakerID, Current: [21]int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}}
 
 
 	rows, err := DB.Query(`
@@ -317,7 +320,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 
 	for rows.Next() {
 
-		err = rows.Scan(&name, &whichPreset, 
+		err = rows.Scan(&presetName, &whichPreset, 
 				&band0,
 				&band1,
 				&band2,
@@ -369,7 +372,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 				band20)
 		*/
 			//constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
-			speaker.PresetNames = append(speaker.PresetNames, name)
+			speaker.PresetNames = append(speaker.PresetNames, presetName)
 			speaker.Equalizer = append(speaker.Equalizer, []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
 			log.Println(speaker.PresetNames, speaker.Equalizer)		// make sure that the two arrays are the same size
 

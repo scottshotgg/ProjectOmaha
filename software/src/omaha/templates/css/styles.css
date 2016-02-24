@@ -73,10 +73,6 @@ paper-tabs paper-tab.iron-selected {
   color: #ffff8d;
 }
 
-paper-card {
-  text-align: center;
-}
-
 .full-container {
   height: 100%;
   padding: 0px; /* This was 20, change back if needed */
@@ -199,6 +195,12 @@ paper-card {
   font-size: 24px;    /*  all these need to be calculated   */
   margin-top: calc(0.05 * 100vh);
 }
+
+      #selectedSpeakers {
+        height: 100%;
+        width: 100px;
+        background-color: #000;
+      }
 
 .paper-progress-1 #primaryProgress.paper-progress {
   background-color: #3f51b5;

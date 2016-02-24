@@ -35,6 +35,7 @@
       paper-card {
         width: 100%;
         height: 100%;   /* This was 100%, cahnge back if needed */
+        text-align: center;
       }
 
       .paper-card .card-content {
@@ -145,7 +146,7 @@
 
   //var fragment = create("<paper-item id=" + "name" + " value=" + "custom" + ">" + "custom" + "</paper-item>"); 
   $(document).ready(function() {
-  })
+  });
   
   var lastSelected = 0;
 //  document.getElementById(equalizerListbox).selected = "Currently Applied";
@@ -264,7 +265,7 @@
 
           this.$.dialog.toggle();
 
-          this.$.toasty.text = "Added preset: " + name + " Equalizer set to: " + iirConstants.join(", ");
+          this.$.toasty.text = "Added preset: " + name + " " + iirConstants.join(", ");
           console.log(this.$.toasty.text);
 
           this.$.toasty.show();
@@ -282,11 +283,10 @@
 
           console.log(iirConstants);
 
-          //for(var i = 0; i < this.speaker.Equalizer.length; i++) {
-          var iirConstantsCopy = $.extend(true, iirConstants);
+          var iirConstantsCopy = iirConstants.slice();
 
           console.log("iirConstantsCopy: ", iirConstantsCopy);
-          this.speaker.Equalizer.push(iirConstantsCopy);
+          this.speaker.Equalizer.push(iirConstants.slice());    // change this to iirConstantsCopy if it breaks
           //}
 
           this.speaker.PresetNames[this.speaker.PresetNames.length] = name;
@@ -329,7 +329,7 @@
         var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
 
         if(selected == "currently applied") {
-          this.$.toasty.text = "Currently applied constants loaded!" + " Equalizer set to: " + iirConstants.join(", ");
+          this.$.toasty.text = "Currently applied constants loaded! " + iirConstants.join(", ");
           this.$.toasty.show();
 
           console.log("2");
@@ -352,7 +352,7 @@
             var associationLink = -1;
             for (k in this.speaker.PresetNames) {
               if(selected == this.speaker.PresetNames[k].valueOf().toLowerCase()) {
-                this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded!" + " Equalizer set to: " + iirConstants.join(", ");
+                this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded! " + iirConstants.join(", ");
                 this.$.toasty.show();
                 console.log("3");
                 console.log("Speaker " + this.speakerId + " selected " + selected);

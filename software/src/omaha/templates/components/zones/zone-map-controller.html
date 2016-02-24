@@ -39,8 +39,10 @@
       #zoneContainer {
         text-align: center;
       }
+
     </style>
-    <div id="zoneMap" class="map">
+    <div id="pageContainer" class="layout horizontal">
+    <div id="zoneMap" class="map"></div>
     </div>
     <paper-card id="popup">
       <div>Current Zone: <span><b>{{selected.zone.name}}</b></span></div>
@@ -134,7 +136,7 @@
         var style = {}
 
        var allColors = [
-          '#795548',
+          /*'#795548',
           '#ff5722',
           '#ff9800',
           '#ffc107',
@@ -148,7 +150,7 @@
           '#3f51b5',
           '#673ab7',
           '#9c27b0',
-          '#e91e63',
+          '#e91e63',*/
           '#f44336'
         ];
         
@@ -228,6 +230,59 @@
         });
         
         mapController.map = map;
+
+        // this is the selection handler for the box dragging
+
+        // a normal box interaction to handle click
+        var box = new ol.interaction.Select();
+        map.addInteraction(box);
+
+        var selectedFeatures = box.getFeatures();
+
+        // a DragBox interaction used to select features by drawing boxes
+        var dragBox = new ol.interaction.DragBox({
+          condition: ol.events.condition.shiftKeyOnly,
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: [63, 81, 181, 1]
+            })
+          })
+        });
+
+        map.addInteraction(dragBox);
+
+        dragBox.on('boxend', function(e) {
+          // features that intersect the box are added to the collection of
+          // selected features, and their names are displayed in the "info"
+          // div
+          var info = [];
+          var extent = dragBox.getGeometry().getExtent();
+          vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+            selectedFeatures.push(feature);
+
+            info.push(feature.B.speaker.id);
+          });
+          if (info.length > 0) {
+            // /infoBox.innerHTML = info.join(', ');
+          }
+          console.log("Selected speakers: ", info);
+
+        });
+
+        // clear selection when drawing a new box and when clicking on the map
+        dragBox.on('boxstart', function(e) {
+
+          selectedFeatures.clear();
+          //infoBox.innerHTML = '&nbsp;';
+        });
+        map.on('click', function() {
+
+        //console.log(selectedFeatures);
+          selectedFeatures.clear();
+          //infoBox.innerHTML = '&nbsp;';
+        });
+
+        // this is the selection for the tooltip shit
 
         var select = new ol.interaction.Select({
           style: function(feature, resolution) {

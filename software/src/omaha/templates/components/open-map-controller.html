@@ -88,6 +88,7 @@
       
       _selectSpeaker: function() {
         this._hideOverlay();
+        //var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
         // here is where we should pass it to the backend i think and quickly get the information
         // this is working
            /* console.log(this.$, "this is in the thing that you added")
@@ -111,6 +112,7 @@
       },
       
       _hideOverlay: function() {
+        //this.overlay.setPosition([0, 0]);
         this.overlay.setPosition(undefined);
       },
 
@@ -118,6 +120,7 @@
         console.log(data.response);
         var a = document.getElementById('speaker-tooltip');   // I guess I'll just keep this as 'a'
         
+        a.speaker.name = data.response.name;
         a.speaker.VolumeLevel[0] = data.response.volume;
         a.speaker.VolumeLevel[1] = data.response.music;
         a.speaker.VolumeLevel[2] = data.response.paging;
@@ -148,6 +151,12 @@
         }
 
         a.speaker.Response = "true";
+
+        console.log(document.getElementById("shutup"));
+        document.getElementById("name").innerHTML = a.speaker.name;
+        document.getElementById("speaker").innerHTML = "Speaker ID: " + a.speaker.id;
+        document.getElementById("zone").innerHTML = "Zone: " + a.speaker.zone.zoneID;
+        document.getElementById("volume").innerHTML = "Volume: " + a.speaker.VolumeLevel[0];
 
         console.log("Speaker", a.speaker);
         //speaker.volumeLevel = data.response.volume;
@@ -306,6 +315,8 @@
                 return style[zone].style;
             }
         });
+
+
         map.addInteraction(select);
 
         select.on('select', function(e) {
@@ -326,7 +337,13 @@
               mapController.selected = speaker;
               // get the point's coordinate
               var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
+
+              console.log(coordinate)
+
+              console.log(speaker);
+
               overlay.setPosition(coordinate);
+
               console.log(colorMap);
             } else {
               // make sure the overlay is hidden
@@ -344,7 +361,7 @@
         hoverInteraction.on('select', function(e){
           if(e.selected.length > 0) {
               console.log("Selected");
-              var speaker = e.selected[0].getProperties().speaker
+              var speaker = e.selected[0].getProperties().speaker;
               console.log(speaker);
               var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
               tooltip.setPosition(coordinate);
@@ -353,4 +370,4 @@
       }
     });
   </script>
-</dom-module> 
+</dom-module> 5

@@ -7,6 +7,7 @@ type Account struct {
 }
 
 type ControllerStatus struct {
+	Name			string		`json:"name"`
 	LEDOn         	bool 		`json:"ledOn"`
 	ID            	int8 		`json:"id"`
 	X            	int  		`json:"x"`
