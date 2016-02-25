@@ -6,12 +6,12 @@
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
-<script src="Chart.js"></script>
 <link rel="stylesheet" href="jquery-ui-1.11.4.css">
 <script src="jquery-1.10.2.js" type="text/jscript"></script>
-<!--<script src="jquery-2.2.0.js"></script>-->
+<script src="Chart.js" type="text/jscript"></script>
 <script src="jquery-ui-1.11.4.js" type="text/jscript"></script>
 <script src="jquery.ui.touch-punch.js" type="text/jscript"></script>
+<!--<script src="jquery-2.2.0.js"></script>-->
 <!--<link rel="import" href="/bower_components/paper-checkbox//paper-checkbox.html">-->
 
 <dom-module id="target-selector">
@@ -25,11 +25,6 @@
         width: 100%;
         text-align: center;
       }
-     
-      paper-slider {
-        width: 100%;
-        margin-top: ;
-      }
       
       paper-button {
         background-color: #3f51b5;
@@ -39,7 +34,7 @@
     </style>
    <paper-card heading="Target" elevation="4">
       <div class="card-content">
-        <canvas id="myChart" class="chartClass" height="400" width="400"></canvas>
+        <canvas id="targetChart" class="chartClass"></canvas>
       </div>
       <div class="card-actions">
         <paper-button on-click="_setTargetClicked">set target</paper-button>
@@ -52,9 +47,9 @@
       is: 'target-selector',
       
       properties: {
-        internalVolume: String,
+        internalTarget: String,
 
-        volume: {     // I think this 
+        target: {     // I think this 
           type: String,
           notify: true,
           observer: '_setInternalVolume'
@@ -99,9 +94,9 @@
       },
       */
 
-      _setInternalVolume: function(volume) {
-        this.internalVolume = volume;
-        console.log("_setInternalVolume");
+      _setInternalTarget: function(volume) {
+        this.internalTarget = target;
+        console.log("_setInternalTarget" + this.internalTarget);
       },
 
       /*
@@ -122,50 +117,17 @@
         console.log("_setInternalPagingVolume");
       },*/
       
-      _setVolumeClicked: function() {
-        this.volume = this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume + " " + this.internalSoundMaskingVolume;
+      _setTargetClicked: function() {
+        this.target = this.internalTarget;
         //this.musicVolume = this.internalVolume2;
         this.$.toast.show();
-        console.log("_setVolumeClicked");
+        console.log("_setTargetClicked");
       },
 
-
-        // change these to work for all the sliders
-      
-      decrementVolume: function() {
-        this.$.volume2.decrement();
-        this.$.volume2._expandKnob();
-        if(this.prevTimeout != 0) {
-          window.clearTimeout(this.prevTimeout)
-        }
-        var elem = this;
-        var func = this.resetKnob;
-        this.prevTimeout = window.setTimeout(function(){
-          func(elem);
-        }, 500);
-      },
-      
-      incrementVolume: function() {
-        this.$.volume2.increment();
-        this.$.volume2._expandKnob();
-        if(this.prevTimeout != 0) {
-          window.clearTimeout(this.prevTimeout)
-        }
-        var elem = this;
-        var func = this.resetKnob;
-        this.prevTimeout = window.setTimeout(function(){
-          func(elem);
-        }, 500);
-      },
-      
-      resetKnob: function(elem) {
-        elem.prevTimeout = 0;
-        elem.$.volume2._resetKnob();
-      },
 
       ready: function() {
-        this.internalVolume = this.volume;
-        console.log("I am ready " + this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume) + " " + this.internalSoundMaskingVolume;
+        this.internalTarget = this.target;
+        console.log("I am ready " + this.internalTarget);
       }
     });
 
@@ -183,41 +145,32 @@
         }
       ]
     }
-    var canvas;
-  $(document).ready(function() {
-    canvas = document.getElementById("myChart");
-    console.log(canvas);
-    var me = $(canvas).offsetParent(); // use this when using a container
-    //console.log(me)
-    var width = $(window).width();
-    console.log(width)
-    canvas.width = $(window).width() * .8;
-    canvas.height = $(window).height() / 1.7;
+    var canvas = document.getElementById("targetChart");
+    var chart_width_scalar = .8;
+    var chart_height_scalar = .6;
 
-    var myChart = document.getElementById("myChart").getContext("2d");
-    new Chart(myChart).Line(data, {
+    var lineAttributes = {
       scaleOverride: true,
       scaleSteps: 10,
       scaleStartValue: -20,
-        scaleStepWidth: 10,
-        scaleShowLabels: true,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
       scaleFontSize: 12
-    });
+    };
+
+  $(document).ready(function() {
+    canvas = document.getElementById("targetChart");
+    canvas.width = $(window).width() * chart_width_scalar;
+    canvas.height = $(window).height() * chart_height_scalar;
+
+    new Chart(canvas.getContext("2d")).Line(data, lineAttributes);
   });
 
   $(window).resize(function() {
-    canvas.width = $(window).width() * .8;
-    canvas.height = $(window).height() / 1.7;
+    canvas.width = $(window).width() * chart_width_scalar;
+    canvas.height = $(window).height() * chart_height_scalar;
 
-    var myChart = document.getElementById("myChart").getContext("2d");
-    new Chart(myChart).Line(data, {
-      scaleOverride: true,
-      scaleSteps: 10,
-      scaleStartValue: -20,
-        scaleStepWidth: 10,
-        scaleShowLabels: true,
-      scaleFontSize: 12
-    });
+    new Chart(canvas.getContext("2d")).Line(data, lineAttributes);
   });
     
 
