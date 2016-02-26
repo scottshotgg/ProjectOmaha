@@ -5,16 +5,17 @@
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-drawer/paper-drawer.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
-
-
 <link rel="import" href="/components/speaker-icon.html">
 <link rel="import" href="/components/zones/zone-assigner.html">
-<dom-module id="zone-map-controller">
+
+<dom-module id="zone-map-controller" class="layout horizontal">
   <template>
     <style>
       :host {
@@ -25,8 +26,12 @@
         height: 100%;
         width: 100%;
       }
+
       paper-card {
         padding: 10px;
+        width: 100%;
+        height: 100%;   /* This was 100%, cahnge back if needed */
+        text-align: center;
       }
 
       #zoneBtn {
@@ -36,14 +41,57 @@
         width: 100%;
       }
       
-      #zoneContainer {
+      #pageContainer {
+        text-align: center;
+        height: 100%;
+      }
+
+      #zoneMap {
+        height: 100%;
+      }
+
+      #mainContainer.paper-header-panel {
+        position: relative;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        height: 100%;
+      }
+
+      .paper-card .card-content {
+        padding: 0px;
+        height: 200%;
+      }
+      
+      paper-button {
+        background-color: #3f51b5;
+        color: #fff;
+        margin-top: 1px;
+      }
+
+      paper-input /deep/ #input {
+        margin-top: 0px;
         text-align: center;
       }
 
     </style>
-    <div id="pageContainer" class="layout horizontal">
-    <div id="zoneMap" class="map"></div>
+    <div id="zoneContainer" style="width: 80%; height: 100%; float: left;"></div>
+    <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 80%; width: 20%; height: 90%;">
+      <body class="fullbleed layout vertical">
+        <paper-header-panel mode="waterfall" style="background-color: #fff">
+          <paper-toolbar>
+            <div>Selected Speakers<h6 style="margin: 0px; text-align: center;">make this centered</h6><h6 style="margin: 0px; text-align: center;">make an escape event key that will clear this</h6><h6 style="margin: 0px; text-align: center;"></div>
+          </paper-toolbar>
+          <div id="dropShadow" class="style-scope paper-header-panel has-shadow"></div>
+          <div id="speakerHolder" style=""></div>
+        </paper-header-panel>
+      </body>
     </div>
+    <div id="buttonHolder" style="border-left: 2px solid #3f51b5; background-color: #fff; margin-left: 80%; width: 20%; height: 10%;">
+    <paper-button on-click="_createZone" style="margin-left: 25%; margin-top: 7%; color: #fff;">Make zone</paper-button>
+    </div>
+
+    <paper-toast id="toast"></span>Zone Created!</paper-toast>
     <paper-card id="popup">
       <div>Current Zone: <span><b>{{selected.zone.name}}</b></span></div>
       <div><paper-button id="zoneBtn" on-click="_assignZone">assign zone</paper-button></div>
@@ -51,9 +99,36 @@
     <paper-dialog id="dialog">
       <zone-assigner on-zoneupdated="_refreshSpeaker" id="zoneAssigner" speaker="{{selected}}" zones="{{zones}}"></zone-assigner>
     </paper-dialog>
-    <help-panel></help-panel>
+
+
+
+    <paper-dialog id="zoneDialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
+      <h1 style="text-align: center;">Create Zone</h1>
+      <div style="text-align: center;">Enter a name for the new zone below</div>
+      <div class="message">{{err}}</font></div>
+      <paper-input id="popupInput" label="" placeholder="Enter Name for Zone" text-align="center"></paper-input>
+      <div class="buttons">
+      <paper-button ondialog-confirm on-click="_acceptPressed">Create</paper-button>
+      <paper-button dialog-dismiss on-click="_cancelPressed">Cancel</paper-button>
+    </div>
+
+    <iron-ajax
+      id="createZoneAjax"
+      url="/system/createZone/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
+
+    <!-- <help-panel></help-panel> -->
   </template>
+
   <script>
+
+    var totalInfo = [];
     
     Polymer({
       is: 'zone-map-controller',
@@ -79,6 +154,28 @@
           }
         }
       },
+
+      _acceptPressed: function(e) {
+        this.$.zoneDialog.toggle();
+        this.$.toast.show();
+        console.log(totalInfo);
+
+        this.$.createZoneAjax.body = {
+          // make sure that this isn't empty, do the disable button thing
+          // send the name with this too dummy
+          "speakers": totalInfo
+        }
+
+        console.log("createZoneAjax:", createZoneAjax.body);
+        this.$.createZoneAjax.generateRequest();
+      },
+
+      _cancelPressed: function(e) {
+      },
+
+      _createZone: function(e) {
+        this.$.zoneDialog.toggle();
+      },
       
       _refreshSpeaker: function(e) {
         var speakerId = e.detail.speakerId;
@@ -95,7 +192,8 @@
       },
 
       renderMap: function() {
-        var mapController = this;
+        var mapController = document.getElementById("zoneMap");
+        console.log(mapController);
         mapController.featureMap = {};
         var container = mapController.$.popup;
         var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
@@ -105,7 +203,7 @@
             duration: 250
           }
         }));
-        
+      
         mapController.overlay = overlay;
         
         // Map views always need a projection.  Here we just want to map image
@@ -221,7 +319,7 @@
               vectorLayer
           ],
           overlays: [overlay],
-          target: 'zoneMap',
+          target: 'zoneContainer',
           view: new ol.View({
             projection: projection,
             center: ol.extent.getCenter(extent),
@@ -233,7 +331,7 @@
 
         // this is the selection handler for the box dragging
 
-        // a normal box interaction to handle click
+        // we need to add a button if it is a touch screen
         var box = new ol.interaction.Select();
         map.addInteraction(box);
 
@@ -262,23 +360,50 @@
 
             info.push(feature.B.speaker.id);
           });
-          if (info.length > 0) {
+          //if (info.length > 0) {
             // /infoBox.innerHTML = info.join(', ');
-          }
-          console.log("Selected speakers: ", info);
+            console.log("Selected speakers: ", info);
+            console.log("Total selected speakers: ", totalInfo);
 
+            // i have a feeling that this is not very optimized
+            for (var i = 0; i < info.length; i++) {
+              if(totalInfo.indexOf(info[i]) == -1) {
+                totalInfo.push(info[i]); 
+              } else {
+                console.log("Speaker", info[i], "is already in the list of selected speakers.");
+                delete totalInfo[i];    // make something for delete
+
+                console.log(totalInfo);
+              }
+            }
+            totalInfo.sort();
+            document.getElementById("speakerHolder").innerHTML = "";
+            for (var k = 0; k < totalInfo.length; k++) {
+              if (totalInfo[k] !== undefined) {
+                document.getElementById("speakerHolder").innerHTML = document.getElementById("speakerHolder").innerHTML + "<paper-item center-justified flex style=\"border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"> Speaker " + totalInfo[k] + "</paper-item>";/* + document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k];*/
+
+                // when we send it off make a new array and splice out the undefineds 
+              }
+            }
+            console.log(totalInfo);
+
+            //var something = document.getElementById("selectedSpeakers").innerHTML = totalInfo;
+         // }
+          //something.innerHTML("la;kdfjlk");
         });
 
         // clear selection when drawing a new box and when clicking on the map
         dragBox.on('boxstart', function(e) {
 
-          selectedFeatures.clear();
+          // make something that removes them from the animation here when you feel like it
+
+          //selectedFeatures.clear();
           //infoBox.innerHTML = '&nbsp;';
         });
         map.on('click', function() {
 
         //console.log(selectedFeatures);
-          selectedFeatures.clear();
+          //selectedFeatures.clear();
           //infoBox.innerHTML = '&nbsp;';
         });
 

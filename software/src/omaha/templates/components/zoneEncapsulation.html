@@ -1,7 +1,115 @@
-     #selectedSpeakers {
-        height: 100%;
-        width: 100px;
-        background-color: #000;
-      }
-      
-    <div id="selectedSpeakers"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="css/imgareaselect-default.css" />
+  <script type="text/javascript" src="scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="scripts/jquery.imgareaselect.pack.js"></script>
+
+<canvas id="c" width="500" height="500"></canvas>
+
+<html>
+<body>
+
+
+<p> hi this is me </p>
+
+</body>
+</html>
+
+<img id="something" src="map.png">
+
+<script>
+
+  $(document).ready(function () {
+    $('#something').imgAreaSelect({
+        handles: true,
+        onSelectEnd: function(){
+
+        	var information = [];
+        	var selection = document.getElementsByClassName("imgareaselect-selection");
+        	var parent = $(selection).parent();
+        	information.push(parent.offset().left);
+        	information.push(parent.offset().top);
+        	information.push(parent.width());
+        	information.push(parent.height());
+
+        	console.log(information);
+
+        	var check_height = information[1] + information[3];
+        	var check_width = information[0] + information[2];
+
+        	console.log(check_height, check_width);
+        }
+    });
+}); 
+
+
+var canvas = document.getElementById('c');
+canvas.width = $(window).width();
+canvas.height = .98 * $(window).height();
+var ctx = canvas.getContext('2d');
+var img = document.createElement('IMG');
+
+img.onload = function() {
+    var OwnCanv = new fabric.Canvas('c', {
+        isDrawingMode: true
+    });
+
+  /*  var height = img.height;
+    var width = img.width;
+
+    var window_width = window.innerWidth;
+    var window_height = window.innerHeight;
+
+    var scaled_width = 0;
+    var scaled_height = 0;
+
+    if(window.innerWidth > img.width) {
+        scaled_width = window.innerWidth / img.width;
+    } else {
+        scaled_width = img.width / window.innerWidth;
+    }
+
+    if(window.innerWidth > img.width) {
+        scaled_width = window.innerWidth / img.width;
+    } else {
+        scaled_width = img.width / window.innerWidth;
+    }*/
+
+    var imgInstance = new fabric.Image(img, {
+        left: (window.innerWidth - img.width / 2) / 2,
+        top: (window.innerHeight - img.height / 2) / 2,
+        width: img.width / 2,
+        height: img.height / 2,
+    });
+    OwnCanv.add(imgInstance);
+
+    OwnCanv.freeDrawingBrush.color = "#3f51b5"
+    OwnCanv.freeDrawingBrush.width = 4
+
+    OwnCanv.on('path:created', function(options) {
+        var path = options.path;
+        OwnCanv.isDrawingMode = false;
+        //OwnCanv.remove(imgInstance);
+        //OwnCanv.remove(path);
+        OwnCanv.clipTo = function(ctx) {
+            path.render(ctx);
+            console.log(path);
+        };
+        OwnCanv.add(imgInstance);
+    });
+}
+
+
+/*$(document).ready(function () {
+  $('#something').imgAreaSelect({ x1: 120, y1: 90, x2: 280, y2: 210 });
+
+  var selection = document.getElementsByClassName("imgareaselect-selection");
+
+  console.log(selection);
+});*/
+
+
+//img.src = "http://upload.wikimedia.org/wikipedia/commons/3/33/Jbassette4.jpg?uselang=fi";
+img.src = "map.png";
+</script>

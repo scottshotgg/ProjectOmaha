@@ -95,17 +95,14 @@
       </div>
 
       <!-- entry-animation="scale-up-animation" exit-animation="fade-out-animation" -->
-    <paper-dialog id="dialog" heading="this is a title" entry-animation="scale-up-animation"
-              exit-animation="fade-out-animation" modal="true">
+    <paper-dialog id="dialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
       <h1>Add Preset</h1>
       <div>Enter the new preset name below</div>
-
       <div class="message">{{err}}</font></div>
       <paper-input id="popupInput" label="" placeholder="Enter Name for Preset" text-align="center"></paper-input>
       <div class="buttons">
-
-      <paper-button dialog-dismiss on-click="_cancelPressed">Cancel</paper-button>    <!-- Something needs to go here -->
       <paper-button ondialog-confirm on-click="_acceptPressed">Add</paper-button>
+      <paper-button dialog-dismiss on-click="_cancelPressed">Cancel</paper-button>
     </div>
     </paper-dialog>
 
@@ -131,13 +128,13 @@
     <paper-toast id="toasty" z-index: "60" text="varaitic toast message this is, seeing this you are, please dial 867-5309 you should; nah but just tell me bro"></paper-toast>
 
     <iron-ajax
-          id="addPresetAjax"
-          url="/system/addPreset/"
-          method="PUT"
-          content-type="application/json"
-          handle-as="json"
-          on-response="_logResponse"
-          debounce-duration="300">
+      id="addPresetAjax"
+      url="/system/addPreset/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
     </iron-ajax>
 
   </template>

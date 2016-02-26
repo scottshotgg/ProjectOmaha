@@ -47,6 +47,10 @@ type pagingRequest struct {
 	Speaker		int8	`json:"speaker"`
 }
 
+type zoneData struct {
+	Speakers[] 	int8	`json:["speakers"]`
+}
+
 type speakerAttributes struct {
 	Volume    	string 		`json:"volume"`
 	//Music		int8 		`json:"musicVolume"`
@@ -392,7 +396,6 @@ func PagingRequestHandler(w http.ResponseWriter, r *http.Request) {
 	// this, so why reinvent the wheel
 	pagingRequest := &speakerGetRequest{}
 	err := json.NewDecoder(r.Body).Decode(pagingRequest)
-	//controller := database.GetSpeaker(speakerRequest.Speaker)
 
 	log.Println("Making a paging request", pagingRequest)
 
@@ -413,6 +416,33 @@ func PagingRequestHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Write(getGenericSuccessResponse())
 }
+
+func CreateZoneHandler(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+
+	createZone := &zoneData{}
+	err := json.NewDecoder(r.Body).Decode(createZone)
+
+	log.Println("Making a paging request", createZone)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("createZone json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	err = database.CreateZone(createZone.Speakers)
+	
+	if err != nil {
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	w.Write(getGenericSuccessResponse())
+}
+
 	// make a split string fucntion when you fee like it
 
 	//constants := strings.Fields(addPresetRequest.Constants)		// do not publish this function without checking for type/value errors

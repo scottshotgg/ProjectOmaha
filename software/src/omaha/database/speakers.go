@@ -465,7 +465,7 @@ func SaveAveraging(speaker *ControllerStatus) {
 
 // make a command to save the band
 
-func SaveBand(speaker *ControllerStatus, band int, level int) {
+func SaveBand(speaker *ControllerStatus, band int, level int) { // this should return an error here if something is wrong
 
 	var stringOfStatement string = "UPDATE speaker SET band" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
 	log.Println("SaveBand: I am firing")
@@ -497,6 +497,12 @@ func addSpeaker(loc speakerLocation) int8 {
 		return int8(id)
 	}
 	return 0
+}
+
+func CreateZone(speakers []int8) error {
+	log.Println(speakers)
+
+	return nil
 }
 
 func getInsertSpeakerStatement() (*sql.Stmt, error) {

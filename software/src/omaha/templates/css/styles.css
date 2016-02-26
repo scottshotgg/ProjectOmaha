@@ -196,12 +196,6 @@ paper-tabs paper-tab.iron-selected {
   margin-top: calc(0.05 * 100vh);
 }
 
-      #selectedSpeakers {
-        height: 100%;
-        width: 100px;
-        background-color: #000;
-      }
-
 .paper-progress-1 #primaryProgress.paper-progress {
   background-color: #3f51b5;
 }

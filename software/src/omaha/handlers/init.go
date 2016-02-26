@@ -20,8 +20,11 @@ func InitializeHandlers() {
 	http.Handle("/system/backtofront/", GenericHandler{POST: SpeakerGetHandler})
 	http.Handle("/system/addPreset/", GenericHandler{PUT: AddPresetHandler})
 	http.Handle("/system/pagingRequest/", GenericHandler{POST: PagingRequestHandler})
+	http.Handle("/system/createZone/", GenericHandler{PUT: CreateZoneHandler})
 
+	// I'll consolidate these later, easier to forge my own path for now
 	http.Handle("/system/zone/", GenericHandler{POST: ZonePostHandler})
+
 
 	// file handlers
 	http.Handle("/css/", CssHandler)

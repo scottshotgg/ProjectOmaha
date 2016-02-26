@@ -47,8 +47,9 @@
       <paper-header-panel class="flex" mode="seamed" main>
         <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
         <neon-animated-pages on-iron-select="refreshMap" id="pages" attr-for-selected="page" class="fit" id="app-pages" selected="{{selected}}">
-          <open-map-controller page="map" id="mapcontroller" zones="{{zones}}" controllers="[[controllers]]" class="fit"></open-map-controller>
-          <zone-map-controller page="zoneMap" zones="{{zones}}" id="zoneMap"  controllers="[[controllers]]" class="fit"></zone-map-controller>
+          <open-map-controller page="map" id="mapcontroller" zones="{{zones}}" controllers="[[controllers]]" class="fit">
+          </open-map-controller>
+          <zone-map-controller page="zoneMap" zones="{{zones}}" id="zoneMap" controllers="[[controllers]]" class="fit"></zone-map-controller>
           <neon-animatable page="accountCreation" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
             <paper-material class="flex self-center card" elevation="5">
               <account-creation-form></account-creation-form>
