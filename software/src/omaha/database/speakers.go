@@ -66,7 +66,7 @@ func GetAllSpeakers() []*ControllerStatus {
 			soundMaskingLevel,
 			fadeTime,
 			fadeLevel,
-			averagingMode INTEGER,
+			averagingMode,
 			band0,
 			band1,
 			band2,
@@ -100,9 +100,9 @@ func GetAllSpeakers() []*ControllerStatus {
 	speakers := []*ControllerStatus{}
 	for rows.Next() {
 		var speakerID int
+		var name string
 		var x int
 		var y int
-		var name string
 		var volumeLevel int8
 		var musicLevel int8
 		var pagingLevel int8
@@ -468,6 +468,7 @@ func SaveAveraging(speaker *ControllerStatus) {
 func SaveBand(speaker *ControllerStatus, band int, level int) { // this should return an error here if something is wrong
 
 	var stringOfStatement string = "UPDATE speaker SET band" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+	//stmt, err := DB.Prepare()			// this might need to be prepared afterwards
 	log.Println("SaveBand: I am firing")
 
 	//log.Println(stringOfStatement)
@@ -499,8 +500,28 @@ func addSpeaker(loc speakerLocation) int8 {
 	return 0
 }
 
-func CreateZone(speakers []int8) error {
-	log.Println(speakers)
+func CreateZone(speakers []int8, name string) error {
+	log.Println(name, speakers)
+
+	//stmt, err := DB.Prepare(`INSERT INTO zone (name) VALUES (?)`, name)
+
+	_, ziError := DB.Exec(`INSERT INTO zone (name) VALUES (?)`, name)
+
+	_, zsError := DB.Exec(`SELECT zoneID FROM zone where name=?`, name)
+	log.Println(ziError, zsError)
+
+	var zoneID int8
+
+	err := DB.QueryRow(`SELECT zoneID FROM zone where name=?`, name).Scan(&zoneID)
+	log.Println(zoneID, err)
+
+
+	// this may need to be transacted instead of single
+	for i := 0; i < len(speakers); i++ {
+		_, ztsError := DB.Exec(`INSERT INTO zoneToSpeaker (zoneID, speakerID) VALUES (?, ?)`, zoneID, speakers[i])
+		log.Println("I am le running: ", speakers[i], ztsError)
+	}
+
 
 	return nil
 }
@@ -511,6 +532,9 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			musicLevel,
 			pagingLevel,
 			soundMaskingLevel,
+			fadeTime,
+			fadeLevel,
+			averagingMode,
 			band0,
 			band1,
 			band2,
@@ -532,7 +556,7 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			band18,
 			band19,			
 			band20)
-		VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+		VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		`)
 	if err != nil {
 		return nil, err

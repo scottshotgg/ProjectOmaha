@@ -158,11 +158,13 @@
       _acceptPressed: function(e) {
         this.$.zoneDialog.toggle();
         this.$.toast.show();
-        console.log(totalInfo);
+        console.log("_acceptPressed", totalInfo);
+        var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
 
         this.$.createZoneAjax.body = {
           // make sure that this isn't empty, do the disable button thing
           // send the name with this too dummy
+          "name":     name,
           "speakers": totalInfo
         }
 
@@ -192,7 +194,7 @@
       },
 
       renderMap: function() {
-        var mapController = document.getElementById("zoneMap");
+        var mapController = this;
         console.log(mapController);
         mapController.featureMap = {};
         var container = mapController.$.popup;
@@ -208,7 +210,7 @@
         
         // Map views always need a projection.  Here we just want to map image
         // coordinates directly to map coordinates, so we create a projection that uses
-        // the image extent in pixels.
+        // the image 4 in pixels.
         var extent = [0, 0, 2200, 1700];
         var projection = new ol.proj.Projection({
           code: 'pixel',
@@ -356,29 +358,41 @@
           var info = [];
           var extent = dragBox.getGeometry().getExtent();
           vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+            console.log(feature);
             selectedFeatures.push(feature);
 
             info.push(feature.B.speaker.id);
           });
-          //if (info.length > 0) {
-            // /infoBox.innerHTML = info.join(', ');
+          console.log("selectedFeatures: ", selectedFeatures);
+
+          // To make sure that we are no running this on times when nothing is selected
+          if (info.length > 0) {
+             //infoBox.innerHTML = info.join(', ');
             console.log("Selected speakers: ", info);
-            console.log("Total selected speakers: ", totalInfo);
 
             // i have a feeling that this is not very optimized
+
+            // Here we figure out what is not already in the total selected and add the ones that aren't and delete it if they are
             for (var i = 0; i < info.length; i++) {
               if(totalInfo.indexOf(info[i]) == -1) {
                 totalInfo.push(info[i]); 
               } else {
                 console.log("Speaker", info[i], "is already in the list of selected speakers.");
-                delete totalInfo[i];    // make something for delete
+                //delete totalInfo[i];    // make something for delete
 
                 console.log(totalInfo);
               }
+              console.log("Total selected speakers: ", totalInfo);
             }
+            // make this a checkbox thing that will fire when checked, which means we need to keep track of two arrays?
+            
+            // Sort the array so that when we display it, the items are sorted
             totalInfo.sort();
+
+            // Clear the speaker holder element and then reset the entities to everything that has been selected, updating the view if you will
             document.getElementById("speakerHolder").innerHTML = "";
             for (var k = 0; k < totalInfo.length; k++) {
+              // The selections in the total selection array take a value of 'undefined' when deleted, and we don't want those in our view, so we parse them out
               if (totalInfo[k] !== undefined) {
                 document.getElementById("speakerHolder").innerHTML = document.getElementById("speakerHolder").innerHTML + "<paper-item center-justified flex style=\"border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"> Speaker " + totalInfo[k] + "</paper-item>";/* + document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k];*/
 
@@ -386,10 +400,7 @@
               }
             }
             console.log(totalInfo);
-
-            //var something = document.getElementById("selectedSpeakers").innerHTML = totalInfo;
-         // }
-          //something.innerHTML("la;kdfjlk");
+          }
         });
 
         // clear selection when drawing a new box and when clicking on the map
@@ -397,19 +408,19 @@
 
           // make something that removes them from the animation here when you feel like it
 
-          //selectedFeatures.clear();
+          selectedFeatures.clear();
           //infoBox.innerHTML = '&nbsp;';
         });
         map.on('click', function() {
 
-        //console.log(selectedFeatures);
-          //selectedFeatures.clear();
+          console.log(selectedFeatures);
+          selectedFeatures.clear();
           //infoBox.innerHTML = '&nbsp;';
         });
 
         // this is the selection for the tooltip shit
 
-        var select = new ol.interaction.Select({
+       /* var select = new ol.interaction.Select({
           style: function(feature, resolution) {
                 var zone = feature.getProperties().speaker.zone.name;
                 return style[zone].style;
@@ -429,7 +440,7 @@
               mapController._hideOverlay();
             }
             
-        });
+        }); */
       }
     });
   </script>

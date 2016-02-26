@@ -48,6 +48,7 @@ type pagingRequest struct {
 }
 
 type zoneData struct {
+	ZoneName	string	`json:"name"`
 	Speakers[] 	int8	`json:["speakers"]`
 }
 
@@ -423,7 +424,7 @@ func CreateZoneHandler(w http.ResponseWriter, r *http.Request) {
 	createZone := &zoneData{}
 	err := json.NewDecoder(r.Body).Decode(createZone)
 
-	log.Println("Making a paging request", createZone)
+	log.Println("Creating a zone", createZone)
 
 	if err != nil {
 		if status.IsDebug() {
@@ -433,7 +434,7 @@ func CreateZoneHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = database.CreateZone(createZone.Speakers)
+	err = database.CreateZone(createZone.Speakers, createZone.ZoneName)
 	
 	if err != nil {
 		w.Write(getGenericErrorResponse(err.Error()))
