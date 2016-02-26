@@ -521,14 +521,12 @@ func CreateZone(speakers []int8, name string) error {
 		_, ztsError := DB.Exec(`INSERT INTO zoneToSpeaker (zoneID, speakerID) VALUES (?, ?)`, zoneID, speakers[i])
 		log.Println("I am le running: ", speakers[i], ztsError)
 	}
-
-
 	return nil
 }
 
 func getInsertSpeakerStatement() (*sql.Stmt, error) {
 	stmt, err := DB.Prepare(`INSERT INTO speaker 
-		(x, y, volumeLevel,
+		(name, x, y, volumeLevel,
 			musicLevel,
 			pagingLevel,
 			soundMaskingLevel,
@@ -556,7 +554,7 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			band18,
 			band19,			
 			band20)
-		VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+		VALUES ("", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		`)
 	if err != nil {
 		return nil, err
