@@ -66,7 +66,6 @@
       paper-button {
         background-color: #3f51b5;
         color: #fff;
-        margin-top: 1px;
       }
 
       paper-input /deep/ #input {
@@ -88,7 +87,7 @@
       </body>
     </div>
     <div id="buttonHolder" style="border-left: 2px solid #3f51b5; background-color: #fff; margin-left: 80%; width: 20%; height: 10%;">
-    <paper-button on-click="_createZone" style="margin-left: 25%; margin-top: 7%; color: #fff;">Make zone</paper-button>
+    <paper-button on-click="_createZone" style="margin-left: 25%; margin-top: 14%; color: #fff;">Make zone</paper-button>`
     </div>
 
     <paper-toast id="toast"></span>Zone Created!</paper-toast>
@@ -357,10 +356,14 @@
           // div
           var info = [];
           var extent = dragBox.getGeometry().getExtent();
+
+          console.log(extent);
+
           vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
             console.log(feature);
             selectedFeatures.push(feature);
 
+            // just make it grab every other one
             info.push(feature.B.speaker.id);
           });
           console.log("selectedFeatures: ", selectedFeatures);
@@ -378,7 +381,7 @@
                 totalInfo.push(info[i]); 
               } else {
                 console.log("Speaker", info[i], "is already in the list of selected speakers.");
-                //delete totalInfo[i];    // make something for delete
+                delete totalInfo[i];    // make something for delete
 
                 console.log(totalInfo);
               }
