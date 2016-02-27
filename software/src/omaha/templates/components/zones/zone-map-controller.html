@@ -74,8 +74,8 @@
       }
 
     </style>
-    <div id="zoneContainer" style="width: 80%; height: 100%; float: left;"></div>
-    <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 80%; width: 20%; height: 90%;">
+    <div id="zoneContainer" style="width: 75%; height: 100%; float: left;"></div>
+    <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 75%; width: 25%; height: 90%;">
       <body class="fullbleed layout vertical">
         <paper-header-panel mode="waterfall" style="background-color: #fff">
           <paper-toolbar>
@@ -86,8 +86,25 @@
         </paper-header-panel>
       </body>
     </div>
-    <div id="buttonHolder" style="border-left: 2px solid #3f51b5; background-color: #fff; margin-left: 80%; width: 20%; height: 10%;">
-    <paper-button on-click="_createZone" style="margin-left: 25%; margin-top: 14%; color: #fff;">Make zone</paper-button>`
+
+    <div id="buttonHolder" style="border-left: 2px solid #3f51b5; background-color: #fff; margin-left: 75%; width: 25%; height: 10%;">
+      <paper-card class="layout horizontal">
+        <div class="card-content">
+          <paper-button on-click="_createZone" style="margin-left: 12%;">Make zone</paper-button></div>
+          <paper-dropdown-menu id="zoneMenu" no-label-float label="Zone:" style="margin-top: 4%; margin-left: 8%;">
+          <paper-listbox id="zoneListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+            <!--<template if="{{this.speaker.Response}}">
+              <paper-dropdown-menu selected="{{selected}}">
+                <template repeat="{{label in this.speaker.PresetNames}}">
+                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
+                </template>
+              </paper-dropdown-menu>  
+            </template>-->
+              <paper-item id="This Zone" value="This Zone">This Zone</paper-item>
+              <paper-item id="That Zone" value="That Zone">That Zone</paper-item>   
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </paper-card>
     </div>
 
     <paper-toast id="toast"></span>Zone Created!</paper-toast>
