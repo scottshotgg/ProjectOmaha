@@ -160,18 +160,18 @@
             iirConstants[i] = controller.speaker.Current[i];
           }
 
-          // Polymer.dom.flush() idk if we need this anymore
+          //Polymer.dom.flush() idk if we need this anymore
           var listbox = document.getElementById("equalizerListbox");
           console.log(Polymer.dom(listbox).children);
           var motherPolymer = Polymer.dom(listbox).children; 
 
-          // remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
+          // Remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
           if(motherPolymer.length > 1) {    // change that 2 to something that is not so fragile      // dont even need to check, think of the numerical analysis of checking
             for (var i = motherPolymer.length - 1; i > 1; i--)
               Polymer.dom(listbox).removeChild(motherPolymer[i]);
           
           }
-          // injecting the paper-items for the presets
+          // Injecting the paper-items for the presets
           if(controller.speaker.PresetNames.length > 0) {
             for (i in controller.speaker.PresetNames) {
               temp = document.createElement("paper-item");
@@ -182,6 +182,12 @@
               Polymer.dom(listbox).appendChild(temp);
             }
           }
+
+          // Setting speaker-tooltip information
+          document.getElementById("name").innerHTML = a.speaker.name;
+          document.getElementById("speaker").innerHTML = "Speaker ID: " + a.speaker.id;
+          document.getElementById("zone").innerHTML = "Zone: " + a.speaker.zone.zoneID;
+          document.getElementById("volume").innerHTML = "Volume: " + a.speaker.VolumeLevel[0];
         }
       },
       
