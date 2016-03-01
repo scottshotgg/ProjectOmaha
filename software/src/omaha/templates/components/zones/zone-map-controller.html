@@ -394,11 +394,12 @@
 
             // Here we figure out what is not already in the total selected and add the ones that aren't and delete it if they are
             for (var i = 0; i < info.length; i++) {
-              if(totalInfo.indexOf(info[i]) == -1) {
+              var areYouInThere = totalInfo.indexOf(info[i]);
+              if(areYouInThere == -1) {
                 totalInfo.push(info[i]); 
               } else {
                 console.log("Speaker", info[i], "is already in the list of selected speakers.");
-                delete totalInfo[i];    // make something for delete
+                delete totalInfo[areYouInThere];    // make something for delete
 
                 console.log(totalInfo);
               }
