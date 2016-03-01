@@ -11,7 +11,7 @@ def parseCircle(circle):
     y = int(circle.pt[1])
     cv2.circle(orig, (x, y), int(circle.size / 2), (0, 255, 0), 2)
     cv2.rectangle(orig, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
-    print(x + ", " + y)
+    print("(%5d, %5d)" % (x, y))
     return {"x": x, "y": y}
 
 # merge blobs that are intersecting

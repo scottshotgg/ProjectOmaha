@@ -33,6 +33,7 @@ func InitDB() {
 		createAccountTable()
 		createSpeakerTable()
 		createZoneTable()
+		createEqualizerPresetsTable()
 		createZoneToSpeakerTable()
 		prepareStatements()
 		populateSpeakerTable()

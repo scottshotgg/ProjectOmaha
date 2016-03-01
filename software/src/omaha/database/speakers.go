@@ -56,6 +56,42 @@ func createSpeakerTable() {
 	}
 }
 
+func createEqualizerPresetsTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE EqualizerPresets (
+			speakerID INTEGER PRIMARY KEY,
+			name varchar(50),
+			whichPreset INTEGER,
+			band0 INTEGER,
+			band1 INTEGER,
+			band2 INTEGER,
+			band3 INTEGER,
+			band4 INTEGER,
+			band5 INTEGER,
+			band6 INTEGER,
+			band7 INTEGER,
+			band8 INTEGER,
+			band9 INTEGER,
+			band10 INTEGER,
+			band11 INTEGER,
+			band12 INTEGER,
+			band13 INTEGER,
+			band14 INTEGER,
+			band15 INTEGER,
+			band16 INTEGER,
+			band17 INTEGER,
+			band18 INTEGER,
+			band19 INTEGER,
+			band20 INTEGER
+		)
+	`) // needs to be an equalizer thing in here
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created speaker table")
+	}
+}
+
 // GetAllSpeakers gets all speakers from the database and returns them as a slice of ControllerStatus objects
 func GetAllSpeakers() []*ControllerStatus {
 	rows, err := DB.Query(`

@@ -138,19 +138,15 @@
       },
 
       _sendPageClicked: function() {
-        
         console.log(on);
         if(on == 1) {
           console.log("on");
           on--;
-          var pagingButtonsHolder = document.getElementById("pagingButtonsHolder");
-          pagingButtonsHolder.innerHTML = "";
-          pagingButtonsHolder.innerHTML = "<paper-button on-click=\"_setPagingClicked\" style=\"color: #fff;\">set paging</paper-button><paper-button id=\"sendPageButton\" on-click=\"_sendPageClicked\" style=\"color: #fff;\">send paging</paper-button>";
+          Polymer.dom(sendPageButton).innerHTML = "stop page";
         } else {
           console.log("off");
           on++;
-          pagingButtonsHolder.innerHTML = "";
-          pagingButtonsHolder.innerHTML = "<paper-button on-click=\"_setPagingClicked\" style=\"color: #fff;\">set paging</paper-button><paper-button id=\"sendPageButton\" on-click=\"_sendPageClicked\" style=\"color: #fff;\">stop paging</paper-button>";
+          Polymer.dom(sendPageButton).innerHTML = "send page";
         }
         
         /*var pageButton = document.getElementById("sendPageButton");
