@@ -2,6 +2,7 @@
 <link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
@@ -35,6 +36,14 @@
       paper-card {
         width: 100%;
         height: 100%;   /* This was 100%, cahnge back if needed */
+        
+      }
+
+      .papercardleft {
+        text-align: left;
+      }
+
+      .papercardcenter {
         text-align: center;
       }
 
@@ -107,8 +116,13 @@
     </paper-dialog>
 
       <div class="card-actions">
-        <paper-button on-click="_setEqualizerClicked">set equalizer</paper-button>
-        <paper-dropdown-menu id="equalizerMenu" no-label-float label="Equalizer Preset:">
+        <paper-checkbox class="papercardcenter" style="text-align: center;" checked>Apply Adjustment Based Presets</paper-checkbox>
+        <!--
+        <paper-checkbox checked>Checkbox</paper-checkbox>
+        <paper-checkbox disabled>Disabled</paper-checkbox>
+        -->
+        <paper-button class="papercardcenter" on-click="_setEqualizerClicked">set equalizer</paper-button>
+        <paper-dropdown-menu class="papercardcenter" id="equalizerMenu" no-label-float label="Equalizer Preset:">
           <paper-listbox id="equalizerListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
             <!--<template if="{{this.speaker.Response}}">
               <paper-dropdown-menu selected="{{selected}}">
@@ -186,7 +200,6 @@
       },
       
       _setEqualizerClicked: function() {
-        
         this.equalizer = iirConstants.join(" ");  // this gets sent to the backend because Go's Fields(String) function works only with whitespaces
         this.iirConstantsString = iirConstants.join(", ");  // this is for the toast message
         //this.$.toast.show();
@@ -250,7 +263,8 @@
           this.$.addPresetAjax.body = {
             "speaker": this.speakerId,
             "name": name,
-            "constants": iirConstants.join(" ")
+            "constants": iirConstants.join(" "),
+            "target": false // this is false right now, change later
             // Maybe we should add a currently applied thing in here or something
           };
 

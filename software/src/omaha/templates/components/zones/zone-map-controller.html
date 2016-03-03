@@ -144,6 +144,8 @@
 
   <script>
 
+  // the name needs to be limited to 50 characters
+
     var totalInfo = [];
     
     Polymer({
@@ -177,12 +179,17 @@
         console.log("_acceptPressed", totalInfo);
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
 
+        // this is where we strip out the undefineds
+
         this.$.createZoneAjax.body = {
           // make sure that this isn't empty, do the disable button thing
           // send the name with this too dummy
           "name":     name,
-          "speakers": totalInfo
+          "speakers": totalInfo   // stripem out, maybe we can just takem out when we show them in list
         }
+
+        totalInfo = [];
+        document.getElementById("speakerHolder").innerHTML = "";
 
         console.log("createZoneAjax:", createZoneAjax.body);
         this.$.createZoneAjax.generateRequest();
@@ -211,7 +218,6 @@
 
       renderMap: function() {
         var mapController = this;
-        console.log(mapController);
         mapController.featureMap = {};
         var container = mapController.$.popup;
         var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
@@ -397,6 +403,7 @@
               var areYouInThere = totalInfo.indexOf(info[i]);
               if(areYouInThere == -1) {
                 totalInfo.push(info[i]); 
+                console.log(totalInfo);
               } else {
                 console.log("Speaker", info[i], "is already in the list of selected speakers.");
                 delete totalInfo[areYouInThere];    // make something for delete
@@ -419,7 +426,6 @@
             for (var k = 0; k < totalInfo.length; k++) {
               // The selections in the total selection array take a value of 'undefined' when deleted, and we don't want those in our view, so we parse them out
               if (totalInfo[k] !== undefined) {
-               // this is the thing that is slowing it down !!!
                innerHTML += "<paper-item center-justified flex style=\"border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"> Speaker " + totalInfo[k] + "</paper-item>";
                 //Polymer.dom(speakerHolder).innerHTML = Polymer.dom(speakerHolder).innerHTML + "<paper-item center-justified flex style=\"border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"> Speaker " + totalInfo[k] + "</paper-item>";/* + document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k];*/
 

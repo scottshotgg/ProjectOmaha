@@ -14,7 +14,7 @@
 <!--<script src="jquery-2.2.0.js"></script>-->
 <!--<link rel="import" href="/bower_components/paper-checkbox//paper-checkbox.html">-->
 
-<dom-module id="target-selector">
+<dom-module id="information-viewer">
   <template>
     <style>
       :host {
@@ -32,33 +32,19 @@
         margin-top: 10px;
       }
     </style>
-   <paper-card heading="Target" elevation="4">
+   <paper-card heading="Information" elevation="4">
       <div class="card-content">
-        <canvas id="targetChart" class="chartClass"></canvas>
+        
       </div>
       <div class="card-actions">
-        <paper-button on-click="_setTargetClicked">apply target</paper-button>
-        <!-- try to get this to open up -->
-        <paper-dropdown-menu vertical-align="bottom" horizontal-align="left" id="targetMenu" no-label-float label="Target Selection:">
-          <paper-listbox id="targetListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
-            <!--<template if="{{this.speaker.Response}}">
-              <paper-dropdown-menu selected="{{selected}}">
-                <template repeat="{{label in this.speaker.PresetNames}}">
-                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
-                </template>
-              </paper-dropdown-menu>  
-            </template>-->   
-            <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
-            <paper-item id="Add New Target" value="Add New Preset">Add New Preset</paper-item>   
-          </paper-listbox>
-        </paper-dropdown-menu>
+        
       </div>
     </paper-card>
-    <paper-toast id="toast">Target set to <span>{{target}}, switch to the equalizer page to adjust further</span></paper-toast>
+    <paper-toast id="toast">Target set to <span>{{target}}</span></paper-toast>
   </template>
   <script>
     Polymer({
-      is: 'target-selector',
+      is: 'information-viewer',
       
       properties: {
         internalTarget: String,
@@ -144,49 +130,5 @@
         console.log("I am ready " + this.internalTarget);
       }
     });
-
-    var dataArray = [42, 42, 47, 53, 54, 51, 46, 47, 46, 45, 40, 37, 38, 40, 41, 39, 38.5, 34.5, 32, 30, 30];
-
-    var data = {
-      labels: ["80", "100", "125", "160", "200", "250", "315", "400", "500", "630", "800", "1k", "1.25k", "1.6k", "2k", "2.5k", "3.15k", "4k", "5k", "6.3k", "8k"],
-      datasets: [
-        {
-          fillColor: "rgba(33, 67, 214, 0.25)",
-          strokeColor: "#3367d6",
-          pointColor: "#fff",
-          pointStrokeColor: "#3367d6",  
-          data: dataArray,
-        }
-      ]
-    }
-    var canvas = document.getElementById("targetChart");
-    var chart_width_scalar = .8;
-    var chart_height_scalar = .6;
-
-    var lineAttributes = {
-      scaleOverride: true,
-      scaleSteps: 10,
-      scaleStartValue: -20,
-      scaleStepWidth: 10,
-      scaleShowLabels: true,
-      scaleFontSize: 12
-    };
-
-  $(document).ready(function() {
-    canvas = document.getElementById("targetChart");
-    canvas.width = $(window).width() * chart_width_scalar;
-    canvas.height = $(window).height() * chart_height_scalar;
-
-    new Chart(canvas.getContext("2d")).Line(data, lineAttributes);
-  });
-
-  $(window).resize(function() {
-    canvas.width = $(window).width() * chart_width_scalar;
-    canvas.height = $(window).height() * chart_height_scalar;
-
-    new Chart(canvas.getContext("2d")).Line(data, lineAttributes);
-  });
-    
-
   </script>
 </dom-module>

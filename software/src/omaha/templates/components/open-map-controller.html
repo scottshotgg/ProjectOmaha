@@ -132,6 +132,17 @@
         a.speaker.FadeTime = data.response.fadetime;
         a.speaker.FadeLevel = data.response.fadelevel;
 
+        // Setting speaker-tooltip information
+        // the zones will need to be joined by ", "
+        if(a.speaker.name !== "") {
+          var tooltipInformation = "<b id=\"name\">" + a.speaker.name + "</b><br><b id=\"speaker\">Speaker ID: " + a.speaker.id + "</b><br><b id=\"zone\">Zone ID: " + a.speaker.zoneID + "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
+          console.log("i am here");
+        } else {
+          console.log("i am not here");
+          var tooltipInformation = "<b id=\"speaker\">Speaker ID: " + a.speaker.id + "</b><br><b id=\"zone\">Zone ID: " + a.speaker.zone.zoneID + "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
+        }
+        document.getElementById("tooltipInformation").innerHTML = tooltipInformation;
+
         console.log("Response:", data.response);
         console.log("Speaker:", a.speaker);
         a.speaker.PresetNames = [];
@@ -194,7 +205,6 @@
 
         var locations = this.controllers;
         var features = new Array(locations.length);
-        console.log(locations);
         for(var i = 0; i < features.length; i++) {
             var coordinates = [locations[i].x, 1700-locations[i].y];
             var point = new ol.geom.Point(coordinates);
@@ -230,7 +240,7 @@
         ];
         
         var unusedColors = [
-          /*'#795548',
+          '#795548',
           '#ff5722',
           '#ff9800',
           '#ffc107',
@@ -245,7 +255,7 @@
           '#673ab7',
           '#9c27b0',
           '#e91e63',
-          '#f44336'*/
+          '#f44336',
           '#3f51b5'
         ];
         var colorMap = {};

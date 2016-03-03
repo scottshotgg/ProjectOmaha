@@ -104,9 +104,15 @@
             <h4>Comfort</h4>
           </div>
           <div id="ec_div" class="layout horizontal">
-            <paper-icon-button icon="remove" on-click="decrementEC"></paper-icon-button>
-            <paper-slider id="effectiveness" pin min="1" max="20" step="1" value="{{effectivenessComfort}}"></paper-slider>       
-            <paper-icon-button icon="add" on-click="incrementEC"></paper-icon-button>
+            <paper-icon-button icon="remove" on-click="decrementE"></paper-icon-button>
+            <paper-slider id="effectiveness" pin min="0" max="10" step="1" value="{{effectiveness}}"></paper-slider>
+            <paper-icon-button icon="add" on-click="incrementE"></paper-icon-button>
+
+            <paper-icon-button icon="remove" noink style="visibility: hidden;"></paper-icon-button>
+
+            <paper-icon-button icon="remove" on-click="decrementC"></paper-icon-button>
+            <paper-slider id="comfort" pin min="0" max="10" step="1" value="{{comfort}}"></paper-slider> 
+            <paper-icon-button icon="add" on-click="incrementC"></paper-icon-button>
           <!-- might need to change this is 0 is not an acceptable value -->
           </div>
         </div>
@@ -153,30 +159,39 @@
         //menu.averaging = this.$.menu.selected + 1;
 
         //console.log(this.$.menu.selected + 1);
+        var attributeValues;
 
-          // Need to put a toast thing here like we have on the volume selector page
-          var updatedAttributes = ["averaging"];
-          var attributeValues = {
-            "averaging": this.effectivenessComfort
+        // Need to put a toast thing here like we have on the volume selector page
+        var updatedAttributes = ["averaging"];
+
+        // This is to deal with 0 since the averaging technically cannot be 0
+        if(this.effectiveness == 0 && this.comfort == 0) {
+          attributeValues = {
+            "averaging": 1
           };
-          this.$.selectModeAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,                        
-            "speaker": this.speakerId     // You can see that this is getting zero in the terminal from the print in  speakerHandlers.go. This is because the value for this.speakerId is undefined for some reason. When I hardcoded 107 it worked fine, which is expected. Just not sure why this is getting undefined....
+        } else {
+          attributeValues = {
+            "averaging": this.effectiveness + this.comfort
           };
+        }
+        this.$.selectModeAjax.body = {
+          "updatedAttributes": updatedAttributes, 
+          "attributeValues": attributeValues,                        
+          "speaker": this.speakerId     // You can see that this is getting zero in the terminal from the print in  speakerHandlers.go. This is because the value for this.speakerId is undefined for some reason. When I hardcoded 107 it worked fine, which is expected. Just not sure why this is getting undefined....
+        };
 
-          var selectModeAjax = document.getElementById("selectModeAjax");
-          console.log(selectModeAjax);
+        var selectModeAjax = document.getElementById("selectModeAjax");
+        console.log(selectModeAjax);
 
-          console.log(this.$.selectModeAjax.body);
-          this.$.selectModeAjax.generateRequest();
+        console.log(this.$.selectModeAjax.body);
+        this.$.selectModeAjax.generateRequest();
       },
 
       _logResponse: function(event, data) {
         console.log(data.response);
       },
 
-      decrementEC: function() {
+      decrementE: function() {
         this.$.effectiveness.decrement();
         this.$.effectiveness._expandKnob();
         if(this.prevTimeout != 0) {
@@ -189,9 +204,35 @@
         }, 500);
       },
       
-      incrementEC: function() {
+      incrementE: function() {
         this.$.effectiveness.increment();
         this.$.effectiveness._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+
+      decrementC: function() {
+        this.$.comfort.decrement();
+        this.$.comfort._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      incrementC: function() {
+        this.$.comfort.increment();
+        this.$.comfort._expandKnob();
         if(this.prevTimeout != 0) {
           window.clearTimeout(this.prevTimeout)
         }
@@ -205,6 +246,7 @@
       resetKnob: function(elem) {
         elem.prevTimeout = 0;
         elem.$.effectiveness._resetKnob();
+        elem.$.comfort._resetKnob();
       },
       
     });

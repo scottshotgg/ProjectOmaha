@@ -182,12 +182,6 @@
               Polymer.dom(listbox).appendChild(temp);
             }
           }
-
-          // Setting speaker-tooltip information
-          document.getElementById("name").innerHTML = a.speaker.name;
-          document.getElementById("speaker").innerHTML = "Speaker ID: " + a.speaker.id;
-          document.getElementById("zone").innerHTML = "Zone: " + a.speaker.zone.zoneID;
-          document.getElementById("volume").innerHTML = "Volume: " + a.speaker.VolumeLevel[0];
         }
       },
       
@@ -209,9 +203,29 @@
         })
         // populate the speaker array
         var speakers = [];
+        var speakersJustID = [];
+        /*
         zones.forEach(function(zone){
-          Array.prototype.push.apply(speakers, zone.speakers);
-        })
+        Array.prototype.push.apply(speakers, zone.speakers);
+        */
+        //console.log(zones);
+
+        for(var i = 0; i < zones.length; i++) {
+          for (var k = 0; k < zones[i].speakers.length; k++) {
+            var isItInYetThatsWhatSheSaid = speakersJustID.indexOf(zones[i].speakers[k].id);
+            if(isItInYetThatsWhatSheSaid == -1) {
+              speakers.push(zones[i].speakers[k]);
+              speakersJustID.push(zones[i].speakers[k].id);
+            } else {
+              speakers[isItInYetThatsWhatSheSaid].zone = zones[i].speakers[k].zone;
+            }
+          }
+         // 
+        //  if() {
+
+        //}
+        }
+        //})
         this.controllers = speakers
         this.zones = zones;
         this.$.mapcontroller.renderMap();

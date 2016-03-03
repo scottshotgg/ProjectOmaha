@@ -41,6 +41,7 @@ type addPresetData struct {
 	Speaker		int8		`json:"speaker"`
 	Name		string		`json:"name"`
 	Constants	string		`json:"constants"`
+	Target		string		`json:"target"`
 }
 
 type pagingRequest struct {

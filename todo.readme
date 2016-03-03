@@ -7,20 +7,20 @@ This is a todo file:
 4.	Test equalizer																		✅
 5.	Look at Growraf: http://www.jqueryrain.com/?MnbPPsmf								✅
 6.	Add music and volume into the database												✅
-7.	Add equalizer loading from former database values
+7.	Add equalizer loading from former database values									✅
 8.	Add music, paging and volume to the database										✅
-8.	Add equalizer presets
-9.	Add music and volume presets
-10. Add color chaning for the whole UI (???)
+8.	Add equalizer presets																✅
+9.	Add music and volume presets														
+10. Add color chaning for the whole UI (???)											
 11. Make variable for fading in and out rate (time in seconds)							✅
 12. Make variable for the level to fade too												✅
 13. Make paging command																	✅
-14. At some point add the debug thing back in to the equalizer, don't forget!
-15. Compile the code and test it on the Pi2, it will probably run much better 
+14. At some point add the debug thing back in to the equalizer, don't forget!			
+15. Compile the code and test it on the Pi2, it will probably run much better			
 16. Finalize database variable typing (int -> int8, mostly)
-17. Fix OpenLayer click event shit
+17. Fix OpenLayer click event shit														✅
 18. Use line chart from Chart.js to chart the spectrum and then give discrete values	✅
-19. What can we use progres bars for? 
+19. What can we use progress bars for? 
 20. Make log for all users that logs ips, speakers ids, and what they are doing on it
 21. Make it visible to the user who is controlling the speaker at that time
 
@@ -31,3 +31,12 @@ NEXT WEEK:
 
 
 	map hashing, lasso tool
+
+
+3/3:
+	how to add targets
+	try to modify the targets
+	information page - this is where we will add the name
+	work out the colors, shouldnt be random, store the code in the DB
+	eq - transparency manual/auto
+
