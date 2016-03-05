@@ -9,7 +9,7 @@ var Commands struct {
 	SetPaging				byte
 	SetFadeTime				byte
 	SetFadeLevel			byte
-	AreYouAlive        		byte // Nto sure how to implement this, could split off another thread and make a ticker, http://stackoverflow.com/questions/16466320/is-there-a-way-to-do-repetitive-tasks-at-intervals-in-golang
+	AreYouAlive        		byte // Not sure how to implement this, could split off another thread and make a ticker, http://stackoverflow.com/questions/16466320/is-there-a-way-to-do-repetitive-tasks-at-intervals-in-golang
 	ResetSpeaker       		byte
 	ResetFIFO          		byte
 	GetLEDStatus       		byte

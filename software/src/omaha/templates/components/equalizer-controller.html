@@ -36,7 +36,7 @@
       paper-card {
         width: 100%;
         height: 100%;   /* This was 100%, cahnge back if needed */
-        
+        text-align: center;   /* center was not here and then i put it here, take out if it fucks up */
       }
 
       .papercardleft {
@@ -78,7 +78,7 @@
       <div class="card-content">
         <div id="sliderequalizer" class="layout horizontal">
           <div id="custom_container"> 
-            <div class="custom one"> <input id="text1" class="level" readonly/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
+            <div class="custom one"> <input id="text1" class="level"/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
             <div class="custom two"> <input id="text2" class="level" readonly/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
             <div class="custom three"> <input id="text3" class="level" readonly/> <div class="custom_slider" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
             <div class="custom four"> <input id="text4" class="level" readonly/><div class="custom_slider" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
@@ -105,10 +105,10 @@
 
       <!-- entry-animation="scale-up-animation" exit-animation="fade-out-animation" -->
     <paper-dialog id="dialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
-      <h1>Add Preset</h1>
-      <div>Enter the new preset name below</div>
-      <div class="message">{{err}}</font></div>
-      <paper-input id="popupInput" label="" placeholder="Enter Name for Preset" text-align="center"></paper-input>
+      <h1 style="text-align: center;">Add Preset</h1>
+      <div style="text-align: center;">Enter the name for the new preset below</div>
+      <div class="message">{{err}}</div>
+      <paper-input id="popupInput" label="" placeholder="Enter new preset name" text-align="center"></paper-input>
       <div class="buttons">
       <paper-button ondialog-confirm on-click="_acceptPressed">Add</paper-button>
       <paper-button dialog-dismiss on-click="_cancelPressed">Cancel</paper-button>
@@ -255,16 +255,14 @@
 
         if(ifvar > 0) {
           console.log("we are in here right now");
-          this.err = "Invalid name: Name already taken, please enter another";
+          this.err = "Invalid name: Name already taken";
           this.$.toasty.text = this.err;
           this.$.toasty.show();
-          console.log("4");
         } else {
           this.$.addPresetAjax.body = {
             "speaker": this.speakerId,
             "name": name,
             "constants": iirConstants.join(" "),
-            "target": false // this is false right now, change later
             // Maybe we should add a currently applied thing in here or something
           };
 
@@ -279,7 +277,6 @@
           console.log(this.$.toasty.text);
 
           this.$.toasty.show();
-          console.log("1");
 
           temp = document.createElement("paper-item");
           temp.setAttribute("value", name);
@@ -322,8 +319,7 @@
         'equalizerListbox.iron-select': '_presetSelectionChanged'
       },
       
-      _presetSelectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
-
+      _presetSelectionChanged: function(event) {
         console.log(this.speakerId);    // This says the speakerId is undefined
 
         //var menu = document.getElementById('equalizerMenu');
@@ -341,8 +337,6 @@
         if(selected == "currently applied") {
           this.$.toasty.text = "Currently applied constants loaded! " + iirConstants.join(", ");
           this.$.toasty.show();
-
-          console.log("2");
 
           lastSelected = this.$.equalizerListbox.selected;
 
@@ -364,8 +358,7 @@
               if(selected == this.speaker.PresetNames[k].valueOf().toLowerCase()) {
                 this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded! " + iirConstants.join(", ");
                 this.$.toasty.show();
-                console.log("3");
-                console.log("Speaker " + this.speakerId + " selected " + selected);
+                console.log("Speaker " + this.speakerId + " selected preset: " + selected);
                 // show a toast here with the preset applied message
                 associationLink = k;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
                 console.log("associationLink", associationLink);
@@ -373,13 +366,13 @@
               }
             }
             if(associationLink != -1) {
-                console.log(this.speaker.Equalizer.length);
-                for (var j = 0; j < this.speaker.Equalizer[0].length; j++) {   // add associationLink back if this fucks up
-                  sliders[j].style.height = (this.speaker.Equalizer[associationLink][j] + 40) * 2 + "%";    // why does this have to be lower case
-                  handles[j].style.bottom = (this.speaker.Equalizer[associationLink][j] + 40) * 2 + "%";
-                  $("#text" + (parseInt(j) + 1)).val(this.speaker.Equalizer[associationLink][j]);
-                  iirConstants[j] = this.speaker.Equalizer[associationLink][j];
-                }
+              console.log(this.speaker.Equalizer.length);
+              for (var j = 0; j < this.speaker.Equalizer[0].length; j++) {   // add associationLink back if this fucks up
+                sliders[j].style.height = (this.speaker.Equalizer[associationLink][j] + 40) * 2 + "%";    // why does this have to be lower case
+                handles[j].style.bottom = (this.speaker.Equalizer[associationLink][j] + 40) * 2 + "%";
+                $("#text" + (parseInt(j) + 1)).val(this.speaker.Equalizer[associationLink][j]);
+                iirConstants[j] = this.speaker.Equalizer[associationLink][j];
+              }
             }
           }
 

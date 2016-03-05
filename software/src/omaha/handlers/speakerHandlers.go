@@ -25,6 +25,8 @@ type speakerResponse struct {
 	Averaging 		int8		`json:"averaging"`
 	FadeTime		int8		`json:"fadetime"`
 	FadeLevel		int8		`json:"fadelevel"`
+	Target[][]	int			`json:["target"]`
+	TargetNames[]	string		`json:["targetNames"]`
 	Equalizer[][]	int			`json:["equalizer"]`
 	PresetNames[]	string		`json:["presetNames"]`
 	Current[21]		int			`json:["current"]` 
@@ -364,7 +366,7 @@ func SpeakerGetHandler(w http.ResponseWriter, r *http.Request) {
 
 func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse {
 
-	speakerResponse := speakerResponse{Name: controller.Name, Volume: controller.VolumeLevel[0], Music: controller.VolumeLevel[1], Paging: controller.VolumeLevel[2], Masking: controller.VolumeLevel[3], Averaging: controller.AveragingMode, FadeTime: controller.PagingLevel[0], FadeLevel: controller.PagingLevel[1], Current: [21]int{controller.Current[0], controller.Current[1], controller.Current[2], controller.Current[3], controller.Current[4], controller.Current[5], controller.Current[6], controller.Current[7], controller.Current[8], controller.Current[9], controller.Current[10], controller.Current[11], controller.Current[12], controller.Current[13], controller.Current[14], controller.Current[15], controller.Current[16], controller.Current[17], controller.Current[18], controller.Current[19], controller.Current[20]}, Equalizer: controller.Equalizer, PresetNames: controller.PresetNames}
+	speakerResponse := speakerResponse{Name: controller.Name, Volume: controller.VolumeLevel[0], Music: controller.VolumeLevel[1], Paging: controller.VolumeLevel[2], Masking: controller.VolumeLevel[3], Averaging: controller.AveragingMode, FadeTime: controller.PagingLevel[0], FadeLevel: controller.PagingLevel[1], Current: [21]int{controller.Current[0], controller.Current[1], controller.Current[2], controller.Current[3], controller.Current[4], controller.Current[5], controller.Current[6], controller.Current[7], controller.Current[8], controller.Current[9], controller.Current[10], controller.Current[11], controller.Current[12], controller.Current[13], controller.Current[14], controller.Current[15], controller.Current[16], controller.Current[17], controller.Current[18], controller.Current[19], controller.Current[20]}, Target: controller.Target, TargetNames: controller.TargetNames, Equalizer: controller.Equalizer, PresetNames: controller.PresetNames}
 	//log.Println(controller)
 	return speakerResponse
 }
@@ -387,6 +389,28 @@ func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println(addPresetRequest)
 
 	database.SavePreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
+func AddTargetHandler(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	status := system.GetSystemStatus()
+
+	addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
+	err := json.NewDecoder(r.Body).Decode(addPresetRequest)
+	//controller := database.GetSpeaker(speakerRequest.Speaker)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("AddTargetHandler json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	log.Println(addPresetRequest)
+
+	database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
 
 	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
 }

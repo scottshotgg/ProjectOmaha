@@ -29,12 +29,47 @@
       paper-button {
         background-color: #3f51b5;
         color: #fff;
-        margin-top: 10px;
+        margin-top: 5px;
       }
+
+      .inputs {
+        width: calc(.025 * 100vw);
+        margin-right: calc(.014 * 100vw);
+        margin-top: calc(-.015 * 100vh);
+      }
+
+      paper-input /deep/ #input {
+        text-align: center;
+      }
+
     </style>
    <paper-card heading="Target" elevation="4">
       <div class="card-content">
-        <canvas id="targetChart" class="chartClass"></canvas>
+        <canvas id="targetChart" style="margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);" class="chartClass"></canvas>
+        <div class="horizontal layout" id="adjustment" placeholder="0" style="height: calc(.05 * 100vh); margin-top: calc(.0 * 100vh);">
+          <!-- try doing a no float and then just putting 0 and making it start default? -->
+          <paper-input class="inputs" on-keyup="redrawOnInput" center-justified placeholder="0" style="margin-left: calc(.025 * 100vw);"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+        </div>
       </div>
       <div class="card-actions">
         <paper-button on-click="_setTargetClicked">apply target</paper-button>
@@ -49,12 +84,35 @@
               </paper-dropdown-menu>  
             </template>-->   
             <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
-            <paper-item id="Add New Target" value="Add New Preset">Add New Preset</paper-item>   
+            <paper-item id="Add New Target" value="Add New Target">Add New Target</paper-item>   
           </paper-listbox>
         </paper-dropdown-menu>
       </div>
     </paper-card>
     <paper-toast id="toast">Target set to <span>{{target}}, switch to the equalizer page to adjust further</span></paper-toast>
+    <!--<paper-toast id="errorAdjustToast"><paper-item id="Add New Target" value="Add New Preset">Add New Preset</paper-item></paper-toast>-->
+    <paper-toast id="errorAdjustToast"></paper-toast>
+    <paper-dialog id="dialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
+      <h1 style="text-align: center;">Add Target</h1>
+      <div style="text-align: center;">Enter the name for the new target below</div>
+      <div class="message">{{err}}</font></div>
+      <paper-input id="popupInput" label="" placeholder="Enter new target name" text-align="center"></paper-input>
+      <div class="buttons">
+      <paper-button ondialog-confirm on-click="_acceptPressed">Add</paper-button>
+      <paper-button dialog-dismiss on-click="_cancelPressed">Cancel</paper-button>
+    </div>
+    </paper-dialog>
+
+    <iron-ajax
+      id="addTargetAjax"
+      url="/system/addTarget/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
   </template>
   <script>
     Polymer({
@@ -91,6 +149,8 @@
           type: Number
         }
       },
+
+    redrawOnInput: redrawOnInput,
 
       /*
       properties: {
@@ -138,6 +198,134 @@
         console.log("_setTargetClicked");
       },
 
+      _logResponse: function(event, data) {
+        console.log(data.response);
+      },
+
+      _acceptPressed: function(event) {
+        var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
+        var ifvar = 0;
+        if(this.speaker.TargetNames.length > 0) {
+          for(var i = 0; i < this.speaker.TargetNames.length; i++) {
+            if(name.toLowerCase() == this.speaker.TargetNames[i].valueOf().toLowerCase()) {
+              console.log("same name dude");
+              ifvar++;    // make more checks dummy
+            }
+          }
+        }
+
+        if(ifvar > 0) {
+          console.log("we are in here right now");
+          this.err = "Invalid name: Name already taken";
+          this.$.errorAdjustToast.text = this.err;
+          this.$.errorAdjustToast.show();
+        } else {
+          this.$.addTargetAjax.body = {
+            "speaker": this.speakerId,
+            "name": name,
+            "constants": dataArray.join(" ")
+            // Maybe we should add a currently applied thing in here or something
+          };
+
+          console.log(dataArray.join(" "));
+
+          console.log("addTargetAjax:", addTargetAjax.body);
+          this.$.addTargetAjax.generateRequest();
+
+          this.$.dialog.toggle();
+
+          this.$.errorAdjustToast.text = "Added target: " + name + " " + dataArray.join(", ");
+          console.log(this.$.errorAdjustToast.text);
+
+          this.$.errorAdjustToast.show();
+
+          temp = document.createElement("paper-item");
+          temp.setAttribute("value", name);
+          temp.setAttribute("id", name);
+          // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
+          temp.innerHTML = name;
+          Polymer.dom(this.$.targetListbox).appendChild(temp);
+
+          var length = this.speaker.Target.length;
+          console.log(length);
+
+          console.log(dataArray);
+
+          var dataArrayCopy = dataArray.slice();
+
+          console.log("dataArrayCopy: ", dataArrayCopy);
+          this.speaker.Target.push(dataArray.slice());    // change this to dataArrayCopy if it breaks
+          //}
+
+          this.speaker.TargetNames[this.speaker.TargetNames.length] = name;
+
+          console.log(this.speaker.Target);
+
+          this.$.targetListbox.selected = name;
+          //this.$.toasty.text = "";
+          this.$.popupInput.value = "";
+        }
+      },
+
+      _cancelPressed: function(event) {
+        // make something that will capture the last thing clicked and keep track of that and change it to that when they click cancel
+
+        this.$.targetListbox.selected = -1;
+
+        console.log(lastSelected);
+
+      },
+
+      listeners: {
+        'targetListbox.iron-select': '_presetSelectionChanged'
+      },
+      
+      _presetSelectionChanged: function(event) {
+          var selected = this.$.targetListbox.selected.valueOf().toLowerCase().replace("\n", "");
+
+          if(selected == "currently applied") {
+          this.$.errorAdjustToast.text = "Currently applied constants loaded! " + dataArray.join(", ");
+          this.$.errorAdjustToast.show();
+
+          lastSelected = this.$.targetListbox.selected;
+
+          for (var i = 0; i < this.speaker.Current.length; i++) { 
+            sliders[i].style.height = (this.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
+            console.log(this);
+            handles[i].style.bottom = (this.speaker.Current[i] + 40) * 2 + "%";
+            $("#text" + (parseInt(i) + 1)).val(this.speaker.Current[i]);
+            dataArray[i] = this.speaker.Current[i];       
+          }
+        } else if(selected == "add new target") {
+            var addTargetAjax = document.getElementById("addTargetAjax");
+            console.log(addTargetAjax);
+            this.$.dialog.toggle();
+        } else if(this.speaker.TargetNames.length > 0) {
+            lastSelected = this.$.targetListbox.selected;
+            var associationLink = -1;
+            for (k in this.speaker.TargetNames) {
+              if(selected == this.speaker.TargetNames[k].valueOf().toLowerCase()) {
+                this.$.errorAdjustToast.text = this.$.targetListbox.selected + " target loaded! " + dataArray.join(", ");
+                this.$.errorAdjustToast.show();
+                console.log("Speaker " + this.speakerId + " selected target: " + selected);
+                // show a toast here with the preset applied message
+                associationLink = k;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
+                console.log("associationLink", associationLink);
+                break;    // this is for efficiency reasons, better to keep it this way if it works
+              }
+            }
+            if(associationLink != -1) {
+              console.log(this.speaker.Target.length);
+              for (var j = 0; j < this.speaker.Target[0].length; j++) {   // add associationLink back if this fucks up
+                sliders[j].style.height = (this.speaker.Target[associationLink][j] + 40) * 2 + "%";    // why does this have to be lower case
+                handles[j].style.bottom = (this.speaker.Target[associationLink][j] + 40) * 2 + "%";
+                $("#text" + (parseInt(j) + 1)).val(this.speaker.Target[associationLink][j]);
+                dataArray[j] = this.speaker.Target[associationLink][j];
+              }
+            }
+          }
+        },
+
 
       ready: function() {
         this.internalTarget = this.target;
@@ -145,10 +333,12 @@
       }
     });
 
+    var labels = ["80", "100", "125", "160", "200", "250", "315", "400", "500", "630", "800", "1k", "1.25k", "1.6k", "2k", "2.5k", "3.15k", "4k", "5k", "6.3k", "8k"]
+
     var dataArray = [42, 42, 47, 53, 54, 51, 46, 47, 46, 45, 40, 37, 38, 40, 41, 39, 38.5, 34.5, 32, 30, 30];
 
     var data = {
-      labels: ["80", "100", "125", "160", "200", "250", "315", "400", "500", "630", "800", "1k", "1.25k", "1.6k", "2k", "2.5k", "3.15k", "4k", "5k", "6.3k", "8k"],
+      labels,
       datasets: [
         {
           fillColor: "rgba(33, 67, 214, 0.25)",
@@ -159,9 +349,6 @@
         }
       ]
     }
-    var canvas = document.getElementById("targetChart");
-    var chart_width_scalar = .8;
-    var chart_height_scalar = .6;
 
     var lineAttributes = {
       scaleOverride: true,
@@ -169,24 +356,108 @@
       scaleStartValue: -20,
       scaleStepWidth: 10,
       scaleShowLabels: true,
-      scaleFontSize: 12
+      scaleFontSize: 12,
     };
+
+    var resizeLineAttributes = {
+      animation: false,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    var redrawLineAttributes = {
+      showTooltips: true,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+
+    var myChart;
+
+    var canvas = document.getElementById("targetChart");
+    var chart_width_scalar = .8;
+    var chart_height_scalar = .55;
+
 
   $(document).ready(function() {
     canvas = document.getElementById("targetChart");
     canvas.width = $(window).width() * chart_width_scalar;
     canvas.height = $(window).height() * chart_height_scalar;
 
-    new Chart(canvas.getContext("2d")).Line(data, lineAttributes);
+    $(document.getElementsByClassName("inputs")).each(function(i) {
+      this.value = dataArray[i];
+    });
+
+    myChart = new Chart(canvas.getContext("2d")).Line(data, lineAttributes);
   });
+
 
   $(window).resize(function() {
+    $($(canvas).parent()).prepend("<canvas id=\"targetChart\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
+    canvas.remove();
+
+    canvas = document.getElementById("targetChart");
     canvas.width = $(window).width() * chart_width_scalar;
     canvas.height = $(window).height() * chart_height_scalar;
-
-    new Chart(canvas.getContext("2d")).Line(data, lineAttributes);
+    myChart = new Chart(canvas.getContext("2d")).Line(data, resizeLineAttributes);
   });
-    
+
+  function redrawOnInput() {
+    var errorAdjustToast = document.getElementById("errorAdjustToast");
+    var strokeColor = "#3367d6";
+    var pointStrokeColor = "#3367d6";
+    var fillColor = "rgba(33, 67, 214, 0.25)";
+
+    $(document.getElementsByClassName("inputs")).each(function(i) {
+      if(this.value > -21 && this.value < 81) {
+        dataArray[i] = this.value;
+      } else {
+        dataArray[i] = null;
+        
+        // Set the error colors
+        strokeColor = "#ff0000";
+        pointStrokeColor = "#ff0000";
+        fillColor = "rgba(255, 00, 00, 0.25)";
+
+        if(isNaN(this.value)) {
+          errorAdjustToast.text = "Invalid entry for " + labels[i] + "Hz: Only numerical values are accepted";
+          errorAdjustToast.show();
+        } else {
+          errorAdjustToast.text = "Invalid entry for " + labels[i] + "Hz: Accepted range of values is -20 to 80";
+          errorAdjustToast.show();
+        }
+      }
+    });
+
+    var redrawData = {
+      labels,
+      datasets: [
+        {
+          fillColor: fillColor,
+          strokeColor: strokeColor,
+          pointColor: "#fff",
+          pointStrokeColor: pointStrokeColor,  
+          data: dataArray,
+        }
+      ]
+    }
+
+    $($(canvas).parent()).prepend("<canvas id=\"targetChart\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
+    canvas.remove();
+
+    canvas = document.getElementById("targetChart");
+    canvas.width = $(window).width() * chart_width_scalar;
+    canvas.height = $(window).height() * chart_height_scalar;
+    myChart = new Chart(canvas.getContext("2d")).Line(redrawData, redrawLineAttributes);
+  }
 
   </script>
 </dom-module>

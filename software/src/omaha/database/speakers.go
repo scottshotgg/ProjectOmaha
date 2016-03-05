@@ -92,6 +92,42 @@ func createEqualizerPresetsTable() {
 	}
 }
 
+func createTargetsTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE Targets (
+			speakerID INTEGER PRIMARY KEY,
+			name varchar(50),
+			whichPreset INTEGER,
+			band0 INTEGER,
+			band1 INTEGER,
+			band2 INTEGER,
+			band3 INTEGER,
+			band4 INTEGER,
+			band5 INTEGER,
+			band6 INTEGER,
+			band7 INTEGER,
+			band8 INTEGER,
+			band9 INTEGER,
+			band10 INTEGER,
+			band11 INTEGER,
+			band12 INTEGER,
+			band13 INTEGER,
+			band14 INTEGER,
+			band15 INTEGER,
+			band16 INTEGER,
+			band17 INTEGER,
+			band18 INTEGER,
+			band19 INTEGER,
+			band20 INTEGER
+		)
+	`) // needs to be an equalizer thing in here
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created speaker table")
+	}
+}
+
 // GetAllSpeakers gets all speakers from the database and returns them as a slice of ControllerStatus objects
 func GetAllSpeakers() []*ControllerStatus {
 	rows, err := DB.Query(`
@@ -236,6 +272,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var y int
 	var name string
 	var presetName string		// might need to make a catch for this
+	var targetName string		// might need to make a catch for this
 	var whichPreset int
 	var band0 int
 	var band1 int
@@ -430,6 +467,111 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		log.Fatal(err)
 	}
 
+	rows, errr := DB.Query(`
+	SELECT 	name, whichPreset, 
+			band0,
+			band1,
+			band2,
+			band3,
+			band4,
+			band5,
+			band6,
+			band7,
+			band8,
+			band9,
+			band10,
+			band11,
+			band12,
+			band13,
+			band14,
+			band15,
+			band16,
+			band17,
+			band18,
+			band19,			
+			band20
+	FROM Targets
+	WHERE speakerID=?;
+	`, speakerID)
+
+	defer rows.Close()
+
+	for rows.Next() {
+
+		err = rows.Scan(&targetName, &whichPreset, 
+				&band0,
+				&band1,
+				&band2,
+				&band3,
+				&band4,
+				&band5,
+				&band6,
+				&band7,
+				&band8,
+				&band9,
+				&band10,
+				&band11,
+				&band12,
+				&band13,
+				&band14,
+				&band15,
+				&band16,
+				&band17,
+				&band18,
+				&band19,
+				&band20)
+
+		if errr != nil {
+			log.Fatal(err)
+		}
+
+		/*
+		log.Println(name, whichPreset, 
+				band0,
+				band1,
+				band2,
+				band3,
+				band4,
+				band5,
+				band6,
+				band7,
+				band8,
+				band9,
+				band10,
+				band11,
+				band12,
+				band13,
+				band14,
+				band15,
+				band16,
+				band17,
+				band18,
+				band19,
+				band20)
+		*/
+			//constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
+			speaker.TargetNames = append(speaker.TargetNames, targetName)
+			speaker.Target = append(speaker.Target, []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
+			log.Println(speaker.TargetNames, speaker.Target)		// make sure that the two arrays are the same size
+
+		//log.Println("current", current)
+
+		// make current the one that is stored in the speaker table
+		/*
+		if(current == 0) {
+			constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
+			speaker.Equalizer  = append(speaker.Equalizer, constants)
+		} else {
+			speaker.Current = [21]int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
+			log.Println("hi from current:", speaker.Current)
+		}
+		*/
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// it is pulling from here but we need to figure out a way to distinguish which one should be loaded
 
 	//speaker.Equalizer = constant in Current
@@ -444,6 +586,20 @@ func SavePreset(speakerId int8, name string, constants []string) {
 	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SavePreset: I am firing")
 	var stringOfStatement string = "INSERT into EqualizerPresets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
+	}
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+}
+
+func SaveTarget(speakerId int8, name string, constants []string) {
+
+	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
+	log.Println("SaveTarget: I am firing")
+	var stringOfStatement string = "INSERT into Targets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
 	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
 		log.Fatal(errr)			

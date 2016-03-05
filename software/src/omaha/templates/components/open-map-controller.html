@@ -145,9 +145,17 @@
 
         console.log("Response:", data.response);
         console.log("Speaker:", a.speaker);
+
+        a.speaker.TargetNames = [];
         a.speaker.PresetNames = [];
-        a.speaker.Current = [];
-        a.speaker.Equalizer = [];
+        a.speaker.Current     = [];
+        a.speaker.Target      = [];
+        a.speaker.Equalizer   = [];
+
+        for (i in data.response.TargetNames) {
+          a.speaker.TargetNames[i] = data.response.TargetNames[i].replace("\n", "");
+          console.log(i, data.response.TargetNames[i]);
+        }
 
         for (i in data.response.PresetNames) {
           a.speaker.PresetNames[i] = data.response.PresetNames[i].replace("\n", "");
@@ -157,6 +165,11 @@
         for (i in data.response.Current) {
           a.speaker.Current[i] = data.response.Current[i];    // why does this have to be lower case
           console.log(i, data.response.Current[i]);
+        }
+
+        for(i in data.response.Target) {
+          a.speaker.Target[i] = data.response.Target[i];
+          console.log(data.response.Target[i]);
         }
 
         for(i in data.response.Equalizer) {

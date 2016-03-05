@@ -325,7 +325,7 @@ func SendPagingRequest(ID int8) (error) {
 
 	data := getMessageHeader(ID, 3)
 	data[1] = Commands.SetPaging		// Cannot use a command to do this
-	data[2] = 1		// Need to see what this needs to be, either 0 or 1, mcu cna check for the toggle
+	data[2] = 0		// Need to see what this needs to be, either 0 or 1, mcu cna check for the toggle
 
 	return nil
 }

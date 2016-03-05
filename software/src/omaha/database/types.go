@@ -15,6 +15,8 @@ type ControllerStatus struct {
 	AveragingMode	int8 		`json:"averagingMode"`
 	VolumeLevel[4]  int8 		`json:["volumeLevel"]`
 	PagingLevel[2]	int8		`json:["pagingLevel"]`
+	Target[][]		int			`json:["target"]`
+	TargetNames[]	string		`json:["targetNames"]`
 	Equalizer[][]	int			`json:["equalizer"]`
 	PresetNames[]	string		`json:["presetNames"]`
 	Current[21]		int			`json:"current"`

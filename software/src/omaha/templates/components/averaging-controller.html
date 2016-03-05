@@ -165,15 +165,9 @@
         var updatedAttributes = ["averaging"];
 
         // This is to deal with 0 since the averaging technically cannot be 0
-        if(this.effectiveness == 0 && this.comfort == 0) {
-          attributeValues = {
-            "averaging": 1
-          };
-        } else {
-          attributeValues = {
-            "averaging": this.effectiveness + this.comfort
-          };
-        }
+        attributeValues = {
+          "averaging": 10 - this.effectiveness + this.comfort
+        };
         this.$.selectModeAjax.body = {
           "updatedAttributes": updatedAttributes, 
           "attributeValues": attributeValues,                        
