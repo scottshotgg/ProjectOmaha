@@ -71,7 +71,7 @@
 
     </style>
 
-    <paper-card heading="Comfort"><h6 style="margin: 0;">what else to call it</h6>
+    <paper-card heading="Pleasantness-Effectiveness Ratio"><h6 style="margin: 0;"></h6>
       <div class="card-content">
         <!--<paper-dropdown-menu no-label-float style="overflow; hidden;" label="Averaging Mode:">
           <paper-listbox id="menu" class="dropdown-content" value="0">
@@ -101,7 +101,7 @@
           <div id="ec_style_div" class="layout horizontal">
             <h4>Effectiveness</h4>
             <paper-slider id="invis" pin min="0" max="100" step="5"></paper-slider>
-            <h4>Comfort</h4>
+            <h4>Pleasantness</h4>
           </div>
           <div id="ec_div" class="layout horizontal">
             <paper-icon-button icon="remove" on-click="decrementE"></paper-icon-button>
@@ -111,7 +111,7 @@
             <paper-icon-button icon="remove" noink style="visibility: hidden;"></paper-icon-button>
 
             <paper-icon-button icon="remove" on-click="decrementC"></paper-icon-button>
-            <paper-slider id="comfort" pin min="0" max="10" step="1" value="{{comfort}}"></paper-slider> 
+            <paper-slider id="pleasantness" pin min="0" max="10" step="1" value="{{pleasantness}}"></paper-slider> 
             <paper-icon-button icon="add" on-click="incrementC"></paper-icon-button>
           <!-- might need to change this is 0 is not an acceptable value -->
           </div>
@@ -120,7 +120,7 @@
         <span>{{value}}</span>
       </div>
       <div class="card-actions">
-        <paper-button on-click="_selectionChanged">set comfort</paper-button>
+        <paper-button on-click="_selectionChanged">set pleasantness</paper-button>
       </div>
     </paper-card>
     <!--<paper-toast id="toast">Averaging mode set to <span>{{volume}}</span></paper-toast>-->
@@ -134,13 +134,12 @@
       debounce-duration="300"></iron-ajax>
   </template>
   <script>
-
-
-
     Polymer({
       is: 'averaging-controller',
 
       properties: {
+        //effectiveness: Number,
+        //pleasantness: Number,
         averaging: Number,
         speakerId: {
             type: Number,
@@ -164,9 +163,9 @@
         // Need to put a toast thing here like we have on the volume selector page
         var updatedAttributes = ["averaging"];
 
-        // This is to deal with 0 since the averaging technically cannot be 0
         attributeValues = {
-          "averaging": 10 - this.effectiveness + this.comfort
+          effectiveness: effectiveness.value,
+          pleasantness: pleasantness.value
         };
         this.$.selectModeAjax.body = {
           "updatedAttributes": updatedAttributes, 
@@ -212,8 +211,8 @@
       },
 
       decrementC: function() {
-        this.$.comfort.decrement();
-        this.$.comfort._expandKnob();
+        this.$.pleasantness.decrement();
+        this.$.pleasantness._expandKnob();
         if(this.prevTimeout != 0) {
           window.clearTimeout(this.prevTimeout)
         }
@@ -225,8 +224,8 @@
       },
       
       incrementC: function() {
-        this.$.comfort.increment();
-        this.$.comfort._expandKnob();
+        this.$.pleasantness.increment();
+        this.$.pleasantness._expandKnob();
         if(this.prevTimeout != 0) {
           window.clearTimeout(this.prevTimeout)
         }
@@ -240,7 +239,7 @@
       resetKnob: function(elem) {
         elem.prevTimeout = 0;
         elem.$.effectiveness._resetKnob();
-        elem.$.comfort._resetKnob();
+        elem.$.pleasantness._resetKnob();
       },
       
     });

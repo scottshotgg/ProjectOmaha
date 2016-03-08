@@ -206,8 +206,8 @@
         console.log("_setEqualizerClicked");
         console.log(iirConstants);
         
-        for (var i = 0; i < this.speaker.Current.length; i++) { 
-          this.speaker.Current[i] = iirConstants[i];
+        for (var i = 0; i < this.speaker.CurrentPreset.length; i++) { 
+          this.speaker.CurrentPreset[i] = iirConstants[i];
         }
       },
 
@@ -340,12 +340,12 @@
 
           lastSelected = this.$.equalizerListbox.selected;
 
-          for (var i = 0; i < this.speaker.Current.length; i++) { 
-            sliders[i].style.height = (this.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
+          for (var i = 0; i < this.speaker.CurrentPreset.length; i++) { 
+            sliders[i].style.height = (this.speaker.CurrentPreset[i] + 40) * 2 + "%";    // why does this have to be lower case
             console.log(this);
-            handles[i].style.bottom = (this.speaker.Current[i] + 40) * 2 + "%";
-            $("#text" + (parseInt(i) + 1)).val(this.speaker.Current[i]);
-            iirConstants[i] = this.speaker.Current[i];       
+            handles[i].style.bottom = (this.speaker.CurrentPreset[i] + 40) * 2 + "%";
+            $("#text" + (parseInt(i) + 1)).val(this.speaker.CurrentPreset[i]);
+            iirConstants[i] = this.speaker.CurrentPreset[i];       
           }
         } else if(selected == "add new preset") {
             var addPresetAjax = document.getElementById("addPresetAjax");

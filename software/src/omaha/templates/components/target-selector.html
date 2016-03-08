@@ -115,6 +115,51 @@
 
   </template>
   <script>
+    var labels = ["80", "100", "125", "160", "200", "250", "315", "400", "500", "630", "800", "1k", "1.25k", "1.6k", "2k", "2.5k", "3.15k", "4k", "5k", "6.3k", "8k"];
+
+
+    var data = {
+      labels,
+      datasets: [{
+        fillColor: "rgba(33, 67, 214, 0.25)",
+        strokeColor: "#3367d6",
+        pointColor: "#fff",
+        pointStrokeColor: "#3367d6",  
+        data: dataArray,
+      }]
+    }
+
+    var lineAttributes = {
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    var resizeLineAttributes = {
+      animation: false,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    var redrawLineAttributes = {
+      showTooltips: true,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    //redraw(dataArray, lineAttributes);
+
     Polymer({
       is: 'target-selector',
       
@@ -192,6 +237,10 @@
       },*/
       
       _setTargetClicked: function() {
+        for (var i = 0; i < this.speaker.CurrentTarget.length; i++) { 
+            this.speaker.CurrentTarget[i] = dataArray[i];
+            console.log(dataArray[i]);
+        }
         this.target = this.internalTarget;
         //this.musicVolume = this.internalVolume2;
         this.$.toast.show();
@@ -281,21 +330,22 @@
       },
       
       _presetSelectionChanged: function(event) {
-          var selected = this.$.targetListbox.selected.valueOf().toLowerCase().replace("\n", "");
+        var selected = this.$.targetListbox.selected.valueOf().toLowerCase().replace("\n", "");
 
-          if(selected == "currently applied") {
+        if(selected == "currently applied") {
           this.$.errorAdjustToast.text = "Currently applied constants loaded! " + dataArray.join(", ");
           this.$.errorAdjustToast.show();
 
           lastSelected = this.$.targetListbox.selected;
 
-          for (var i = 0; i < this.speaker.Current.length; i++) { 
-            sliders[i].style.height = (this.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
-            console.log(this);
-            handles[i].style.bottom = (this.speaker.Current[i] + 40) * 2 + "%";
-            $("#text" + (parseInt(i) + 1)).val(this.speaker.Current[i]);
-            dataArray[i] = this.speaker.Current[i];       
+          for (var i = 0; i < this.speaker.CurrentTarget.length; i++) { 
+            dataArray[i] = this.speaker.CurrentTarget[i];
+
+            redraw(data, lineAttributes);
           }
+          $(document.getElementsByClassName("inputs")).each(function(j) {
+            this.value = dataArray[j];
+          });
         } else if(selected == "add new target") {
             var addTargetAjax = document.getElementById("addTargetAjax");
             console.log(addTargetAjax);
@@ -305,9 +355,6 @@
             var associationLink = -1;
             for (k in this.speaker.TargetNames) {
               if(selected == this.speaker.TargetNames[k].valueOf().toLowerCase()) {
-                this.$.errorAdjustToast.text = this.$.targetListbox.selected + " target loaded! " + dataArray.join(", ");
-                this.$.errorAdjustToast.show();
-                console.log("Speaker " + this.speakerId + " selected target: " + selected);
                 // show a toast here with the preset applied message
                 associationLink = k;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
                 console.log("associationLink", associationLink);
@@ -316,12 +363,23 @@
             }
             if(associationLink != -1) {
               console.log(this.speaker.Target.length);
+
               for (var j = 0; j < this.speaker.Target[0].length; j++) {   // add associationLink back if this fucks up
-                sliders[j].style.height = (this.speaker.Target[associationLink][j] + 40) * 2 + "%";    // why does this have to be lower case
+                /*sliders[j].style.height = (this.speaker.Target[associationLink][j] + 40) * 2 + "%";    // why does this have to be lower case
                 handles[j].style.bottom = (this.speaker.Target[associationLink][j] + 40) * 2 + "%";
                 $("#text" + (parseInt(j) + 1)).val(this.speaker.Target[associationLink][j]);
-                dataArray[j] = this.speaker.Target[associationLink][j];
+                dataArray[j] = this.speaker.Target[associationLink][j];*/
+               dataArray[j] = this.speaker.Target[associationLink][j]; 
               }
+
+              $(document.getElementsByClassName("inputs")).each(function(j) {   // this can be optimized
+                this.value = dataArray[j];
+              });
+
+              redraw(data, lineAttributes);
+              this.$.errorAdjustToast.text = this.$.targetListbox.selected + " target loaded! " + dataArray.join(", ");
+              this.$.errorAdjustToast.show();
+              console.log("Speaker " + this.speakerId + " selected target: " + selected);
             }
           }
         },
@@ -332,53 +390,6 @@
         console.log("I am ready " + this.internalTarget);
       }
     });
-
-    var labels = ["80", "100", "125", "160", "200", "250", "315", "400", "500", "630", "800", "1k", "1.25k", "1.6k", "2k", "2.5k", "3.15k", "4k", "5k", "6.3k", "8k"]
-
-    var dataArray = [42, 42, 47, 53, 54, 51, 46, 47, 46, 45, 40, 37, 38, 40, 41, 39, 38.5, 34.5, 32, 30, 30];
-
-    var data = {
-      labels,
-      datasets: [
-        {
-          fillColor: "rgba(33, 67, 214, 0.25)",
-          strokeColor: "#3367d6",
-          pointColor: "#fff",
-          pointStrokeColor: "#3367d6",  
-          data: dataArray,
-        }
-      ]
-    }
-
-    var lineAttributes = {
-      scaleOverride: true,
-      scaleSteps: 10,
-      scaleStartValue: -20,
-      scaleStepWidth: 10,
-      scaleShowLabels: true,
-      scaleFontSize: 12,
-    };
-
-    var resizeLineAttributes = {
-      animation: false,
-      scaleOverride: true,
-      scaleSteps: 10,
-      scaleStartValue: -20,
-      scaleStepWidth: 10,
-      scaleShowLabels: true,
-      scaleFontSize: 12,
-    };
-
-    var redrawLineAttributes = {
-      showTooltips: true,
-      scaleOverride: true,
-      scaleSteps: 10,
-      scaleStartValue: -20,
-      scaleStepWidth: 10,
-      scaleShowLabels: true,
-      scaleFontSize: 12,
-    };
-
 
     var myChart;
 
@@ -410,6 +421,17 @@
     myChart = new Chart(canvas.getContext("2d")).Line(data, resizeLineAttributes);
   });
 
+  function redraw(drawingData, drawingLineAttributes) {
+    $($(canvas).parent()).prepend("<canvas id=\"targetChart\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
+    canvas.remove();
+
+    canvas = document.getElementById("targetChart");
+    canvas.width = $(window).width() * chart_width_scalar;
+    canvas.height = $(window).height() * chart_height_scalar;
+    myChart = new Chart(canvas.getContext("2d")).Line(drawingData, drawingLineAttributes);
+
+  }
+
   function redrawOnInput() {
     var errorAdjustToast = document.getElementById("errorAdjustToast");
     var strokeColor = "#3367d6";
@@ -439,25 +461,23 @@
 
     var redrawData = {
       labels,
-      datasets: [
-        {
-          fillColor: fillColor,
-          strokeColor: strokeColor,
-          pointColor: "#fff",
-          pointStrokeColor: pointStrokeColor,  
-          data: dataArray,
-        }
-      ]
+      datasets: [{
+        fillColor: fillColor,
+        strokeColor: strokeColor,
+        pointColor: "#fff",
+        pointStrokeColor: pointStrokeColor,  
+        data: dataArray,
+        }]
     }
 
-    $($(canvas).parent()).prepend("<canvas id=\"targetChart\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
-    canvas.remove();
-
-    canvas = document.getElementById("targetChart");
-    canvas.width = $(window).width() * chart_width_scalar;
-    canvas.height = $(window).height() * chart_height_scalar;
-    myChart = new Chart(canvas.getContext("2d")).Line(redrawData, redrawLineAttributes);
+    redraw(redrawData, redrawLineAttributes);
   }
+  
+
+      for (var i = 0; i < dataArray.length; i++) {
+      //dataArray[i] = this.speaker.CurrentTarget[i];
+    }
+    //redraw(dataArray, lineAttributes);
 
   </script>
 </dom-module>

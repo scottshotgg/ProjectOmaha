@@ -89,7 +89,7 @@ paper-tabs paper-tab.iron-selected {
   margin-bottom: calc(-.008 * 100vw);
   margin-left: calc(-.006 * 100vw);
   width: calc(.022 * 100vw);
-  height: calc(.011 * 100vw);
+  height: calc(.0065 * 100vw);
 
   /* Circle */
   /*
@@ -110,6 +110,10 @@ paper-tabs paper-tab.iron-selected {
 
 .ui-widget-header {
   background: #3f51b5;
+}
+
+.ui-widget-content {
+
 }
 
 .header.paper-card .title-text.paper-card {
@@ -137,6 +141,7 @@ paper-tabs paper-tab.iron-selected {
 }
 
 .custom > .custom_slider {
+  background: rgba(63, 81, 181, .2);
   /*height: calc(.35 * 100vh);*/
   height: calc(100% - .07 * 100vw);
   /*margin-bottom: calc(.005 * 100vw); */ /* This was 25 */

@@ -25,28 +25,52 @@ func createSpeakerTable() {
 			soundMaskingLevel INTEGER,
 			fadeTime INTEGER,
 			fadeLevel INTEGER,
-			averagingMode INTEGER,
-			band0 INTEGER,
-			band1 INTEGER,
-			band2 INTEGER,
-			band3 INTEGER,
-			band4 INTEGER,
-			band5 INTEGER,
-			band6 INTEGER,
-			band7 INTEGER,
-			band8 INTEGER,
-			band9 INTEGER,
-			band10 INTEGER,
-			band11 INTEGER,
-			band12 INTEGER,
-			band13 INTEGER,
-			band14 INTEGER,
-			band15 INTEGER,
-			band16 INTEGER,
-			band17 INTEGER,
-			band18 INTEGER,
-			band19 INTEGER,
-			band20 INTEGER
+			effectiveness INTEGER,
+			pleasantness INTEGER,
+
+			pBand0 INTEGER, 
+			pBand1 INTEGER, 
+			pBand2 INTEGER, 
+			pBand3 INTEGER, 
+			pBand4 INTEGER, 
+			pBand5 INTEGER, 
+			pBand6 INTEGER, 
+			pBand7 INTEGER, 
+			pBand8 INTEGER, 
+			pBand9 INTEGER, 
+			pBand10 INTEGER, 
+			pBand11 INTEGER, 
+			pBand12 INTEGER, 
+			pBand13 INTEGER, 
+			pBand14 INTEGER, 
+			pBand15 INTEGER, 
+			pBand16 INTEGER, 
+			pBand17 INTEGER, 
+			pBand18 INTEGER, 
+			pBand19 INTEGER, 
+			pBand20 INTEGER,
+			
+			tBand0 INTEGER, 
+			tBand1 INTEGER, 
+			tBand2 INTEGER, 
+			tBand3 INTEGER, 
+			tBand4 INTEGER, 
+			tBand5 INTEGER, 
+			tBand6 INTEGER, 
+			tBand7 INTEGER, 
+			tBand8 INTEGER, 
+			tBand9 INTEGER, 
+			tBand10 INTEGER, 
+			tBand11 INTEGER, 
+			tBand12 INTEGER, 
+			tBand13 INTEGER, 
+			tBand14 INTEGER, 
+			tBand15 INTEGER, 
+			tBand16 INTEGER, 
+			tBand17 INTEGER, 
+			tBand18 INTEGER, 
+			tBand19 INTEGER, 
+			tBand20
 		)
 	`) // needs to be an equalizer thing in here
 	if err != nil {
@@ -129,7 +153,8 @@ func createTargetsTable() {
 }
 
 // GetAllSpeakers gets all speakers from the database and returns them as a slice of ControllerStatus objects
-func GetAllSpeakers() []*ControllerStatus {
+func GetAllSpeakers() []*ControllerStatus {		
+// not sure if we need to get all the bands and stuff, doesnt look like that are used
 	rows, err := DB.Query(`
 		SELECT speakerID, name, x, y,  
 			volumeLevel,
@@ -138,28 +163,52 @@ func GetAllSpeakers() []*ControllerStatus {
 			soundMaskingLevel,
 			fadeTime,
 			fadeLevel,
-			averagingMode,
-			band0,
-			band1,
-			band2,
-			band3,
-			band4,
-			band5,
-			band6,
-			band7,
-			band8,
-			band9,
-			band10,
-			band11,
-			band12,
-			band13,
-			band14,
-			band15,
-			band16,
-			band17,
-			band18,
-			band19,			
-			band20
+			effectiveness,
+			pleasantness,
+
+			pBand0, 		
+			pBand1, 
+			pBand2, 
+			pBand3, 
+			pBand4, 
+			pBand5, 
+			pBand6, 
+			pBand7, 
+			pBand8, 
+			pBand9, 
+			pBand10, 
+			pBand11, 
+			pBand12, 
+			pBand13, 
+			pBand14, 
+			pBand15, 
+			pBand16, 
+			pBand17, 
+			pBand18, 
+			pBand19, 
+			pBand20,
+			
+			tBand0, 
+			tBand1, 
+			tBand2, 
+			tBand3, 
+			tBand4, 
+			tBand5, 
+			tBand6, 
+			tBand7, 
+			tBand8, 
+			tBand9, 
+			tBand10, 
+			tBand11, 
+			tBand12, 
+			tBand13, 
+			tBand14, 
+			tBand15, 
+			tBand16, 
+			tBand17, 
+			tBand18, 
+			tBand19, 
+			tBand20
 
 		FROM speaker
 	`)
@@ -181,62 +230,116 @@ func GetAllSpeakers() []*ControllerStatus {
 		var soundMaskingLevel int8
 		var fadeTime int8
 		var fadeLevel int8
-		var averagingMode int8
+		var effectiveness int8
+		var pleasantness int8
 		// var currentMode int
 		// var whichPreset int
-		var band0 int
-		var band1 int
-		var band2 int
-		var band3 int
-		var band4 int
-		var band5 int
-		var band6 int
-		var band7 int
-		var band8 int
-		var band9 int
-		var band10 int
-		var band11 int
-		var band12 int
-		var band13 int
-		var band14 int
-		var band15 int
-		var band16 int
-		var band17 int
-		var band18 int
-		var band19 int
-		var band20 int
+		var pBand0 int // not sure if we need to get all the bands and stuff, doesnt look like that are used
+		var pBand1 int
+		var pBand2 int
+		var pBand3 int
+		var pBand4 int
+		var pBand5 int
+		var pBand6 int
+		var pBand7 int
+		var pBand8 int
+		var pBand9 int
+		var pBand10 int
+		var pBand11 int
+		var pBand12 int
+		var pBand13 int
+		var pBand14 int
+		var pBand15 int
+		var pBand16 int
+		var pBand17 int
+		var pBand18 int
+		var pBand19 int
+		var pBand20 int
+
+		var tBand0 int
+		var tBand1 int
+		var tBand2 int
+		var tBand3 int
+		var tBand4 int
+		var tBand5 int
+		var tBand6 int
+		var tBand7 int
+		var tBand8 int
+		var tBand9 int
+		var tBand10 int
+		var tBand11 int
+		var tBand12 int
+		var tBand13 int
+		var tBand14 int
+		var tBand15 int
+		var tBand16 int
+		var tBand17 int
+		var tBand18 int
+		var tBand19 int
+		var tBand20 int
 
 		// in here get the presets that go along with the speakers and use those variables 
 
-		if err := rows.Scan(&speakerID, &name, &x, &y,
+		if err := rows.Scan(
+			&speakerID, 
+			&name, 
+			&x, 
+			&y,
 			&volumeLevel, 
 			&musicLevel,
 			&pagingLevel,
 			&soundMaskingLevel,
 			&fadeTime,
 			&fadeLevel,
-			&averagingMode,
-			&band0,
-			&band1,
-			&band2,
-			&band3,
-			&band4,
-			&band5,
-			&band6,
-			&band7,
-			&band8,
-			&band9,
-			&band10,
-			&band11,
-			&band12,
-			&band13,
-			&band14,
-			&band15,
-			&band16,
-			&band17,
-			&band18,
-			&band19,
-			&band20)
+			&effectiveness,
+			&pleasantness,		
+
+			// Current preset bands
+			&pBand0,
+			&pBand1,
+			&pBand2,
+			&pBand3,
+			&pBand4,
+			&pBand5,
+			&pBand6,
+			&pBand7,
+			&pBand8,
+			&pBand9,
+			&pBand10,
+			&pBand11,
+			&pBand12,
+			&pBand13,
+			&pBand14,
+			&pBand15,
+			&pBand16,
+			&pBand17,
+			&pBand18,
+			&pBand19,
+			&pBand20,
+
+			// Current target bands
+			&tBand0,
+			&tBand1,
+			&tBand2,
+			&tBand3,
+			&tBand4,
+			&tBand5,
+			&tBand6,
+			&tBand7,
+			&tBand8,
+			&tBand9,
+			&tBand10,
+			&tBand11,
+			&tBand12,
+			&tBand13,
+			&tBand14,
+			&tBand15,
+			&tBand16,
+			&tBand17,
+			&tBand18,
+			&tBand19,
+			&tBand20)
+
 		err != nil {
 			log.Fatal(err)
 		}
@@ -267,13 +370,15 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var soundMaskingLevel int8
 	var fadeTime int8
 	var fadeLevel int8
-	var averagingMode int8
+	var effectiveness int8
+	var pleasantness int8
 	var x int
 	var y int
 	var name string
 	var presetName string		// might need to make a catch for this
 	var targetName string		// might need to make a catch for this
 	var whichPreset int
+
 	var band0 int
 	var band1 int
 	var band2 int
@@ -296,6 +401,50 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var band19 int
 	var band20 int
 
+	var pBand0 int
+	var pBand1 int
+	var pBand2 int
+	var pBand3 int
+	var pBand4 int
+	var pBand5 int
+	var pBand6 int
+	var pBand7 int
+	var pBand8 int
+	var pBand9 int
+	var pBand10 int
+	var pBand11 int
+	var pBand12 int
+	var pBand13 int
+	var pBand14 int
+	var pBand15 int
+	var pBand16 int
+	var pBand17 int
+	var pBand18 int
+	var pBand19 int
+	var pBand20 int
+
+	var tBand0 int
+	var tBand1 int
+	var tBand2 int
+	var tBand3 int
+	var tBand4 int
+	var tBand5 int
+	var tBand6 int
+	var tBand7 int
+	var tBand8 int
+	var tBand9 int
+	var tBand10 int
+	var tBand11 int
+	var tBand12 int
+	var tBand13 int
+	var tBand14 int
+	var tBand15 int
+	var tBand16 int
+	var tBand17 int
+	var tBand18 int
+	var tBand19 int
+	var tBand20 int
+
 	err := DB.QueryRow(`
 		SELECT name, x, y, volumeLevel,
 			musicLevel,
@@ -303,63 +452,142 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			soundMaskingLevel,
 			fadeTime,
 			fadeLevel,
-			averagingMode,
-			band0,
-			band1,
-			band2,
-			band3,
-			band4,
-			band5,
-			band6,
-			band7,
-			band8,
-			band9,
-			band10,
-			band11,
-			band12,
-			band13,
-			band14,
-			band15,
-			band16,
-			band17,
-			band18,
-			band19,			
-			band20
+			effectiveness,
+			pleasantness,
+
+			pBand0, 
+			pBand1, 
+			pBand2, 
+			pBand3, 
+			pBand4, 
+			pBand5, 
+			pBand6, 
+			pBand7, 
+			pBand8, 
+			pBand9, 
+			pBand10, 
+			pBand11, 
+			pBand12, 
+			pBand13, 
+			pBand14, 
+			pBand15, 
+			pBand16, 
+			pBand17, 
+			pBand18, 
+			pBand19, 
+			pBand20,
+			
+			tBand0, 
+			tBand1, 
+			tBand2, 
+			tBand3, 
+			tBand4, 
+			tBand5, 
+			tBand6, 
+			tBand7, 
+			tBand8, 
+			tBand9, 
+			tBand10, 
+			tBand11, 
+			tBand12, 
+			tBand13, 
+			tBand14, 
+			tBand15, 
+			tBand16, 
+			tBand17, 
+			tBand18, 
+			tBand19, 
+			tBand20
 		FROM speaker
 		WHERE speakerID=?;
-		`, speakerID).Scan(&name, &x, &y,
+		`, speakerID).Scan(
+			&name, 
+			&x, 
+			&y,
 			&volumeLevel,
 			&musicLevel,
 			&pagingLevel,
 			&soundMaskingLevel,
 			&fadeTime,
 			&fadeLevel,
-			&averagingMode,
-			&band0,
-			&band1,
-			&band2,
-			&band3,
-			&band4,
-			&band5,
-			&band6,
-			&band7,
-			&band8,
-			&band9,
-			&band10,
-			&band11,
-			&band12,
-			&band13,
-			&band14,
-			&band15,
-			&band16,
-			&band17,
-			&band18,
-			&band19,
-			&band20)
+			&effectiveness,
+			&pleasantness,
+
+			// Current preset bands
+			&pBand0,
+			&pBand1,
+			&pBand2,
+			&pBand3,
+			&pBand4,
+			&pBand5,
+			&pBand6,
+			&pBand7,
+			&pBand8,
+			&pBand9,
+			&pBand10,
+			&pBand11,
+			&pBand12,
+			&pBand13,
+			&pBand14,
+			&pBand15,
+			&pBand16,
+			&pBand17,
+			&pBand18,
+			&pBand19,
+			&pBand20,
+
+			// Current target bands
+			&tBand0,
+			&tBand1,
+			&tBand2,
+			&tBand3,
+			&tBand4,
+			&tBand5,
+			&tBand6,
+			&tBand7,
+			&tBand8,
+			&tBand9,
+			&tBand10,
+			&tBand11,
+			&tBand12,
+			&tBand13,
+			&tBand14,
+			&tBand15,
+			&tBand16,
+			&tBand17,
+			&tBand18,
+			&tBand19,
+			&tBand20)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	speaker := &ControllerStatus{Name: name, X: x, Y: y, VolumeLevel: [4]int8{volumeLevel, musicLevel, pagingLevel, soundMaskingLevel}, PagingLevel: [2]int8{fadeTime, fadeLevel}, AveragingMode: averagingMode, ID: speakerID, Current: [21]int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}}
+	speaker := &ControllerStatus { 
+		Name: name, 
+		X: x, 
+		Y: y, 
+
+		VolumeLevel: [4] int8 {
+			volumeLevel, 
+			musicLevel, 
+			pagingLevel, 
+			soundMaskingLevel }, 
+
+		PagingLevel: [2] int8 {
+			fadeTime, 
+			fadeLevel}, 
+
+		Effectiveness: effectiveness,
+		Pleasantness: pleasantness, 
+		ID: speakerID, 
+
+		CurrentPreset: [21] int {
+			pBand0, pBand1, pBand2, pBand3, pBand4, pBand5, pBand6, pBand7, pBand8, pBand9, pBand10, pBand11, 
+			pBand12, pBand13, pBand14, pBand15, pBand16, pBand17, pBand18, pBand19, pBand20 },
+
+		CurrentTarget: [21] int {
+			tBand0, tBand1, tBand2, tBand3, tBand4, tBand5, tBand6, tBand7, tBand8, tBand9, tBand10, tBand11, 
+			tBand12, tBand13, tBand14, tBand15, tBand16, tBand17, tBand18, tBand19, tBand20 }}
 
 
 	rows, err := DB.Query(`
@@ -647,9 +875,10 @@ func SaveAveraging(speaker *ControllerStatus) {
 	_, err := DB.Exec(`
 		UPDATE speaker
 		SET
-			averagingMode = ?
+			effectiveness = ?,
+			pleasantness = ?
 		WHERE speakerID = ?
-	`, speaker.AveragingMode, speaker.ID)
+	`, speaker.Effectiveness, speaker.Pleasantness, speaker.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -657,9 +886,14 @@ func SaveAveraging(speaker *ControllerStatus) {
 
 // make a command to save the band
 
-func SaveBand(speaker *ControllerStatus, band int, level int) { // this should return an error here if something is wrong
+func SaveBand(speaker *ControllerStatus, band int, level int, target bool) { // this should return an error here if something is wrong
+	var stringOfStatement string
 
-	var stringOfStatement string = "UPDATE speaker SET band" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+	if (target == false) {
+		stringOfStatement = "UPDATE speaker SET pBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+	} else {
+		stringOfStatement = "UPDATE speaker SET tBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+	}
 	//stmt, err := DB.Prepare()			// this might need to be prepared afterwards
 	log.Println("SaveBand: I am firing")
 
@@ -724,29 +958,54 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			soundMaskingLevel,
 			fadeTime,
 			fadeLevel,
-			averagingMode,
-			band0,
-			band1,
-			band2,
-			band3,
-			band4,
-			band5,
-			band6,
-			band7,
-			band8,
-			band9,
-			band10,
-			band11,
-			band12,
-			band13,
-			band14,
-			band15,
-			band16,
-			band17,
-			band18,
-			band19,			
-			band20)
-		VALUES ("", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+			effectiveness,
+			pleasantness,
+
+			pBand0, 
+			pBand1, 
+			pBand2, 
+			pBand3, 
+			pBand4, 
+			pBand5, 
+			pBand6, 
+			pBand7, 
+			pBand8, 
+			pBand9, 
+			pBand10, 
+			pBand11, 
+			pBand12, 
+			pBand13, 
+			pBand14, 
+			pBand15, 
+			pBand16, 
+			pBand17, 
+			pBand18, 
+			pBand19, 
+			pBand20,
+			
+			tBand0, 
+			tBand1, 
+			tBand2, 
+			tBand3, 
+			tBand4, 
+			tBand5, 
+			tBand6, 
+			tBand7, 
+			tBand8, 
+			tBand9, 
+			tBand10, 
+			tBand11, 
+			tBand12, 
+			tBand13, 
+			tBand14, 
+			tBand15, 
+			tBand16, 
+			tBand17, 
+			tBand18, 
+			tBand19, 
+			tBand20)
+		VALUES ("", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		`)
 	if err != nil {
 		return nil, err

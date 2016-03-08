@@ -143,7 +143,8 @@
           console.log(document.getElementById('equalizerMenu'));
 
           // Set averaging mode
-          document.getElementById('effectiveness').value = this.$.controller.speaker.AveragingMode;
+          document.getElementById('effectiveness').value = this.$.controller.speaker.Effectiveness;
+          document.getElementById('pleasantness').value = this.$.controller.speaker.Pleasantness;
 
           // Set paging levels
           document.getElementById('pagingvolume').value = this.$.controller.speaker.VolumeLevel[2];
@@ -153,12 +154,17 @@
           // Set equalizer bands
           var sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
           var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
-          for (i in controller.speaker.current) {
-            sliders[i].style.height = (controller.speaker.Current[i] + 40) * 2 + "%";    // why does this have to be lower case
-            handles[i].style.bottom = (controller.speaker.Current[i] + 40) * 2 + "%";
-            $("#text" + (parseInt(i) + 1)).val(controller.speaker.Current[i]);
-            iirConstants[i] = controller.speaker.Current[i];
+          for (i in controller.speaker.CurrentPreset) {   // this was "current" for some reason
+            sliders[i].style.height = (controller.speaker.CurrentPreset[i] + 40) * 2 + "%";    // why does this have to be lower case
+            handles[i].style.bottom = (controller.speaker.CurrentPreset[i] + 40) * 2 + "%";
+            $("#text" + (parseInt(i) + 1)).val(controller.speaker.CurrentPreset[i]);
+            iirConstants[i] = controller.speaker.CurrentPreset[i];
           }
+
+          for (var i = 0; i < this.$.controller.speaker.CurrentTarget.length; i++) {
+            dataArray[i] = this.$.controller.speaker.CurrentTarget[i];
+          }
+          //console.log(dataArray);
 
           //Polymer.dom.flush() idk if we need this anymore
           var equalizerListbox = document.getElementById("equalizerListbox");

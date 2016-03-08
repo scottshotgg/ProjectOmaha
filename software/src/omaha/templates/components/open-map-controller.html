@@ -128,7 +128,8 @@
         a.speaker.VolumeLevel[1] = data.response.music;
         a.speaker.VolumeLevel[2] = data.response.paging;
         a.speaker.VolumeLevel[3] = data.response.masking;
-        a.speaker.AveragingMode = data.response.averaging;
+        a.speaker.Effectiveness = data.response.effectiveness;
+        a.speaker.Pleasantness = data.response.pleasantness;
         a.speaker.FadeTime = data.response.fadetime;
         a.speaker.FadeLevel = data.response.fadelevel;
 
@@ -146,11 +147,12 @@
         console.log("Response:", data.response);
         console.log("Speaker:", a.speaker);
 
-        a.speaker.TargetNames = [];
-        a.speaker.PresetNames = [];
-        a.speaker.Current     = [];
-        a.speaker.Target      = [];
-        a.speaker.Equalizer   = [];
+        a.speaker.TargetNames   = [];
+        a.speaker.PresetNames   = [];
+        a.speaker.CurrentPreset = [];
+        a.speaker.CurrentTarget = [];
+        a.speaker.Target        = [];
+        a.speaker.Equalizer     = [];
 
         for (i in data.response.TargetNames) {
           a.speaker.TargetNames[i] = data.response.TargetNames[i].replace("\n", "");
@@ -162,9 +164,14 @@
           console.log(i, data.response.PresetNames[i]);
         }
 
-        for (i in data.response.Current) {
-          a.speaker.Current[i] = data.response.Current[i];    // why does this have to be lower case
-          console.log(i, data.response.Current[i]);
+        for (i in data.response.CurrentPreset) {
+          a.speaker.CurrentPreset[i] = data.response.CurrentPreset[i];
+          console.log(i, data.response.CurrentPreset[i]);
+        }
+
+        for (i in data.response.CurrentTarget) {
+          a.speaker.CurrentTarget[i] = data.response.CurrentTarget[i];
+          console.log(i, data.response.CurrentTarget[i]);
         }
 
         for(i in data.response.Target) {
