@@ -11,12 +11,15 @@
 <link rel="import" href="/components/speaker-controller.html">
 <link rel="import" href="/components/map-controller.html">
 <link rel="import" href="/components/open-map-controller.html">
+<link rel="import" href="/components/information-viewer.html">
 <link rel="import" href="/components/zones/zone-map-controller.html">
 <link rel="import" href="/components/zones/zone-controller.html">
 <link rel="import" href="/components/account-creation-form.html">
 <link rel="import" href="/components/zone-creation-form.html">
 <link rel="import" href="/components/simple-fit.html">
 <link rel="import" href="/components/omaha-drawer.html">
+
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/ >
 
 <dom-module id="omaha-app">
   <template>
@@ -47,22 +50,29 @@
       <paper-header-panel class="flex" mode="seamed" main>
         <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
         <neon-animated-pages on-iron-select="refreshMap" id="pages" attr-for-selected="page" class="fit" id="app-pages" selected="{{selected}}">
+
+          <!-- <information-viewer page="information" id="information" zones="{{zones}}" controllers="[[controllers]]" class="fit"></information-viewer> -->
+
           <open-map-controller page="map" id="mapcontroller" zones="{{zones}}" controllers="[[controllers]]" class="fit">
           </open-map-controller>
+
           <zone-map-controller page="zoneMap" zones="{{zones}}" id="zoneMap" controllers="[[controllers]]" class="fit"></zone-map-controller>
+
           <neon-animatable page="accountCreation" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
             <paper-material class="flex self-center card" elevation="5">
               <account-creation-form></account-creation-form>
             </paper-material>
           </neon-animatable> 
+
           <neon-animatable page="zoneCreation" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
             <paper-material class="flex self-center card" elevation="5">
               <zone-creation-form></zone-creation-form>
             </paper-material>
           </neon-animatable> 
-          
+
           <speaker-controller class="controller" page="speakerController" id="controller" class="fit"></speaker-controller>
           <zone-controller class="controller" page="zoneController" id="zoneController" class="fit"></zone-controller>
+
         </neon-animated-pages>
         <paper-dialog id="dialog">
           <h2>Error</h2>
@@ -73,13 +83,15 @@
         </paper-dialog>
       </paper-header-panel>
     </paper-drawer-panel>
-         <iron-ajax
-            id="systemStatusAjax"
-            url="/system/"
-            content-type="application/json"
-            handle-as="json"
-            on-response="_initializeStatus"
-            debounce-duration="300"></iron-ajax>
+
+    <iron-ajax
+      id="systemStatusAjax"
+      url="/system/"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_initializeStatus"
+      debounce-duration="300">
+    </iron-ajax>
   </template>
   <script>
 
@@ -114,6 +126,7 @@
 
       _presetSelectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
         console.log("hi");    // This says the speakerId is undefined
+        // dont think we need this
         },
 
       _speakerSelected: function(e) {
@@ -161,10 +174,13 @@
             iirConstants[i] = controller.speaker.CurrentPreset[i];
           }
 
+        /*  document.getElementById("targetListbox").selected = "Currently Applied";
+
+          console.log(document.getElementById("targetListbox"));*/
+
           for (var i = 0; i < this.$.controller.speaker.CurrentTarget.length; i++) {
-            dataArray[i] = this.$.controller.speaker.CurrentTarget[i];
+            dataArray.push(this.$.controller.speaker.CurrentTarget[i]);
           }
-          //console.log(dataArray);
 
           //Polymer.dom.flush() idk if we need this anymore
           var equalizerListbox = document.getElementById("equalizerListbox");
@@ -256,6 +272,8 @@
         //})
         this.controllers = speakers
         this.zones = zones;
+        console.log(this.$);
+        //this.$.information.renderMap();
         this.$.mapcontroller.renderMap();
         this.$.zoneMap.renderMap();
       },
@@ -275,6 +293,7 @@
       
       refreshMap: function() {
         switch(this.$.pages.selected) {
+          //case "information":
           case "map":
           case "zoneMap":
             var map = this.$.pages.selectedItem.map;

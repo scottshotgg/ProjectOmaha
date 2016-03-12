@@ -48,27 +48,27 @@
         <canvas id="targetChart" style="margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);" class="chartClass"></canvas>
         <div class="horizontal layout" id="adjustment" placeholder="0" style="height: calc(.05 * 100vh); margin-top: calc(.0 * 100vh);">
           <!-- try doing a no float and then just putting 0 and making it start default? -->
-          <paper-input class="inputs" on-keyup="redrawOnInput" center-justified placeholder="0" style="margin-left: calc(.025 * 100vw);"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-keyup="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" center-justified placeholder="0" style="margin-left: calc(.025 * 100vw);"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
         </div>
       </div>
       <div class="card-actions">
@@ -89,7 +89,7 @@
         </paper-dropdown-menu>
       </div>
     </paper-card>
-    <paper-toast id="toast">Target set to <span>{{target}}, switch to the equalizer page to adjust further</span></paper-toast>
+    <paper-toast id="toaster" duration="4000"></span></paper-toast>
     <!--<paper-toast id="errorAdjustToast"><paper-item id="Add New Target" value="Add New Preset">Add New Preset</paper-item></paper-toast>-->
     <paper-toast id="errorAdjustToast"></paper-toast>
     <paper-dialog id="dialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
@@ -115,16 +115,24 @@
 
   </template>
   <script>
+  window.addEventListener('WebComponentsReady', function(e) {
+    console.log("WebComponentsReady");
+    console.log();
+  });
+
+  var dataArray = [];
+  console.log(dataArray);
+
     var labels = ["80", "100", "125", "160", "200", "250", "315", "400", "500", "630", "800", "1k", "1.25k", "1.6k", "2k", "2.5k", "3.15k", "4k", "5k", "6.3k", "8k"];
 
 
-    var data = {
+    data = {
       labels,
       datasets: [{
-        fillColor: "rgba(33, 67, 214, 0.25)",
-        strokeColor: "#3367d6",
+        fillColor: "rgba(63, 81, 181, 0.25)",
+        strokeColor: "#3f51b5",
         pointColor: "#fff",
-        pointStrokeColor: "#3367d6",  
+        pointStrokeColor: "#3f51b5",  
         data: dataArray,
       }]
     }
@@ -169,7 +177,11 @@
         target: {     // I think this 
           type: String,
           notify: true,
-          observer: '_setInternalVolume'
+          observer: '_setInternalTarget'
+        },
+
+        speaker: {
+          type: Object,
         },
 
        /*
@@ -213,9 +225,9 @@
       },
       */
 
-      _setInternalTarget: function(volume) {
-        this.internalTarget = target;
-        console.log("_setInternalTarget" + this.internalTarget);
+      _setInternalTarget: function(dataArrayString) {
+        this.internalTarget = dataArrayString;
+        console.log("_setInternalTarget" + dataArrayString);
       },
 
       /*
@@ -237,13 +249,17 @@
       },*/
       
       _setTargetClicked: function() {
+        this.dataArrayString = dataArray.join(", ");
         for (var i = 0; i < this.speaker.CurrentTarget.length; i++) { 
-            this.speaker.CurrentTarget[i] = dataArray[i];
-            console.log(dataArray[i]);
+          this.speaker.CurrentTarget[i] = dataArray[i];
+          //console.log(dataArray[i]);
         }
-        this.target = this.internalTarget;
-        //this.musicVolume = this.internalVolume2;
-        this.$.toast.show();
+        this.target = dataArray.join(" ");
+        //console.log(this.$);
+        console.log(dataArray);
+        //console.log(this.dataArrayString);
+        this.$.toaster.text = "Target set to: " + dataArray.join(", ") + ", switch to the equalizer page for further adjustment";
+        this.$.toaster.show();
         console.log("_setTargetClicked");
       },
 
@@ -272,11 +288,12 @@
           this.$.addTargetAjax.body = {
             "speaker": this.speakerId,
             "name": name,
+            "update": false,
             "constants": dataArray.join(" ")
             // Maybe we should add a currently applied thing in here or something
           };
 
-          console.log(dataArray.join(" "));
+          //console.log(dataArray.join(" "));
 
           console.log("addTargetAjax:", addTargetAjax.body);
           this.$.addTargetAjax.generateRequest();
@@ -296,13 +313,13 @@
           Polymer.dom(this.$.targetListbox).appendChild(temp);
 
           var length = this.speaker.Target.length;
-          console.log(length);
+          //console.log(length);
 
           console.log(dataArray);
 
-          var dataArrayCopy = dataArray.slice();
+         /* var dataArrayCopy = dataArray.slice();
 
-          console.log("dataArrayCopy: ", dataArrayCopy);
+          console.log("dataArrayCopy: ", dataArrayCopy);*/
           this.speaker.Target.push(dataArray.slice());    // change this to dataArrayCopy if it breaks
           //}
 
@@ -340,9 +357,10 @@
 
           for (var i = 0; i < this.speaker.CurrentTarget.length; i++) { 
             dataArray[i] = this.speaker.CurrentTarget[i];
-
-            redraw(data, lineAttributes);
           }
+
+          redraw(data, lineAttributes);
+
           $(document.getElementsByClassName("inputs")).each(function(j) {
             this.value = dataArray[j];
           });
@@ -364,16 +382,12 @@
             if(associationLink != -1) {
               console.log(this.speaker.Target.length);
 
-              for (var j = 0; j < this.speaker.Target[0].length; j++) {   // add associationLink back if this fucks up
-                /*sliders[j].style.height = (this.speaker.Target[associationLink][j] + 40) * 2 + "%";    // why does this have to be lower case
-                handles[j].style.bottom = (this.speaker.Target[associationLink][j] + 40) * 2 + "%";
-                $("#text" + (parseInt(j) + 1)).val(this.speaker.Target[associationLink][j]);
-                dataArray[j] = this.speaker.Target[associationLink][j];*/
+              for (var j = 0; j < this.speaker.Target[0].length; j++) {
                dataArray[j] = this.speaker.Target[associationLink][j]; 
               }
 
-              $(document.getElementsByClassName("inputs")).each(function(j) {   // this can be optimized
-                this.value = dataArray[j];
+              $(document.getElementsByClassName("inputs")).each(function(k) {   // this can be optimized
+                this.value = dataArray[k];
               });
 
               redraw(data, lineAttributes);
@@ -434,20 +448,23 @@
 
   function redrawOnInput() {
     var errorAdjustToast = document.getElementById("errorAdjustToast");
-    var strokeColor = "#3367d6";
-    var pointStrokeColor = "#3367d6";
-    var fillColor = "rgba(33, 67, 214, 0.25)";
+    var strokeColor = "#3f51b5";
+    var pointStrokeColor = "#3f51b5";
+    var fillColor = "rgba(63, 81, 181, .25)";
+
+    console.log(dataArray);
 
     $(document.getElementsByClassName("inputs")).each(function(i) {
+      console.log(dataArray.length);
       if(this.value > -21 && this.value < 81) {
-        dataArray[i] = this.value;
+        dataArray[i] = parseInt(this.value);
       } else {
         dataArray[i] = null;
         
         // Set the error colors
-        strokeColor = "#ff0000";
-        pointStrokeColor = "#ff0000";
-        fillColor = "rgba(255, 00, 00, 0.25)";
+        strokeColor = "#F33F31";
+        pointStrokeColor = "#F33F31";
+        fillColor = "rgba(243, 63, 49, .25)";
 
         if(isNaN(this.value)) {
           errorAdjustToast.text = "Invalid entry for " + labels[i] + "Hz: Only numerical values are accepted";
@@ -457,6 +474,7 @@
           errorAdjustToast.show();
         }
       }
+      //console.log(dataArray);
     });
 
     var redrawData = {
@@ -472,12 +490,10 @@
 
     redraw(redrawData, redrawLineAttributes);
   }
-  
 
-      for (var i = 0; i < dataArray.length; i++) {
-      //dataArray[i] = this.speaker.CurrentTarget[i];
-    }
-    //redraw(dataArray, lineAttributes);
+    function me() {
+        console.log("gi");
 
+      }
   </script>
 </dom-module>

@@ -13,6 +13,9 @@
 <link rel="import" href="/components/speaker-icon.html">
 <link rel="import" href="/components/help-panel.html">
 <link rel="import" href="/components/speaker-tooltip.html">
+<link rel="import" href="/components/target-selector.html">
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/ >
+
 <dom-module id="open-map-controller">
   <template>
     <style>
@@ -167,21 +170,35 @@
         for (i in data.response.CurrentPreset) {
           a.speaker.CurrentPreset[i] = data.response.CurrentPreset[i];
           console.log(i, data.response.CurrentPreset[i]);
-        }
+        } 
 
         for (i in data.response.CurrentTarget) {
           a.speaker.CurrentTarget[i] = data.response.CurrentTarget[i];
           console.log(i, data.response.CurrentTarget[i]);
+          //dataArray.push(data.response.CurrentTarget[i]);
+          dataArray[i] = a.speaker.CurrentTarget[i];
         }
+
+
+        $(document.getElementsByClassName("inputs")).each(function(j) {
+          this.value = dataArray[j];
+        });
+        //document.getElementById("targetListbox").selected = "Currently Applied";
+        //document.getElementById("equalizerListbox").selected = "Currently Applied";
+        redrawOnInput();
+
+        dataArray = [];
+
+        //console.log(dataArray);
 
         for(i in data.response.Target) {
           a.speaker.Target[i] = data.response.Target[i];
-          console.log(data.response.Target[i]);
+          console.log(data.response.TargetNames[i], data.response.Target[i]);
         }
 
         for(i in data.response.Equalizer) {
           a.speaker.Equalizer[i] = data.response.Equalizer[i];
-          console.log(data.response.Equalizer[i]);
+          console.log(data.response.PresetNames[i], data.response.Equalizer[i]);
         }
 
         a.speaker.Response = "true";

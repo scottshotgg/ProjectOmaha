@@ -46,6 +46,8 @@ type addPresetData struct {
 	Name		string		`json:"name"`
 	Constants	string		`json:"constants"`
 	Target		string		`json:"target"`
+	Update 		bool		`json:"update"`
+
 }
 
 type pagingRequest struct {
@@ -66,6 +68,7 @@ type speakerAttributes struct {
 	Equalizer 		string		`json:"equalizer"`
 	ZoneID 			int8 		`json:"zoneId"`
 	Paging			string		`json:"paging"`
+	Target			string		`json:"target"`
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error {
@@ -78,6 +81,7 @@ var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.Contro
 	//"fadetime":		updateSpeakerFadeTime,
 	"paging":		updateSpeakerPaging,
 	"zoneId": 		updateSpeakerZoneID,
+	"target":		updateSpeakerTarget,
 }
 
 func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerStatus) error {
@@ -164,6 +168,8 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.Contr
 }
 
 func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	log.Println(attr, speaker)
+
 	constants := strings.Fields(attr.Equalizer)		// do not publish this function without checking for type/value errors
 	//log.Println(constants)
 
@@ -202,11 +208,11 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 }
 
 func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerStatus) error {
-	constants := strings.Fields(attr.Equalizer)		// do not publish this function without checking for type/value errors
+	constants := strings.Fields(attr.Target)		// do not publish this function without checking for type/value errors
 	//log.Println(constants)
 
-	for i := range speaker.Equalizer {
-		log.Println(speaker.Equalizer[i])
+	for i := range speaker.Target {
+		log.Println(speaker.Target[i])
 	}
 
 	if(len(constants) < 21) {
@@ -221,13 +227,13 @@ func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerSt
 		}
 		//constantsInts = append(constantsInts, int8(intParse))
 
-		if(intParse != speaker.CurrentPreset[k]) {			// change this to pull from the db, it might already do that
+		if(intParse != speaker.CurrentTarget[k]) {			// change this to pull from the db, it might already do that
 			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
 			system.SetEqualizerConstant(speaker, int8(intParse), int8(k))
-			speaker.CurrentPreset[k] = intParse	// this needs checking
+			speaker.CurrentTarget[k] = intParse	// this needs checking
 			//log.Printf("You changed band %d to level %d", k, intParse)
 		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, intParse, false)
+			database.SaveBand(speaker, k, intParse, true)
 		}
 			k++
 
@@ -468,7 +474,6 @@ func AddTargetHandler(w http.ResponseWriter, r *http.Request) {		// could merge 
 
 	addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
 	err := json.NewDecoder(r.Body).Decode(addPresetRequest)
-	//controller := database.GetSpeaker(speakerRequest.Speaker)
 
 	if err != nil {
 		if status.IsDebug() {
@@ -479,9 +484,7 @@ func AddTargetHandler(w http.ResponseWriter, r *http.Request) {		// could merge 
 	}
 
 	log.Println(addPresetRequest)
-
 	database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
-
 	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
 }
 

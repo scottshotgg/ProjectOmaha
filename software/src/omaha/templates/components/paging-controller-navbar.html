@@ -11,9 +11,10 @@
 <link rel="import" href="/components/averaging-controller.html">
 <link rel="import" href="/components/equalizer-controller.html">
 <link rel="import" href="/components/paging-controller.html">
+\
 
 <!--<link rel="import" href="/components/map-controller.html">-->
-<dom-module id="speaker-controller">
+<dom-module id="paging-controller-navbar">
   <template>
     <style>
      :host {
@@ -34,6 +35,11 @@
       
       paging-controller {
         width: 70%;
+      }
+
+      paper-card {
+        width: 100%;
+        text-align: center;
       }
 
       equalizer-controller {
@@ -79,64 +85,13 @@
         volume-selector, light-controller {
           margin-top: 20px;
         }
-      }
-
-      /* Make the client cache the map and check on load of something like that */
-
+      }    
     </style>
-    <div id="radio-container" class="layout horizontal">
-      <paper-radio-group id="mode" selected="{{mode}}">
-        <!-- <paper-radio-button id="informationButton" name="information" class="flex">Information</paper-radio-button> -->
-        <paper-radio-button id="volumeButton" name="volume" class="flex">Volume</paper-radio-button>
-        <paper-radio-button id="averagingButton" name="averaging" class="flex">Pleasantness</paper-radio-button>
-        <paper-radio-button id="targetButton" name="target" class="flex">Target</paper-radio-button>
-        <paper-radio-button id="equalizerButton" name="equalizer" class="flex">Equalizer</paper-radio-button>
-        <paper-radio-button id="pagingButton" name="paging" class="flex">Paging</paper-radio-button>
-      </paper-radio-group>
-    </div>
-    <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
 
-      <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <simple-fit class="container">
-          <volume-selector id="volume" volume="{{volumeLevel}}" musicVolume="{{musicLevel}}"></volume-selector>
-        </simple-fit>
-      </neon-animatable>
-
-      <neon-animatable page="averaging" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <simple-fit class="container">
-          <averaging-controller id="averaging" speaker-id="[[speakerId]]" averaging="[[averaging]]"></averaging-controller>
-        </simple-fit>
-      </neon-animatable>
-
-      <neon-animatable page="target" id="target-selector" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <simple-fit class="container">
-          <target-selector id="target" speaker-id="[[speakerId]]" speaker="[[speaker]]" target="{{target}}"></target-selector> <!-- Don't know if we need the speakerId anymore -->
-        </simple-fit>
-      </neon-animatable>
-
-      <neon-animatable page="equalizer" id="equalizer-controller" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <simple-fit class="container">
-          <equalizer-controller id="equalizer" speaker-id="[[speakerId]]" speaker="[[speaker]]" equalizer="{{equalizerone}}"></equalizer-controller> <!-- Don't know if we need the speakerId anymore -->
-        </simple-fit>
-      </neon-animatable>
-
-      <neon-animatable page="paging" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <simple-fit class="container">
-          <paging-controller id="paging" speaker-id="[[speakerId]]" paging="{{pagingLevel}}"></paging-controller>
-        </simple-fit>
-      </neon-animatable>
-
-    </neon-animated-pages>
-
-    <iron-ajax
-          id="speakerUpdateAjax"
-          url="/system/speaker/"
-          method="PUT"
-          content-type="application/json"
-          handle-as="json"
-          on-response="_logResponse"
-          debounce-duration="300">
-    </iron-ajax>
+    <paper-card heading="Information" elevation="4">
+    	<div class="card-content"></div>
+    	<div class="card-actions"></div>
+    </paper-card>
 
   </template>
   <script>
@@ -146,7 +101,7 @@
 });*/
 
     Polymer({
-      is: 'speaker-controller',
+      is: 'paging-controller-navbar',
 
       behaviors: [
         Polymer.NeonAnimatableBehavior
@@ -200,12 +155,6 @@
           type: String,
           value: "0",
           observer: '_equalizerUpdate'
-        },
-
-        target: {
-          type: String,
-          value: "0",
-          observer: '_targetUpdate'
         },
 
         animationConfig: {
@@ -319,21 +268,6 @@
         }
       },
 
-      _targetUpdate: function() {
-        if(this.isReady) {
-          var updatedAttributes = ["target"];
-          var attributeValues = {
-            "target": this.target,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
-        }
-      },
-
       _logResponse: function(event, data) {
         console.log(data.response);
       },
@@ -358,59 +292,5 @@
         this.isReady = true;
       }
     });
-
-
-  /*if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    console.log(navigator.userAgent);
-    console.log("This is a mobile browser - changing display pattern");
-
-      window.onload = function() {
-        // Use this for loading a different thing when the window loads and the viewport is too small
-        var radio_group = document.getElementById("mode")
-        console.log(radio_group);
-        radio_group.style.float = "left";
-
-        var radio_buttons = [];
-        radio_buttons[0] = document.getElementById("volumeButton");
-        radio_buttons[1] = document.getElementById("lightButton");
-        radio_buttons[2] = document.getElementById("averagingButton");
-        radio_buttons[3] = document.getElementById("equalizerButton");
-        console.log(radio_buttons);
-
-        for (i in radio_buttons) {
-          radio_buttons[i].style.float = "left";
-        }
-
-        Polymer.updateStyles(); // may or may not need this
-
-      };
-  }*/
-/*
-paper-radio-group {
-          @apply(--layout-horizontal)
-        }
-        paper-radio-button {
-          @apply(--layout-vertical);
-          @apply(--layout-center);
-        }
-
-        #radio-container {
-          @apply(--layout-vertical)
-        }
-
-        volume-selector, light-controller {
-          margin-top: 20px;
-        }*/
-
-          //$(window).resize(function() {
-    
-//      console.log($(window).width());
-      
-//console.log(document.getElementById("eighty").offsetWidth);
-//console.log(document.clientHeight);
-//document.getElementById("equalizer-controller").style.height = 'calc(60% + (.05 * 100vw))';
-//console.log(document.getElementById("").offsetHeight);
-//});
-
   </script>
 </dom-module>
