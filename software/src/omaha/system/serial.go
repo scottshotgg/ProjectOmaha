@@ -20,15 +20,14 @@ func HandleControllerMessages() {
 		req := <-MessageChan
 		status := GetSystemStatus()
 		if !status.IsDebug() {
-			_, err := status.Port.Write(req.Data) // I dont get what this is doing here....?
+			_, err := status.Port.Write(req.Data)
 
-			//n, err := s.Write([]byte("test")) // req.Data goes here?
 			if err != nil {
 				log.Fatal(err)
 			}
 		}
 		if req.OnWrite != nil {
-			result := req.OnWrite() // I'm a bit confused on where the actual data is sent
+			result := req.OnWrite()
 			if req.ResultChan != nil {
 				req.ResultChan <- result
 			}
@@ -67,6 +66,7 @@ func (status *SystemStatus) SendData(data byte) {
 }*/
 
 func (status *SystemStatus) ReadData(buffer []byte) bool {
+
 	buffer[0] = 0x01
 	_, err := status.Port.Read(buffer)
 	log.Printf("port.Read: %v\n", buffer)

@@ -2,7 +2,7 @@ package system
 
 import (
 	"io"
-	"log"
+	//"log"
 	"omaha/database"
 )
 
@@ -19,15 +19,16 @@ func (status *SystemStatus) IsDebug() bool {
 	return status.debug
 }
 
-func InitializeSystemStatus(isDebug bool) *SystemStatus {
+func InitializeSystemStatus(isDebug bool) (*SystemStatus, int) {		// this might need to change to controllers and return the entire object/pointer 
 	status.debug = isDebug
 	if !isDebug {
 		status.InitializePort()
 	}
 
 	controllers := database.GetAllSpeakers()
+	length := len(controllers)
 
-	for _, controller := range controllers {
+	/*for _, controller := range controllers {
 		var err error
 
 		controller.LEDOn, err = GetLEDStatusFromController(controller)
@@ -45,8 +46,8 @@ func InitializeSystemStatus(isDebug bool) *SystemStatus {
 			log.Println(err)
 		}
 		//database.SaveVolume(controller)
-	}
-	return &status
+	}*/
+	return &status, length
 }
 
 func GetSystemStatus() *SystemStatus {

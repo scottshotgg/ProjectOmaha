@@ -1,6 +1,7 @@
 package system
 
 var Commands struct {
+	KeepAlive				byte
 	SetVolume          		byte
 	GetVolume          		byte
 	SetSoundMaskingVolume	byte
@@ -28,6 +29,7 @@ var Commands struct {
 
 func init() { // Can we not just set these up ^ there so that we don't
 	// have to write all the commands out twice?
+	Commands.KeepAlive = byte('K')
 	Commands.SetVolume = byte('S')
 	Commands.GetVolume = byte('s')
 	Commands.SetSoundMaskingVolume = byte('W')

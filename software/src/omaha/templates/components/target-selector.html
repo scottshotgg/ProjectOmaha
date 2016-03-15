@@ -46,29 +46,29 @@
    <paper-card heading="Target" elevation="4">
       <div class="card-content">
         <canvas id="targetChart" style="margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);" class="chartClass"></canvas>
-        <div class="horizontal layout" id="adjustment" placeholder="0" style="height: calc(.05 * 100vh); margin-top: calc(.0 * 100vh);">
+        <div class="horizontal layout" id="adjustment" style="height: calc(.05 * 100vh); margin-top: calc(.0 * 100vh);">
           <!-- try doing a no float and then just putting 0 and making it start default? -->
-          <paper-input class="inputs" on-input="redrawOnInput" center-justified placeholder="0" style="margin-left: calc(.025 * 100vw);"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" placeholder="0"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" center-justified style="margin-left: calc(.025 * 100vw);"></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
         </div>
       </div>
       <div class="card-actions">
@@ -249,18 +249,45 @@
       },*/
       
       _setTargetClicked: function() {
-        this.dataArrayString = dataArray.join(", ");
-        for (var i = 0; i < this.speaker.CurrentTarget.length; i++) { 
-          this.speaker.CurrentTarget[i] = dataArray[i];
-          //console.log(dataArray[i]);
-        }
-        this.target = dataArray.join(" ");
-        //console.log(this.$);
-        console.log(dataArray);
-        //console.log(this.dataArrayString);
-        this.$.toaster.text = "Target set to: " + dataArray.join(", ") + ", switch to the equalizer page for further adjustment";
-        this.$.toaster.show();
-        console.log("_setTargetClicked");
+        var checkInt = 0;
+        var checkBands = [];
+        var targetText = "Invalid input at ";
+
+        /*$(document.getElementsByClassName("inputs")).each(function(i) {
+          if(isNaN(this.value) || this.value == "" || this.value < -20 || this.value > 80) {
+            console.log(typeof this.value, parseInt(this.value));
+            console.log(this.name);
+            checkInt++;
+            checkBands.push(this.name); // may have to put new string here
+          }
+        });
+
+        if(checkInt > 0) {
+          if(checkBands.length == 1) {
+            targetText += checkBands[0] + "Hz";
+          } else {
+            for (var i = 0; i < checkBands.length - 1; i++) {
+              targetText += checkBands[i] + "Hz, "
+            }
+            targetText += "and " + checkBands[checkBands.length - 1] + "Hz";
+          }
+          this.$.toaster.duration = 2000 + (500 * checkBands.length);
+          this.$.toaster.text = targetText;
+          this.$.toaster.show();
+        } else {*/
+          this.dataArrayString = dataArray.join(", ");
+          for (var i = 0; i < this.speaker.CurrentTarget.length; i++) { 
+            this.speaker.CurrentTarget[i] = dataArray[i];
+            //console.log(dataArray[i]);
+          }
+          this.target = dataArray.join(" ");
+          //console.log(this.$);
+          console.log(dataArray);
+          //console.log(this.dataArrayString);
+          this.$.toaster.text = "Target set to: " + dataArray.join(", ") + ", switch to the equalizer page for further adjustment";
+          this.$.toaster.show();
+          console.log("_setTargetClicked");
+        //}
       },
 
       _logResponse: function(event, data) {
@@ -456,7 +483,7 @@
 
     $(document.getElementsByClassName("inputs")).each(function(i) {
       console.log(dataArray.length);
-      if(this.value > -21 && this.value < 81) {
+      if(this.value > -21 && this.value < 81 && this.value !== "") {
         dataArray[i] = parseInt(this.value);
       } else {
         dataArray[i] = null;
@@ -469,6 +496,8 @@
         if(isNaN(this.value)) {
           errorAdjustToast.text = "Invalid entry for " + labels[i] + "Hz: Only numerical values are accepted";
           errorAdjustToast.show();
+        } else if (this.value === "") {
+
         } else {
           errorAdjustToast.text = "Invalid entry for " + labels[i] + "Hz: Accepted range of values is -20 to 80";
           errorAdjustToast.show();

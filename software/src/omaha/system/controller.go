@@ -3,16 +3,60 @@ package system
 import (
 	"log"
 	"omaha/database"
-	"strconv"
 )
 
 const NULLZone int = 0
 
-func Btoi(b bool) int {
-	if b {
-		return 1
+func KeepAlive(ID int8) (error int8) {
+	data := getMessageHeader(ID, 3)
+	data[1] = Commands.KeepAlive
+	data[2] = 0x01
+
+    defer func() {
+    	if r := recover(); r != nil {
+        	log.Println("Error reading from the port for controller ", ID, "\n", r)
+    		error = -ID
+    	}
+    }()
+
+	log.Println("KeepAlive: ", data)
+	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
+		if status.IsDebug() {
+			//log.Println("KeepAlive Simlulation: ", data)
+			return nil
+		}
+		return nil
+	}}
+	MessageChan <- req
+	if(status.IsDebug()){				// this is supposed to be !status
+		b := []byte{0x00}			
+		status.ReadData(b)
+
+		// if we get lower case k back then just return 0, else return whatever it returned back - here is where we can add diagnostics
+		if(int8(b[0]) == int8('k')) {
+			error = 0
+		} else {
+			error = int8(b[0])
+		}
 	}
-	return 0
+
+	return 
+}
+
+func GetKeepAlive(this *database.ControllerStatus, ID int8) (int, error) {
+	if status.debug {
+		return 0, nil
+	}
+
+	data := getMessageHeader(ID, 4)
+	data[1] = 0x61
+	data[2] = 0x00
+
+	b := []byte{0x00}
+	status.ReadData(b)
+
+	return 0, nil
+
 }
 
 func IsLEDOn(this *database.ControllerStatus) bool {
@@ -34,7 +78,6 @@ func TurnLEDOn(this *database.ControllerStatus) error {
 	MessageChan <- req
 
 	return nil
-
 }
 
 func TurnLEDOff(this *database.ControllerStatus) error {
@@ -367,7 +410,7 @@ func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) { /
 		alive := status.ReadData(b)
 
 		if alive != true || b[0] != 0x72 {
-			m[i] = strconv.Itoa(Btoi(alive)) + strconv.Itoa(int(b[0])) // This should map the string consisting of 0l where 0 is the bool representing alive and
+			//m[i] = strconv.Itoa(Btoi(alive)) + strconv.Itoa(int(b[0])) // This should map the string consisting of 0l where 0 is the bool representing alive and
 			// l is the variable recieved by the master controller if we need to send
 			// maybe we should print thing to make sure its working
 			// In here if it isn't r then we also need to check if it is 'v', 'm', other crap
