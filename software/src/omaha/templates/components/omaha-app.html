@@ -328,13 +328,19 @@
         controllerUpdateAjax = this.$.controllerUpdateAjax;
 
 
-        var myVar = setInterval(myTimer, 1000);     // this timeout might need to be changed depending on what the client is on device wise and the internet speed that they are using
+        (function keepAlive() {                   // this is asynchonous and a better usage that using setInterval
+          controllerUpdateAjax.generateRequest();
+          setTimeout(keepAlive, 1000);
+        })();
+
+
+        /*var myVar = setInterval(myTimer, 1000);     // this timeout might need to be changed depending on what the client is on device wise and the internet speed that they are using
         function myTimer() {
           var d = new Date();
           console.log(d.toLocaleTimeString());
           //console.log();
           controllerUpdateAjax.generateRequest();
-        }
+        }*/
       }
 
     });
