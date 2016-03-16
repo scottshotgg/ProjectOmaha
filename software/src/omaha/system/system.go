@@ -9,8 +9,11 @@ import (
 var status SystemStatus
 
 type SystemStatus struct {
-	debug bool               `json:"-"`
-	Port  io.ReadWriteCloser `json:"-"`
+	debug		bool				`json:"-"`
+	Port 		io.ReadWriteCloser	`json:"-"`
+	ID 			int8				`json:"id"`
+	BrokenLink	int8				`json:"brokenLink"`
+	// damaged controllers in an array here
 }
 
 // Do we want to store this stuff in a database since that way it will be written to disk?

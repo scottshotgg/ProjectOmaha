@@ -159,6 +159,8 @@
   var background = document.getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
 
   //var fragment = create("<paper-item id=" + "name" + " value=" + "custom" + ">" + "custom" + "</paper-item>"); 
+  var equalizerToast = 0;
+
   $(document).ready(function() {
   });
   
@@ -205,6 +207,7 @@
       },
       
       _setEqualizerClicked: function() {
+
         var checkInt = 0;
         var checkBands = [];
         var equalizerText = "Invalid input at ";
@@ -433,6 +436,7 @@
 
       ready: function() {
         this.internalEqualizer = this.iirConstantsString;   // does this need to be equalizer?
+        equalizerToast = this.$.equalizerToast;
       }
     });
 

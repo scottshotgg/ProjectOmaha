@@ -92,8 +92,21 @@
       on-response="_initializeStatus"
       debounce-duration="300">
     </iron-ajax>
+
+    <iron-ajax
+      id="controllerUpdateAjax"
+      url="/system/controllerUpdate/"
+      method="GET"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_keepAliveResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
   </template>
   <script>
+
+    // this interval should be determined by 1000 * number of controllers
 
     var lastSelected = 0;
 
@@ -264,10 +277,6 @@
               speakers[isItInYetThatsWhatSheSaid].zone = zones[i].speakers[k].zone;
             }
           }
-         // 
-        //  if() {
-
-        //}
         }
         //})
         this.controllers = speakers
@@ -276,6 +285,9 @@
         //this.$.information.renderMap();
         this.$.mapcontroller.renderMap();
         this.$.zoneMap.renderMap();
+      },
+
+      controllerUpdate: function() {
       },
 
       _showAccountCreation: function() {
@@ -302,10 +314,27 @@
         }
       },
 
+      _keepAliveResponse: function(event, data) {
+        console.log("Controller update: " + data.response.id + " " + data.response.status);
+
+        // from here we can reflect this on the UI somehow
+      },
+
       ready: function() {
         this.$.systemStatusAjax.generateRequest();
         this.$.nav.hideBackArrow();
         this.$.panel.forceNarrow = true;
+
+        controllerUpdateAjax = this.$.controllerUpdateAjax;
+
+
+        var myVar = setInterval(myTimer, 1000);     // this timeout might need to be changed depending on what the client is on device wise and the internet speed that they are using
+        function myTimer() {
+          var d = new Date();
+          console.log(d.toLocaleTimeString());
+          //console.log();
+          controllerUpdateAjax.generateRequest();
+        }
       }
 
     });

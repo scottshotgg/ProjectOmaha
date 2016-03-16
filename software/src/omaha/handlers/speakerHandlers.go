@@ -41,6 +41,11 @@ type speakerGetRequest struct {
 	Speaker		int8		`json:"speaker"`
 }
 
+type keepAlive struct {
+	ID			int8		`json:"id"`
+	Status		int8		`json:"status"`
+}
+
 type addPresetData struct {
 	Speaker		int8		`json:"speaker"`
 	Name		string		`json:"name"`
@@ -514,6 +519,47 @@ func PagingRequestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(getGenericSuccessResponse())
+}
+
+func ControllerUpdateHandler(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+	log.Println(status)
+
+	// It is NOT a GET request, but the struct that is used is identical to the one that would have been used for 
+	// this, so why reinvent the wheel
+	//pagingRequest := &speakerGetRequest{}
+	//err := json.NewDecoder(r.Body).Decode(pagingRequest)
+
+	//log.Println("Making a paging request", pagingRequest)
+	
+	/*if err != nil {
+		if status.IsDebug() {
+			//log.Printf("pagingRequest json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	err = system.SendPagingRequest(pagingRequest.Speaker)
+	
+	if err != nil {
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}*/
+
+	keepAliveResponse := keepAlive {
+		ID: status.ID, 
+		Status: status.BrokenLink}
+
+	//response, _ := json.Marshal(fillSpeakerResponse(controller))
+
+	log.Println("Controller Request", keepAliveResponse)
+
+	response, _ := json.Marshal(keepAliveResponse)
+
+	w.Write(response)
+
+	//w.Write(getGenericSuccessResponse())
 }
 
 func CreateZoneHandler(w http.ResponseWriter, r *http.Request) {
