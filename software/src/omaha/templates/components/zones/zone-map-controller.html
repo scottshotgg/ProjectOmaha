@@ -218,6 +218,8 @@
       },
 
       renderMap: function() {
+        console.log("fi");
+
         var mapController = this;
         mapController.featureMap = {};
         var container = mapController.$.popup;
@@ -423,7 +425,7 @@
             // Clear the speaker holder element and then reset the entities to everything that has been selected, updating the view if you will
             speakerHolder = document.getElementById("speakerHolder");
             var innerHTML = "";
-            document.getElementById("speakerHolder").innerHTML = "";
+            speakerHolder.innerHTML = "";
             for (var k = 0; k < totalInfo.length; k++) {
               // The selections in the total selection array take a value of 'undefined' when deleted, and we don't want those in our view, so we parse them out
               if (totalInfo[k] !== undefined) {
@@ -433,7 +435,7 @@
                 // when we send it off make a new array and splice out the undefineds 
               }
             }
-            document.getElementById("speakerHolder").innerHTML = innerHTML;
+            speakerHolder.innerHTML = innerHTML;
             console.log(totalInfo);
           }
         });

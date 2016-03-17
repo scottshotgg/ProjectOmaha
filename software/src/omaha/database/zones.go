@@ -39,6 +39,40 @@ func createZoneToSpeakerTable() {
 	}
 }
 
+// createPagingZoneTable creates the zone table in the database
+func createPagingZoneTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE pagingZone (
+			zoneID INTEGER PRIMARY KEY AUTOINCREMENT,
+			name varchar(50)	
+		)
+	`)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created pagingZone table")
+		AddPagingZone("default")
+	}
+}
+
+// createPagingZoneToSpeakerTable creates the zoneToSpeaker table in the database
+func createPagingZoneToSpeakerTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE pagingZoneToSpeaker (
+			zoneID INTEGER REFERENCES pagingZone(ZoneID),
+			speakerID INTEGER REFERENCES Speaker(SpeakerID),
+			PRIMARY KEY (ZoneID, SpeakerID),
+			FOREIGN KEY(zoneID) REFERENCES pagingZone,
+			FOREIGN KEY(speakerID) REFERENCES speaker
+		)
+	`)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created pagingZoneToSpeaker table")
+	}
+}
+
 // AddZone adds a zone to the database with the specified name
 func AddZone(name string) {
 	_, err := DB.Exec(`INSERT INTO zone 
@@ -52,12 +86,36 @@ func AddZone(name string) {
 	}
 }
 
+// AddPagingZone adds a paging zone to the database with the specified name
+func AddPagingZone(name string) {
+	_, err := DB.Exec(`INSERT INTO pagingZone 
+		(name)
+		VALUES (?)
+		`, name)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Printf("Created paging zone %s\n", name)
+	}
+}
+
 // GetZoneID gets the ID of the zone with the given name
 func getZoneID(zoneName string) (int8, error) {
 	var zoneID int8
 	DB.QueryRow(`
 		SELECT zoneID 
 		FROM zone
+		WHERE name=?
+		`, zoneName).Scan(&zoneID)
+	return zoneID, nil
+}
+
+// getPagingZoneID gets the ID of the zone with the given name
+func getPagingZoneID(zoneName string) (int8, error) {
+	var zoneID int8
+	DB.QueryRow(`
+		SELECT ZoneID 
+		FROM pagingZone
 		WHERE name=?
 		`, zoneName).Scan(&zoneID)
 	return zoneID, nil
@@ -74,11 +132,28 @@ func getAddSpeakerToZonesStmt() (*sql.Stmt, error) {
 	return stmt, nil
 }
 
+func getAddSpeakerToPagingZonesStmt() (*sql.Stmt, error) {
+	stmt, err := DB.Prepare(`INSERT INTO pagingZoneToSpeaker 
+		(zoneID, speakerID)
+		VALUES (?, ?)
+		`)
+	if err != nil {
+		return nil, err
+	}
+	return stmt, nil
+}
+
 func addSpeakerToDefaultZone(speakerID int8) {
 	zoneID, _ := getZoneID("default")
 	_, err := addSpeakerToZonesStmt.Exec(zoneID, speakerID)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	pagingZoneID, _ := getPagingZoneID("default")
+	_, errr := addSpeakerToPagingZonesStmt.Exec(pagingZoneID, speakerID)
+	if errr != nil {
+		log.Fatal(errr)
 	}
 }
 

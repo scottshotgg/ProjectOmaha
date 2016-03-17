@@ -48,27 +48,27 @@
         <canvas id="targetChart" style="margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);" class="chartClass"></canvas>
         <div class="horizontal layout" id="adjustment" style="height: calc(.05 * 100vh); margin-top: calc(.0 * 100vh);">
           <!-- try doing a no float and then just putting 0 and making it start default? -->
-          <paper-input class="inputs" on-input="redrawOnInput" center-justified style="margin-left: calc(.025 * 100vw);"></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
-          <paper-input class="inputs" on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="80"     on-input="redrawOnInput" center-justified style="margin-left: calc(.025 * 100vw);"></paper-input>
+          <paper-input class="inputs" name="100"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="125"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="160"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="200"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="250"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="315"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="400"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="500"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="630"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="800"    on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="1k"     on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="1.25k"  on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="1.6k"   on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="2k"     on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="2.5k"   on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="3.15k"  on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="4k"     on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="5k"     on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="6.3k"   on-input="redrawOnInput" ></paper-input>
+          <paper-input class="inputs" name="8k"     on-input="redrawOnInput" ></paper-input>
         </div>
       </div>
       <div class="card-actions">
@@ -253,14 +253,17 @@
         var checkBands = [];
         var targetText = "Invalid input at ";
 
-        /*$(document.getElementsByClassName("inputs")).each(function(i) {
-          if(isNaN(this.value) || this.value == "" || this.value < -20 || this.value > 80) {
+        $(document.getElementsByClassName("inputs")).each(function(i) {
+          if(isNaN(this.value) || this.value < -20 || this.value > 80) {
             console.log(typeof this.value, parseInt(this.value));
             console.log(this.name);
             checkInt++;
-            checkBands.push(this.name); // may have to put new string here
+            checkBands.push(labels[i]); // may have to put new string here
+            console.log(checkBands);
           }
         });
+
+        console.log(checkBands);
 
         if(checkInt > 0) {
           if(checkBands.length == 1) {
@@ -274,7 +277,7 @@
           this.$.toaster.duration = 2000 + (500 * checkBands.length);
           this.$.toaster.text = targetText;
           this.$.toaster.show();
-        } else {*/
+        } else {
           this.dataArrayString = dataArray.join(", ");
           for (var i = 0; i < this.speaker.CurrentTarget.length; i++) { 
             this.speaker.CurrentTarget[i] = dataArray[i];
@@ -287,7 +290,7 @@
           this.$.toaster.text = "Target set to: " + dataArray.join(", ") + ", switch to the equalizer page for further adjustment";
           this.$.toaster.show();
           console.log("_setTargetClicked");
-        //}
+        }
       },
 
       _logResponse: function(event, data) {

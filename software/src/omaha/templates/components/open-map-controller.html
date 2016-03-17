@@ -63,6 +63,10 @@
 
   </template>
   <script>
+
+  var controllers = []; 
+  var renderMapCopy;
+  var vectorLayerCopy
     
     Polymer({
       is: 'open-map-controller',
@@ -233,7 +237,7 @@
         // Map views always need a projection.  Here we just want to map image
         // coordinates directly to map coordinates, so we create a projection that uses
         // the image extent in pixels.
-        var extent = [0, 0, 2200, 1700];
+        var extent = [0, 0, 2200, 1700];        // this needs to read in the coordinates from the image itself
         var projection = new ol.proj.Projection({
           code: 'pixel',
           units: 'pixels',
@@ -241,6 +245,8 @@
         });
 
         var locations = this.controllers;
+        controllers = this.controllers;
+
         var features = new Array(locations.length);
         for(var i = 0; i < features.length; i++) {
             var coordinates = [locations[i].x, 1700-locations[i].y];
@@ -316,21 +322,24 @@
                 if(!(zone in style) || style[zone].resolution !== resolution) {
                   style[zone] = {};
                   style[zone].style = [new ol.style.Style({
-                        image: new ol.style.Circle({
-                            radius: 15/Math.max(resolution,1),
-                            stroke: new ol.style.Stroke({
-                                color: '#000000'
-                            }),
-                            fill: new ol.style.Fill({
-                                color: colorMap[zone]
-                            })
+                      image: new ol.style.Circle({
+                        radius: 15/Math.max(resolution,1),
+                        stroke: new ol.style.Stroke({
+                            color: '#000000'
+                        }),
+                        fill: new ol.style.Fill({
+                            color: colorMap[zone]
                         })
-                    })];
-                    style[zone].resolution = resolution;
+                      })
+                  })];
+                  style[zone].resolution = resolution;
                 }
+
                 return style[zone].style;
             }
         });
+
+        vectorLayerCopy = vectorLayer;
 
         var map = new ol.Map({
           layers: [
@@ -413,5 +422,29 @@
         })
       }
     });
+
+  function updateMapForError(data) {
+    //console.log(controllers);
+
+    console.log(controllers[data.response.id]);
+
+    var features = vectorLayerCopy.getSource().getFeatures();
+
+    // this may need a scale applied to it for the zooming
+    var style = new ol.style.Style({
+                    image: new ol.style.Icon({
+                      src: "/css/brokenlink.png"
+                    })
+                });
+
+    features[data.response.id].setStyle(style);
+
+    vectorLayerCopy.changed();
+
+    //console.log(features.style);
+
+    //document.querySelector("open-map-controller").renderMap();
+  }
+
   </script>
-</dom-module> 5
+</dom-module>

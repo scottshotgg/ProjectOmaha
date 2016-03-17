@@ -30,6 +30,17 @@ CREATE TABLE zoneToSpeaker (
 	PRIMARY KEY (ZoneID, SpeakerID)
 )
 
+CREATE TABLE pagingZone (
+	zoneID INTEGER PRIMARY KEY AUTOINCREMENT,
+	name varchar(50)	
+)
+
+CREATE TABLE pagingZoneToSpeaker (
+	zoneID int REFERENCES PagingZone(ZoneID),
+	speakerID int REFERENCES Speaker(SpeakerID)
+	PRIMARY KEY (ZoneID, SpeakerID)
+)
+
 CREATE TABLE Accounts-to-Speakers (
 	userID varchar(50) REFERENCES Account(UserID),
 	speakerID int REFERENCES Speaker(SpeakerID),

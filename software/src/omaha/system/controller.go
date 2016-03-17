@@ -14,7 +14,7 @@ func KeepAlive(ID int8) (error int8) {
 
     defer func() {
     	if r := recover(); r != nil {
-        	log.Println("Error reading from the port for controller ", ID, "\n", r)
+        	log.Println("Error reading from the port for controller ", ID)
     		error = -ID
     	}
     }()
@@ -28,7 +28,8 @@ func KeepAlive(ID int8) (error int8) {
 		return nil
 	}}
 	MessageChan <- req
-	if(status.IsDebug()){				// this is supposed to be !status
+
+	if(!status.IsDebug()){				// this is supposed to be !status
 		b := []byte{0x00}			
 		status.ReadData(b)
 
@@ -41,22 +42,6 @@ func KeepAlive(ID int8) (error int8) {
 	}
 
 	return 
-}
-
-func GetKeepAlive(this *database.ControllerStatus, ID int8) (int, error) {
-	if status.debug {
-		return 0, nil
-	}
-
-	data := getMessageHeader(ID, 4)
-	data[1] = 0x61
-	data[2] = 0x00
-
-	b := []byte{0x00}
-	status.ReadData(b)
-
-	return 0, nil
-
 }
 
 func IsLEDOn(this *database.ControllerStatus) bool {

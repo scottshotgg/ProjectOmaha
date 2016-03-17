@@ -99,17 +99,20 @@
         </paper-dropdown-menu>
         <div id=ec_encap class="layout vertical">
           <div id="ec_style_div" class="layout horizontal">
-            <h4>Effectiveness</h4>
             <paper-slider id="invis" pin min="0" max="100" step="5"></paper-slider>
-            <h4>Pleasantness</h4>
           </div>
+
+          <h4>Effectiveness</h4>
           <div id="ec_div" class="layout horizontal">
             <paper-icon-button icon="remove" on-click="decrementE"></paper-icon-button>
             <paper-slider id="effectiveness" pin min="0" max="10" step="1" value="{{effectiveness}}"></paper-slider>
             <paper-icon-button icon="add" on-click="incrementE"></paper-icon-button>
+          </div>
 
-            <paper-icon-button icon="remove" noink style="visibility: hidden;"></paper-icon-button>
 
+          <h4>Pleasantness</h4>
+            <!-- <paper-icon-button icon="remove" noink style="visibility: hidden;"></paper-icon-button> -->
+          <div id="ec_div" class="layout horizontal">
             <paper-icon-button icon="remove" on-click="decrementC"></paper-icon-button>
             <paper-slider id="pleasantness" pin min="0" max="10" step="1" value="{{pleasantness}}"></paper-slider> 
             <paper-icon-button icon="add" on-click="incrementC"></paper-icon-button>
@@ -120,7 +123,7 @@
         <span>{{value}}</span>
       </div>
       <div class="card-actions">
-        <paper-button on-click="_selectionChanged">set pleasantness</paper-button>
+        <paper-button on-click="_selectionChanged">set ratio</paper-button>
       </div>
     </paper-card>
     <!--<paper-toast id="toast">Averaging mode set to <span>{{volume}}</span></paper-toast>-->

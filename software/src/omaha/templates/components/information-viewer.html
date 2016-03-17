@@ -74,7 +74,7 @@
       }
 
     </style>
-    <div id="zoneContainer" style="width: 75%; height: 100%; float: left;"></div>
+    <div id="informationContainer" style="width: 75%; height: 100%; float: left;"></div>
     <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 75%; width: 25%; height: 90%;">
       <body class="fullbleed layout vertical">
         <paper-header-panel mode="waterfall" style="background-color: #fff">
@@ -82,7 +82,7 @@
             <div>Selected Speakers<h6 style="margin: 0px; text-align: center;">make this centered</h6><h6 style="margin: 0px; text-align: center;">make an escape event key that will clear this</h6><h6 style="margin: 0px; text-align: center;"></div>
           </paper-toolbar>
           <div id="dropShadow" class="style-scope paper-header-panel has-shadow"></div>
-          <div id="speakerHolder" style=""></div>
+          <div id="informationSpeakerHolder" style=""></div>
         </paper-header-panel>
       </body>
     </div>
@@ -189,7 +189,7 @@
         }
 
         totalInfo = [];
-        document.getElementById("speakerHolder").innerHTML = "";
+        document.getElementById("informationSpeakerHolder").innerHTML = "";
 
         console.log("createZoneAjax:", createZoneAjax.body);
         this.$.createZoneAjax.generateRequest();
@@ -217,6 +217,7 @@
       },
 
       renderMap: function() {
+        console.log("gi");
         var mapController = this;
         mapController.featureMap = {};
         var container = mapController.$.popup;
@@ -343,7 +344,7 @@
               vectorLayer
           ],
           overlays: [overlay],
-          target: 'zoneContainer',
+          target: 'informationContainer',
           view: new ol.View({
             projection: projection,
             center: ol.extent.getCenter(extent),
@@ -420,9 +421,9 @@
             totalInfo = mergeSort(totalInfo);   // This mergeSort isn't any faster wtf
 
             // Clear the speaker holder element and then reset the entities to everything that has been selected, updating the view if you will
-            speakerHolder = document.getElementById("speakerHolder");
+            informationSpeakerHolder = document.getElementById("informationSpeakerHolder");
             var innerHTML = "";
-            document.getElementById("speakerHolder").innerHTML = "";
+            informationSpeakerHolder.innerHTML = "";
             for (var k = 0; k < totalInfo.length; k++) {
               // The selections in the total selection array take a value of 'undefined' when deleted, and we don't want those in our view, so we parse them out
               if (totalInfo[k] !== undefined) {
@@ -432,7 +433,7 @@
                 // when we send it off make a new array and splice out the undefineds 
               }
             }
-            document.getElementById("speakerHolder").innerHTML = innerHTML;
+            informationSpeakerHolder.innerHTML = innerHTML;
             console.log(totalInfo);
           }
         });
@@ -477,6 +478,8 @@
         }); */
       }
     });
+
+console.log("this is me");
 
     function mergeSort(arr) {
         if (arr.length < 2)

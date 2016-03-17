@@ -588,6 +588,33 @@ func CreateZoneHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(getGenericSuccessResponse())
 }
 
+func CreatePagingZoneHandler(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+
+	//  this is not the same thing as a zone but it uses the same data type
+	createZone := &zoneData{}
+	err := json.NewDecoder(r.Body).Decode(createZone)
+
+	log.Println("Creating a paging zone", createZone)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("createPagingZone json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	err = database.CreatePagingZone(createZone.Speakers, createZone.ZoneName)
+	
+	if err != nil {
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	w.Write(getGenericSuccessResponse())
+}
+
 	// make a split string fucntion when you fee like it
 
 	//constants := strings.Fields(addPresetRequest.Constants)		// do not publish this function without checking for type/value errors

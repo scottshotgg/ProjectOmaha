@@ -87,11 +87,11 @@
     <div id="radio-container" class="layout horizontal">
       <paper-radio-group id="mode" selected="{{mode}}">
         <!-- <paper-radio-button id="informationButton" name="information" class="flex">Information</paper-radio-button> -->
-        <paper-radio-button id="volumeButton" name="volume" class="flex">Volume</paper-radio-button>
-        <paper-radio-button id="averagingButton" name="averaging" class="flex">Pleasantness</paper-radio-button>
-        <paper-radio-button id="targetButton" name="target" class="flex">Target</paper-radio-button>
-        <paper-radio-button id="equalizerButton" name="equalizer" class="flex">Equalizer</paper-radio-button>
-        <paper-radio-button id="pagingButton" name="paging" class="flex">Paging</paper-radio-button>
+        <paper-radio-button id="volumeButton"     name="volume"     class="flex">Volume</paper-radio-button>
+        <paper-radio-button id="averagingButton"  name="averaging"  class="flex">Comfort Ratio</paper-radio-button>
+        <paper-radio-button id="targetButton"     name="target"     class="flex">Target</paper-radio-button>
+        <paper-radio-button id="equalizerButton"  name="equalizer"  class="flex">Equalizer</paper-radio-button>
+        <paper-radio-button id="pagingButton"     name="paging"     class="flex">Paging</paper-radio-button>
       </paper-radio-group>
     </div>
     <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
@@ -165,7 +165,7 @@
 
         mode: {
           type: String,
-          value: "information"
+          value: "volume"
         },
 
         speakerId: {

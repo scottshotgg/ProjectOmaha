@@ -23,12 +23,12 @@ func schedule(keepAlive func(ID int8) (int8), delay time.Duration, amountOfContr
             status.BrokenLink = keepAlive(controller)
 
             // repeat the keepAlive until the controller responds, we can also set a bounding here so that it will not be tested regularly after awhile
-        	//if(status.BrokenLink == 0) {
+        	if(status.BrokenLink == 0) {
             	controller++			// if we get a 0 then move onto the next controller
-        	//} else {
+        	} else {
         		// at this point we should have a function jump that will use a case and figure out wtf is wrong with the controller, and then we can
         		// add it to a skipped array (or make a new data structure to support this) if there is UI consent/acknowledgment 
-        //	}
+        	}
 
             if(controller > amountOfControllers) {
             	controller = 1

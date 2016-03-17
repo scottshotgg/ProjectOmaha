@@ -14,6 +14,7 @@ var (
 	DB                    *sql.DB
 	insertSpeakerStmt     *sql.Stmt
 	addSpeakerToZonesStmt *sql.Stmt
+	addSpeakerToPagingZonesStmt *sql.Stmt
 )
 
 // InitDB creates the DB variable. If the database hasn't been created yet, it will be created.
@@ -33,9 +34,11 @@ func InitDB() {
 		createAccountTable()
 		createSpeakerTable()
 		createZoneTable()
+		createPagingZoneTable()
 		createEqualizerPresetsTable()
 		createTargetsTable()
 		createZoneToSpeakerTable()
+		createPagingZoneToSpeakerTable()
 		prepareStatements()
 		populateSpeakerTable()
 	case err != nil:
@@ -50,6 +53,10 @@ func prepareStatements() {
 		log.Fatal(err)
 	}
 	addSpeakerToZonesStmt, err = getAddSpeakerToZonesStmt()
+	if err != nil {
+		log.Fatal(err)
+	}
+	addSpeakerToPagingZonesStmt, err = getAddSpeakerToPagingZonesStmt()
 	if err != nil {
 		log.Fatal(err)
 	}

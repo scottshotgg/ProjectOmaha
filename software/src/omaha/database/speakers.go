@@ -941,6 +941,30 @@ func addSpeaker(loc speakerLocation) int8 {
 	return 0
 }
 
+func CreatePagingZone(speakers []int8, name string) error {
+	log.Println(name, speakers)
+
+	//stmt, err := DB.Prepare(`INSERT INTO zone (name) VALUES (?)`, name)
+
+	_, ziError := DB.Exec(`INSERT INTO pagingZone (name) VALUES (?)`, name)
+
+	_, zsError := DB.Exec(`SELECT zoneID FROM pagingZone where name=?`, name)
+	log.Println(ziError, zsError)
+
+	var zoneID int8
+
+	err := DB.QueryRow(`SELECT zoneID FROM pagingZone where name=?`, name).Scan(&zoneID)
+	log.Println(zoneID, err)
+
+
+	// this may need to be transacted instead of single
+	for i := 0; i < len(speakers); i++ {
+		_, ztsError := DB.Exec(`INSERT INTO pagingZoneToSpeaker (zoneID, speakerID) VALUES (?, ?)`, zoneID, speakers[i])
+		log.Println("I am le running: ", speakers[i], ztsError)
+	}
+	return nil
+}
+
 func CreateZone(speakers []int8, name string) error {
 	log.Println(name, speakers)
 
@@ -1035,13 +1059,15 @@ func populateSpeakerTable() {
 		log.Fatal(err)
 	}
 	// reset the statements back to their original values
-	defer func(speakerStmt, zoneStmt *sql.Stmt) {
+	defer func(speakerStmt, zoneStmt *sql.Stmt, pagingZoneStmt *sql.Stmt) {
 		insertSpeakerStmt = speakerStmt
 		addSpeakerToZonesStmt = zoneStmt
-	}(insertSpeakerStmt, addSpeakerToZonesStmt)
+		addSpeakerToPagingZonesStmt = pagingZoneStmt
+	}(insertSpeakerStmt, addSpeakerToZonesStmt, addSpeakerToPagingZonesStmt)
 	// change the statements to use this transaction
 	insertSpeakerStmt = tx.Stmt(insertSpeakerStmt)
 	addSpeakerToZonesStmt = tx.Stmt(addSpeakerToZonesStmt)
+	addSpeakerToPagingZonesStmt = tx.Stmt(addSpeakerToPagingZonesStmt)
 	speakerLocations := getSpeakerLocations()
 	for _, speakerLoc := range speakerLocations {
 		id := addSpeaker(speakerLoc)

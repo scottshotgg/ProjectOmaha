@@ -12,6 +12,7 @@
 <link rel="import" href="/components/map-controller.html">
 <link rel="import" href="/components/open-map-controller.html">
 <link rel="import" href="/components/information-viewer.html">
+<link rel="import" href="/components/paging-controller-navbar.html">
 <link rel="import" href="/components/zones/zone-map-controller.html">
 <link rel="import" href="/components/zones/zone-controller.html">
 <link rel="import" href="/components/account-creation-form.html">
@@ -64,11 +65,17 @@
             </paper-material>
           </neon-animatable> 
 
-          <neon-animatable page="zoneCreation" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+          <information-viewer page="information" id="information" zones="{{zones}}" controllers="[[controllers]]" class="fit"></information-viewer>
+
+          <!-- <neon-animatable page="zoneCreation" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
             <paper-material class="flex self-center card" elevation="5">
               <zone-creation-form></zone-creation-form>
             </paper-material>
-          </neon-animatable> 
+          </neon-animatable> -->
+
+          <paging-controller-navbar page="pagingMap" id="pagingMap" zones="{{zones}}" controllers="[[controllers]]" class="fit">
+          </paging-controller-navbar>
+
 
           <speaker-controller class="controller" page="speakerController" id="controller" class="fit"></speaker-controller>
           <zone-controller class="controller" page="zoneController" id="zoneController" class="fit"></zone-controller>
@@ -282,12 +289,10 @@
         this.controllers = speakers
         this.zones = zones;
         console.log(this.$);
-        //this.$.information.renderMap();
+        this.$.information.renderMap();
+        this.$.pagingMap.renderMap();
         this.$.mapcontroller.renderMap();
         this.$.zoneMap.renderMap();
-      },
-
-      controllerUpdate: function() {
       },
 
       _showAccountCreation: function() {
@@ -305,19 +310,24 @@
       
       refreshMap: function() {
         switch(this.$.pages.selected) {
-          //case "information":
           case "map":
+          case "pagingMap":
+          case "information":
           case "zoneMap":
             var map = this.$.pages.selectedItem.map;
+            console.log("THIS IS THE MAP THING THAT YOU ARE LOOKING FOR " + map);
             if(map !== undefined)
               map.updateSize();
+            break;
         }
       },
 
       _keepAliveResponse: function(event, data) {
         console.log("Controller update: " + data.response.id + " " + data.response.status);
 
-        // from here we can reflect this on the UI somehow
+        if(data.response.status !== 0) {      // this should be an array and should also have a case statement that will tell it what image to apply
+          updateMapForError(data);
+        }
       },
 
       ready: function() {
