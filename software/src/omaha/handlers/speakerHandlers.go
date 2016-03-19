@@ -203,7 +203,7 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
 			system.SetEqualizerConstant(speaker, int8(whole), int8(k))
 			log.Println("\n\n", whole, "\n\n")
-			system.SetEqualizerConstant(speaker, int8(decimal), int8(k))
+			system.SetEqualizerConstant(speaker, int8(decimal), 21)
 			log.Println("\n\n", decimal, "\n\n")
 			speaker.CurrentPreset[k] = floatParse	// this needs checking
 			//log.Printf("You changed band %d to level %d", k, floatParse)
@@ -245,14 +245,14 @@ func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerSt
 			decimal := math.Abs(whole - floatParse) * 100
 
 			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-			system.SetEqualizerConstant(speaker, int8(whole), int8(k))
+			//system.SetEqualizerConstant(speaker, int8(whole), int8(k))
 			log.Println("\n\n", whole, "\n\n")
-			system.SetEqualizerConstant(speaker, int8(decimal), int8(k))
+			//system.SetEqualizerConstant(speaker, int8(decimal), int8(k))
 			log.Println("\n\n", decimal, "\n\n")
 			speaker.CurrentPreset[k] = floatParse	// this needs checking
 			//log.Printf("You changed band %d to level %d", k, floatParse)
 		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, floatParse, false)
+			database.SaveBand(speaker, k, floatParse, true)
 		}
 			k++
 
