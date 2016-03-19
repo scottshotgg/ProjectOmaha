@@ -327,7 +327,7 @@ func (status *SystemStatus) SendCoefficientInformation(equalizedGain int8, decib
 	return 0, nil
 }
 
-func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8) (int, error) {
+func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8, decimal bool) (int, error) {
 
 	/*if status.debug {
 		return 0, nil
@@ -336,8 +336,11 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 	data := getMessageHeader(this.ID, 3)	// zone, id
 	data[1] = byte(band)		// Cannot use a command to do this
 	//data[2] = byte(level * 2 + 80)
-	data[2] = byte(level + 40)
-
+	if(decimal) {
+		data[2] = byte(level)
+	} else {
+		data[2] = byte(level + 40)
+	}
 	log.Println("Packet contents: ", data)
 	
 	req := &ControllerRequest{ Data: data, OnWrite: func() interface{} {
