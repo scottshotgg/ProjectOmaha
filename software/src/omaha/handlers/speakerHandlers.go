@@ -9,6 +9,7 @@ import (
 	"omaha/system"
 	"strings"
 	"strconv"
+	"math"
 )
 
 type speakerPutRequest struct {
@@ -26,12 +27,12 @@ type speakerResponse struct {
 	Pleasantness 		int8		`json:"pleasantness"`
 	FadeTime			int8		`json:"fadetime"`
 	FadeLevel			int8		`json:"fadelevel"`
-	Target[][]			int			`json:["target"]`
+	Target[][]			float64			`json:["target"]`
 	TargetNames[]		string		`json:["targetNames"]`
-	Equalizer[][]		int			`json:["equalizer"]`
+	Equalizer[][]		float64			`json:["equalizer"]`
 	PresetNames[]		string		`json:["presetNames"]`
-	CurrentPreset[21]	int			`json:["currentPreset"]` 
-	CurrentTarget[21]	int			`json:["currentTarget"]` 
+	CurrentPreset[21]	float64			`json:["currentPreset"]` 
+	CurrentTarget[21]	float64			`json:["currentTarget"]` 
 	Err     			string 		`json:"err"`
 	Speaker				int8		`json:"speaker"`
 	Name				string		`json:"name"`
@@ -188,22 +189,28 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 
 	var k = 0
 	for _, i := range constants {
-		intParse, err := strconv.Atoi(i)
+		floatParse, err := strconv.ParseFloat(i, 64)
 		if err != nil {
 			panic(err)		// test if this returns
 		}
-		//constantsInts = append(constantsInts, int8(intParse))
+		//constantsInts = append(constantsInts, int8(floatParse))
 
-		if(intParse != speaker.CurrentPreset[k]) {			// change this to pull from the db, it might already do that
+		if(floatParse != speaker.CurrentPreset[k]) {			// change this to pull from the db, it might already do that
+			whole := math.Floor(floatParse)
+
+			decimal := math.Abs(whole - floatParse) * 100
+
 			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-			system.SetEqualizerConstant(speaker, int8(intParse), int8(k))
-			speaker.CurrentPreset[k] = intParse	// this needs checking
-			//log.Printf("You changed band %d to level %d", k, intParse)
+			system.SetEqualizerConstant(speaker, int8(whole), int8(k))
+			log.Println("\n\n", whole, "\n\n")
+			system.SetEqualizerConstant(speaker, int8(decimal), int8(k))
+			log.Println("\n\n", decimal, "\n\n")
+			speaker.CurrentPreset[k] = floatParse	// this needs checking
+			//log.Printf("You changed band %d to level %d", k, floatParse)
 		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, intParse, false)
+			database.SaveBand(speaker, k, floatParse, false)
 		}
 			k++
-
 		//log.Println("constantsInts: ", constantsInts)
 	}
 
@@ -226,19 +233,26 @@ func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerSt
 
 	var k = 0
 	for _, i := range constants {
-		intParse, err := strconv.Atoi(i)
+		floatParse, err := strconv.ParseFloat(i, 64)
 		if err != nil {
 			panic(err)		// test if this returns
 		}
-		//constantsInts = append(constantsInts, int8(intParse))
+		//constantsInts = append(constantsInts, int8(floatParse))
 
-		if(intParse != speaker.CurrentTarget[k]) {			// change this to pull from the db, it might already do that
+		if(floatParse != speaker.CurrentTarget[k]) {			// change this to pull from the db, it might already do that
+			whole := math.Floor(floatParse)
+
+			decimal := math.Abs(whole - floatParse) * 100
+
 			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-			system.SetEqualizerConstant(speaker, int8(intParse), int8(k))
-			speaker.CurrentTarget[k] = intParse	// this needs checking
-			//log.Printf("You changed band %d to level %d", k, intParse)
+			system.SetEqualizerConstant(speaker, int8(whole), int8(k))
+			log.Println("\n\n", whole, "\n\n")
+			system.SetEqualizerConstant(speaker, int8(decimal), int8(k))
+			log.Println("\n\n", decimal, "\n\n")
+			speaker.CurrentPreset[k] = floatParse	// this needs checking
+			//log.Printf("You changed band %d to level %d", k, floatParse)
 		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, intParse, true)
+			database.SaveBand(speaker, k, floatParse, false)
 		}
 			k++
 
@@ -429,14 +443,14 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 		Pleasantness:	controller.Pleasantness,
 		FadeTime: 		controller.PagingLevel[0], 
 		FadeLevel: 		controller.PagingLevel[1], 
-		CurrentPreset: [21] int {
+		CurrentPreset: [21] float64 {
 			controller.CurrentPreset[0], controller.CurrentPreset[1], controller.CurrentPreset[2], controller.CurrentPreset[3], 
 			controller.CurrentPreset[4], controller.CurrentPreset[5], controller.CurrentPreset[6], controller.CurrentPreset[7], 
 			controller.CurrentPreset[8], controller.CurrentPreset[9], controller.CurrentPreset[10], controller.CurrentPreset[11], 
 			controller.CurrentPreset[12], controller.CurrentPreset[13], controller.CurrentPreset[14], controller.CurrentPreset[15], 
 			controller.CurrentPreset[16], controller.CurrentPreset[17], controller.CurrentPreset[18], controller.CurrentPreset[19], 
 			controller.CurrentPreset[20] }, 
-		CurrentTarget: [21] int {
+		CurrentTarget: [21] float64 {
 			controller.CurrentTarget[0], controller.CurrentTarget[1], controller.CurrentTarget[2], controller.CurrentTarget[3],
 			controller.CurrentTarget[4], controller.CurrentTarget[5], controller.CurrentTarget[6], controller.CurrentTarget[7], 
 			controller.CurrentTarget[8], controller.CurrentTarget[9], controller.CurrentTarget[10], controller.CurrentTarget[11], 

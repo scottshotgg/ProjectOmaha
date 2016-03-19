@@ -30,7 +30,7 @@ func KeepAlive(ID int8) (error int8) {
 	}}
 	MessageChan <- req
 
-	if(status.IsDebug()){				// this is supposed to be !status
+	if(!status.IsDebug()){				// this is supposed to be !status
 		b := []byte{0x00}			
 		status.ReadData(b)
 
@@ -335,7 +335,8 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 
 	data := getMessageHeader(this.ID, 3)	// zone, id
 	data[1] = byte(band)		// Cannot use a command to do this
-	data[2] = byte(level * 2 + 80)
+	//data[2] = byte(level * 2 + 80)
+	data[2] = byte(level + 40)
 
 	log.Println("Packet contents: ", data)
 	

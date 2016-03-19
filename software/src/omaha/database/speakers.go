@@ -28,48 +28,48 @@ func createSpeakerTable() {
 			effectiveness INTEGER,
 			pleasantness INTEGER,
 
-			pBand0 INTEGER, 
-			pBand1 INTEGER, 
-			pBand2 INTEGER, 
-			pBand3 INTEGER, 
-			pBand4 INTEGER, 
-			pBand5 INTEGER, 
-			pBand6 INTEGER, 
-			pBand7 INTEGER, 
-			pBand8 INTEGER, 
-			pBand9 INTEGER, 
-			pBand10 INTEGER, 
-			pBand11 INTEGER, 
-			pBand12 INTEGER, 
-			pBand13 INTEGER, 
-			pBand14 INTEGER, 
-			pBand15 INTEGER, 
-			pBand16 INTEGER, 
-			pBand17 INTEGER, 
-			pBand18 INTEGER, 
-			pBand19 INTEGER, 
-			pBand20 INTEGER,
+			pBand0 REAL, 
+			pBand1 REAL, 
+			pBand2 REAL, 
+			pBand3 REAL, 
+			pBand4 REAL, 
+			pBand5 REAL, 
+			pBand6 REAL, 
+			pBand7 REAL, 
+			pBand8 REAL, 
+			pBand9 REAL, 
+			pBand10 REAL, 
+			pBand11 REAL, 
+			pBand12 REAL, 
+			pBand13 REAL, 
+			pBand14 REAL, 
+			pBand15 REAL, 
+			pBand16 REAL, 
+			pBand17 REAL, 
+			pBand18 REAL, 
+			pBand19 REAL, 
+			pBand20 REAL,
 			
-			tBand0 INTEGER, 
-			tBand1 INTEGER, 
-			tBand2 INTEGER, 
-			tBand3 INTEGER, 
-			tBand4 INTEGER, 
-			tBand5 INTEGER, 
-			tBand6 INTEGER, 
-			tBand7 INTEGER, 
-			tBand8 INTEGER, 
-			tBand9 INTEGER, 
-			tBand10 INTEGER, 
-			tBand11 INTEGER, 
-			tBand12 INTEGER, 
-			tBand13 INTEGER, 
-			tBand14 INTEGER, 
-			tBand15 INTEGER, 
-			tBand16 INTEGER, 
-			tBand17 INTEGER, 
-			tBand18 INTEGER, 
-			tBand19 INTEGER, 
+			tBand0 REAL, 
+			tBand1 REAL, 
+			tBand2 REAL, 
+			tBand3 REAL, 
+			tBand4 REAL, 
+			tBand5 REAL, 
+			tBand6 REAL, 
+			tBand7 REAL, 
+			tBand8 REAL, 
+			tBand9 REAL, 
+			tBand10 REAL, 
+			tBand11 REAL, 
+			tBand12 REAL, 
+			tBand13 REAL, 
+			tBand14 REAL, 
+			tBand15 REAL, 
+			tBand16 REAL, 
+			tBand17 REAL, 
+			tBand18 REAL, 
+			tBand19 REAL, 
 			tBand20
 		)
 	`) // needs to be an equalizer thing in here
@@ -86,27 +86,27 @@ func createEqualizerPresetsTable() {
 			speakerID INTEGER PRIMARY KEY,
 			name varchar(50),
 			whichPreset INTEGER,
-			band0 INTEGER,
-			band1 INTEGER,
-			band2 INTEGER,
-			band3 INTEGER,
-			band4 INTEGER,
-			band5 INTEGER,
-			band6 INTEGER,
-			band7 INTEGER,
-			band8 INTEGER,
-			band9 INTEGER,
-			band10 INTEGER,
-			band11 INTEGER,
-			band12 INTEGER,
-			band13 INTEGER,
-			band14 INTEGER,
-			band15 INTEGER,
-			band16 INTEGER,
-			band17 INTEGER,
-			band18 INTEGER,
-			band19 INTEGER,
-			band20 INTEGER
+			band0 REAL,
+			band1 REAL,
+			band2 REAL,
+			band3 REAL,
+			band4 REAL,
+			band5 REAL,
+			band6 REAL,
+			band7 REAL,
+			band8 REAL,
+			band9 REAL,
+			band10 REAL,
+			band11 REAL,
+			band12 REAL,
+			band13 REAL,
+			band14 REAL,
+			band15 REAL,
+			band16 REAL,
+			band17 REAL,
+			band18 REAL,
+			band19 REAL,
+			band20 REAL
 		)
 	`) // needs to be an equalizer thing in here
 	if err != nil {
@@ -122,27 +122,27 @@ func createTargetsTable() {
 			speakerID INTEGER PRIMARY KEY,
 			name varchar(50),
 			whichPreset INTEGER,
-			band0 INTEGER,
-			band1 INTEGER,
-			band2 INTEGER,
-			band3 INTEGER,
-			band4 INTEGER,
-			band5 INTEGER,
-			band6 INTEGER,
-			band7 INTEGER,
-			band8 INTEGER,
-			band9 INTEGER,
-			band10 INTEGER,
-			band11 INTEGER,
-			band12 INTEGER,
-			band13 INTEGER,
-			band14 INTEGER,
-			band15 INTEGER,
-			band16 INTEGER,
-			band17 INTEGER,
-			band18 INTEGER,
-			band19 INTEGER,
-			band20 INTEGER
+			band0 REAL,
+			band1 REAL,
+			band2 REAL,
+			band3 REAL,
+			band4 REAL,
+			band5 REAL,
+			band6 REAL,
+			band7 REAL,
+			band8 REAL,
+			band9 REAL,
+			band10 REAL,
+			band11 REAL,
+			band12 REAL,
+			band13 REAL,
+			band14 REAL,
+			band15 REAL,
+			band16 REAL,
+			band17 REAL,
+			band18 REAL,
+			band19 REAL,
+			band20 REAL
 		)
 	`) // needs to be an equalizer thing in here
 	if err != nil {
@@ -234,49 +234,49 @@ func GetAllSpeakers() []*ControllerStatus {
 		var pleasantness int8
 		// var currentMode int
 		// var whichPreset int
-		var pBand0 int // not sure if we need to get all the bands and stuff, doesnt look like that are used
-		var pBand1 int
-		var pBand2 int
-		var pBand3 int
-		var pBand4 int
-		var pBand5 int
-		var pBand6 int
-		var pBand7 int
-		var pBand8 int
-		var pBand9 int
-		var pBand10 int
-		var pBand11 int
-		var pBand12 int
-		var pBand13 int
-		var pBand14 int
-		var pBand15 int
-		var pBand16 int
-		var pBand17 int
-		var pBand18 int
-		var pBand19 int
-		var pBand20 int
+		var pBand0 float64 // not sure if we need to get all the bands and stuff, doesnt look like that are used
+		var pBand1 float64
+		var pBand2 float64
+		var pBand3 float64
+		var pBand4 float64
+		var pBand5 float64
+		var pBand6 float64
+		var pBand7 float64
+		var pBand8 float64
+		var pBand9 float64
+		var pBand10 float64
+		var pBand11 float64
+		var pBand12 float64
+		var pBand13 float64
+		var pBand14 float64
+		var pBand15 float64
+		var pBand16 float64
+		var pBand17 float64
+		var pBand18 float64
+		var pBand19 float64
+		var pBand20 float64
 
-		var tBand0 int
-		var tBand1 int
-		var tBand2 int
-		var tBand3 int
-		var tBand4 int
-		var tBand5 int
-		var tBand6 int
-		var tBand7 int
-		var tBand8 int
-		var tBand9 int
-		var tBand10 int
-		var tBand11 int
-		var tBand12 int
-		var tBand13 int
-		var tBand14 int
-		var tBand15 int
-		var tBand16 int
-		var tBand17 int
-		var tBand18 int
-		var tBand19 int
-		var tBand20 int
+		var tBand0 float64
+		var tBand1 float64
+		var tBand2 float64
+		var tBand3 float64
+		var tBand4 float64
+		var tBand5 float64
+		var tBand6 float64
+		var tBand7 float64
+		var tBand8 float64
+		var tBand9 float64
+		var tBand10 float64
+		var tBand11 float64
+		var tBand12 float64
+		var tBand13 float64
+		var tBand14 float64
+		var tBand15 float64
+		var tBand16 float64
+		var tBand17 float64
+		var tBand18 float64
+		var tBand19 float64
+		var tBand20 float64
 
 		// in here get the presets that go along with the speakers and use those variables 
 
@@ -379,71 +379,71 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var targetName string		// might need to make a catch for this
 	var whichPreset int
 
-	var band0 int
-	var band1 int
-	var band2 int
-	var band3 int
-	var band4 int
-	var band5 int
-	var band6 int
-	var band7 int
-	var band8 int
-	var band9 int
-	var band10 int
-	var band11 int
-	var band12 int
-	var band13 int
-	var band14 int
-	var band15 int
-	var band16 int
-	var band17 int
-	var band18 int
-	var band19 int
-	var band20 int
+	var band0 float64
+	var band1 float64
+	var band2 float64
+	var band3 float64
+	var band4 float64
+	var band5 float64
+	var band6 float64
+	var band7 float64
+	var band8 float64
+	var band9 float64
+	var band10 float64
+	var band11 float64
+	var band12 float64
+	var band13 float64
+	var band14 float64
+	var band15 float64
+	var band16 float64
+	var band17 float64
+	var band18 float64
+	var band19 float64
+	var band20 float64
 
-	var pBand0 int
-	var pBand1 int
-	var pBand2 int
-	var pBand3 int
-	var pBand4 int
-	var pBand5 int
-	var pBand6 int
-	var pBand7 int
-	var pBand8 int
-	var pBand9 int
-	var pBand10 int
-	var pBand11 int
-	var pBand12 int
-	var pBand13 int
-	var pBand14 int
-	var pBand15 int
-	var pBand16 int
-	var pBand17 int
-	var pBand18 int
-	var pBand19 int
-	var pBand20 int
+	var pBand0 float64 // not sure if we need to get all the bands and stuff, doesnt look like that are used
+	var pBand1 float64
+	var pBand2 float64
+	var pBand3 float64
+	var pBand4 float64
+	var pBand5 float64
+	var pBand6 float64
+	var pBand7 float64
+	var pBand8 float64
+	var pBand9 float64
+	var pBand10 float64
+	var pBand11 float64
+	var pBand12 float64
+	var pBand13 float64
+	var pBand14 float64
+	var pBand15 float64
+	var pBand16 float64
+	var pBand17 float64
+	var pBand18 float64
+	var pBand19 float64
+	var pBand20 float64
 
-	var tBand0 int
-	var tBand1 int
-	var tBand2 int
-	var tBand3 int
-	var tBand4 int
-	var tBand5 int
-	var tBand6 int
-	var tBand7 int
-	var tBand8 int
-	var tBand9 int
-	var tBand10 int
-	var tBand11 int
-	var tBand12 int
-	var tBand13 int
-	var tBand14 int
-	var tBand15 int
-	var tBand16 int
-	var tBand17 int
-	var tBand18 int
-	var tBand19 int
-	var tBand20 int
+	var tBand0 float64
+	var tBand1 float64
+	var tBand2 float64
+	var tBand3 float64
+	var tBand4 float64
+	var tBand5 float64
+	var tBand6 float64
+	var tBand7 float64
+	var tBand8 float64
+	var tBand9 float64
+	var tBand10 float64
+	var tBand11 float64
+	var tBand12 float64
+	var tBand13 float64
+	var tBand14 float64
+	var tBand15 float64
+	var tBand16 float64
+	var tBand17 float64
+	var tBand18 float64
+	var tBand19 float64
+	var tBand20 float64
 
 	err := DB.QueryRow(`
 		SELECT name, x, y, volumeLevel,
@@ -581,11 +581,11 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		Pleasantness: pleasantness, 
 		ID: speakerID, 
 
-		CurrentPreset: [21] int {
+		CurrentPreset: [21] float64 {
 			pBand0, pBand1, pBand2, pBand3, pBand4, pBand5, pBand6, pBand7, pBand8, pBand9, pBand10, pBand11, 
 			pBand12, pBand13, pBand14, pBand15, pBand16, pBand17, pBand18, pBand19, pBand20 },
 
-		CurrentTarget: [21] int {
+		CurrentTarget: [21] float64 {
 			tBand0, tBand1, tBand2, tBand3, tBand4, tBand5, tBand6, tBand7, tBand8, tBand9, tBand10, tBand11, 
 			tBand12, tBand13, tBand14, tBand15, tBand16, tBand17, tBand18, tBand19, tBand20 }}
 
@@ -674,7 +674,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		*/
 			//constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
 			speaker.PresetNames = append(speaker.PresetNames, presetName)
-			speaker.Equalizer = append(speaker.Equalizer, []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
+			speaker.Equalizer = append(speaker.Equalizer, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
 			log.Println(speaker.PresetNames, speaker.Equalizer)		// make sure that the two arrays are the same size
 
 		//log.Println("current", current)
@@ -779,7 +779,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		*/
 			//constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
 			speaker.TargetNames = append(speaker.TargetNames, targetName)
-			speaker.Target = append(speaker.Target, []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
+			speaker.Target = append(speaker.Target, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
 			log.Println(speaker.TargetNames, speaker.Target)		// make sure that the two arrays are the same size
 
 		//log.Println("current", current)
@@ -901,7 +901,7 @@ func SaveAveraging(speaker *ControllerStatus) {
 
 // make a command to save the band
 
-func SaveBand(speaker *ControllerStatus, band int, level int, target bool) { // this should return an error here if something is wrong
+func SaveBand(speaker *ControllerStatus, band int, level float64, target bool) { // this should return an error here if something is wrong
 	var stringOfStatement string
 
 	if (target == false) {

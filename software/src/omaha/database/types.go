@@ -16,11 +16,11 @@ type ControllerStatus struct {
 	Pleasantness		int8 		`json:"Pleasantness"`
 	VolumeLevel[4]  	int8 		`json:["volumeLevel"]`
 	PagingLevel[2]		int8		`json:["pagingLevel"]`
-	Target[][]			int			`json:["target"]`
-	CurrentTarget[21] 	int			`json:"currentTarget"`
+	Target[][]			float64		`json:["target"]`
+	CurrentTarget[21] 	float64		`json:"currentTarget"`
 	TargetNames[]		string		`json:["targetNames"]`
-	Equalizer[][]		int			`json:["equalizer"]`
-	CurrentPreset[21]	int			`json:"currentPreset"`
+	Equalizer[][]		float64		`json:["equalizer"]`
+	CurrentPreset[21]	float64		`json:"currentPreset"`
 	PresetNames[]		string		`json:["presetNames"]`
 	WhichPreset			int			`json:"WhichPreset"`
 }

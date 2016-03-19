@@ -524,15 +524,15 @@
     
     // make the equalizer get the constants out to the database here
 
-    $(function() {
-      $(document.getElementsByClassName("custom_slider")).each(function(i) {
+  $(function() {
+    $(document.getElementsByClassName("custom_slider")).each(function(i) {
 
       //console.log(this);
 
       $(this).slider({
         orientation: "vertical",
         range: "min",
-        //step: .5,
+        step: .01,
         min: -40,
         max: 10,
         value: 0,
