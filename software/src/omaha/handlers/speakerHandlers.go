@@ -549,7 +549,7 @@ func ControllerUpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 	keepAliveResponse := keepAlive {
 		ID: status.ID, 
-		Status: status.BrokenLink}
+		Status: status.BrokenLink }
 
 	//response, _ := json.Marshal(fillSpeakerResponse(controller))
 

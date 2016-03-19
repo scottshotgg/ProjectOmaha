@@ -14,7 +14,8 @@ func KeepAlive(ID int8) (error int8) {
 
     defer func() {
     	if r := recover(); r != nil {
-        	log.Println("Error reading from the port for controller ", ID)
+			log.Println(int8('A'))
+        	log.Println("Error reading from the port for controller ", ID, "\n", r)
     		error = -ID
     	}
     }()
@@ -29,14 +30,15 @@ func KeepAlive(ID int8) (error int8) {
 	}}
 	MessageChan <- req
 
-	if(!status.IsDebug()){				// this is supposed to be !status
+	if(status.IsDebug()){				// this is supposed to be !status
 		b := []byte{0x00}			
 		status.ReadData(b)
 
-		log.Println("Return packet: ", b)
+		log.Println("Return packet: ", b[0])
 
 		// if we get lower case k back then just return 0, else return whatever it returned back - here is where we can add diagnostics
 		if(int8(b[0]) == int8('a')) {
+			log.Println(int8('a'))
 			error = 0
 		} else {
 			error = int8(b[0])
