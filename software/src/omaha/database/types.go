@@ -22,7 +22,8 @@ type ControllerStatus struct {
 	Equalizer[][]		float64		`json:["equalizer"]`
 	CurrentPreset[21]	float64		`json:"currentPreset"`
 	PresetNames[]		string		`json:["presetNames"]`
-	WhichPreset			int			`json:"WhichPreset"`
+	WhichPreset			int			`json:"whichPreset"`
+	Status 				int			`json:"status"`
 }
 
 type Zone struct {

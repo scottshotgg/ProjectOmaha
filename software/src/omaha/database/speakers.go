@@ -27,6 +27,7 @@ func createSpeakerTable() {
 			fadeLevel INTEGER,
 			effectiveness INTEGER,
 			pleasantness INTEGER,
+			status INTEGER DEFAULT 0,
 
 			pBand0 REAL, 
 			pBand1 REAL, 
@@ -152,6 +153,10 @@ func createTargetsTable() {
 	}
 }
 
+/*func GetAllStatus() {
+
+}*/
+
 // GetAllSpeakers gets all speakers from the database and returns them as a slice of ControllerStatus objects
 func GetAllSpeakers() []*ControllerStatus {		
 // not sure if we need to get all the bands and stuff, doesnt look like that are used
@@ -165,6 +170,7 @@ func GetAllSpeakers() []*ControllerStatus {
 			fadeLevel,
 			effectiveness,
 			pleasantness,
+			status,
 
 			pBand0, 		
 			pBand1, 
@@ -232,6 +238,7 @@ func GetAllSpeakers() []*ControllerStatus {
 		var fadeLevel int8
 		var effectiveness int8
 		var pleasantness int8
+		var status int
 		// var currentMode int
 		// var whichPreset int
 		var pBand0 float64 // not sure if we need to get all the bands and stuff, doesnt look like that are used
@@ -292,7 +299,8 @@ func GetAllSpeakers() []*ControllerStatus {
 			&fadeTime,
 			&fadeLevel,
 			&effectiveness,
-			&pleasantness,		
+			&pleasantness,
+			&status,		
 
 			// Current preset bands
 			&pBand0,
@@ -378,6 +386,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var presetName string		// might need to make a catch for this
 	var targetName string		// might need to make a catch for this
 	var whichPreset int
+	var status int
 
 	var band0 float64
 	var band1 float64
@@ -454,6 +463,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			fadeLevel,
 			effectiveness,
 			pleasantness,
+			status,
 
 			pBand0, 
 			pBand1, 
@@ -512,6 +522,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&fadeLevel,
 			&effectiveness,
 			&pleasantness,
+			&status,
 
 			// Current preset bands
 			&pBand0,
@@ -575,11 +586,12 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 
 		PagingLevel: [2] int8 {
 			fadeTime, 
-			fadeLevel}, 
+			fadeLevel }, 
 
 		Effectiveness: effectiveness,
 		Pleasantness: pleasantness, 
 		ID: speakerID, 
+		Status: status,
 
 		CurrentPreset: [21] float64 {
 			pBand0, pBand1, pBand2, pBand3, pBand4, pBand5, pBand6, pBand7, pBand8, pBand9, pBand10, pBand11, 
@@ -808,6 +820,18 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	return speaker
 }
 
+func UpdateStatus(ID int8, status int8) {
+	log.Println("Saving status")
+	_, err := DB.Exec(`
+		UPDATE speaker
+		SET
+			status = ?
+		WHERE speakerID = ?
+	`, status, ID)	
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func SavePreset(speakerId int8, name string, constants []string) {
 

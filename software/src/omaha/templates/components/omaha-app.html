@@ -260,6 +260,7 @@
       _initializeStatus: function(event, data) {
         // add zone ID to each speaker
         var zones = data.response.zones;
+
         zones.forEach(function(zone){
           zone.speakers.forEach(function(speaker){
             speaker.zone = zone;
@@ -325,9 +326,13 @@
       _keepAliveResponse: function(event, data) {
         console.log("Controller update: " + data.response.id + " " + data.response.status);
 
-        if(data.response.status !== 0) {      // this should be an array and should also have a case statement that will tell it what image to apply
-          updateMapForError(data);
+        console.log(this.controllers[data.response.id].status);
+
+        if(data.response.status !== this.controllers[data.response.id].status) {      // this should be an array and should also have a case statement that will tell it what image to apply
+          updateMapForError(data.response.id, (this.controllers[data.response.id].status) === 0 ? false : true);
+          this.controllers[data.response.id].status = data.response.status;
         }
+        console.log(this.controllers[data.response.id].status);
       },
 
       ready: function() {

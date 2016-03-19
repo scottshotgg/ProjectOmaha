@@ -302,40 +302,61 @@
           '#3f51b5'
         ];
         var colorMap = {};
-        
         var vectorLayer = new ol.layer.Vector({
             source: vectorSource,
             style: function(feature, resolution) {
               var zone = feature.getProperties().speaker.zone.name;
-                if(!(zone in colorMap)) {
-                  var color;
-                  if(unusedColors.length > 0) {
-                    var index = Math.floor(Math.random() * unusedColors.length)
-                    color = unusedColors[index]
-                    unusedColors.splice(index, 1);
-                  } else {
-                    color = colors[Math.floor(Math.random() * colors.length)]
-                  }
-
-                  colorMap[zone] = color;
+              if(!(zone in colorMap)) {
+                var color;
+                if(unusedColors.length > 0) {
+                  var index = Math.floor(Math.random() * unusedColors.length)
+                  color = unusedColors[index]
+                  unusedColors.splice(index, 1);
+                } else {
+                  color = colors[Math.floor(Math.random() * colors.length)]
                 }
-                if(!(zone in style) || style[zone].resolution !== resolution) {
-                  style[zone] = {};
-                  style[zone].style = [new ol.style.Style({
-                      image: new ol.style.Circle({
-                        radius: 15/Math.max(resolution,1),
-                        stroke: new ol.style.Stroke({
-                            color: '#000000'
-                        }),
-                        fill: new ol.style.Fill({
-                            color: colorMap[zone]
-                        })
+
+                colorMap[zone] = color;
+              }
+              if(!(zone in style) || style[zone].resolution !== resolution) {
+                style[zone] = {};
+                style[zone].style = [new ol.style.Style({
+                    image: new ol.style.Circle({
+                      radius: 15/Math.max(resolution,1),
+                      stroke: new ol.style.Stroke({
+                          color: '#000000'
+                      }),
+                      fill: new ol.style.Fill({
+                          color: colorMap[zone]
                       })
-                  })];
-                  style[zone].resolution = resolution;
-                }
+                    })
+                })];
+                style[zone].resolution = resolution;
+              }
+              //console.log(feature.getProperties().speaker);
 
-                return style[zone].style;
+              var errorStyle = new ol.style.Style({
+                image: new ol.style.Icon({
+                  src: "/css/brokenlink.png"
+                })
+              });
+
+              if(zone == "default") {
+                //console.log("I AM IN");
+                var speakers = feature.getProperties().speaker;
+                //for(i in speakers) {       // this can be improved
+                  //console.log(speakers.status);
+
+                  //console.log(feature.geometry);
+                  if(speakers.status !== 0) {
+                    console.log("updateMapForError", speakers.id);
+                    //updateMapForError(i, true);
+
+                    feature.setStyle(errorStyle);
+                  }
+                //}
+              }
+              return style[zone].style;
             }
         });
 
@@ -423,27 +444,46 @@
       }
     });
 
-  function updateMapForError(data) {
-    //console.log(controllers);
+  function updateMapForError(id, change) {
 
-    console.log(controllers[data.response.id]);
+    console.log(change);
 
     var features = vectorLayerCopy.getSource().getFeatures();
+    var i = 0;
+    for(i = 0; i < features.length; i++) {
+      if(features[i].getProperties().speaker.id == id) {
+        console.log(features[i].getProperties().speaker);
+        break;
+      }
+    }
 
-    // this may need a scale applied to it for the zooming
-    var style = new ol.style.Style({
-                    image: new ol.style.Icon({
-                      src: "/css/brokenlink.png"
-                    })
-                });
+    console.log("i: ", i);
+    console.log("features of i", features[i].getProperties().speaker);
 
-    features[data.response.id].setStyle(style);
+    var old_style = features[i].getStyle(style);
 
-    vectorLayerCopy.changed();
+    console.log(features);
 
-    //console.log(features.style);
 
-    //document.querySelector("open-map-controller").renderMap();
+    if(change === false) {
+      features[i].setStyle(old_style);
+      vectorLayerCopy.changed();
+    } else {
+
+      // this may need a scale applied to it for the zooming
+      var style = new ol.style.Style({
+        image: new ol.style.Icon({
+          src: "/css/brokenlink.png"
+        })
+      });
+
+      features[i].setStyle(style);
+      vectorLayerCopy.changed();
+
+      //console.log(features.style);
+
+      //document.querySelector("open-map-controller").renderMap();
+    }
   }
 
   </script>

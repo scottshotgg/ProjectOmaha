@@ -22,7 +22,7 @@ func (status *SystemStatus) IsDebug() bool {
 	return status.debug
 }
 
-func InitializeSystemStatus(isDebug bool) (*SystemStatus, int) {		// this might need to change to controllers and return the entire object/pointer 
+func InitializeSystemStatus(isDebug bool) (*SystemStatus, int, []*database.ControllerStatus) {		// this might need to change to controllers and return the entire object/pointer 
 	status.debug = isDebug
 	if !isDebug {
 		status.InitializePort()
@@ -50,7 +50,7 @@ func InitializeSystemStatus(isDebug bool) (*SystemStatus, int) {		// this might 
 		}
 		//database.SaveVolume(controller)
 	}*/
-	return &status, length
+	return &status, length, controllers
 }
 
 func GetSystemStatus() *SystemStatus {

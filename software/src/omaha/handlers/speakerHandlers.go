@@ -27,12 +27,12 @@ type speakerResponse struct {
 	Pleasantness 		int8		`json:"pleasantness"`
 	FadeTime			int8		`json:"fadetime"`
 	FadeLevel			int8		`json:"fadelevel"`
-	Target[][]			float64			`json:["target"]`
+	Target[][]			float64		`json:["target"]`
 	TargetNames[]		string		`json:["targetNames"]`
-	Equalizer[][]		float64			`json:["equalizer"]`
+	Equalizer[][]		float64		`json:["equalizer"]`
 	PresetNames[]		string		`json:["presetNames"]`
-	CurrentPreset[21]	float64			`json:["currentPreset"]` 
-	CurrentTarget[21]	float64			`json:["currentTarget"]` 
+	CurrentPreset[21]	float64		`json:["currentPreset"]` 
+	CurrentTarget[21]	float64		`json:["currentTarget"]` 
 	Err     			string 		`json:"err"`
 	Speaker				int8		`json:"speaker"`
 	Name				string		`json:"name"`
@@ -67,7 +67,7 @@ type zoneData struct {
 
 type speakerAttributes struct {
 	Volume    		string 		`json:"volume"`
-	//Music		int8 		`json:"musicVolume"`
+	//Music			int8 		`json:"musicVolume"`
 	Pleasantness 	int8 		`json:"effectiveness"`
 	Effectiveness 	int8 		`json:"pleasantness"`
 	LED       		bool 		`json:"led"` 
