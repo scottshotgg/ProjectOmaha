@@ -33,8 +33,10 @@ func KeepAlive(ID int8) (error int8) {
 		b := []byte{0x00}			
 		status.ReadData(b)
 
+		log.Println("Return packet: ", b)
+
 		// if we get lower case k back then just return 0, else return whatever it returned back - here is where we can add diagnostics
-		if(int8(b[0]) == int8('k')) {
+		if(int8(b[0]) == int8('a')) {
 			error = 0
 		} else {
 			error = int8(b[0])
