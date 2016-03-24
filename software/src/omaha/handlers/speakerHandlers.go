@@ -560,6 +560,7 @@ func ControllerUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}*/
+	log.Println(status.ID, status.BrokenLink)
 
 	keepAliveResponse := keepAlive {
 		ID: status.ID, 

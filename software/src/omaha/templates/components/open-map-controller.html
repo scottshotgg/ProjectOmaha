@@ -64,9 +64,13 @@
   </template>
   <script>
 
+  var savedResolution;
+  var savedStyle = [];
+  var savedStyle_i = 1;
+
   var controllers = []; 
   var renderMapCopy;
-  var vectorLayerCopy
+  var vectorLayerCopy;
     
     Polymer({
       is: 'open-map-controller',
@@ -317,12 +321,15 @@
                 }
 
                 colorMap[zone] = color;
+                savedStyle[zone] = color;
+                savedStyle_i++;
+                console.log(savedStyle);
               }
               if(!(zone in style) || style[zone].resolution !== resolution) {
                 style[zone] = {};
                 style[zone].style = [new ol.style.Style({
                     image: new ol.style.Circle({
-                      radius: 15/Math.max(resolution,1),
+                      radius: 15/Math.max(resolution, 1),
                       stroke: new ol.style.Stroke({
                           color: '#000000'
                       }),
@@ -333,6 +340,10 @@
                 })];
                 style[zone].resolution = resolution;
               }
+
+              savedResolution = resolution;
+              savedFeature = feature;
+
               //console.log(feature.getProperties().speaker);
 
               var errorStyle = new ol.style.Style({
@@ -446,7 +457,9 @@
 
   function updateMapForError(id, change) {
 
-    console.log(change);
+    // console.log(change);
+
+    // /change = false;
 
     var features = vectorLayerCopy.getSource().getFeatures();
     var i = 0;
@@ -465,25 +478,45 @@
     console.log(features);
 
 
-    if(change === false) {
+    /*if(change === false) {
       features[i].setStyle(old_style);
       vectorLayerCopy.changed();
     } else {
 
       // this may need a scale applied to it for the zooming
-      var style = new ol.style.Style({
+      
+
+      //console.log(features.style);
+
+      //document.querySelector("open-map-controller").renderMap();
+    }*/
+    var style;
+
+    if(change) {
+      style = new ol.style.Style({
         image: new ol.style.Icon({
           src: "/css/brokenlink.png"
         })
       });
 
-      features[i].setStyle(style);
-      vectorLayerCopy.changed();
+      // this thing also needs to remove the possibility to communicate with the speaker, remove the pop-up
 
-      //console.log(features.style);
-
-      //document.querySelector("open-map-controller").renderMap();
+    } else {
+       style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                      radius: 15/Math.max(savedResolution, 1),
+                      stroke: new ol.style.Stroke({
+                          color: '#000000'
+                      }),
+                      fill: new ol.style.Fill({
+                          color: savedStyle[features[i].getProperties().speaker.zone.name]
+                      })
+                    })
+                });
     }
+
+    features[i].setStyle(style);
+    vectorLayerCopy.changed();
   }
 
   </script>

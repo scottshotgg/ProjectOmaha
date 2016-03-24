@@ -208,7 +208,7 @@ func getAllZoneIDs() []int8 {
 // getZonesSpeakers gets the speakers that belong to the specified zone
 func getZonesSpeakers(zoneID int8) []*ControllerStatus {
 	rows, err := DB.Query(`
-		SELECT s.speakerID, x, y
+		SELECT s.speakerID, x, y, status
 		FROM speaker s
 		INNER JOIN zoneToSpeaker z
 		ON s.speakerID = z.speakerId
@@ -223,12 +223,14 @@ func getZonesSpeakers(zoneID int8) []*ControllerStatus {
 		var speakerID int8
 		var x int
 		var y int
-		rows.Scan(&speakerID, &x, &y)
+		var status int
+		rows.Scan(&speakerID, &x, &y, &status)
 
 		speaker := &ControllerStatus{}
 		speaker.X = x
 		speaker.Y = y
 		speaker.ID = int8(speakerID)
+		speaker.Status = status
 		speakers = append(speakers, speaker)
 	}
 	return speakers

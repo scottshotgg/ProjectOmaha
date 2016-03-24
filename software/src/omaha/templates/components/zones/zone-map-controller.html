@@ -76,7 +76,7 @@
 
     </style>
     <div id="zoneContainer" style="width: 75%; height: 100%; float: left;"></div>
-    <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 75%; width: 25%; height: 90%;">
+    <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 75%; width: 25%; height: 85%;">
       <body class="fullbleed layout vertical">
         <paper-header-panel mode="waterfall" style="background-color: #fff">
           <paper-toolbar>
@@ -88,23 +88,38 @@
       </body>
     </div>
 
-    <div id="buttonHolder" style="border-left: 2px solid #3f51b5; background-color: #fff; margin-left: 75%; width: 25%; height: 10%;">
+    <div id="buttonHolder" style="border-left: 2px solid #3f51b5; background-color: #fff; margin-left: 75%; width: 25%; height: 15%;">
       <paper-card class="layout horizontal">
         <div class="card-content">
-          <paper-button on-click="_createZone" style="margin-left: 12%;">Make zone</paper-button></div>
-          <paper-dropdown-menu id="zoneMenu" no-label-float label="Zone:" style="margin-top: 4%; margin-left: 8%;">
-          <paper-listbox id="zoneListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
-            <!--<template if="{{this.speaker.Response}}">
-              <paper-dropdown-menu selected="{{selected}}">
-                <template repeat="{{label in this.speaker.PresetNames}}">
-                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
-                </template>
-              </paper-dropdown-menu>  
-            </template>-->
-              <paper-item id="This Zone" value="This Zone">This Zone</paper-item>
-              <paper-item id="That Zone" value="That Zone">That Zone</paper-item>   
-          </paper-listbox>
-        </paper-dropdown-menu>
+          <paper-button on-click="_createZone" style="margin-left: 12%; margin-top: 18%;">Make zone</paper-button></div>
+          <div class="layout vertical">
+            <paper-dropdown-menu id="zonePickerMenu" no-label-float label="Zone:" style="margin-top: 0%; margin-left: 8%;">
+            <paper-listbox id="zonePickerListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+              <!--<template if="{{this.speaker.Response}}">
+                <paper-dropdown-menu selected="{{selected}}">
+                  <template repeat="{{label in this.speaker.PresetNames}}">
+                    <paper-item value="{{i}}" label="{{label}}"></paper-item>
+                  </template>
+                </paper-dropdown-menu>  
+              </template>-->
+                <paper-item id="masking_zone" value="Masking Zone">Masking Zone</paper-item>
+                <paper-item id="paging_zone" value="Paging Zone">Paging Zone</paper-item>   
+            </paper-listbox>
+          </paper-dropdown-menu>
+            <paper-dropdown-menu id="zoneMenu" no-label-float label="Zone:" style="margin-top: 0%; margin-left: 8%;">
+            <paper-listbox id="zoneListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+              <!--<template if="{{this.speaker.Response}}">
+                <paper-dropdown-menu selected="{{selected}}">
+                  <template repeat="{{label in this.speaker.PresetNames}}">
+                    <paper-item value="{{i}}" label="{{label}}"></paper-item>
+                  </template>
+                </paper-dropdown-menu>  
+              </template>-->
+                <paper-item id="This Zone" value="This Zone">This Zone</paper-item>
+                <paper-item id="That Zone" value="That Zone">That Zone</paper-item>   
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </div>
       </paper-card>
     </div>
 
@@ -145,6 +160,16 @@
 
   <script>
 
+
+  var selectedFeatures;
+
+  document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+      document.getElementById("speakerHolder").innerHTML = "";
+      selectedFeatures.clear();     // this needs some work
+    }
+  };
   // the name needs to be limited to 50 characters
 
     var totalInfo = [];
@@ -362,7 +387,7 @@
         var box = new ol.interaction.Select();
         map.addInteraction(box);
 
-        var selectedFeatures = box.getFeatures();
+        selectedFeatures = box.getFeatures();
 
         // a DragBox interaction used to select features by drawing boxes
         var dragBox = new ol.interaction.DragBox({
@@ -372,7 +397,21 @@
               color: [63, 81, 181, 1]
             })
           })
-        });
+        }); 
+
+        var source = new ol.source.Vector();
+
+        /*var dragBox = new ol.interaction.Draw({
+          features: selectedFeatures,
+          source: source,
+          type: "Polygon",
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: [63, 81, 181, 1]
+            })
+          }) 
+
+        });*/
 
         map.addInteraction(dragBox);
 
@@ -410,6 +449,23 @@
               } else {
                 console.log("Speaker", info[i], "is already in the list of selected speakers.");
                 delete totalInfo[areYouInThere];    // make something for delete
+                console.log(selectedFeatures);
+
+                
+                /*console.log(selectedFeatures.a.length);
+
+                for (var j = 0; j < selectedFeatures.a.length; j++) {
+                  //console.log("THIS IS WHAT YOU ARE LOOKING FOR", feature.B.speaker.id,  selectedFeatures.a[j].B.speaker.id);
+                  if(info[i] === selectedFeatures.a[j].B.speaker.id) {
+                    selectedFeatures.remove(j);
+                    console.log("hi", j);
+                  }
+                }
+                     console.log(selectedFeatures.a.length);
+
+                             solve this shit later
+
+                */
 
                 console.log(totalInfo);
               }
@@ -450,8 +506,8 @@
         });
         map.on('click', function() {
 
-          console.log(selectedFeatures);
-          selectedFeatures.clear();
+        console.log(selectedFeatures);
+        selectedFeatures.clear();
           //infoBox.innerHTML = '&nbsp;';
         });
 

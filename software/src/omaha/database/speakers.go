@@ -356,6 +356,7 @@ func GetAllSpeakers() []*ControllerStatus {
 		speaker.Y = y
 		speaker.ID = int8(speakerID)
 		speaker.Name = name
+		speaker.Status = status
 
 		speaker.VolumeLevel[0] = int8(volumeLevel)
 		speaker.VolumeLevel[1] = int8(musicLevel)
@@ -831,6 +832,8 @@ func UpdateStatus(ID int8, status int8) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Println(ID, status)
 }
 
 func SavePreset(speakerId int8, name string, constants []string) {

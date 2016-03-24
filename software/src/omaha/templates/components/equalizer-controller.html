@@ -9,6 +9,8 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="/bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
@@ -72,35 +74,120 @@
         text-align: center;
       }
 
+      #mode {
+        margin-bottom: 2%;      /* this might need to change to something that is calculated */
+      }
+
     </style>
 
    <paper-card heading="Equalizer" elevation="4">
-      <div class="card-content">
-        <div id="sliderequalizer" class="layout horizontal">
-          <div id="custom_container">
-            <div class="custom one"> <input id="text1" name="80" class="level" tabindex=1 oninput="inputChanged()"/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
-            <div class="custom two"> <input id="text2" name="100" class="level" tabindex=2 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
-            <div class="custom three"> <input id="text3" name="125" class="level" tabindex=3 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
-            <div class="custom four"> <input id="text4" name="160" class="level" tabindex=4 oninput="inputChanged()"/><div class="custom_slider" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
-            <div class="custom five"> <input id="text5" name="200" class="level" tabindex=5 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer5"}}></div><input class="bands" value="200" readonly/></div>
-            <div class="custom six"> <input id="text6" name="250" class="level" tabindex=6 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer6"}}></div><input class="bands" value="250" readonly/></div>
-            <div class="custom seven"> <input id="text7" name="315" class="level" tabindex=7 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer7"}}></div><input class="bands" value="315" readonly/></div>
-            <div class="custom eight"> <input id="text8" name="400" class="level" tabindex=8 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer8"}}></div><input class="bands" value="400" readonly/></div>
-            <div class="custom nine"> <input id="text9" name="500" class="level" tabindex=9 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer9"}}></div><input class="bands" value="500" readonly/></div>
-            <div class="custom ten"> <input id="text10" name="630" class="level" tabindex=10 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer10"}}></div><input class="bands" value="630" readonly/></div>
-            <div class="custom eleven"> <input id="text11" name="800" class="level" tabindex=11 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer11"}}></div><input class="bands" value="800" readonly/></div>
-            <div class="custom twelve"> <input id="text12" name="1k" class="level" tabindex=12 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer12"}}></div><input class="bands" value="1k" readonly/></div>
-            <div class="custom thirteen"> <input id="text13" name="1.25k" class="level" tabindex=13 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer13"}}></div><input class="bands" value="1.25k" readonly/></div>
-            <div class="custom fourteen"> <input id="text14" name="1.6k" class="level" tabindex=14 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer14"}}></div><input class="bands" value="1.6k" readonly/></div>
-            <div class="custom fifteen"> <input id="text15" name="2k" class="level" tabindex=15 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer15"}}></div><input class="bands" value="2k" readonly/></div>
-            <div class="custom sixteen"> <input id="text16" name="2.5k" class="level" tabindex=16 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer16"}}></div><input class="bands" value="2.5k" readonly/></div>
-            <div class="custom seventeen"> <input id="text17" name="3.15k" class="level" tabindex=17 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer17"}}></div><input class="bands" value="3.15k" readonly/></div>
-            <div class="custom eighteen"> <input id="text18" name="4k" class="level" tabindex=18 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer18"}}></div><input class="bands" value="4k" readonly/></div>
-            <div class="custom nineteen"> <input id="text19" name="5k" class="level" tabindex=19 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer19"}}></div><input class="bands" value="5k" readonly/></div>
-            <div class="custom twenty"> <input id="text20" name="6.3k" class="level" tabindex=20 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer20"}}></div><input class="bands" value="6.3k" readonly/></div>
-            <div class="custom twentyone"> <input id="text21" name="8k" class="level" tabindex=21 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer21"}></div><input class="bands" value="8k" readonly/></div>
-          </div>
-        </div>
+      <div id="card-content" style="height: calc(.68 * 100vh);" class="card-content">         <!-- something might need to be done about the growing to adjust for .6 -> .68 -->
+
+        <paper-radio-group id="mode" selected="{{mode}}">
+          <!-- <paper-radio-button id="informationButton" name="information" class="flex">Information</paper-radio-button> -->
+          <paper-radio-button id="maskingButton"  name="masking"  class="flex">Masking</paper-radio-button>
+          <paper-radio-button id="musicButton"    name="music"    class="flex">Music</paper-radio-button>
+          <paper-radio-button id="pagingButton"   name="paging"   class="flex">Paging</paper-radio-button>
+        </paper-radio-group>
+
+        <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
+
+          <neon-animatable page="masking" style="height: calc(.6 * 100vh);" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+            <simple-fit class="container">
+
+              <div id="sliderequalizer_masking" class="layout horizontal">
+                <div id="custom_container_masking">     <!-- change the custom class names back is shit hits the fan -->
+                  <div class="custom" style="margin-left: 4%;"> <input id="text1" name="80" class="level" tabindex=1 oninput="inputChanged()"/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
+                  <div class="custom"> <input id="text2" name="100" class="level" tabindex=2 oninput="inputChanged()"/> <div class="custom_slider" class="masking" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
+                  <div class="custom"> <input id="text3" name="125" class="level" tabindex=3 oninput="inputChanged()"/> <div class="custom_slider" class="masking" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
+                  <div class="custom"> <input id="text4" name="160" class="level" tabindex=4 oninput="inputChanged()"/><div class="custom_slider" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
+                  <div class="custom"> <input id="text5" name="200" class="level" tabindex=5 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer5"}}></div><input class="bands" value="200" readonly/></div>
+                  <div class="custom"> <input id="text6" name="250" class="level" tabindex=6 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer6"}}></div><input class="bands" value="250" readonly/></div>
+                  <div class="custom"> <input id="text7" name="315" class="level" tabindex=7 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer7"}}></div><input class="bands" value="315" readonly/></div>
+                  <div class="custom"> <input id="text8" name="400" class="level" tabindex=8 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer8"}}></div><input class="bands" value="400" readonly/></div>
+                  <div class="custom"> <input id="text9" name="500" class="level" tabindex=9 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer9"}}></div><input class="bands" value="500" readonly/></div>
+                  <div class="custom"> <input id="text10" name="630" class="level" tabindex=10 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer10"}}></div><input class="bands" value="630" readonly/></div>
+                  <div class="custom"> <input id="text11" name="800" class="level" tabindex=11 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer11"}}></div><input class="bands" value="800" readonly/></div>
+                  <div class="custom"> <input id="text12" name="1k" class="level" tabindex=12 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer12"}}></div><input class="bands" value="1k" readonly/></div>
+                  <div class="custom"> <input id="text13" name="1.25k" class="level" tabindex=13 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer13"}}></div><input class="bands" value="1.25k" readonly/></div>
+                  <div class="custom"> <input id="text14" name="1.6k" class="level" tabindex=14 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer14"}}></div><input class="bands" value="1.6k" readonly/></div>
+                  <div class="custom"> <input id="text15" name="2k" class="level" tabindex=15 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer15"}}></div><input class="bands" value="2k" readonly/></div>
+                  <div class="custom"> <input id="text16" name="2.5k" class="level" tabindex=16 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer16"}}></div><input class="bands" value="2.5k" readonly/></div>
+                  <div class="custom"> <input id="text17" name="3.15k" class="level" tabindex=17 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer17"}}></div><input class="bands" value="3.15k" readonly/></div>
+                  <div class="custom"> <input id="text18" name="4k" class="level" tabindex=18 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer18"}}></div><input class="bands" value="4k" readonly/></div>
+                  <div class="custom"> <input id="text19" name="5k" class="level" tabindex=19 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer19"}}></div><input class="bands" value="5k" readonly/></div>
+                  <div class="custom"> <input id="text20" name="6.3k" class="level" tabindex=20 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer20"}}></div><input class="bands" value="6.3k" readonly/></div>
+                  <div class="custom"> <input id="text21" name="8k" class="level" tabindex=21 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer21"}></div><input class="bands" value="8k" readonly/></div>
+                </div>
+              </div>
+              
+            </simple-fit>
+          </neon-animatable>
+
+          <neon-animatable page="music" style="height: calc(.6 * 100vh);" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+            <simple-fit class="container">
+              
+            <div id="sliderequalizer_music" class="layout horizontal">
+                <div id="custom_container_music">     <!-- change the custom class names back is shit hits the fan -->
+                  <div class="custom" style="margin-left: 4%;"> <input id="text22" name="80" class="level" tabindex=1 oninput="inputChanged()"/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
+                  <div class="custom music"> <input id="text23" name="100" class="level" tabindex=2 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
+                  <div class="custom"> <input id="text24" name="125" class="level" tabindex=3 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
+                  <div class="custom"> <input id="text25" name="160" class="level" tabindex=4 oninput="inputChanged()"/><div class="custom_slider" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
+                  <div class="custom"> <input id="text26" name="200" class="level" tabindex=5 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer5"}}></div><input class="bands" value="200" readonly/></div>
+                  <div class="custom"> <input id="text27" name="250" class="level" tabindex=6 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer6"}}></div><input class="bands" value="250" readonly/></div>
+                  <div class="custom"> <input id="text28" name="315" class="level" tabindex=7 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer7"}}></div><input class="bands" value="315" readonly/></div>
+                  <div class="custom"> <input id="text29" name="400" class="level" tabindex=8 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer8"}}></div><input class="bands" value="400" readonly/></div>
+                  <div class="custom"> <input id="text30" name="500" class="level" tabindex=9 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer9"}}></div><input class="bands" value="500" readonly/></div>
+                  <div class="custom"> <input id="text31" name="630" class="level" tabindex=10 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer10"}}></div><input class="bands" value="630" readonly/></div>
+                  <div class="custom"> <input id="text32" name="800" class="level" tabindex=11 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer11"}}></div><input class="bands" value="800" readonly/></div>
+                  <div class="custom"> <input id="text33" name="1k" class="level" tabindex=12 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer12"}}></div><input class="bands" value="1k" readonly/></div>
+                  <div class="custom"> <input id="text34" name="1.25k" class="level" tabindex=13 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer13"}}></div><input class="bands" value="1.25k" readonly/></div>
+                  <div class="custom"> <input id="text35" name="1.6k" class="level" tabindex=14 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer14"}}></div><input class="bands" value="1.6k" readonly/></div>
+                  <div class="custom"> <input id="text36" name="2k" class="level" tabindex=15 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer15"}}></div><input class="bands" value="2k" readonly/></div>
+                  <div class="custom"> <input id="text37" name="2.5k" class="level" tabindex=16 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer16"}}></div><input class="bands" value="2.5k" readonly/></div>
+                  <div class="custom"> <input id="text38" name="3.15k" class="level" tabindex=17 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer17"}}></div><input class="bands" value="3.15k" readonly/></div>
+                  <div class="custom"> <input id="text39" name="4k" class="level" tabindex=18 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer18"}}></div><input class="bands" value="4k" readonly/></div>
+                  <div class="custom"> <input id="text40" name="5k" class="level" tabindex=19 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer19"}}></div><input class="bands" value="5k" readonly/></div>
+                  <div class="custom"> <input id="text41" name="6.3k" class="level" tabindex=20 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer20"}}></div><input class="bands" value="6.3k" readonly/></div>
+                  <div class="custom"> <input id="text42" name="8k" class="level" tabindex=21 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer21"}></div><input class="bands" value="8k" readonly/></div>
+                </div>
+              </div>
+
+            </simple-fit>
+          </neon-animatable>
+
+          <neon-animatable page="paging" style="height: calc(.6 * 100vh);" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+            <simple-fit class="container">
+              
+            <div id="sliderequalizer_paging" class="layout horizontal">
+                <div id="custom_container_paging">     <!-- change the custom class names back is shit hits the fan -->
+                  <div class="custom" style="margin-left: 4%;"> <input id="text43" name="80" class="level" tabindex=1 oninput="inputChanged()"/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
+                  <div class="custom"> <input id="text44" name="100" class="level" tabindex=2 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
+                  <div class="custom"> <input id="text45" name="125" class="level" tabindex=3 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
+                  <div class="custom"> <input id="text46" name="160" class="level" tabindex=4 oninput="inputChanged()"/><div class="custom_slider" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
+                  <div class="custom"> <input id="text47" name="200" class="level" tabindex=5 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer5"}}></div><input class="bands" value="200" readonly/></div>
+                  <div class="custom"> <input id="text48" name="250" class="level" tabindex=6 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer6"}}></div><input class="bands" value="250" readonly/></div>
+                  <div class="custom"> <input id="text49" name="315" class="level" tabindex=7 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer7"}}></div><input class="bands" value="315" readonly/></div>
+                  <div class="custom"> <input id="text50" name="400" class="level" tabindex=8 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer8"}}></div><input class="bands" value="400" readonly/></div>
+                  <div class="custom"> <input id="text51" name="500" class="level" tabindex=9 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer9"}}></div><input class="bands" value="500" readonly/></div>
+                  <div class="custom"> <input id="text52" name="630" class="level" tabindex=10 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer10"}}></div><input class="bands" value="630" readonly/></div>
+                  <div class="custom"> <input id="text53" name="800" class="level" tabindex=11 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer11"}}></div><input class="bands" value="800" readonly/></div>
+                  <div class="custom"> <input id="text54" name="1k" class="level" tabindex=12 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer12"}}></div><input class="bands" value="1k" readonly/></div>
+                  <div class="custom"> <input id="text55" name="1.25k" class="level" tabindex=13 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer13"}}></div><input class="bands" value="1.25k" readonly/></div>
+                  <div class="custom"> <input id="text56" name="1.6k" class="level" tabindex=14 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer14"}}></div><input class="bands" value="1.6k" readonly/></div>
+                  <div class="custom"> <input id="text57" name="2k" class="level" tabindex=15 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer15"}}></div><input class="bands" value="2k" readonly/></div>
+                  <div class="custom"> <input id="text58" name="2.5k" class="level" tabindex=16 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer16"}}></div><input class="bands" value="2.5k" readonly/></div>
+                  <div class="custom"> <input id="text59" name="3.15k" class="level" tabindex=17 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer17"}}></div><input class="bands" value="3.15k" readonly/></div>
+                  <div class="custom"> <input id="text60" name="4k" class="level" tabindex=18 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer18"}}></div><input class="bands" value="4k" readonly/></div>
+                  <div class="custom"> <input id="text61" name="5k" class="level" tabindex=19 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer19"}}></div><input class="bands" value="5k" readonly/></div>
+                  <div class="custom"> <input id="text62" name="6.3k" class="level" tabindex=20 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer20"}}></div><input class="bands" value="6.3k" readonly/></div>
+                  <div class="custom"> <input id="text63" name="8k" class="level" tabindex=21 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer21"}></div><input class="bands" value="8k" readonly/></div>
+                </div>
+              </div>
+              
+            </simple-fit>
+          </neon-animatable>
+        </neon-animated-pages>
       </div>
 
       <!-- entry-animation="scale-up-animation" exit-animation="fade-out-animation" -->
@@ -154,14 +241,34 @@
   </template>
   <script>
 
-  var sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
-  var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
-  var background = document.getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
+  var sliders_masking;
+  var handles_masking;
+  var background_masking;
+
+  var sliders_music;
+  var handles_music;
+  var background_music;
+
+  var sliders_paging;
+  var handles_paging;
+  var background_paging;
 
   //var fragment = create("<paper-item id=" + "name" + " value=" + "custom" + ">" + "custom" + "</paper-item>"); 
   var equalizerToast = 0;
 
   $(document).ready(function() {
+    sliders_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+    handles_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+    background_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
+
+    sliders_music = document.getElementById("sliderequalizer_music").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+    handles_music = document.getElementById("sliderequalizer_music").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+    background_music = document.getElementById("sliderequalizer_music").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
+
+    sliders_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+    handles_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+    background_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
+
   });
   
   var lastSelected = 0;
@@ -186,6 +293,11 @@
       properties: {
         internalEqualizer: String,
 
+        mode: {
+        type:  String,
+        value: "masking"
+        },
+
         speakerId: {
           type: Number
         },
@@ -200,6 +312,7 @@
           observer: '_setInternalEqualizer'
         }
       },
+
 
       _setInternalEqualizer: function(iirConstantsString) {
         this.internalEqualizer = iirConstantsString;
@@ -477,6 +590,21 @@
         console.log(isThereAnError);
     }
 
+    
+    /*$(window).load(function() {
+      document.querySelector("#card-content").style.height = $(".custom").height() + "px";
+      console.log(document.querySelector("#card-content".height), $("#sliderequalizer"));
+      console.log("loading thing");
+    });*/ 
+    
+
+    /*function clickThis() {
+
+      document.querySelector("#card-content").style.height = $("#custom_container").height() + "px";
+      console.log(document.querySelector("#card-content".height), $("#custom_container").height());
+      console.log("clickThis");
+    }*/
+
 // there was some script endings and shit here, putem back if shit fucks up
 
   var MIN_WIDTH_SUPPORTED = 0;
@@ -525,7 +653,7 @@
     // make the equalizer get the constants out to the database here
 
   $(function() {
-    $(document.getElementsByClassName("custom_slider")).each(function(i) {
+    $(document.getElementById("custom_container_masking").getElementsByClassName("custom_slider")).each(function(i) {
 
       //console.log(this);
 
@@ -538,14 +666,66 @@
         value: 0,
         slide: function( event, ui) {
           isThereAnError = false;
-          sliders[i].style.background = "#3f51b5";
-          handles[i].style.background = "#3f51b5";
-          background[i].style.background = "rgba(63, 81, 181, .2)";
+          sliders_masking[i].style.background = "#3f51b5";
+          handles_masking[i].style.background = "#3f51b5";
+          background_masking[i].style.background = "rgba(63, 81, 181, .2)";
           $("#text" + (i + 1)).val(ui.value);
           iirConstants[i] = ui.value;
         }
       });
       $("#text" + (i + 1)).val($(".custom > .custom_slider").slider("value"));
+    });
+
+  });
+
+  $(function() {
+    $(document.getElementById("custom_container_music").getElementsByClassName("custom_slider")).each(function(i) {
+
+      //console.log(this);
+
+      $(this).slider({
+        orientation: "vertical",
+        range: "min",
+        step: .01,
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          isThereAnError = false;
+          sliders_masking[i].style.background = "#3f51b5";
+          handles_masking[i].style.background = "#3f51b5";
+          background_masking[i].style.background = "rgba(63, 81, 181, .2)";
+          $("#text" + (i + 22)).val(ui.value);
+          iirConstants[i] = ui.value;
+        }
+      });
+      $("#text" + (i + 22)).val($(".custom > .custom_slider").slider("value"));
+    });
+
+  });
+
+  $(function() {
+    $(document.getElementById("custom_container_paging").getElementsByClassName("custom_slider")).each(function(i) {
+
+      //console.log(this);
+
+      $(this).slider({
+        orientation: "vertical",
+        range: "min",
+        step: .01,
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          isThereAnError = false;
+          sliders_music[i].style.background = "#3f51b5";
+          handles_music[i].style.background = "#3f51b5";
+          background_music[i].style.background = "rgba(63, 81, 181, .2)";
+          $("#text" + (i + 43)).val(ui.value);
+          iirConstants[i] = ui.value;
+        }
+      });
+      $("#text" + (i + 43)).val($(".custom > .custom_slider").slider("value"));
     });
 
   });
@@ -841,10 +1021,10 @@
       //};      
     }
   $(window).resize(function() {
-    if($(window).width() < MIN_WIDTH_SUPPORTED || $(window).height() < MIN_HEIGHT_SUPPORTED){
+    if($(window).width() < MIN_WIDTH_SUPPORTED || $(window).height() < MIN_HEIGHT_SUPPORTED) {
       console.log($(window).width());
 
-console.log(document.getElementById("eighty").offsetWidth);
+      console.log(document.getElementById("eighty").offsetWidth);
       /*var custom_container = document.getElementById("custom_container");
       //custom_container.style.visibility = "hidden";
       var customs = document.getElementsByClassName("custom");

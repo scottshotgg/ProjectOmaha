@@ -49,7 +49,7 @@
     <paper-drawer-panel id="panel">
       <omaha-drawer id="drawer" drawer selected="{{selected}}"></omaha-drawer>
       <paper-header-panel class="flex" mode="seamed" main>
-        <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
+      23  <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
         <neon-animated-pages on-iron-select="refreshMap" id="pages" attr-for-selected="page" class="fit" id="app-pages" selected="{{selected}}">
 
           <!-- <information-viewer page="information" id="information" zones="{{zones}}" controllers="[[controllers]]" class="fit"></information-viewer> -->
@@ -320,19 +320,26 @@
             if(map !== undefined)
               map.updateSize();
             break;
+
+          default:
+            console.log("tell someone of higher authority if you see this, like me, lol");
         }
       },
 
       _keepAliveResponse: function(event, data) {
-        console.log("Controller update: " + data.response.id + " " + data.response.status);
+        //console.log("Controller update: " + data.response.id + " " + data.response.status);
 
-        console.log(this.controllers[data.response.id].status);
+        //console.log("THIS IS THE DATA RESPONSE YOU ARE LOOKING FOR", this.controllers[data.response.id - 1].status);
 
-        if(data.response.status !== this.controllers[data.response.id].status) {      // this should be an array and should also have a case statement that will tell it what image to apply
-          updateMapForError(data.response.id, (this.controllers[data.response.id].status) === 0 ? false : true);
-          this.controllers[data.response.id].status = data.response.status;
+       /// console.log(this.controllers);
+
+        if(data.response.status !== this.controllers[data.response.id - 1].status) {      // this should be an array and should also have a case statement that will tell it what image to apply
+          //console.log(this.controllers[data.response.id - 1].status === 0 ? false : true);
+          updateMapForError(data.response.id, (this.controllers[data.response.id - 1].status) === 0 ? true : false);
+          //console.log("THIS IS THE DATA RESPONSE YOU ARE LOOKING FOR", data.response.id, data.response.status);
+          this.controllers[data.response.id - 1].status = data.response.status;
         }
-        console.log(this.controllers[data.response.id].status);
+        //console.log(this.controllers[data.response.id].status);
       },
 
       ready: function() {
