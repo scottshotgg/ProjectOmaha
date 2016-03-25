@@ -24,11 +24,11 @@ func (status *SystemStatus) IsDebug() bool {
 
 func InitializeSystemStatus(isDebug bool) (*SystemStatus, int, []*database.ControllerStatus) {		// this might need to change to controllers and return the entire object/pointer 
 	status.debug = isDebug
-	length := 1
 	controllers := database.GetAllSpeakers()
+	length := len(controllers)
+
 	if !isDebug {
 		status.InitializePort()
-		length = len(controllers)
 	}
 
 	/*for _, controller := range controllers {
@@ -50,7 +50,8 @@ func InitializeSystemStatus(isDebug bool) (*SystemStatus, int, []*database.Contr
 		}
 		//database.SaveVolume(controller)
 	}*/
-	log.Println(length)
+
+	log.Println("length", length)
 
 	return &status, length, controllers
 }

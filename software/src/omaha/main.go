@@ -76,7 +76,8 @@ func startKeepAlive(amountOfControllers int, controllers []*database.ControllerS
 
 func main() {
 	// initialization
-	var debug = flag.Bool("d", false, "help me!!!")
+	var controllerAmount = flag.Int("c", -1, "help me!!!")  
+    var debug = flag.Bool("d", false, "help me!!!")
 	flag.Parse()
 	initializeLogger()
 	go system.HandleControllerMessages()
@@ -84,7 +85,13 @@ func main() {
 	database.InitDB()
 	defer database.DB.Close()
 
-	SystemStatus, amountOfControllers, controllers := system.InitializeSystemStatus(*debug)
+    SystemStatus, amountOfControllers, controllers := system.InitializeSystemStatus(*debug)
+    if(!*debug) {
+        amountOfControllers = *controllerAmount
+    }
+
+    log.Println("this is me", amountOfControllers)
+
 	if !(*debug) {
 		status := system.GetSystemStatus()
 		defer status.Port.Close()
