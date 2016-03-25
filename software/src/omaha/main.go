@@ -23,6 +23,8 @@ func schedule(keepAlive func(ID int8) (int8), delay time.Duration, amountOfContr
         	//log.Println(controllers)
 
         	status.ID = controller + 1
+
+            log.Println(controller)
            
             status.BrokenLink = keepAlive(controller)
 
@@ -48,6 +50,7 @@ func schedule(keepAlive func(ID int8) (int8), delay time.Duration, amountOfContr
             //log.Println(controller, amountOfControllers)
             if(controller > amountOfControllers - 1) {
             	controller = 1
+                status.ID = 1
             	//log.Println("I got to here3")
             }
 
@@ -92,7 +95,7 @@ func main() {
 	handlers.InitializeHandlers()
 
 	log.Println("Starting KeepAlive sequence")
-	startKeepAlive(len(controllers), controllers)
+	startKeepAlive(amountOfControllers, controllers)
 
 	log.Println("Starting server")
 	err := http.ListenAndServe(":8080", nil)
