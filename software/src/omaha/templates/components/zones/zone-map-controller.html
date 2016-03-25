@@ -80,7 +80,7 @@
       <body class="fullbleed layout vertical">
         <paper-header-panel mode="waterfall" style="background-color: #fff">
           <paper-toolbar>
-            <div>Selected Speakers<h6 style="margin: 0px; text-align: center;">make this centered</h6><h6 style="margin: 0px; text-align: center;">make an escape event key that will clear this</h6><h6 style="margin: 0px; text-align: center;"></div>
+            <div style="text-align: center; width: 100%;"><font>Selected Speakers</font><h6 style="margin: 0px; text-align: center;">make an escape event key that will clear this</h6><h6 style="margin: 0px; text-align: center;"></div>
           </paper-toolbar>
           <div id="dropShadow" class="style-scope paper-header-panel has-shadow"></div>
           <div id="speakerHolder" style=""></div>
@@ -88,7 +88,7 @@
       </body>
     </div>
 
-    <div id="buttonHolder" style="border-left: 2px solid #3f51b5; background-color: #fff; margin-left: 75%; width: 25%; height: 15%;">
+    <div id="buttonHolder" style="border-left: 2px solid #3f51b5; border-top: 2px solid #3f51b5; background-color: #fff; margin-left: 75%; width: 25%; height: 15%;">
       <paper-card class="layout horizontal">
         <div class="card-content">
           <paper-button on-click="_createZone" style="margin-left: 12%; margin-top: 18%;">Make zone</paper-button></div>
@@ -485,7 +485,7 @@
             for (var k = 0; k < totalInfo.length; k++) {
               // The selections in the total selection array take a value of 'undefined' when deleted, and we don't want those in our view, so we parse them out
               if (totalInfo[k] !== undefined) {
-               innerHTML += "<paper-item center-justified flex style=\"border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"> Speaker " + totalInfo[k] + "</paper-item>";
+               innerHTML += "<paper-item center-justified flex style=\"background: rgba(63, 81, 181, .1);  border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"><font style=\"width: 100%; text-align: center;\"> Speaker " + totalInfo[k] + "</font></paper-item>";
                 //Polymer.dom(speakerHolder).innerHTML = Polymer.dom(speakerHolder).innerHTML + "<paper-item center-justified flex style=\"border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"> Speaker " + totalInfo[k] + "</paper-item>";/* + document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k];*/
 
                 // when we send it off make a new array and splice out the undefineds 

@@ -74,7 +74,7 @@
         text-align: center;
       }
 
-      #mode {
+      #equalizerSelector {
         margin-bottom: 2%;      /* this might need to change to something that is calculated */
       }
 
@@ -83,11 +83,11 @@
    <paper-card heading="Equalizer" elevation="4">
       <div id="card-content" style="height: calc(.68 * 100vh);" class="card-content">         <!-- something might need to be done about the growing to adjust for .6 -> .68 -->
 
-        <paper-radio-group id="mode" selected="{{mode}}">
+        <paper-radio-group id="equalizerSelector" selected="{{mode}}">
           <!-- <paper-radio-button id="informationButton" name="information" class="flex">Information</paper-radio-button> -->
-          <paper-radio-button id="maskingButton"  name="masking"  class="flex">Masking</paper-radio-button>
-          <paper-radio-button id="musicButton"    name="music"    class="flex">Music</paper-radio-button>
-          <paper-radio-button id="pagingButton"   name="paging"   class="flex">Paging</paper-radio-button>
+          <paper-radio-button id="maskingButton" name="masking"  class="flex">Masking</paper-radio-button>
+          <paper-radio-button id="musicButton"   name="music"    class="flex">Music</paper-radio-button>
+          <paper-radio-button id="pagingButton"  name="paging"   class="flex">Paging</paper-radio-button>
         </paper-radio-group>
 
         <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
@@ -241,23 +241,41 @@
   </template>
   <script>
 
-  var sliders_masking;
-  var handles_masking;
-  var background_masking;
-
-  var sliders_music;
-  var handles_music;
-  var background_music;
-
-  var sliders_paging;
-  var handles_paging;
-  var background_paging;
+  var sliders;
+  var handles;
+  var background;
 
   //var fragment = create("<paper-item id=" + "name" + " value=" + "custom" + ">" + "custom" + "</paper-item>"); 
   var equalizerToast = 0;
+  var equalizerMode;
+  var typeFound = 0;
+
+
+  function getValues() {
+    switch (equalizerMode.selected) {
+      case "masking": 
+        typeFound = 0;
+        console.log(equalizerMode.selected);
+        break;
+      case "music":
+        typeFound = 1;
+        console.log(equalizerMode.selected);
+        break;
+      case "paging":
+        typeFound = 2;
+        console.log(equalizerMode.selected);
+        break;
+
+      default:
+        console.log("something is messed up with the equalizerMode = this.$.equalizerSelector.selected;");
+      }
+
+      return typeFound;
+  }
+
 
   $(document).ready(function() {
-    sliders_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+    /*sliders_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
     handles_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
     background_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
 
@@ -267,7 +285,13 @@
 
     sliders_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
     handles_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
-    background_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
+    background_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");*/
+
+    sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+    handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+    background = document.getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
+
+    console.log(sliders, "\n", handles, "\n", background);
 
   });
   
@@ -282,7 +306,7 @@
 
   var iirConstants = [];
 
-  for(loopVar = 0; loopVar < 21; loopVar++) { // watch out! we got a static over here
+  for(loopVar = 0; loopVar < 63; loopVar++) { // watch out! we got a static over here
     iirConstants[loopVar] = 0;
   }
   console.log(iirConstants);
@@ -390,6 +414,8 @@
       },*/
 
       _acceptPressed: function(event) {
+
+
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
         var ifvar = 0;
         if(this.speaker.PresetNames.length > 0) {
@@ -410,6 +436,7 @@
           this.$.addPresetAjax.body = {
             "speaker": this.speakerId,
             "name": name,
+            "type": getValues(),
             "constants": iirConstants.join(" "),
             // Maybe we should add a currently applied thing in here or something
           };
@@ -550,6 +577,7 @@
       ready: function() {
         this.internalEqualizer = this.iirConstantsString;   // does this need to be equalizer?
         equalizerToast = this.$.equalizerToast;
+        equalizerMode = this.$.equalizerSelector;
       }
     });
 
@@ -652,6 +680,31 @@
     
     // make the equalizer get the constants out to the database here
 
+$(function() {
+    $(document.getElementsByClassName("custom_slider")).each(function(i) {
+
+      //console.log(this);
+
+      $(this).slider({
+        orientation: "vertical",
+        range: "min",
+        step: .01,
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          isThereAnError = false;
+          sliders[i + (typeFound * 21)].style.background = "#3f51b5";
+          handles[i + (typeFound * 21)].style.background = "#3f51b5";
+          background[i + (typeFound * 21)].style.background = "rgba(63, 81, 181, .2)";
+          $("#text" + (i + (typeFound * 21) + 1)).val(ui.value);
+          iirConstants[i] = ui.value;
+        }
+      });
+      $("#text" + (i + 1)).val($(".custom > .custom_slider").slider("value"));
+    });
+  });
+/*
   $(function() {
     $(document.getElementById("custom_container_masking").getElementsByClassName("custom_slider")).each(function(i) {
 
@@ -666,9 +719,9 @@
         value: 0,
         slide: function( event, ui) {
           isThereAnError = false;
-          sliders_masking[i].style.background = "#3f51b5";
-          handles_masking[i].style.background = "#3f51b5";
-          background_masking[i].style.background = "rgba(63, 81, 181, .2)";
+          sliders[i].style.background = "#3f51b5";
+          handles[i].style.background = "#3f51b5";
+          background[i].style.background = "rgba(63, 81, 181, .2)";
           $("#text" + (i + 1)).val(ui.value);
           iirConstants[i] = ui.value;
         }
@@ -692,9 +745,9 @@
         value: 0,
         slide: function( event, ui) {
           isThereAnError = false;
-          sliders_masking[i].style.background = "#3f51b5";
-          handles_masking[i].style.background = "#3f51b5";
-          background_masking[i].style.background = "rgba(63, 81, 181, .2)";
+          sliders[i + 21].style.background = "#3f51b5";
+          handles[i + 21].style.background = "#3f51b5";
+          background[i + 21].style.background = "rgba(63, 81, 181, .2)";
           $("#text" + (i + 22)).val(ui.value);
           iirConstants[i] = ui.value;
         }
@@ -718,9 +771,9 @@
         value: 0,
         slide: function( event, ui) {
           isThereAnError = false;
-          sliders_music[i].style.background = "#3f51b5";
-          handles_music[i].style.background = "#3f51b5";
-          background_music[i].style.background = "rgba(63, 81, 181, .2)";
+          sliders[i + 42].style.background = "#3f51b5";
+          handles[i + 42].style.background = "#3f51b5";
+          background[i + 42].style.background = "rgba(63, 81, 181, .2)";
           $("#text" + (i + 43)).val(ui.value);
           iirConstants[i] = ui.value;
         }
@@ -728,7 +781,7 @@
       $("#text" + (i + 43)).val($(".custom > .custom_slider").slider("value"));
     });
 
-  });
+  });*/
     
 /*
     $(function() {

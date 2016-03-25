@@ -36,6 +36,7 @@ func InitDB() {
 		createZoneTable()
 		createPagingZoneTable()
 		createEqualizerPresetsTable()
+		createMusicEqualizerPresetsTable()
 		createTargetsTable()
 		createZoneToSpeakerTable()
 		createPagingZoneToSpeakerTable()

@@ -19,23 +19,34 @@ type speakerPutRequest struct {
 }
 
 type speakerResponse struct {
-	Volume				int8		`json:"volume"`
-	Music 				int8		`json:"music"`
-	Paging 				int8		`json:"paging"`
-	Masking 			int8		`json:"masking"`
-	Effectiveness 		int8		`json:"effectiveness"`
-	Pleasantness 		int8		`json:"pleasantness"`
-	FadeTime			int8		`json:"fadetime"`
-	FadeLevel			int8		`json:"fadelevel"`
-	Target[][]			float64		`json:["target"]`
-	TargetNames[]		string		`json:["targetNames"]`
-	Equalizer[][]		float64		`json:["equalizer"]`
-	PresetNames[]		string		`json:["presetNames"]`
-	CurrentPreset[21]	float64		`json:["currentPreset"]` 
-	CurrentTarget[21]	float64		`json:["currentTarget"]` 
-	Err     			string 		`json:"err"`
-	Speaker				int8		`json:"speaker"`
-	Name				string		`json:"name"`
+	Volume					int8		`json:"volume"`
+	Music 					int8		`json:"music"`
+	Paging 					int8		`json:"paging"`
+	Masking 				int8		`json:"masking"`
+	Effectiveness 			int8		`json:"effectiveness"`
+	Pleasantness 			int8		`json:"pleasantness"`
+	FadeTime				int8		`json:"fadetime"`
+	FadeLevel				int8		`json:"fadelevel"`
+
+	Target[][]				float64		`json:["target"]`
+	TargetNames[]			string		`json:["targetNames"]`
+	CurrentTarget[21]		float64		`json:["currentTarget"]` 
+
+	Equalizer[][]			float64		`json:["equalizer"]`
+	PresetNames[]			string		`json:["presetNames"]`
+	CurrentPreset[21]		float64		`json:["currentPreset"]`
+
+	MusicEqualizer[][]		float64		`json:["musicEqualizer"]`
+	MusicPresetNames[]		string		`json:["musicPresetNames"]`
+	CurrentMusicPreset[21]	float64		`json:["currentMusicPreset"]` 
+
+	PagingEqualizer[][]		float64		`json:["pagingEqualizer"]`
+	PagingPresetNames[]		string		`json:["pagingPresetNames"]`
+	CurrentPagingPreset[21]	float64		`json:["currentPagingPreset"]` 
+
+	Err     				string 		`json:"err"`
+	Speaker					int8		`json:"speaker"`
+	Name					string		`json:"name"`
 }
 
 type speakerGetRequest struct {
@@ -50,6 +61,7 @@ type keepAlive struct {
 type addPresetData struct {
 	Speaker		int8		`json:"speaker"`
 	Name		string		`json:"name"`
+	Type 		int			`json:"type"`
 	Constants	string		`json:"constants"`
 	Target		string		`json:"target"`
 	Update 		bool		`json:"update"`
@@ -71,7 +83,11 @@ type speakerAttributes struct {
 	Pleasantness 	int8 		`json:"effectiveness"`
 	Effectiveness 	int8 		`json:"pleasantness"`
 	LED       		bool 		`json:"led"` 
+
 	Equalizer 		string		`json:"equalizer"`
+	MusicEqualizer 	string		`json:"musicEqualizer"`
+	PagingEqualizer string		`json:"pagingEqualizer"`
+
 	ZoneID 			int8 		`json:"zoneId"`
 	Paging			string		`json:"paging"`
 	Target			string		`json:"target"`
@@ -174,22 +190,24 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.Contr
 }
 
 func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.ControllerStatus) error {
-	log.Println(attr, speaker)
+	log.Println(attr.Equalizer)
 
 	constants := strings.Fields(attr.Equalizer)		// do not publish this function without checking for type/value errors
 	//log.Println(constants)
+
+	log.Println(constants, len(constants))
 
 	for i := range speaker.Equalizer {
 		log.Println(speaker.Equalizer[i])
 	}
 
-	if(len(constants) < 21) {
+	if(len(constants) < 63) {
 		return errors.New("Invalid amount of constants")
 	}
 
 	var k = 0
-	for _, i := range constants {
-		floatParse, err := strconv.ParseFloat(i, 64)
+	for  i := 0; i < len(constants) / 3; i++ {
+		floatParse, err := strconv.ParseFloat(constants[i], 64)
 		if err != nil {
 			panic(err)		// test if this returns
 		}
@@ -208,7 +226,98 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 			speaker.CurrentPreset[k] = floatParse	// this needs checking
 			//log.Printf("You changed band %d to level %d", k, floatParse)
 		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, floatParse, false)
+			database.SaveBand(speaker, k, floatParse, 0)
+		}
+
+		floatParse, err = strconv.ParseFloat(constants[i + 21], 64)
+		if err != nil {
+			panic(err)		// test if this returns
+		}
+		//constantsInts = append(constantsInts, int8(floatParse))
+
+		if(floatParse != speaker.CurrentMusicPreset[k]) {			// change this to pull from the db, it might already do that
+			whole := math.Floor(floatParse)
+
+			decimal := math.Abs(whole - floatParse) * 100
+
+			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+			//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
+			log.Println("Whole value:", int8(whole))
+			//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+			log.Println("Decimal value:", int8(decimal))
+			speaker.CurrentMusicPreset[k] = floatParse	// this needs checking
+			//log.Printf("You changed band %d to level %d", k, floatParse)
+		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+			database.SaveBand(speaker, k, floatParse, 1)
+		}
+
+		floatParse, err = strconv.ParseFloat(constants[i + 42], 64)
+		if err != nil {
+			panic(err)		// test if this returns
+		}
+		//constantsInts = append(constantsInts, int8(floatParse))
+
+		/*if(floatParse != speaker.CurrentPagingPreset[k]) {			// change this to pull from the db, it might already do that
+			whole := math.Floor(floatParse)
+
+			decimal := math.Abs(whole - floatParse) * 100
+
+			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+			//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 41), false)
+			log.Println("Whole value:", int8(whole))
+			//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+			log.Println("Decimal value:", int8(decimal))
+			speaker.CurrentPagingPreset[k] = floatParse	// this needs checking
+			//log.Printf("You changed band %d to level %d", k, floatParse)
+		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+			database.SaveBand(speaker, k, floatParse, 2)
+		}*/
+
+		k++
+		//log.Println("constantsInts: ", constantsInts)
+	}
+
+	log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
+
+	return nil
+}
+
+func updateSpeakerMusicEqualizer(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	log.Println(attr, speaker)
+
+	constants := strings.Fields(attr.MusicEqualizer)		// do not publish this function without checking for type/value errors
+	//log.Println(constants)
+
+	for i := range speaker.MusicEqualizer {
+		log.Println(speaker.MusicEqualizer[i])
+	}
+
+	if(len(constants) < 21) {
+		return errors.New("Invalid amount of constants")
+	}
+
+	var k = 0
+	for _, i := range constants {
+		floatParse, err := strconv.ParseFloat(i, 64)
+		if err != nil {
+			panic(err)		// test if this returns
+		}
+		//constantsInts = append(constantsInts, int8(floatParse))
+
+		if(floatParse != speaker.CurrentMusicPreset[k]) {			// change this to pull from the db, it might already do that
+			whole := math.Floor(floatParse)
+
+			decimal := math.Abs(whole - floatParse) * 100
+
+			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+			system.SetEqualizerConstant(speaker, int8(whole), int8(k), false)			// add an offset to the BAND
+			log.Println("Whole value:", int8(whole))
+			system.SetEqualizerConstant(speaker, int8(decimal), 21, true)				// add an offset to the BAND
+			log.Println("Decimal value:", int8(decimal))
+			speaker.CurrentMusicPreset[k] = floatParse	// this needs checking
+			//log.Printf("You changed band %d to level %d", k, floatParse)
+		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+			database.SaveBand(speaker, k, floatParse, 1)
 		}
 			k++
 		//log.Println("constantsInts: ", constantsInts)
@@ -252,7 +361,7 @@ func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerSt
 			speaker.CurrentPreset[k] = floatParse	// this needs checking
 			//log.Printf("You changed band %d to level %d", k, floatParse)
 		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, floatParse, true)
+			database.SaveBand(speaker, k, floatParse, 2)
 		}
 			k++
 
@@ -483,7 +592,17 @@ func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(addPresetRequest)
 
-	database.SavePreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+	switch addPresetRequest.Type {
+		case 0:
+			database.SavePreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+		case 1:
+			database.SaveMusicPreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+		case 2:
+			// you dont do anything right now, shuddup
+			database.SavePreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+		default: 
+			log.Println("AddPresetHandler MESSED UP SOMEHOW")
+	}
 
 	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
 }

@@ -20,6 +20,7 @@ func InitializeHandlers() {
 	http.Handle("/system/speaker/", GenericHandler{PUT: SpeakerPutHandler})
 	http.Handle("/system/backtofront/", GenericHandler{POST: SpeakerGetHandler})
 	http.Handle("/system/addPreset/", GenericHandler{PUT: AddPresetHandler})
+	//http.Handle("/system/updatePreset/", GenericHandler{PUT: UpdatePresetHandler})
 	http.Handle("/system/addTarget/", GenericHandler{PUT: AddTargetHandler})
 	http.Handle("/system/pagingRequest/", GenericHandler{POST: PagingRequestHandler})
 	http.Handle("/system/createZone/", GenericHandler{PUT: CreateZoneHandler})

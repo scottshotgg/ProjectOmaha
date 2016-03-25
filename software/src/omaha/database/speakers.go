@@ -50,6 +50,28 @@ func createSpeakerTable() {
 			pBand18 REAL, 
 			pBand19 REAL, 
 			pBand20 REAL,
+
+			mBand0 REAL, 
+			mBand1 REAL, 
+			mBand2 REAL, 
+			mBand3 REAL, 
+			mBand4 REAL, 
+			mBand5 REAL, 
+			mBand6 REAL, 
+			mBand7 REAL, 
+			mBand8 REAL, 
+			mBand9 REAL, 
+			mBand10 REAL, 
+			mBand11 REAL, 
+			mBand12 REAL, 
+			mBand13 REAL, 
+			mBand14 REAL, 
+			mBand15 REAL, 
+			mBand16 REAL, 
+			mBand17 REAL, 
+			mBand18 REAL, 
+			mBand19 REAL, 
+			mBand20 REAL,
 			
 			tBand0 REAL, 
 			tBand1 REAL, 
@@ -71,7 +93,7 @@ func createSpeakerTable() {
 			tBand17 REAL, 
 			tBand18 REAL, 
 			tBand19 REAL, 
-			tBand20
+			tBand20 REAL
 		)
 	`) // needs to be an equalizer thing in here
 	if err != nil {
@@ -81,11 +103,34 @@ func createSpeakerTable() {
 	}
 }
 
+/*
+paBand0 REAL, 
+			paBand1 REAL, 
+			paBand2 REAL, 
+			paBand3 REAL, 
+			paBand4 REAL, 
+			paBand5 REAL, 
+			paBand6 REAL, 
+			paBand7 REAL, 
+			paBand8 REAL, 
+			paBand9 REAL, 
+			paBand10 REAL, 
+			paBand11 REAL, 
+			paBand12 REAL, 
+			paBand13 REAL, 
+			paBand14 REAL, 
+			paBand15 REAL, 
+			paBand16 REAL, 
+			paBand17 REAL, 
+			paBand18 REAL, 
+			paBand19 REAL, 
+			paBand20 REAL,
+*/
 func createEqualizerPresetsTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE EqualizerPresets (
-			speakerID INTEGER PRIMARY KEY,
-			name varchar(50),
+			speakerID INTEGER,
+			name varchar(50) PRIMARY KEY,
 			whichPreset INTEGER,
 			band0 REAL,
 			band1 REAL,
@@ -113,7 +158,43 @@ func createEqualizerPresetsTable() {
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		log.Println("Created speaker table")
+		log.Println("Created equalizer table")
+	}
+}
+
+func createMusicEqualizerPresetsTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE MusicEqualizerPresets (
+			speakerID INTEGER,
+			name varchar(50) PRIMARY KEY,
+			whichPreset INTEGER,
+			band0 REAL,
+			band1 REAL,
+			band2 REAL,
+			band3 REAL,
+			band4 REAL,
+			band5 REAL,
+			band6 REAL,
+			band7 REAL,
+			band8 REAL,
+			band9 REAL,
+			band10 REAL,
+			band11 REAL,
+			band12 REAL,
+			band13 REAL,
+			band14 REAL,
+			band15 REAL,
+			band16 REAL,
+			band17 REAL,
+			band18 REAL,
+			band19 REAL,
+			band20 REAL
+		)
+	`) // needs to be an equalizer thing in here
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created music equalizer table")
 	}
 }
 
@@ -193,6 +274,28 @@ func GetAllSpeakers() []*ControllerStatus {
 			pBand18, 
 			pBand19, 
 			pBand20,
+
+			mBand0, 
+			mBand1, 
+			mBand2, 
+			mBand3, 
+			mBand4, 
+			mBand5, 
+			mBand6, 
+			mBand7, 
+			mBand8, 
+			mBand9, 
+			mBand10, 
+			mBand11, 
+			mBand12, 
+			mBand13, 
+			mBand14, 
+			mBand15, 
+			mBand16, 
+			mBand17, 
+			mBand18, 
+			mBand19, 
+			mBand20,
 			
 			tBand0, 
 			tBand1, 
@@ -241,7 +344,7 @@ func GetAllSpeakers() []*ControllerStatus {
 		var status int
 		// var currentMode int
 		// var whichPreset int
-		var pBand0 float64 // not sure if we need to get all the bands and stuff, doesnt look like that are used
+		var pBand0 float64			// why do we need to pull all of this stuff, this can be optimized!!
 		var pBand1 float64
 		var pBand2 float64
 		var pBand3 float64
@@ -262,6 +365,28 @@ func GetAllSpeakers() []*ControllerStatus {
 		var pBand18 float64
 		var pBand19 float64
 		var pBand20 float64
+
+		var mBand0 float64
+		var mBand1 float64
+		var mBand2 float64
+		var mBand3 float64
+		var mBand4 float64
+		var mBand5 float64
+		var mBand6 float64
+		var mBand7 float64
+		var mBand8 float64
+		var mBand9 float64
+		var mBand10 float64
+		var mBand11 float64
+		var mBand12 float64
+		var mBand13 float64
+		var mBand14 float64
+		var mBand15 float64
+		var mBand16 float64
+		var mBand17 float64
+		var mBand18 float64
+		var mBand19 float64
+		var mBand20 float64
 
 		var tBand0 float64
 		var tBand1 float64
@@ -324,6 +449,29 @@ func GetAllSpeakers() []*ControllerStatus {
 			&pBand18,
 			&pBand19,
 			&pBand20,
+
+			// Current music preset bands
+			&mBand0,
+			&mBand1,
+			&mBand2,
+			&mBand3,
+			&mBand4,
+			&mBand5,
+			&mBand6,
+			&mBand7,
+			&mBand8,
+			&mBand9,
+			&mBand10,
+			&mBand11,
+			&mBand12,
+			&mBand13,
+			&mBand14,
+			&mBand15,
+			&mBand16,
+			&mBand17,
+			&mBand18,
+			&mBand19,
+			&mBand20,
 
 			// Current target bands
 			&tBand0,
@@ -389,7 +537,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var whichPreset int
 	var status int
 
-	var band0 float64
+	var band0 float64			// not using these bands, take these out later
 	var band1 float64
 	var band2 float64
 	var band3 float64
@@ -411,7 +559,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var band19 float64
 	var band20 float64
 
-	var pBand0 float64 // not sure if we need to get all the bands and stuff, doesnt look like that are used
+	var pBand0 float64
 	var pBand1 float64
 	var pBand2 float64
 	var pBand3 float64
@@ -432,6 +580,28 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var pBand18 float64
 	var pBand19 float64
 	var pBand20 float64
+
+	var mBand0 float64
+	var mBand1 float64
+	var mBand2 float64
+	var mBand3 float64
+	var mBand4 float64
+	var mBand5 float64
+	var mBand6 float64
+	var mBand7 float64
+	var mBand8 float64
+	var mBand9 float64
+	var mBand10 float64
+	var mBand11 float64
+	var mBand12 float64
+	var mBand13 float64
+	var mBand14 float64
+	var mBand15 float64
+	var mBand16 float64
+	var mBand17 float64
+	var mBand18 float64
+	var mBand19 float64
+	var mBand20 float64
 
 	var tBand0 float64
 	var tBand1 float64
@@ -487,6 +657,28 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			pBand18, 
 			pBand19, 
 			pBand20,
+
+			mBand0, 
+			mBand1, 
+			mBand2, 
+			mBand3, 
+			mBand4, 
+			mBand5, 
+			mBand6, 
+			mBand7, 
+			mBand8, 
+			mBand9, 
+			mBand10, 
+			mBand11, 
+			mBand12, 
+			mBand13, 
+			mBand14, 
+			mBand15, 
+			mBand16, 
+			mBand17, 
+			mBand18, 
+			mBand19, 
+			mBand20,
 			
 			tBand0, 
 			tBand1, 
@@ -548,6 +740,29 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&pBand19,
 			&pBand20,
 
+			// Current music preset bands
+			&mBand0,
+			&mBand1,
+			&mBand2,
+			&mBand3,
+			&mBand4,
+			&mBand5,
+			&mBand6,
+			&mBand7,
+			&mBand8,
+			&mBand9,
+			&mBand10,
+			&mBand11,
+			&mBand12,
+			&mBand13,
+			&mBand14,
+			&mBand15,
+			&mBand16,
+			&mBand17,
+			&mBand18,
+			&mBand19,
+			&mBand20,
+
 			// Current target bands
 			&tBand0,
 			&tBand1,
@@ -597,6 +812,10 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		CurrentPreset: [21] float64 {
 			pBand0, pBand1, pBand2, pBand3, pBand4, pBand5, pBand6, pBand7, pBand8, pBand9, pBand10, pBand11, 
 			pBand12, pBand13, pBand14, pBand15, pBand16, pBand17, pBand18, pBand19, pBand20 },
+
+		CurrentMusicPreset: [21] float64 {
+			mBand0, mBand1, mBand2, mBand3, mBand4, mBand5, mBand6, mBand7, mBand8, mBand9, mBand10, mBand11, 
+			mBand12, mBand13, mBand14, mBand15, mBand16, mBand17, mBand18, mBand19, mBand20 },
 
 		CurrentTarget: [21] float64 {
 			tBand0, tBand1, tBand2, tBand3, tBand4, tBand5, tBand6, tBand7, tBand8, tBand9, tBand10, tBand11, 
@@ -660,48 +879,71 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		/*
-		log.Println(name, whichPreset, 
-				band0,
-				band1,
-				band2,
-				band3,
-				band4,
-				band5,
-				band6,
-				band7,
-				band8,
-				band9,
-				band10,
-				band11,
-				band12,
-				band13,
-				band14,
-				band15,
-				band16,
-				band17,
-				band18,
-				band19,
-				band20)
-		*/
-			//constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
+			
 			speaker.PresetNames = append(speaker.PresetNames, presetName)
 			speaker.Equalizer = append(speaker.Equalizer, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
 			log.Println(speaker.PresetNames, speaker.Equalizer)		// make sure that the two arrays are the same size
+	}
 
-		//log.Println("current", current)
+	rows, err = DB.Query(`
+	SELECT 	name, whichPreset, 
+			band0,
+			band1,
+			band2,
+			band3,
+			band4,
+			band5,
+			band6,
+			band7,
+			band8,
+			band9,
+			band10,
+			band11,
+			band12,
+			band13,
+			band14,
+			band15,
+			band16,
+			band17,
+			band18,
+			band19,			
+			band20
+	FROM MusicEqualizerPresets
+	WHERE speakerID=?;
+	`, speakerID)
 
-		// make current the one that is stored in the speaker table
-		/*
-		if(current == 0) {
-			constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
-			speaker.Equalizer  = append(speaker.Equalizer, constants)
-		} else {
-			speaker.Current = [21]int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
-			log.Println("hi from current:", speaker.Current)
+	for rows.Next() {
+
+		err = rows.Scan(&presetName, &whichPreset, 
+				&band0,
+				&band1,
+				&band2,
+				&band3,
+				&band4,
+				&band5,
+				&band6,
+				&band7,
+				&band8,
+				&band9,
+				&band10,
+				&band11,
+				&band12,
+				&band13,
+				&band14,
+				&band15,
+				&band16,
+				&band17,
+				&band18,
+				&band19,
+				&band20)
+
+		if err != nil {
+			log.Fatal(err)
 		}
-		*/
+			
+			speaker.PresetNames = append(speaker.MusicPresetNames, presetName)
+			speaker.Equalizer = append(speaker.MusicEqualizer, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
+			log.Println(speaker.MusicPresetNames, speaker.MusicEqualizer)		// make sure that the two arrays are the same size
 	}
 	err = rows.Err()
 	if err != nil {
@@ -735,8 +977,6 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	WHERE speakerID=?;
 	`, speakerID)
 
-	defer rows.Close()
-
 	for rows.Next() {
 
 		err = rows.Scan(&targetName, &whichPreset, 
@@ -766,32 +1006,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			log.Fatal(err)
 		}
 
-		/*
-		log.Println(name, whichPreset, 
-				band0,
-				band1,
-				band2,
-				band3,
-				band4,
-				band5,
-				band6,
-				band7,
-				band8,
-				band9,
-				band10,
-				band11,
-				band12,
-				band13,
-				band14,
-				band15,
-				band16,
-				band17,
-				band18,
-				band19,
-				band20)
-		*/
-			//constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
-			speaker.TargetNames = append(speaker.TargetNames, targetName)
+		speaker.TargetNames = append(speaker.TargetNames, targetName)
 			speaker.Target = append(speaker.Target, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
 			log.Println(speaker.TargetNames, speaker.Target)		// make sure that the two arrays are the same size
 
@@ -850,6 +1065,21 @@ func SavePreset(speakerId int8, name string, constants []string) {
 	//statement, err := DB.Prepare(stringOfStatement)
 }
 
+func SaveMusicPreset(speakerId int8, name string, constants []string) {
+
+	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
+	log.Println("SavePreset: I am firing")
+	var stringOfStatement string = "INSERT into MusicEqualizerPresets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
+	}
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+}
+
+// wtf is this for, cant remember why I created this
 func UpdateTarget(speakerId int8, name string, constants []string) {
 
 	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
@@ -928,13 +1158,18 @@ func SaveAveraging(speaker *ControllerStatus) {
 
 // make a command to save the band
 
-func SaveBand(speaker *ControllerStatus, band int, level float64, target bool) { // this should return an error here if something is wrong
+func SaveBand(speaker *ControllerStatus, band int, level float64, target int) { // this should return an error here if something is wrong
 	var stringOfStatement string
 
-	if (target == false) {
-		stringOfStatement = "UPDATE speaker SET pBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
-	} else {
-		stringOfStatement = "UPDATE speaker SET tBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+	switch target {
+		case 0:
+			stringOfStatement = "UPDATE speaker SET pBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+		case 1:
+			stringOfStatement = "UPDATE speaker SET mBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+		case 2:
+			stringOfStatement = "UPDATE speaker SET tBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+		default:
+			log.Println("SAVEBAND WAS PASSED AN INVALID TARGET VALUE")
 	}
 	//stmt, err := DB.Prepare()			// this might need to be prepared afterwards
 	log.Println("SaveBand: I am firing")
@@ -942,7 +1177,7 @@ func SaveBand(speaker *ControllerStatus, band int, level float64, target bool) {
 	//log.Println(stringOfStatement)
 
 	//statement, err := DB.Prepare(stringOfStatement)
-
+	// need to check whether or not this is null or w/e before sending it off
 	_, errr := DB.Exec(stringOfStatement, level, speaker.ID)		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
 	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
 		log.Fatal(errr)			
@@ -1048,6 +1283,28 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			pBand18, 
 			pBand19, 
 			pBand20,
+
+			mBand0, 
+			mBand1, 
+			mBand2, 
+			mBand3, 
+			mBand4, 
+			mBand5, 
+			mBand6, 
+			mBand7, 
+			mBand8, 
+			mBand9, 
+			mBand10, 
+			mBand11, 
+			mBand12, 
+			mBand13, 
+			mBand14, 
+			mBand15, 
+			mBand16, 
+			mBand17, 
+			mBand18, 
+			mBand19, 
+			mBand20,
 			
 			tBand0, 
 			tBand1, 
@@ -1071,7 +1328,8 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			tBand19, 
 			tBand20)
 		VALUES ("", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		`)
 	if err != nil {
 		return nil, err

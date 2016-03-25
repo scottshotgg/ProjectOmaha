@@ -116,7 +116,7 @@
 
       <neon-animatable page="equalizer" id="equalizer-controller" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
-          <equalizer-controller id="equalizer" speaker-id="[[speakerId]]" speaker="[[speaker]]" equalizer="{{equalizerone}}"></equalizer-controller> <!-- Don't know if we need the speakerId anymore -->
+          <equalizer-controller id="equalizer" speaker-id="[[speakerId]]" speaker="[[speaker]]" equalizer="{{equalizerone}}" music="{{musicone}}"></equalizer-controller> <!-- Don't know if we need the speakerId anymore -->
         </simple-fit>
       </neon-animatable>
 
@@ -197,6 +197,12 @@
         },
 
         equalizerone: {
+          type: String,
+          value: "0",
+          observer: '_equalizerUpdate'
+        },
+
+        musicone: {
           type: String,
           value: "0",
           observer: '_equalizerUpdate'
@@ -316,6 +322,27 @@
             "speaker": this.speakerId
           };
           this.$.speakerUpdateAjax.generateRequest();
+
+          console.log(this.$.speakerUpdateAjax.body);
+
+        }
+      },
+
+      _musicEqualizerUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["music"];
+          var attributeValues = {
+            "music": this.musicone,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+
+          console.log(this.$.speakerUpdateAjax.body);
+
         }
       },
 

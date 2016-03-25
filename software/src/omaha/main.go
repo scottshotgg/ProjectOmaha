@@ -26,7 +26,7 @@ func schedule(keepAlive func(ID int8) (int8), delay time.Duration, amountOfContr
            
             status.BrokenLink = keepAlive(controller)
 
-            log.Println(controllers[controller])
+            //log.Println(controllers[controller])
             var i int = 0
             for i = 0; i < len(controllers); i++ {
             	//lUog.Println(controllers[i])
@@ -44,11 +44,11 @@ func schedule(keepAlive func(ID int8) (int8), delay time.Duration, amountOfContr
         		// add it to a skipped array (or make a new data structure to support this) if there is UI consent/acknowledgment 
         	}
 
-        	log.Println("I got to here")
-            log.Println(controller, amountOfControllers)
+        	//log.Println("I got to here")
+            //log.Println(controller, amountOfControllers)
             if(controller > amountOfControllers - 1) {
             	controller = 1
-            	log.Println("I got to here3")
+            	//log.Println("I got to here3")
             }
 
             select {
