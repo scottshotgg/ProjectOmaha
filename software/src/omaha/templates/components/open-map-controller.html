@@ -159,11 +159,18 @@
         console.log("Speaker:", a.speaker);
 
         a.speaker.TargetNames   = [];
+        a.speaker.CurrentTarget = [];
+
         a.speaker.PresetNames   = [];
         a.speaker.CurrentPreset = [];
-        a.speaker.CurrentTarget = [];
+
+        a.speaker.MusicPresetNames   = [];
+        a.speaker.CurrentMusicPreset = [];
+
         a.speaker.Target        = [];
         a.speaker.Equalizer     = [];
+
+        a.speaker.Music         = [];
 
         for (i in data.response.TargetNames) {
           a.speaker.TargetNames[i] = data.response.TargetNames[i].replace("\n", "");
@@ -175,9 +182,19 @@
           console.log(i, data.response.PresetNames[i]);
         }
 
+        for (i in data.response.MusicPresetNames) {
+          a.speaker.MusicPresetNames[i] = data.response.MusicPresetNames[i].replace("\n", "");
+          console.log(i, data.response.MusicPresetNames[i]);
+        }
+
         for (i in data.response.CurrentPreset) {
           a.speaker.CurrentPreset[i] = data.response.CurrentPreset[i];
           console.log(i, data.response.CurrentPreset[i]);
+        }
+
+        for (i in data.response.CurrentMusicPreset) {
+          a.speaker.CurrentMusicPreset[i] = data.response.CurrentMusicPreset[i];
+          console.log(i, data.response.CurrentMusicPreset[i]);
         } 
 
         for (i in data.response.CurrentTarget) {
@@ -207,6 +224,11 @@
         for(i in data.response.Equalizer) {
           a.speaker.Equalizer[i] = data.response.Equalizer[i];
           console.log(data.response.PresetNames[i], data.response.Equalizer[i]);
+        }
+
+        for(i in data.response.MusicEqualizer) {
+          a.speaker.MusicEqualizer[i] = data.response.MusicEqualizer[i];
+          console.log(data.response.MusicPresetNames[i], data.response.MusicEqualizer[i]);
         }
 
         a.speaker.Response = "true";

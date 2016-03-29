@@ -24,7 +24,7 @@ func schedule(keepAlive func(ID int8) (int8), delay time.Duration, amountOfContr
 
         	status.ID = controller + 1
 
-            log.Println(controller)
+            //log.Println(controller)
            
             status.BrokenLink = keepAlive(controller)
 
@@ -33,7 +33,6 @@ func schedule(keepAlive func(ID int8) (int8), delay time.Duration, amountOfContr
             for i = 0; i < len(controllers); i++ {
             	//lUog.Println(controllers[i])
             }
-            log.Println(status.BrokenLink, controllers[controller].Status)
             if(status.BrokenLink != int8(controllers[controller].Status)) {
             	database.UpdateStatus(status.ID, status.BrokenLink)
             }

@@ -559,6 +559,13 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 			controller.CurrentPreset[12], controller.CurrentPreset[13], controller.CurrentPreset[14], controller.CurrentPreset[15], 
 			controller.CurrentPreset[16], controller.CurrentPreset[17], controller.CurrentPreset[18], controller.CurrentPreset[19], 
 			controller.CurrentPreset[20] }, 
+		CurrentMusicPreset: [21] float64 {
+			controller.CurrentMusicPreset[0], controller.CurrentMusicPreset[1], controller.CurrentMusicPreset[2], controller.CurrentMusicPreset[3], 
+			controller.CurrentMusicPreset[4], controller.CurrentMusicPreset[5], controller.CurrentMusicPreset[6], controller.CurrentMusicPreset[7], 
+			controller.CurrentMusicPreset[8], controller.CurrentMusicPreset[9], controller.CurrentMusicPreset[10], controller.CurrentMusicPreset[11], 
+			controller.CurrentMusicPreset[12], controller.CurrentMusicPreset[13], controller.CurrentMusicPreset[14], controller.CurrentMusicPreset[15], 
+			controller.CurrentMusicPreset[16], controller.CurrentMusicPreset[17], controller.CurrentMusicPreset[18], controller.CurrentMusicPreset[19], 
+			controller.CurrentMusicPreset[20] }, 
 		CurrentTarget: [21] float64 {
 			controller.CurrentTarget[0], controller.CurrentTarget[1], controller.CurrentTarget[2], controller.CurrentTarget[3],
 			controller.CurrentTarget[4], controller.CurrentTarget[5], controller.CurrentTarget[6], controller.CurrentTarget[7], 
@@ -566,10 +573,12 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 			controller.CurrentTarget[12], controller.CurrentTarget[13], controller.CurrentTarget[14], controller.CurrentTarget[15], 
 			controller.CurrentTarget[16], controller.CurrentTarget[17], controller.CurrentTarget[18], controller.CurrentTarget[19], 
 			controller.CurrentTarget[20] }, 
-		Target: 		controller.Target, 
-		TargetNames: 	controller.TargetNames, 
-		Equalizer: 		controller.Equalizer, 
-		PresetNames: 	controller.PresetNames }
+		Target: 			controller.Target, 
+		TargetNames: 		controller.TargetNames, 
+		Equalizer: 			controller.Equalizer,
+		PresetNames: 		controller.PresetNames, 
+		MusicEqualizer:		controller.MusicEqualizer,
+		MusicPresetNames:	controller.MusicPresetNames }
 	//log.Println(controller)
 	return speakerResponse
 }

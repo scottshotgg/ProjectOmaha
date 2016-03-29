@@ -187,12 +187,30 @@
           // Set equalizer bands
           var sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
           var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+
+          console.log(sliders[21].style, handles[21].style);
           for (i in controller.speaker.CurrentPreset) {   // this was "current" for some reason
             sliders[i].style.height = (controller.speaker.CurrentPreset[i] + 40) * 2 + "%";    // why does this have to be lower case
             handles[i].style.bottom = (controller.speaker.CurrentPreset[i] + 40) * 2 + "%";
             $("#text" + (parseInt(i) + 1)).val(controller.speaker.CurrentPreset[i]);
             iirConstants[i] = controller.speaker.CurrentPreset[i];
           }
+          console.log(sliders[21].style, handles[21].style);
+          for (var i = 0; i < controller.speaker.CurrentMusicPreset.length; i++) {   // this was "current" for some reason
+            console.log("I am here");
+            sliders[i + 21].style.height = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + "%";
+            handles[i + 21].style.bottom = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + "%";
+            $("#text" + (parseInt(i + 21) + 1)).val(controller.speaker.CurrentMusicPreset[i]);
+            iirConstants[i + 21] = controller.speaker.CurrentMusicPreset[i];
+          }
+          /* this is for the paging
+          for (var i = 0; i < controller.speaker.CurrentMusicPreset.length; i++) {   // this was "current" for some reason
+            console.log("I am here");
+            sliders[i + 21].style.height = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + "%";
+            handles[i + 21].style.bottom = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + "%";
+            $("#text" + (parseInt(i + 21) + 1)).val(controller.speaker.CurrentMusicPreset[i]);
+            iirConstants[i + 21] = controller.speaker.CurrentMusicPreset[i];
+          }*/
 
         /*  document.getElementById("targetListbox").selected = "Currently Applied";
 
@@ -212,6 +230,8 @@
             for (var i = motherPolymer.length - 1; i > 1; i--)
               Polymer.dom(equalizerListbox).removeChild(motherPolymer[i]);
           }
+
+
 
           // Injecting the paper-items for the presets
           if(controller.speaker.PresetNames.length > 0) {
