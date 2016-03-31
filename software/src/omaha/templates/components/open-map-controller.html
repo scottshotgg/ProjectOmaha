@@ -147,10 +147,12 @@
 
         if(a.speaker.EqualizerMode == 1) {
           equalizerSelector.selected = "music";
+          lastEQMode = "music";
           musicMenu.style.visibility = "visible";
           equalizerMenu.style.visibility = "hidden";
         } else if(a.speaker.EqualizerMode == 2) {
           equalizerSelector.selected = "paging"; 
+          lastEQMode = "paging";
           //musicMenu.style.visibility = "visible";
           //equalizerMenu.style.visibility = "hidden";
           // add one for paging menu here if we need it
