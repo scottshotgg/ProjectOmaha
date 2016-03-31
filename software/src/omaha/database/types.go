@@ -35,6 +35,7 @@ type ControllerStatus struct {
 
 	WhichPreset				int			`json:"whichPreset"`			// really need to delete this or w/e
 	Status 					int			`json:"status"`
+	EqualizerMode			int8		`json:"equalizerMode"`
 }
 
 type Zone struct {

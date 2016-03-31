@@ -28,6 +28,7 @@ func createSpeakerTable() {
 			effectiveness INTEGER,
 			pleasantness INTEGER,
 			status INTEGER DEFAULT 0,
+			equalizerMode INTEGER DEFAULT 0,
 
 			pBand0 REAL, 
 			pBand1 REAL, 
@@ -252,6 +253,7 @@ func GetAllSpeakers() []*ControllerStatus {
 			effectiveness,
 			pleasantness,
 			status,
+			equalizerMode,
 
 			pBand0, 		
 			pBand1, 
@@ -342,6 +344,7 @@ func GetAllSpeakers() []*ControllerStatus {
 		var effectiveness int8
 		var pleasantness int8
 		var status int
+		var equalizerMode int8
 		// var currentMode int
 		// var whichPreset int
 		var pBand0 float64			// why do we need to pull all of this stuff, this can be optimized!!
@@ -425,7 +428,8 @@ func GetAllSpeakers() []*ControllerStatus {
 			&fadeLevel,
 			&effectiveness,
 			&pleasantness,
-			&status,		
+			&status,
+			&equalizerMode,		
 
 			// Current preset bands
 			&pBand0,
@@ -505,6 +509,7 @@ func GetAllSpeakers() []*ControllerStatus {
 		speaker.ID = int8(speakerID)
 		speaker.Name = name
 		speaker.Status = status
+		speaker.EqualizerMode = equalizerMode
 
 		speaker.VolumeLevel[0] = int8(volumeLevel)
 		speaker.VolumeLevel[1] = int8(musicLevel)
@@ -536,6 +541,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var targetName string		// might need to make a catch for this
 	var whichPreset int
 	var status int
+	var equalizerMode int8
 
 	var band0 float64			// not using these bands, take these out later
 	var band1 float64
@@ -635,6 +641,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			effectiveness,
 			pleasantness,
 			status,
+			equalizerMode,
 
 			pBand0, 
 			pBand1, 
@@ -716,6 +723,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&effectiveness,
 			&pleasantness,
 			&status,
+			&equalizerMode,
 
 			// Current preset bands
 			&pBand0,
@@ -808,6 +816,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		Pleasantness: pleasantness, 
 		ID: speakerID, 
 		Status: status,
+		EqualizerMode: equalizerMode,
 
 		CurrentPreset: [21] float64 {
 			pBand0, pBand1, pBand2, pBand3, pBand4, pBand5, pBand6, pBand7, pBand8, pBand9, pBand10, pBand11, 
@@ -941,8 +950,8 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			log.Fatal(err)
 		}
 			
-			speaker.PresetNames = append(speaker.MusicPresetNames, presetName)
-			speaker.Equalizer = append(speaker.MusicEqualizer, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
+			speaker.MusicPresetNames = append(speaker.MusicPresetNames, presetName)
+			speaker.MusicEqualizer = append(speaker.MusicEqualizer, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
 			log.Println(speaker.MusicPresetNames, speaker.MusicEqualizer)		// make sure that the two arrays are the same size
 	}
 	err = rows.Err()
@@ -1027,6 +1036,8 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//log.Println(speaker.Music)
 
 	// it is pulling from here but we need to figure out a way to distinguish which one should be loaded
 
@@ -1261,6 +1272,8 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			fadeLevel,
 			effectiveness,
 			pleasantness,
+			status,
+			equalizerMode,
 
 			pBand0, 
 			pBand1, 

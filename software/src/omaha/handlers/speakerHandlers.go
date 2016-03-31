@@ -47,6 +47,7 @@ type speakerResponse struct {
 	Err     				string 		`json:"err"`
 	Speaker					int8		`json:"speaker"`
 	Name					string		`json:"name"`
+	EqualizerMode			int8		`json:"equalizerMode"`
 }
 
 type speakerGetRequest struct {
@@ -65,7 +66,11 @@ type addPresetData struct {
 	Constants	string		`json:"constants"`
 	Target		string		`json:"target"`
 	Update 		bool		`json:"update"`
+}
 
+type changeEQModeData struct {
+	Speaker int8	`json:"speaker"`
+	Mode	int8	`json:"mode"`
 }
 
 type pagingRequest struct {
@@ -578,7 +583,8 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 		Equalizer: 			controller.Equalizer,
 		PresetNames: 		controller.PresetNames, 
 		MusicEqualizer:		controller.MusicEqualizer,
-		MusicPresetNames:	controller.MusicPresetNames }
+		MusicPresetNames:	controller.MusicPresetNames, 
+		EqualizerMode:		controller.EqualizerMode }
 	//log.Println(controller)
 	return speakerResponse
 }
@@ -757,6 +763,56 @@ func CreatePagingZoneHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Write(getGenericSuccessResponse())
 }
+
+func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	//status := system.GetSystemStatus()
+
+	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
+	changeEQModeRequest := &changeEQModeData{}
+	_ = json.NewDecoder(r.Body).Decode(changeEQModeRequest)
+
+	/*if err != nil {
+		if status.IsDebug() {
+			log.Printf("AddTargetHandler json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}*/
+
+
+	// this should tell the controller to send out the packets for the music constants
+	// should also call to change the status in the database to music mode
+
+
+	log.Println("I got you packet dude, sendin one back", changeEQModeRequest)
+	//log.Println(addPresetRequest)
+	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
+
+// Example handler
+/*
+func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	status := system.GetSystemStatus()
+
+	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
+	//err := json.NewDecoder(r.Body).Decode(addPresetRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("AddTargetHandler json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+	log.Println("I got you packet dude, sendin one back")
+	//log.Println(addPresetRequest)
+	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+*/
+
 
 	// make a split string fucntion when you fee like it
 

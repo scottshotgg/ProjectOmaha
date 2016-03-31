@@ -202,14 +202,12 @@
     </div>
     </paper-dialog>
 
-    <paper-dialog id="switchingToMusicDialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
-      <h1 style="text-align: center; padding-top: 24px; padding-bottom: 5px; margin: 0px;">Warning</h1>
-      <div style="text-align: center; margin-top: 0px; padding: 5% 5% 5% 5%;">You are switching the speaker to music mode
-        <br>The speaker will only be able to produce music in this mode
-      </div>
+    <paper-dialog id="switchingEQModeDialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
+      <h2 style="text-align: center; padding-top: 24px; padding-bottom: 5px; margin: 0px;">Warning</h2>
+      <div id="eqmode" style="text-align: center; margin-top: 0px; padding: 5% 5% 5% 5%;"></div>
       <div class="butons" style="margin: 0; border-top: 1px rgba(201, 201, 201, .6) solid; padding: 5%;">
-      <paper-button ondialog-confirm style="margin: 0.5em 1em 0.5em 1em;" on-click="_acceptChangePressed">Switch</paper-button>
-      <paper-button dialog-dismiss on-click="_cancelChangePressed">Cancel</paper-button></div>
+      <paper-button ondialog-confirm style="margin: 0.5em 1em 0.5em 1em;" on-click="_switchPressed">Switch</paper-button>
+      <paper-button dialog-dismiss on-click="_cancelSwitchPressed">Cancel</paper-button></div>
     </paper-dialog>
 
       <div class="card-actions">
@@ -255,6 +253,16 @@
     <iron-ajax
       id="addPresetAjax"
       url="/system/addPreset/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax
+      id="changeEQModeAjax"
+      url="/system/changeEQMode/"
       method="PUT"
       content-type="application/json"
       handle-as="json"
@@ -321,6 +329,10 @@
   
   var lastSelected = 0;
   var isThereAnError = false;
+
+
+
+  var lastEQMode = "masking";
 //  document.getElementById(equalizerListbox).selected = "Currently Applied";
 
   //PresetNames[] = {"hi", "my", "name", "is", "scott"};
@@ -335,16 +347,36 @@
   }
   console.log(iirConstants);
 
+  function showEqualizerSwitchDialog(mode) {
+    console.log(mode);
+    switch(mode) {
+      case "masking": {
+        document.getElementById("eqmode").innerHTML = "You are switching the speaker to masking mode<br>In this mode, the speaker will produce equalized white noise and unequalized music.";
+        break;
+      }
+      case "music": {
+        document.getElementById("eqmode").innerHTML = "You are switching the speaker to music mode<br>In this mode the speaker will produce equalized music only.";
+        break;
+      }
+      case "paging": {
+        document.getElementById("eqmode").innerHTML = "You are switching the speaker to paging mode<br>idk if this is gonna be in here yet or why we need it";
+        break;
+      }
+    }
+    document.querySelector("#switchingEQModeDialog").toggle();
+  }
+
   function musicChanged() {
     musicMenu.style.visibility = "visible";
     equalizerMenu.style.visibility = "hidden";
-    document.querySelector("#switchingToMusicDialog").toggle();
+    showEqualizerSwitchDialog("music");
 
   }
 
   function equalizerChanged() {
     musicMenu.style.visibility = "hidden";
     equalizerMenu.style.visibility = "visible";
+    showEqualizerSwitchDialog("masking");
   }
 
 
@@ -524,6 +556,29 @@
         this.$.equalizerListbox.selected = -1;
 
         console.log(lastSelected);
+
+      },
+
+      _switchPressed: function(event) {
+        // make a call to change the equalizer constants and turn on music mode
+
+        this.$.changeEQModeAjax.body = {
+          "speaker":  this.speakerId,
+          "mode":     getValues(),
+        };
+
+        this.$.changeEQModeAjax.generateRequest();
+
+        this.$.switchingEQModeDialog.toggle();
+        lastEQMode = this.$.equalizerSelector.selected;
+        console.log(lastEQMode);
+      },
+
+      _cancelSwitchPressed: function(event) {
+        musicMenu.style.visibility = "hidden";
+        equalizerMenu.style.visibility = "visible";
+        this.$.equalizerSelector.selected = lastEQMode;
+        //this.$.switchingToMusicDialog.toggle();
 
       },
 

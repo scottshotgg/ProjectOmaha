@@ -133,7 +133,7 @@
       _logResponse: function(event, data) {
         console.log(data.response);
         var a = document.getElementById('speaker-tooltip');   // I guess I'll just keep this as 'a'
-        
+  
         a.speaker.name = data.response.name;
         a.speaker.VolumeLevel[0] = data.response.volume;
         a.speaker.VolumeLevel[1] = data.response.music;
@@ -143,6 +143,18 @@
         a.speaker.Pleasantness = data.response.pleasantness;
         a.speaker.FadeTime = data.response.fadetime;
         a.speaker.FadeLevel = data.response.fadelevel;
+        a.speaker.EqualizerMode = data.response.equalizerMode;
+
+        if(a.speaker.EqualizerMode == 1) {
+          equalizerSelector.selected = "music";
+          musicMenu.style.visibility = "visible";
+          equalizerMenu.style.visibility = "hidden";
+        } else if(a.speaker.EqualizerMode == 2) {
+          equalizerSelector.selected = "paging"; 
+          //musicMenu.style.visibility = "visible";
+          //equalizerMenu.style.visibility = "hidden";
+          // add one for paging menu here if we need it
+        }
 
         // Setting speaker-tooltip information
         // the zones will need to be joined by ", "
