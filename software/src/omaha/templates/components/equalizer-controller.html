@@ -231,7 +231,7 @@
               <paper-item id="Add New Preset" value="Add New Preset">Add New Preset</paper-item>   
           </paper-listbox>
         </paper-dropdown-menu>
-        <paper-dropdown-menu class="papercardcenter" id="musicMenu" style="position: absolute; left: 778px; visibility: hidden;" no-label-float label="Music Preset:">
+        <paper-dropdown-menu class="papercardcenter" id="musicMenu" style="position: absolute; left: 48.5%; visibility: hidden;" no-label-float label="Music Preset:">
           <paper-listbox id="musicListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
             <!--<template if="{{this.speaker.Response}}">
               <paper-dropdown-menu selected="{{selected}}">
@@ -242,7 +242,6 @@
             </template>-->
               <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
               <paper-item id="Add New Preset" value="Add New Preset">Add New Preset</paper-item>  
-              <paper-item id="Music Test" value="Music Test">Music Test</paper-item>   
           </paper-listbox>
         </paper-dropdown-menu>
         <span>{{value}}</span>
@@ -343,7 +342,7 @@
 
   var iirConstants = [];
 
-  for(loopVar = 0; loopVar < 63; loopVar++) { // watch out! we got a static over here
+  for(loopVar = 0; loopVar < 21; loopVar++) { // watch out! we got a static over here
     iirConstants[loopVar] = 0;
   }
   console.log(iirConstants);
@@ -433,15 +432,20 @@
           } else {
             for (var i = 0; i < checkBands.length - 1; i++) {
               equalizerText += checkBands[i] + "Hz, "
-            }
+            }z
             equalizerText += "and " + checkBands[checkBands.length - 1] + "Hz";
           }
           this.$.equalizerToast.duration = 2000 + (500 * checkBands.length);
           this.$.equalizerToast.text = equalizerText;
           this.$.equalizerToast.show();
         } else {
-          this.equalizer = iirConstants.join(" ");  // this gets sent to the backend because Go's Fields(String) function works only with whitespaces
-          this.iirConstantsString = iirConstants.join(", ");  // this is for the toast message
+
+
+          this.equalizer = iirConstants.slice(0 + (21 * typeFound), 21 + (22 * typeFound)).join(" ");  // this gets sent to the backend because Go's Fields(String) function works only with whitespaces
+          console.log(this.equalizer);
+          this.iirConstantsString = iirConstants.slice(0 + (21 * typeFound), 21 + (22 * typeFound)).join(", ");  // this is for the toast message
+
+
           this.$.equalizerToast.text = "Equalizer set to " + this.iirConstantsString;
           this.$.equalizerToast.show();
           console.log("_setEqualizerClicked");
@@ -576,8 +580,23 @@
       },
 
       _cancelSwitchPressed: function(event) {
-        musicMenu.style.visibility = "hidden";
-        equalizerMenu.style.visibility = "visible";
+        //musicMenu.style.visibility = "hidden";
+        //equalizerMenu.style.visibility = "visible";
+
+        switch(lastEQMode) {
+          case "masking":
+            musicMenu.style.visibility = "hidden";
+            equalizerMenu.style.visibility = "visible";
+            break;
+
+          case "music":
+            musicMenu.style.visibility = "visible";
+            equalizerMenu.style.visibility = "hidden";
+            break;
+
+          default:
+            console.log("fuck me");
+        }
         this.$.equalizerSelector.selected = lastEQMode;
         //this.$.switchingToMusicDialog.toggle();
 
@@ -587,6 +606,7 @@
         'equalizerListbox.iron-select': '_presetSelectionChanged'
       },
       
+      // this will need some typefound modifications
       _presetSelectionChanged: function(event) {
         console.log(this.speakerId);    // This says the speakerId is undefined
 

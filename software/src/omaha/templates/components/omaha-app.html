@@ -300,8 +300,15 @@
       },
 
       _initializeStatus: function(event, data) {
+        var speakers = [];
+        var speakersJustID = [];
+
         // add zone ID to each speaker
+
+        var innerHTMLString = "";
         var zones = data.response.zones;
+        var zoneListbox = document.querySelector("#zoneListbox");
+        zoneListbox.innerHTML = "";
 
         zones.forEach(function(zone){
           zone.speakers.forEach(function(speaker){
@@ -309,8 +316,6 @@
           });
         })
         // populate the speaker array
-        var speakers = [];
-        var speakersJustID = [];
         /*
         zones.forEach(function(zone){
         Array.prototype.push.apply(speakers, zone.speakers);
@@ -318,6 +323,9 @@
         //console.log(zones);
 
         for(var i = 0; i < zones.length; i++) {
+          console.log(zones);
+          innerHTMLString += "<paper-item center-justified flex ><font style=\"width: 100%; text-align: center;\">" + zones[i].name + "</font></paper-item>";
+
           for (var k = 0; k < zones[i].speakers.length; k++) {
             var isItInYetThatsWhatSheSaid = speakersJustID.indexOf(zones[i].speakers[k].id);
             if(isItInYetThatsWhatSheSaid == -1) {
@@ -328,6 +336,37 @@
             }
           }
         }
+        zoneListbox.innerHTML = innerHTMLString;
+
+
+        innerHTMLString = "";
+        var pagingZones = data.response.pagingZones;
+        var pagingZoneListbox = document.querySelector("#pagingZoneListbox");
+        pagingZoneListbox.innerHTML = "";
+
+        pagingZones.forEach(function(pagingZone){
+          pagingZone.speakers.forEach(function(speaker){
+            speaker.pagingZone = pagingZone;
+          });
+        })
+        
+        for(var i = 0; i < pagingZones.length; i++) {
+          console.log(pagingZones);
+          innerHTMLString += "<paper-item id=\"" + pagingZones[i].name + "\" value=\"" + pagingZones[i].name + "\"center-justified flex ><font style=\"width: 100%; text-align: center;\">" + pagingZones[i].name + "</font></paper-item>";
+
+          for (var k = 0; k < pagingZones[i].speakers.length; k++) {
+            var isItInYetThatsWhatSheSaid = speakersJustID.indexOf(pagingZones[i].speakers[k].id);
+            if(isItInYetThatsWhatSheSaid == -1) {
+              speakers.push(pagingZones[i].speakers[k]);
+              speakersJustID.push(pagingZones[i].speakers[k].id);
+            } else {
+              speakers[isItInYetThatsWhatSheSaid].pagingZone = pagingZones[i].speakers[k].pagingZone;
+            }
+          }
+        }
+        pagingZoneListbox.innerHTML = innerHTMLString;
+
+
         //})
         this.controllers = speakers
         this.zones = zones;
@@ -336,6 +375,7 @@
         this.$.pagingMap.renderMap();
         this.$.mapcontroller.renderMap();
         this.$.zoneMap.renderMap();
+        this.$.zoneMap.renderPagingMap();
       },
 
       _showAccountCreation: function() {

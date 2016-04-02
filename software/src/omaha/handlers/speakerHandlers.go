@@ -206,60 +206,83 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 		log.Println(speaker.Equalizer[i])
 	}
 
-	if(len(constants) < 63) {
+	if(len(constants) < 21) {
 		return errors.New("Invalid amount of constants")
 	}
 
 	var k = 0
-	for  i := 0; i < len(constants) / 3; i++ {
-		floatParse, err := strconv.ParseFloat(constants[i], 64)
-		if err != nil {
-			panic(err)		// test if this returns
-		}
 		//constantsInts = append(constantsInts, int8(floatParse))
 
-		if(floatParse != speaker.CurrentPreset[k]) {			// change this to pull from the db, it might already do that
-			whole := math.Floor(floatParse)
+		switch(speaker.EqualizerMode) {
+			case 0: {
+				for  i := 0; i < len(constants); i++ {
+					floatParse, err := strconv.ParseFloat(constants[i], 64)
+					if err != nil {
+						panic(err)		// test if this returns
+					}
+					if(floatParse != speaker.CurrentPreset[k]) {			// change this to pull from the db, it might already do that
+						whole := math.Floor(floatParse)
 
-			decimal := math.Abs(whole - floatParse) * 100
+						decimal := math.Abs(whole - floatParse) * 100
 
-			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-			system.SetEqualizerConstant(speaker, int8(whole), int8(k), false)
-			log.Println("Whole value:", int8(whole))
-			system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
-			log.Println("Decimal value:", int8(decimal))
-			speaker.CurrentPreset[k] = floatParse	// this needs checking
-			//log.Printf("You changed band %d to level %d", k, floatParse)
-		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, floatParse, 0)
+						//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+						system.SetEqualizerConstant(speaker, int8(whole), int8(k), false)
+						log.Println("Whole value:", int8(whole))
+						system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+						log.Println("Decimal value:", int8(decimal))
+						speaker.CurrentPreset[k] = floatParse	// this needs checking
+						//log.Printf("You changed band %d to level %d", k, floatParse)
+					//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+						database.SaveBand(speaker, k, floatParse, 0)
+					}
+
+					floatParse, err = strconv.ParseFloat(constants[i], 64)
+					if err != nil {
+						panic(err)		// test if this returns
+					}
+					k++
+				}
+
+				break;
+			}
+
+			case 1: {
+				for  i := 0; i < len(constants); i++ {
+					floatParse, err := strconv.ParseFloat(constants[i], 64)
+					if err != nil {
+						panic(err)		// test if this returns
+					}
+					if(floatParse != speaker.CurrentMusicPreset[k]) {			// change this to pull from the db, it might already do that
+						whole := math.Floor(floatParse)
+
+						decimal := math.Abs(whole - floatParse) * 100
+
+						//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+						//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
+						log.Println("Whole value:", int8(whole))
+						//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+						log.Println("Decimal value:", int8(decimal))
+						speaker.CurrentMusicPreset[k] = floatParse	// this needs checking
+						//log.Printf("You changed band %d to level %d", k, floatParse)
+					//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+						database.SaveBand(speaker, k, floatParse, 1)
+					}
+
+					floatParse, err = strconv.ParseFloat(constants[i], 64)
+					if err != nil {
+						panic(err)		// test if this returns
+					}
+					k++
+				}
+
+				break;
+			}
 		}
 
-		floatParse, err = strconv.ParseFloat(constants[i + 21], 64)
-		if err != nil {
-			panic(err)		// test if this returns
-		}
+		
 		//constantsInts = append(constantsInts, int8(floatParse))
 
-		if(floatParse != speaker.CurrentMusicPreset[k]) {			// change this to pull from the db, it might already do that
-			whole := math.Floor(floatParse)
-
-			decimal := math.Abs(whole - floatParse) * 100
-
-			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-			//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
-			log.Println("Whole value:", int8(whole))
-			//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
-			log.Println("Decimal value:", int8(decimal))
-			speaker.CurrentMusicPreset[k] = floatParse	// this needs checking
-			//log.Printf("You changed band %d to level %d", k, floatParse)
-		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, floatParse, 1)
-		}
-
-		floatParse, err = strconv.ParseFloat(constants[i + 42], 64)
-		if err != nil {
-			panic(err)		// test if this returns
-		}
+		
 		//constantsInts = append(constantsInts, int8(floatParse))
 
 		/*if(floatParse != speaker.CurrentPagingPreset[k]) {			// change this to pull from the db, it might already do that
@@ -278,9 +301,7 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 			database.SaveBand(speaker, k, floatParse, 2)
 		}*/
 
-		k++
 		//log.Println("constantsInts: ", constantsInts)
-	}
 
 	log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
 
@@ -765,20 +786,22 @@ func CreatePagingZoneHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
-	//status := system.GetSystemStatus()
+	status := system.GetSystemStatus()
 
 	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
 	changeEQModeRequest := &changeEQModeData{}
-	_ = json.NewDecoder(r.Body).Decode(changeEQModeRequest)
+	err := json.NewDecoder(r.Body).Decode(changeEQModeRequest)
 
-	/*if err != nil {
+	if err != nil {
 		if status.IsDebug() {
-			log.Printf("AddTargetHandler json decoding error: %s\n", err)
+			log.Printf("ChangeEQMode json decoding error: %s\n", err)
 		}
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
-	}*/
+	}
 
+	err = database.ChangeEQMode(changeEQModeRequest.Speaker, changeEQModeRequest.Mode)
+	_, err = system.SetEQMode(changeEQModeRequest.Speaker, changeEQModeRequest.Mode)
 
 	// this should tell the controller to send out the packets for the music constants
 	// should also call to change the status in the database to music mode

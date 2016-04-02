@@ -186,11 +186,40 @@ func GetAllZones() []*Zone {
 	return zones
 }
 
+
+func GetAllPagingZones() []*Zone {
+	zoneIDs := getAllPagingZoneIDs()
+	zones := []*Zone{}
+	for _, zoneID := range zoneIDs {
+		zone := GetZone(zoneID)
+		zones = append(zones, zone)
+	}
+	return zones
+}
+
 // getAllZoneIDs gets all zone ID of every zone in the database
 func getAllZoneIDs() []int8 {
 	rows, err := DB.Query(`
 		SELECT zoneID
 		FROM zone
+	`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	zoneIDs := []int8{}
+	for rows.Next() {
+		var zoneID int8
+		rows.Scan(&zoneID)
+		zoneIDs = append(zoneIDs, zoneID)
+	}
+	return zoneIDs
+}
+
+func getAllPagingZoneIDs() []int8 {
+	rows, err := DB.Query(`
+		SELECT zoneID
+		FROM pagingZone
 	`)
 	if err != nil {
 		log.Fatal(err)

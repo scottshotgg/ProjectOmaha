@@ -75,12 +75,17 @@
       }
 
     </style>
-    <div id="zoneContainer" style="width: 75%; height: 100%; float: left;"></div>
+
+    <!-- right here just make two maps with the zones each rendered like the listboxes -->
+
+    <div id="zoneContainer"        style="width: 75%; height: 100%; float: left; visibility: visible;"></div>
+    <div id="pagingZoneContainer"  style="position: absolute; width: 75%; height: 100%; visibility: hidden;"></div>
+
     <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 75%; width: 25%; height: 85%;">
       <body class="fullbleed layout vertical">
         <paper-header-panel mode="waterfall" style="background-color: #fff">
           <paper-toolbar>
-            <div style="text-align: center; width: 100%;"><font>Selected Speakers</font><h6 style="margin: 0px; text-align: center;">make an escape event key that will clear this</h6><h6 style="margin: 0px; text-align: center;"></div>
+            <div style="text-align: center; width: 100%;"><font style="font-size: 22px;">Selected Speakers</font></div>
           </paper-toolbar>
           <div id="dropShadow" class="style-scope paper-header-panel has-shadow"></div>
           <div id="speakerHolder" style=""></div>
@@ -93,7 +98,7 @@
         <div class="card-content">
           <paper-button on-click="_createZone" style="margin-left: 12%; margin-top: 18%;">Make zone</paper-button></div>
           <div class="layout vertical">
-            <paper-dropdown-menu id="zonePickerMenu" no-label-float label="Zone:" style="margin-top: 0%; margin-left: 8%;">
+            <paper-dropdown-menu id="zonePickerMenu" no-label-float label="Zone Type:" style="margin-top: 0%; margin-left: 8%;">
             <paper-listbox id="zonePickerListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
               <!--<template if="{{this.speaker.Response}}">
                 <paper-dropdown-menu selected="{{selected}}">
@@ -102,11 +107,11 @@
                   </template>
                 </paper-dropdown-menu>  
               </template>-->
-                <paper-item id="masking_zone" value="Masking Zone">Masking Zone</paper-item>
-                <paper-item id="paging_zone" value="Paging Zone">Paging Zone</paper-item>   
+                <paper-item id="masking_zone" onclick="showMasking()" value="Masking Zone">Masking Zone</paper-item>
+                <paper-item id="paging_zone"  onclick="showPaging()" value="Paging Zone">Paging Zone</paper-item>   
             </paper-listbox>
           </paper-dropdown-menu>
-            <paper-dropdown-menu id="zoneMenu" no-label-float label="Zone:" style="margin-top: 0%; margin-left: 8%;">
+            <paper-dropdown-menu id="zoneMenu" no-label-float label="Zone:" style="visibility: hidden; margin-top: 0%; margin-left: 8%;">
             <paper-listbox id="zoneListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
               <!--<template if="{{this.speaker.Response}}">
                 <paper-dropdown-menu selected="{{selected}}">
@@ -115,10 +120,21 @@
                   </template>
                 </paper-dropdown-menu>  
               </template>-->
-                <paper-item id="This Zone" value="This Zone">This Zone</paper-item>
-                <paper-item id="That Zone" value="That Zone">That Zone</paper-item>   
             </paper-listbox>
           </paper-dropdown-menu>
+
+          <paper-dropdown-menu id="pagingZoneMenu" no-label-float label="Paging Zone:" style="visibility: hidden; position: absolute; margin-top: 0%; margin-left: 4%; top: 52%; width: 190px;">
+          <paper-listbox id="pagingZoneListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+            <!--<template if="{{this.speaker.Response}}">
+              <paper-dropdown-menu selected="{{selected}}">
+                <template repeat="{{label in this.speaker.PresetNames}}">
+                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
+                </template>
+              </paper-dropdown-menu>  
+            </template>-->
+          </paper-listbox>
+        </paper-dropdown-menu>
+
         </div>
       </paper-card>
     </div>
@@ -160,20 +176,51 @@
 
   <script>
 
+  var pagingMap;
+  var map;
 
   var selectedFeatures;
+  var info = [];
+  var totalInfo = [];
 
+  // escape listener
   document.onkeydown = function(evt) {
     evt = evt || window.event;
     if (evt.keyCode == 27) {
+      alert("You are about to clear you selection.\nAre you sure you want to do this?");
       document.getElementById("speakerHolder").innerHTML = "";
-      selectedFeatures.clear();     // this needs some work
+      selectedFeatures.clear();
+      //selectedFeatures.a = [];     // this needs some work
+      info = [];
+      totalInfo = [];
     }
   };
+
+
+  function showPaging() {
+    document.querySelector("#pagingZoneMenu").style.visibility = "visible";
+    document.querySelector("#pagingZoneContainer").style.visibility = "visible";
+
+    document.querySelector("#zoneMenu").style.visibility = "hidden";
+    document.querySelector("#zoneContainer").style.visibility = "hidden";
+
+    pagingMap.updateSize();
+  }
+
+  function showMasking() {
+    document.querySelector("#pagingZoneMenu").style.visibility = "hidden";
+    document.querySelector("#pagingZoneContainer").style.visibility = "hidden";
+
+    document.querySelector("#zoneMenu").style.visibility = "visible";
+    document.querySelector("#zoneContainer").style.visibility = "visible";
+
+    map.updateSize();
+
+  }
+
+
   // the name needs to be limited to 50 characters
 
-    var totalInfo = [];
-    
     Polymer({
       is: 'zone-map-controller',
 
@@ -243,8 +290,7 @@
       },
 
       renderMap: function() {
-        console.log("fi");
-
+        console.log(this);
         var mapController = this;
         mapController.featureMap = {};
         var container = mapController.$.popup;
@@ -359,7 +405,7 @@
             }
         });
 
-        var map = new ol.Map({
+        map = new ol.Map({
           layers: [
             new ol.layer.Image({
               source: new ol.source.ImageStatic({
@@ -388,6 +434,8 @@
         map.addInteraction(box);
 
         selectedFeatures = box.getFeatures();
+
+        console.log("selectedFeatures: ", selectedFeatures);
 
         // a DragBox interaction used to select features by drawing boxes
         var dragBox = new ol.interaction.DragBox({
@@ -419,14 +467,46 @@
           // features that intersect the box are added to the collection of
           // selected features, and their names are displayed in the "info"
           // div
-          var info = [];
           var extent = dragBox.getGeometry().getExtent();
 
           console.log(extent);
 
           vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
-            console.log(feature);
-            selectedFeatures.push(feature);
+          console.log(feature);
+
+          console.log(typeof selectedFeatures.a);
+
+          //for (var i = 0; i < selectedFeatures.a.length; i++) {
+              var areYouInThere = selectedFeatures.a.indexOf(feature);
+              console.log(areYouInThere);
+              if(areYouInThere == -1) {
+                selectedFeatures.push(feature);
+                totalInfo.push(feature.B.speaker.id); 
+                console.log(totalInfo);
+              } else {
+                console.log("Speaker", feature.B.speaker.id, "is already in the list of selected speakers.");
+                //delete totalInfo[areYouInThere];    // make something for delete
+                console.log(selectedFeatures);
+
+                
+                /*console.log(selectedFeatures.a.length);
+
+                for (var j = 0; j < selectedFeatures.a.length; j++) {
+                  //console.log("THIS IS WHAT YOU ARE LOOKING FOR", feature.B.speaker.id,  selectedFeatures.a[j].B.speaker.id);
+                  if(info[i] === selectedFeatures.a[j].B.speaker.id) {
+                    selectedFeatures.remove(j);
+                    console.log("hi", j);
+                  }
+                }
+                     console.log(selectedFeatures.a.length);
+
+                             solve this shit later
+
+                */
+
+                console.log(totalInfo);
+              }
+           // }
 
             // just make it grab every other one
             info.push(feature.B.speaker.id);
@@ -441,7 +521,7 @@
             // i have a feeling that this is not very optimized
 
             // Here we figure out what is not already in the total selected and add the ones that aren't and delete it if they are
-            for (var i = 0; i < info.length; i++) {
+            /*for (var i = 0; i < info.length; i++) {
               var areYouInThere = totalInfo.indexOf(info[i]);
               if(areYouInThere == -1) {
                 totalInfo.push(info[i]); 
@@ -465,11 +545,11 @@
 
                              solve this shit later
 
-                */
+                
 
                 console.log(totalInfo);
               }
-            }
+            }*/
 
             console.log("Total selected speakers: ", totalInfo);
             // make this a checkbox thing that will fire when checked, which means we need to keep track of two arrays?
@@ -485,7 +565,7 @@
             for (var k = 0; k < totalInfo.length; k++) {
               // The selections in the total selection array take a value of 'undefined' when deleted, and we don't want those in our view, so we parse them out
               if (totalInfo[k] !== undefined) {
-               innerHTML += "<paper-item center-justified flex style=\"background: rgba(63, 81, 181, .1);  border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"><font style=\"width: 100%; text-align: center;\"> Speaker " + totalInfo[k] + "</font></paper-item>";
+               innerHTML += "<paper-item center-justified flex style=\"background: rgba(63, 81, 181, .1);  border-style: solid; border-radius: 0px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"><font style=\"width: 100%; text-align: center;\"> Speaker " + totalInfo[k] + "</font></paper-item>";
                 //Polymer.dom(speakerHolder).innerHTML = Polymer.dom(speakerHolder).innerHTML + "<paper-item center-justified flex style=\"border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"> Speaker " + totalInfo[k] + "</paper-item>";/* + document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k];*/
 
                 // when we send it off make a new array and splice out the undefineds 
@@ -534,6 +614,232 @@
             }
             
         }); */
+      },
+
+      renderPagingMap: function() {
+        console.log(this);
+        var mapController = this;
+        mapController.featureMap = {};
+        var container = mapController.$.popup;
+        var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+          element: container,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+      
+        mapController.overlay = overlay;
+        
+        // Map views always need a projection.  Here we just want to map image
+        // coordinates directly to map coordinates, so we create a projection that uses
+        // the image 4 in pixels.
+        var extent = [0, 0, 2200, 1700];
+        var projection = new ol.proj.Projection({
+          code: 'pixel',
+          units: 'pixels',
+          extent: extent
+        });
+
+        var locations = this.controllers;
+        var features = new Array(locations.length);
+        for(var i = 0; i < features.length; i++) {
+            var coordinates = [locations[i].x, 1700-locations[i].y];
+            features[i] = new ol.Feature({
+              geometry: new ol.geom.Point(coordinates),
+              speaker: locations[i]
+            });
+            mapController.featureMap[locations[i].id] = features[i]
+        }
+
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var style = {}
+
+       var allColors = [
+          /*'#795548',
+          '#ff5722',
+          '#ff9800',
+          '#ffc107',
+          //'--paper-yellow-500', this is kinda hard to see
+          '#cddc39',
+          '#8bc34a',
+          '#009688',
+          '#00bcd4',
+          '#03a9f4',
+          '#2196f3',
+          '#3f51b5',
+          '#673ab7',
+          '#9c27b0',
+          '#e91e63',*/
+          '#f44336'
+        ];
+        
+        var unusedColors = [
+          '#795548',
+          '#ff5722',
+          '#ff9800',
+          '#ffc107',
+          //'--paper-yellow-500', this is kinda hard to see
+          '#cddc39',
+          '#8bc34a',
+          '#009688',
+          '#00bcd4',
+          '#03a9f4',
+          '#2196f3',
+          '#3f51b5',
+          '#673ab7',
+          '#9c27b0',
+          '#e91e63',
+          '#f44336'
+        ];
+        var colorMap = {};
+        
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: function(feature, resolution) {
+              var zone = feature.getProperties().speaker.zone.name;
+                if(!(zone in colorMap)) {
+                  var color;
+                  if(unusedColors.length > 0) {
+                    var index = Math.floor(Math.random() * unusedColors.length)
+                    color = unusedColors[index]
+                    unusedColors.splice(index, 1);
+                  } else {
+                    color = colors[Math.floor(Math.random() * colors.length)]
+                  }
+
+                  colorMap[zone] = color;
+                }
+                if(!(zone in style) || style[zone].resolution !== resolution) {
+                  style[zone] = {};
+                  style[zone].style = [new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 15/Math.max(resolution,1),
+                            stroke: new ol.style.Stroke({
+                                color: '#000000'
+                            }),
+                            fill: new ol.style.Fill({
+                                color: colorMap[zone]
+                            })
+                        })
+                    })];
+                    style[zone].resolution = resolution;
+                }
+                return style[zone].style;
+            }
+        });
+
+        pagingMap = new ol.Map({
+          layers: [
+            new ol.layer.Image({
+              source: new ol.source.ImageStatic({
+                url: '/css/map.png',
+                projection: projection,
+                imageExtent: extent
+              })
+            }),
+              vectorLayer
+          ],
+          overlays: [overlay],
+          target: 'pagingZoneContainer',
+          view: new ol.View({
+            projection: projection,
+            center: ol.extent.getCenter(extent),
+            zoom: 2
+          })
+        });
+        
+        mapController.map = map;
+
+        // this is the selection handler for the box dragging
+
+        // we need to add a button if it is a touch screen
+        var box = new ol.interaction.Select();
+        map.addInteraction(box);
+
+        selectedFeatures = box.getFeatures();
+
+        console.log("selectedFeatures: ", selectedFeatures);
+
+        var dragBox = new ol.interaction.DragBox({
+          condition: ol.events.condition.shiftKeyOnly,
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: [63, 81, 181, 1]
+            })
+          })
+        }); 
+
+        var source = new ol.source.Vector();
+
+        map.addInteraction(dragBox);
+
+        dragBox.on('boxend', function(e) {
+          var extent = dragBox.getGeometry().getExtent();
+
+          console.log(extent);
+
+          vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+          console.log(feature);
+
+          console.log(typeof selectedFeatures.a);
+            var areYouInThere = selectedFeatures.a.indexOf(feature);
+            console.log(areYouInThere);
+            if(areYouInThere == -1) {
+              selectedFeatures.push(feature);
+              totalInfo.push(feature.B.speaker.id); 
+              console.log(totalInfo);
+            } else {
+              console.log("Speaker", feature.B.speaker.id, "is already in the list of selected speakers.");
+              console.log(selectedFeatures);
+              console.log(totalInfo);
+            }
+            info.push(feature.B.speaker.id);
+          });
+          console.log("selectedFeatures: ", selectedFeatures);
+
+          // To make sure that we are no running this on times when nothing is selected
+          if (info.length > 0) {
+            console.log("Selected speakers: ", info);
+
+            console.log("Total selected speakers: ", totalInfo);
+            // make this a checkbox thing that will fire when checked, which means we need to keep track of two arrays?
+            
+            console.log("Starting sort: ");
+            // Sort the array so that when we display it, the items are sorted
+            totalInfo = mergeSort(totalInfo);   // This mergeSort isn't any faster wtf
+
+            // Clear the speaker holder element and then reset the entities to everything that has been selected, updating the view if you will
+            speakerHolder = document.getElementById("speakerHolder");
+            var innerHTML = "";
+            speakerHolder.innerHTML = "";
+            for (var k = 0; k < totalInfo.length; k++) {
+              // The selections in the total selection array take a value of 'undefined' when deleted, and we don't want those in our view, so we parse them out
+              if (totalInfo[k] !== undefined) {
+               innerHTML += "<paper-item center-justified flex style=\"background: rgba(63, 81, 181, .1);  border-style: solid; border-radius: 0px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"><font style=\"width: 100%; text-align: center;\"> Speaker " + totalInfo[k] + "</font></paper-item>";
+              }
+            }
+            speakerHolder.innerHTML = innerHTML;
+            console.log(totalInfo);
+          }
+        });
+
+        // clear selection when drawing a new box and when clicking on the map
+        dragBox.on('boxstart', function(e) {
+
+          // make something that removes them from the animation here when you feel like it
+
+          //selectedFeatures.clear();
+          //infoBox.innerHTML = '&nbsp;';
+        });
+        map.on('click', function() {
+
+        console.log(selectedFeatures);
+        selectedFeatures.clear();
+        });
       }
     });
 

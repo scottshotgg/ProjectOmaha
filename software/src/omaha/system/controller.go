@@ -356,6 +356,22 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 	return 0, nil
 }
 
+func SetEQMode(ID int8, mode int8) (int, error) {
+	data := getMessageHeader(ID, 3)
+	data[1] = Commands.SetEQMode
+	data[2] = byte(mode)
+
+	req := &ControllerRequest{ Data: data, OnWrite: func() interface{} {
+		if status.IsDebug() {
+			log.Println("Set EQ mode to ",  mode)
+		}
+		return nil
+	}}
+	MessageChan <- req
+
+	return 0, nil
+}
+
 func SendPagingRequest(ID int8) (error) {
 	if status.debug {
 		return nil

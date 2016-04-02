@@ -1214,6 +1214,16 @@ func addSpeaker(loc speakerLocation) int8 {
 	return 0
 }
 
+func ChangeEQMode(speaker int8, mode int8) error {
+	var statement = "UPDATE speaker SET equalizerMode = ? WHERE speakerID = ?"
+	_, err := DB.Exec(statement, mode, speaker)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return nil
+}
+
 func CreatePagingZone(speakers []int8, name string) error {
 	log.Println(name, speakers)
 
