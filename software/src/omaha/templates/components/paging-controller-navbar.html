@@ -134,9 +134,9 @@
     <div id="buttonHolder" style="border-left: 2px solid #3f51b5; border-top: 2px solid #3f51b5; background-color: #fff; margin-left: 75%; width: 25%; height: 9.8%;">
       <paper-card class="layout horizontal">
         <div class="card-content">
-          <paper-button on-click="_createZone" style="margin-left: 12%;">Dial</paper-button></div>
-          <paper-dropdown-menu id="zoneMenu" no-label-float label="Zone:" style="margin-top: 4%; margin-left: 8%;">
-          <paper-listbox id="zoneListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+          <paper-button on-click="_dial" style="margin-left: 95%;">Dial</paper-button></div>
+          <!-- <paper-dropdown-menu id="zoneCallingMenu" no-label-float label="Zone:" style="margin-top: 4%; margin-left: 8%;"> -->
+          <paper-listbox id="callingListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
             <!--<template if="{{this.speaker.Response}}">
               <paper-dropdown-menu selected="{{selected}}">
                 <template repeat="{{label in this.speaker.PresetNames}}">
@@ -144,8 +144,6 @@
                 </template>
               </paper-dropdown-menu>  
             </template>-->      <!-- this needs to be populated and lifted up -->
-              <paper-item id="This Zone" value="This Zone">This Zone</paper-item>
-              <paper-item id="That Zone" value="That Zone">That Zone</paper-item>   
           </paper-listbox>
         </paper-dropdown-menu>
       </paper-card>
@@ -163,30 +161,37 @@
 
 
     <paper-dialog id="zoneDialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
-      <h1 style="text-align: center;">Create Paging Zone</h1>
-      <div style="text-align: center;">Enter a name for the new zone below</div>
-      <div class="message">{{err}}</font></div>
-      <paper-input id="popupInput" label="" placeholder="Enter Name for Zone" text-align="center"></paper-input>
-      <div class="buttons">
-      <paper-button ondialog-confirm on-click="_acceptPressed">Create</paper-button>
-      <paper-button dialog-dismiss on-click="_cancelPressed">Cancel</paper-button>
+      <h1 style="text-align: center;">Calling selected...</h1>
+      <!-- <div style="text-align: center;">Enter a name for the new zone below</div> -->
+      <!-- <div class="message">{{err}}</font></div> -->
+      <!-- <paper-input id="popupInput" label="" placeholder="Enter Name for Zone" text-align="center"></paper-input> -->
+      <div class="buttons" class="layout horizontal">
+      <!-- <paper-button ondialog-confirm on-click="_acceptPressed">Create</paper-button> -->
+      <paper-button center-justified flex dialog-dismiss on-click style="margin: 0.5em 4.5em .5em 0em;" ="_cancelPressed">Cancel</paper-button>
     </div>
-
-    <iron-ajax
-      id="createPagingZoneAjax"
-      url="/system/createPagingZone/"
-      method="PUT"
-      content-type="application/json"
-      handle-as="json"
-      on-response="_logResponse"
-      debounce-duration="300">
-    </iron-ajax>
 
 
     <!-- <help-panel></help-panel> -->
   </template>
 
   <script>
+
+  function pulsateCircle(id, coordinates) {
+    console.log("got you a circle i see");
+
+    var elem = document.createElement('div');
+    elem.setAttribute('class', 'gps_ring');
+
+    //coordinates[0] += 2;
+    //coordinates[1] -= 2;
+
+    return new ol.Overlay({
+      id: id,
+      element: elem,
+      position: coordinates,
+      positioning: 'center-center'
+    });
+  }
 
   function thisClick() {
     console.log("hi");
@@ -246,7 +251,7 @@
       _cancelPressed: function(e) {
       },
 
-      _createZone: function(e) {
+      _dial: function(e) {
         this.$.zoneDialog.toggle();
       },
       
@@ -362,7 +367,8 @@
                 }
                 if(!(zone in style) || style[zone].resolution !== resolution) {
                   style[zone] = {};
-                  style[zone].style = [new ol.style.Style({
+                  style[zone].style = 
+                  [new ol.style.Style({
                         image: new ol.style.Circle({
                             radius: 15/Math.max(resolution,1),
                             stroke: new ol.style.Stroke({
@@ -373,6 +379,13 @@
                             })
                         })
                     })];
+                  /*
+                    image: new ol.Overlay({
+                                id: id,
+                                element: elem,
+                                position: coordinates,
+                                positioning: 'center-center'
+                              });*/
                     style[zone].resolution = resolution;
                 }
                 return style[zone].style;
@@ -398,7 +411,18 @@
             zoom: 2
           })
         });
-        
+
+        for(var i = 0; i < features.length; i++) {
+          map.addOverlay(pulsateCircle(i, features[i].getGeometry().getCoordinates()));
+        }
+        /*var coordsArray = [];
+        for(var i = 0; i < features.length; i++) {
+          coordsArray += features[i].getGeometry().getCoordinates();
+
+          console.log(features[i].getGeometry().getCoordinates());
+        }
+        map.addOverlay(pulsateCircle(coordsArray));
+        */
         mapController.map = map;
 
         // this is the selection handler for the box dragging

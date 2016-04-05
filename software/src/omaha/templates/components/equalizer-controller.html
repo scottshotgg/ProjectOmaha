@@ -270,6 +270,16 @@
       debounce-duration="300">
     </iron-ajax>
 
+    <iron-ajax
+      id="createPagingZoneAjax"
+      url="/system/createPagingZone/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
   </template>
   <script>
 

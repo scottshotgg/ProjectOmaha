@@ -26,6 +26,7 @@ func InitializeHandlers() {
 	http.Handle("/system/pagingRequest/", GenericHandler{POST: PagingRequestHandler})
 	http.Handle("/system/createZone/", GenericHandler{PUT: CreateZoneHandler})
 	http.Handle("/system/createPagingZone/", GenericHandler{PUT: CreatePagingZoneHandler})
+	http.Handle("/system/scheduleTime/", GenericHandler{PUT: ScheduleTime)}
 
 	// I'll consolidate these later, easier to forge my own path for now
 	http.Handle("/system/zone/", GenericHandler{POST: ZonePostHandler})

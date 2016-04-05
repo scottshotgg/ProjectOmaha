@@ -233,6 +233,33 @@ paper-tabs paper-tab.iron-selected {
     background-color: #3f51b5;
 }
 
+.pagingZoneStyle {
+  background: rgba(63, 81, 181, .1); 
+  border-style: solid; 
+  border-radius: 5px; 
+  border-width: 1px; 
+  border-color: #3f51b5; 
+  margin: 5px; 
+}
+
+.gps_ring {
+    transform: translate3d(0, 0, 0);      /* This forces the GPU to work or something, idk, not even sure if its working
+                                              pretty sure the lag is from  so many layers */
+    border: 3px solid rgba(63, 81, 181, .8);
+    -webkit-border-radius: 30px;
+    height: 22px;
+    width: 22px;
+    -webkit-animation: pulsate 1.25s linear;
+    -webkit-animation-iteration-count: infinite; 
+    opacity: 0.0
+}
+@-webkit-keyframes pulsate {
+    0% {-webkit-transform: scale(0.1, 0.1); opacity: 0.0;}
+    60% {opacity: 1.0;}
+    100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0;}
+}
+
+
 /* this header shit doesnt do anything */
 
 

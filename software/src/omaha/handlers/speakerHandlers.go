@@ -74,7 +74,7 @@ type changeEQModeData struct {
 }
 
 type pagingRequest struct {
-	Speaker		int8	`json:"speaker"`
+	Speaker	int8	`json:"speaker"`
 }
 
 type zoneData struct {
@@ -98,6 +98,20 @@ type speakerAttributes struct {
 	Target			string		`json:"target"`
 }
 
+type timeSchedule struct {
+	Year	int8	`json:"year"`
+	Month	int8	`json:"month"`
+	Week	int8	`json:"week"`
+	Day		int8	`json:"day"`
+	Hour	int8	`json:"hour"`
+	Minute	int8	`json:"minute"`
+	Second	int8	`json:"second"`
+
+	Name	int8	`json:"name"`
+	Action	int8	`json:"action"`		// this might need to be an array
+
+}
+
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error {
 	"volume":		updateSpeakerVolume,
 	//"music":		updateSpeakerMusic,
@@ -105,7 +119,7 @@ var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.Contro
 	"led":       	updateSpeakerLED,
 	"equalizer": 	updateSpeakerEqualizer,
 	//"fadelevel":	updateSpeakerFadeLevel,
-	//"fadetime":		updateSpeakerFadeTime,
+	//"fadetime":	updateSpeakerFadeTime,
 	"paging":		updateSpeakerPaging,
 	"zoneId": 		updateSpeakerZoneID,
 	"target":		updateSpeakerTarget,
@@ -811,6 +825,70 @@ func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this
 	//log.Println(addPresetRequest)
 	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
 	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
+// need to take into account daylight savings
+
+func ScheduleTime(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+
+	time := &timeSchedule{}
+	err := json.NewDecoder(r.body).Decode(time)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("ScheduleTime json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+
+    //w.Write(getGenericSuccessResponse())
+
+	currentTime := time.Now()
+
+    //userGiven := time.Date(2016, 5, 4, 16, 15, 0, 0, currentTime.Location())
+    current := time.Now()
+    userGiven2 := time.Date(2016, 4, 5, 15, 41, 0, 0, currentTime.Location())
+
+    yearDifference := userGiven2.Year() - current.Year()
+    monthDifference := int(userGiven2.Month()) - int(current.Month())
+    dayDifference := userGiven2.Day() - current.Day()
+    hourDifference := userGiven2.Hour() - current.Hour()
+    minuterDifference := userGiven2.Minute() - current.Minute()
+    secondDifference := userGiven2.Second() - current.Second()
+
+    log.Println("Timer will go off in", yearDifference, "years", monthDifference, "month/s", dayDifference, "day/s", minuterDifference, "minute/s", secondDifference, "second/s")
+    amountInSeconds := (yearDifference * 366 * 24 * 60 * 60) + (monthDifference * 30 * 24 * 60 * 60) + (dayDifference * 24 * 60 * 60 ) + (hourDifference * 60 * 60) + (minuterDifference * 60) + secondDifference
+    log.Println(amountInSeconds)
+
+
+    //log.Println(userGiven.AddDate(userGiven2.Year(), -int(userGiven2.Month()), -userGiven2.Day()))
+
+
+    ticker := time.NewTicker(1 * time.Second)
+    quit := make(chan struct{})
+    go func() {
+    	// write to database
+        for {
+           select {
+            case <- ticker.C:
+                log.Println("I'm about to do something")
+            case <- quit:
+                ticker.Stop()
+                log.Println("I quit!")
+                return
+            }
+        }
+     }()
+
+     time.Sleep(time.Duration(amountInSeconds + 1)  * time.Second)
+
+     log.Println("times up!");
+
+     // write the success afterwards, might not need this 
+     //w.Write(getGenericSuccessResponse())
 }
 
 
