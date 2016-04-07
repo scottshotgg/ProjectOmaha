@@ -117,6 +117,8 @@
     // this interval should be determined by 1000 * number of controllers
 
     var lastSelected = 0;
+    var zones;
+    var displayedZones = {};
 
     Polymer({
       is: 'omaha-app',
@@ -310,7 +312,10 @@
         var innerHTMLSpeakersString = "";
 
         var innerHTMLString = "";
-        var zones = data.response.zones;
+        zones = data.response.zones;
+        for (var i = 0; i < zones.length; i++) {
+          displayedZones[zones[i].name] = undefined;
+        }
         var zoneListbox = document.querySelector("#zoneListbox");
         zoneListbox.innerHTML = "";
 
@@ -331,7 +336,7 @@
         for(var i = 0; i < zones.length; i++) {
           console.log(zones);
           innerHTMLString += "<paper-item center-justified flex ><font style=\"width: 100%; text-align: center;\">" + zones[i].name + "</font></paper-item>";
-          callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\" onclick=\"thisClick()\"><font style=\"text-align: center; width: 100%;\">" + zones[i].name + "</font></paper-item>";
+          callingInnerHTMLString += "<paper-item center-justified flex id=\"" + zones[i].name + "\" class=\"pagingZoneStyle\" onclick=\"thisClick(this)\"><font style=\"text-align: center; width: 100%;\">" + zones[i].name + "</font></paper-item>";
 
           for (var k = 0; k < zones[i].speakers.length; k++) {
             var isItInYetThatsWhatSheSaid = speakersJustID.indexOf(zones[i].speakers[k].id);
@@ -377,7 +382,7 @@
           }
         } */
         //pagingZoneListbox.innerHTML = innerHTMLString;
-        
+
           var targetListbox = document.getElementById("targetListbox");
 
           for (i in pagingZones) {
@@ -415,7 +420,8 @@
 
 
         //})
-        this.controllers = speakers
+        console.log(this);
+        this.controllers = speakers;
         this.zones = zones;
         console.log(this.$);
         this.$.information.renderMap();

@@ -10,6 +10,7 @@ import (
 	"strings"
 	"strconv"
 	"math"
+	"time"
 )
 
 type speakerPutRequest struct {
@@ -832,8 +833,8 @@ func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this
 func ScheduleTime(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
-	time := &timeSchedule{}
-	err := json.NewDecoder(r.body).Decode(time)
+	timeGiven := &timeSchedule{}
+	err := json.NewDecoder(r.Body).Decode(timeGiven)
 
 	if err != nil {
 		if status.IsDebug() {

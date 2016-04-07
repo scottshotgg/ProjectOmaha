@@ -13,7 +13,9 @@
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="/components/speaker-icon.html">
+<link rel="import" href="/components/omaha-app.html">
 <link rel="import" href="/components/zones/zone-assigner.html">
+<script src="jquery-ui-1.11.4.js" type="text/jscript"></script>
 
 <dom-module id="paging-controller-navbar" class="layout horizontal">
   <template>
@@ -102,29 +104,29 @@
           </paper-toolbar>
           <div id="dropShadow" class="style-scope paper-header-panel has-shadow"></div>
           <div id="pagingSpeakerHolder">
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">Marketing</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">Lobby</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">Conference Room 1</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">Andy</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">Bruce</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">Danny</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle" onclick="thisClick()"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Marketing</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Lobby</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Conference Room 1</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Andy</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Bruce</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Danny</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
+             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
 
           </div>
         </paper-header-panel>
@@ -171,10 +173,16 @@
     </div>
 
 
+
     <!-- <help-panel></help-panel> -->
   </template>
 
   <script>
+
+  var map;
+  var features;
+  var mapController;
+
 
   function pulsateCircle(id, coordinates) {
     console.log("got you a circle i see");
@@ -193,9 +201,59 @@
     });
   }
 
-  function thisClick() {
-    console.log("hi");
+  function findZoneIndex(zoneName) {
+    for(var i = 0; i < zones.length; i++) {
+      if(zones[i].name === zoneName) 
+        return i;
+      }
   }
+
+  function thisClick(elem) {
+    console.log(elem.id);
+    console.log(features);
+    console.log(map.a);
+
+
+    var zoneIndex = findZoneIndex(elem.id);
+    var zoneOverlayArray = [];
+    if(displayedZones[zones[zoneIndex].name] === undefined) {
+      for(var i = 0; i < zones[zoneIndex].speakers.length; i++) {        // just do this for now
+        var tempOverlay = pulsateCircle(i, features[zones[zoneIndex].speakers[i].id - 1].getGeometry().getCoordinates());
+        mapController.map.addOverlay(tempOverlay);
+        zoneOverlayArray.push(tempOverlay.wa);
+      }
+      displayedZones[zones[zoneIndex].name] = zoneOverlayArray;
+      mapController.map.updateSize();
+    }
+    else {
+      console.log("removing overlay");
+      var overlays = mapController.map.getOverlays();
+      var overlaysCopy = overlays.a.slice();
+      var overlayLength = overlaysCopy.length;
+      console.log(overlays.a.length);
+      for(var j = 1; j < overlayLength; j++) {        // just do this for now
+        console.log(overlays.a[j]);
+        console.log(j);
+        mapController.map.removeOverlay(overlays.a[j]);
+
+      }
+      console.log(overlays.a.length, overlayLength);
+        
+      //console.log(mapController.map.removeOverlay(pulsateCircle(j, features[zones[zoneIndex].speakers[j].id - 1].getGeometry().getCoordinates())));
+
+     // / displayedZones[zones[zoneIndex].name] = undefined;
+      mapController.map.updateSize();
+    }
+
+    console.log(displayedZones);
+  }
+
+  (function() {
+    $(".pagingZoneStyle").each(function(i) {
+      console.log(i);
+    });
+  })();
+
 
   // the name needs to be limited to 50 characters
 
@@ -270,7 +328,7 @@
       },
 
       renderMap: function() {
-        var mapController = this;
+        mapController = this;
         mapController.featureMap = {};
         var container = mapController.$.popup;
         var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
@@ -294,7 +352,7 @@
         });
 
         var locations = this.controllers;
-        var features = new Array(locations.length);
+        features = new Array(locations.length);
         for(var i = 0; i < features.length; i++) {
             var coordinates = [locations[i].x, 1700-locations[i].y];
             features[i] = new ol.Feature({
@@ -392,7 +450,7 @@
             }
         });
 
-        var map = new ol.Map({
+        map = new ol.Map({
           layers: [
             new ol.layer.Image({
               source: new ol.source.ImageStatic({
@@ -412,9 +470,6 @@
           })
         });
 
-        for(var i = 0; i < features.length; i++) {
-          map.addOverlay(pulsateCircle(i, features[i].getGeometry().getCoordinates()));
-        }
         /*var coordsArray = [];
         for(var i = 0; i < features.length; i++) {
           coordsArray += features[i].getGeometry().getCoordinates();
@@ -429,7 +484,7 @@
 
         // we need to add a button if it is a touch screen
         var box = new ol.interaction.Select();
-        map.addInteraction(box);
+        //map.addInteraction(box);
 
         var selectedFeatures = box.getFeatures();
 
@@ -443,7 +498,7 @@
           })
         });
 
-        map.addInteraction(dragBox);
+        //map.addInteraction(dragBox);
 
         dragBox.on('boxend', function(e) {
           // features that intersect the box are added to the collection of
