@@ -17,7 +17,7 @@ func createZoneTable() {
 		log.Fatal(err)
 	} else {
 		log.Println("Created zone table")
-		AddZone("default")
+		AddZone("all_masking")
 	}
 }
 
@@ -51,7 +51,7 @@ func createPagingZoneTable() {
 		log.Fatal(err)
 	} else {
 		log.Println("Created pagingZone table")
-		AddPagingZone("default")
+		AddPagingZone("all_paging")
 	}
 }
 
@@ -143,14 +143,14 @@ func getAddSpeakerToPagingZonesStmt() (*sql.Stmt, error) {
 	return stmt, nil
 }
 
-func addSpeakerToDefaultZone(speakerID int8) {
-	zoneID, _ := getZoneID("default")
+func addSpeakerToAllZones(speakerID int8) {
+	zoneID, _ := getZoneID("all_masking")
 	_, err := addSpeakerToZonesStmt.Exec(zoneID, speakerID)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	pagingZoneID, _ := getPagingZoneID("default")
+	pagingZoneID, _ := getPagingZoneID("all_paging")
 	_, errr := addSpeakerToPagingZonesStmt.Exec(pagingZoneID, speakerID)
 	if errr != nil {
 		log.Fatal(errr)
@@ -191,7 +191,7 @@ func GetAllPagingZones() []*Zone {
 	zoneIDs := getAllPagingZoneIDs()
 	zones := []*Zone{}
 	for _, zoneID := range zoneIDs {
-		zone := GetZone(zoneID)
+		zone := GetPagingZone(zoneID)
 		zones = append(zones, zone)
 	}
 	return zones
@@ -231,6 +231,7 @@ func getAllPagingZoneIDs() []int8 {
 		rows.Scan(&zoneID)
 		zoneIDs = append(zoneIDs, zoneID)
 	}
+	log.Println(zoneIDs)
 	return zoneIDs
 }
 
@@ -265,6 +266,37 @@ func getZonesSpeakers(zoneID int8) []*ControllerStatus {
 	return speakers
 }
 
+// getZonesSpeakers gets the speakers that belong to the specified zone
+func getPagingZonesSpeakers(zoneID int8) []*ControllerStatus {
+	rows, err := DB.Query(`
+		SELECT s.speakerID, x, y, status
+		FROM speaker s
+		INNER JOIN pagingZoneToSpeaker z
+		ON s.speakerID = z.speakerId
+		WHERE zoneID = ?
+	`, zoneID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	speakers := []*ControllerStatus{}
+	for rows.Next() {
+		var speakerID int8
+		var x int
+		var y int
+		var status int
+		rows.Scan(&speakerID, &x, &y, &status)
+
+		speaker := &ControllerStatus{}
+		speaker.X = x
+		speaker.Y = y
+		speaker.ID = int8(speakerID)
+		speaker.Status = status
+		speakers = append(speakers, speaker)
+	}
+	return speakers
+}
+
 // GetZone gets the Zone with the specified ID from the database
 func GetZone(zoneID int8) *Zone {
 	// get speakers
@@ -274,6 +306,22 @@ func GetZone(zoneID int8) *Zone {
 	DB.QueryRow(`
 		SELECT name 
 		FROM zone
+		WHERE zoneID=?
+		`, zoneID).Scan(&name)
+
+	zone := &Zone{ID: zoneID, Name: name, Speakers: speakers}
+	return zone
+}
+
+// GetZone gets the Zone with the specified ID from the database
+func GetPagingZone(zoneID int8) *Zone {
+	// get speakers
+	speakers := getPagingZonesSpeakers(zoneID)
+	// get name
+	var name string
+	DB.QueryRow(`
+		SELECT name 
+		FROM pagingZone
 		WHERE zoneID=?
 		`, zoneID).Scan(&name)
 

@@ -118,6 +118,7 @@
 
     var lastSelected = 0;
     var zones;
+    var pagingZones;
     var displayedZones = {};
 
     Polymer({
@@ -332,11 +333,11 @@
         //console.log(zones);
 
         callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\"><font style=\"text-align: center; width: 100%; font-weight: bold;\">Masking Zones:</font></paper-item>";
-
+        console.log(data.response);
         for(var i = 0; i < zones.length; i++) {
-          console.log(zones);
+          //console.log(zones);
           innerHTMLString += "<paper-item center-justified flex ><font style=\"width: 100%; text-align: center;\">" + zones[i].name + "</font></paper-item>";
-          callingInnerHTMLString += "<paper-item center-justified flex id=\"" + zones[i].name + "\" class=\"pagingZoneStyle\" onclick=\"thisClick(this)\"><font style=\"text-align: center; width: 100%;\">" + zones[i].name + "</font></paper-item>";
+          callingInnerHTMLString += "<paper-item center-justified flex id=\"" + zones[i].name + "\" class=\"pagingZoneStyle\" onclick=\"updateViewForSelectedSpeakers(this)\"><font style=\"text-align: center; width: 100%;\">" + zones[i].name + "</font></paper-item>";
 
           for (var k = 0; k < zones[i].speakers.length; k++) {
             var isItInYetThatsWhatSheSaid = speakersJustID.indexOf(zones[i].speakers[k].id);
@@ -352,7 +353,7 @@
 
 
         innerHTMLString = "";
-        var pagingZones = data.response.pagingZones;
+        pagingZones = data.response.pagingZones;
         //var pagingZoneListbox = document.querySelector("#pagingZoneListbox");
         pagingZoneListbox.innerHTML = "";
 
@@ -365,11 +366,13 @@
         callingInnerHTMLString += "<paper-item center-justified flex><font style=\"text-align: center; width: 100%;\"></font></paper-item>";
         callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\"><font style=\"text-align: center; width: 100%; font-weight: bold;\">Paging Zones:</font></paper-item>";
         
-        /*for(var i = 0; i < pagingZones.length; i++) {
-          console.log(pagingZones);
+        for(var i = 0; i < pagingZones.length; i++) {
+          displayedZones[pagingZones[i].name] = undefined;
+          //console.log(pagingZones[i], pagingZones[i].name);
+          //console.log(pagingZones);
           innerHTMLString += "<paper-item id=\"" + pagingZones[i].name + "\" value=\"" + pagingZones[i].name + "\"center-justified flex ><font style=\"width: 100%; text-align: center;\">" + pagingZones[i].name + "</font></paper-item>";
 
-          callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\" onclick=\"thisClick()\"><font style=\"text-align: center; width: 100%;\">" + pagingZones[i].name + "</font></paper-item>";
+          callingInnerHTMLString += "<paper-item id=\"" + pagingZones[i].name + "\" value=\"" + pagingZones[i].name + "\" center-justified flex class=\"pagingZoneStyle\" onclick=\"updateViewForSelectedSpeakers(this)\"><font style=\"text-align: center; width: 100%;\">" + pagingZones[i].name + "</font></paper-item>";
 
           for (var k = 0; k < pagingZones[i].speakers.length; k++) {
             var isItInYetThatsWhatSheSaid = speakersJustID.indexOf(pagingZones[i].speakers[k].id);
@@ -380,12 +383,12 @@
               speakers[isItInYetThatsWhatSheSaid].pagingZone = pagingZones[i].speakers[k].pagingZone;
             }
           }
-        } */
-        //pagingZoneListbox.innerHTML = innerHTMLString;
+        } 
+        pagingZoneListbox.innerHTML = innerHTMLString;
 
-          var targetListbox = document.getElementById("targetListbox");
+        var targetListbox = document.getElementById("targetListbox");
 
-          for (i in pagingZones) {
+          /*for (i in pagingZones) {
             console.log("pagingZones", pagingZones);
             temp = document.createElement("paper-item");
             temp.setAttribute("value", pagingZones[i].name);
@@ -393,12 +396,12 @@
             // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
             temp.innerHTML = pagingZones[i].name;
             Polymer.dom(pagingZoneListbox).appendChild(temp);
-          }
+          }*/
 
-
+        // blank
         callingInnerHTMLString += "<paper-item center-justified flex><font style=\"text-align: center; width: 100%;\"></font></paper-item>";
         callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\"><font style=\"text-align: center; width: 100%; font-weight: bold;\">Named Speakers:</font></paper-item>";
-        callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\" onclick=\"thisClick()\"><font style=\"text-align: center; width: 100%;\">Dummy name</font></paper-item>";
+        callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\" onclick=\"updateViewForSelectedSpeakers(this)\"><font style=\"text-align: center; width: 100%;\">Dummy name</font></paper-item>";
 
 
 
@@ -408,7 +411,8 @@
         console.log(zones[0].speakers[0]);
 
         for(var k = 0; k < zones[0].speakers.length; k++) {
-          callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\" onclick=\"thisClick()\"><font style=\"text-align: center; width: 100%;\">Speaker " + zones[0].speakers[k].id + "</font></paper-item>";
+          displayedZones[zones[0].speakers[k].name] = undefined;
+          callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\" onclick=\"updateViewForSelectedSpeakers()\"><font style=\"text-align: center; width: 100%;\">Speaker " + zones[0].speakers[k].id + "</font></paper-item>";
         }
 
 
@@ -465,9 +469,7 @@
         //console.log("Controller update: " + data.response.id + " " + data.response.status);
 
         //console.log("THIS IS THE DATA RESPONSE YOU ARE LOOKING FOR", this.controllers[data.response.id - 1].status);
-
-       /// console.log(this.controllers);
-
+        console.log(data.response);
         if(data.response.status !== this.controllers[data.response.id - 1].status) {      // this should be an array and should also have a case statement that will tell it what image to apply
           //console.log(this.controllers[data.response.id - 1].status === 0 ? false : true);
           updateMapForError(data.response.id, (this.controllers[data.response.id - 1].status) === 0 ? true : false);

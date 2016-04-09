@@ -182,11 +182,10 @@
   var map;
   var features;
   var mapController;
+  var idIterator = 0;
 
 
   function pulsateCircle(id, coordinates) {
-    console.log("got you a circle i see");
-
     var elem = document.createElement('div');
     elem.setAttribute('class', 'gps_ring');
 
@@ -206,44 +205,72 @@
       if(zones[i].name === zoneName) 
         return i;
       }
+    for(var i = 0; i < pagingZones.length; i++) {
+      if(pagingZones[i].name === zoneName) 
+        return i;
+      }
+    for(var i = 0; i < zones[0].length; i++) {
+      if(zones[0].speakers[i].name === zoneName) 
+        return i;
+      }
   }
 
-  function thisClick(elem) {
+  function updateViewForSelectedSpeakers(elem) {
     console.log(elem.id);
     console.log(features);
     console.log(map.a);
+    var overlays = mapController.map.getOverlays();
+    console.log(overlays);
 
+    // when adding to the view, we can show that the speakers that have been selected are already all in the selected speakers
 
     var zoneIndex = findZoneIndex(elem.id);
+    console.log(zoneIndex);
     var zoneOverlayArray = [];
-    if(displayedZones[zones[zoneIndex].name] === undefined) {
+    console.log(elem.id);
+    if(displayedZones[elem.id] === undefined) {
+      // change the styling to reflect the view
+      elem.style.background = "rgba(63, 81, 181, .25)";
+
       for(var i = 0; i < zones[zoneIndex].speakers.length; i++) {        // just do this for now
         var tempOverlay = pulsateCircle(i, features[zones[zoneIndex].speakers[i].id - 1].getGeometry().getCoordinates());
+        tempOverlay.id = idIterator;
         mapController.map.addOverlay(tempOverlay);
-        zoneOverlayArray.push(tempOverlay.wa);
+        zoneOverlayArray.push(tempOverlay.id);
+        idIterator++;
       }
-      displayedZones[zones[zoneIndex].name] = zoneOverlayArray;
+      displayedZones[elem.id] = zoneOverlayArray;
       mapController.map.updateSize();
     }
     else {
-      console.log("removing overlay");
-      var overlays = mapController.map.getOverlays();
-      var overlaysCopy = overlays.a.slice();
-      var overlayLength = overlaysCopy.length;
-      console.log(overlays.a.length);
-      for(var j = 1; j < overlayLength; j++) {        // just do this for now
-        console.log(overlays.a[j]);
-        console.log(j);
-        mapController.map.removeOverlay(overlays.a[j]);
+      // change the styling to reflect the view
+      elem.style.background = "rgba(63, 81, 181, .1)";
 
+      //var overlays = mapController.map.getOverlays().clear();     // works to clear everything, use it later for the restart
+      var overlays = mapController.map.getOverlays();
+      console.log(overlays);
+      //var overlaysCopy = overlays.a.slice();
+      //var overlayLength = overlaysCopy.length;
+      console.log(overlays.a.length);
+
+      console.log(displayedZones[elem.id]);
+      //for(var j = displayedZones[zones[zoneIndex].name].length - 1; j > 0; j--) {        // just do this for now       shift this down instead of up
+      for(var j = displayedZones[elem.id].length - 1; j >= 0; j--) {
+        var elementPos = overlays.a.map(function(x) { return x.id; }).indexOf(displayedZones[elem.id][j]);
+
+        var objectFound = overlays.a[elementPos];
+        console.log(objectFound);
+        mapController.map.removeOverlay(objectFound);
       }
-      console.log(overlays.a.length, overlayLength);
+      //console.log(overlays.a.length, overlayLength);
         
       //console.log(mapController.map.removeOverlay(pulsateCircle(j, features[zones[zoneIndex].speakers[j].id - 1].getGeometry().getCoordinates())));
 
      // / displayedZones[zones[zoneIndex].name] = undefined;
       mapController.map.updateSize();
+      displayedZones[elem.id] = undefined;
     }
+    console.log(displayedZones);
 
     console.log(displayedZones);
   }

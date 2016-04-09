@@ -1207,7 +1207,7 @@ func addSpeaker(loc speakerLocation) int8 {
 			log.Fatal(err)
 		}
 		// add to default zone
-		//addSpeakerToDefaultZone(int8(id), zoneStmt2)
+		//addSpeakerToAllZones(int8(id), zoneStmt2)
 		log.Printf("Created speaker %d at (%d, %d)\n", id, loc.X, loc.Y)
 		return int8(id)
 	}
@@ -1352,7 +1352,7 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			tBand20)
 		VALUES ("", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		`)
 	if err != nil {
 		return nil, err
@@ -1379,7 +1379,7 @@ func populateSpeakerTable() {
 	speakerLocations := getSpeakerLocations()
 	for _, speakerLoc := range speakerLocations {
 		id := addSpeaker(speakerLoc)
-		addSpeakerToDefaultZone(id)
+		addSpeakerToAllZones(id)
 	}
 	tx.Commit()
 }

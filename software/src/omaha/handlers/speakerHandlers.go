@@ -857,11 +857,11 @@ func ScheduleTime(w http.ResponseWriter, r *http.Request) {
     monthDifference := int(userGiven2.Month()) - int(current.Month())
     dayDifference := userGiven2.Day() - current.Day()
     hourDifference := userGiven2.Hour() - current.Hour()
-    minuterDifference := userGiven2.Minute() - current.Minute()
+    minuteDifference := userGiven2.Minute() - current.Minute()
     secondDifference := userGiven2.Second() - current.Second()
 
-    log.Println("Timer will go off in", yearDifference, "years", monthDifference, "month/s", dayDifference, "day/s", minuterDifference, "minute/s", secondDifference, "second/s")
-    amountInSeconds := (yearDifference * 366 * 24 * 60 * 60) + (monthDifference * 30 * 24 * 60 * 60) + (dayDifference * 24 * 60 * 60 ) + (hourDifference * 60 * 60) + (minuterDifference * 60) + secondDifference
+    log.Println("Timer will go off in", yearDifference, "years", monthDifference, "month/s", dayDifference, "day/s", minuteDifference, "minute/s", secondDifference, "second/s")
+    amountInSeconds := (yearDifference * 366 * 24 * 60 * 60) + (monthDifference * 30 * 24 * 60 * 60) + (dayDifference * 24 * 60 * 60 ) + (hourDifference * 60 * 60) + (minuteDifference * 60) + secondDifference
     log.Println(amountInSeconds)
 
 
