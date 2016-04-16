@@ -183,6 +183,7 @@
   var features;
   var mapController;
   var idIterator = 0;
+  var currentSpeakers = [];
 
 
   function pulsateCircle(id, coordinates) {
@@ -201,19 +202,36 @@
   }
 
   function findZoneIndex(zoneName) {
+    console.log(zoneName);
     for(var i = 0; i < zones.length; i++) {
-      if(zones[i].name === zoneName) 
+      if(zones[i].name === zoneName) {        
+        for(var k = 0; k < zones[i].speakers.length; k++) {
+          currentSpeakers[k] = zones[i].speakers[k].id;
+        }
+        console.log("found a name");
         return i;
       }
+    }
     for(var i = 0; i < pagingZones.length; i++) {
-      if(pagingZones[i].name === zoneName) 
+      if(pagingZones[i].name === zoneName) {
+        console.log(pagingZones[i]);
+        for(var k = 0; k < pagingZones[i].speakers.length; k++) {
+          currentSpeakers[k] = pagingZones[i].speakers[k].id;
+        }
         return i;
       }
-    for(var i = 0; i < zones[0].length; i++) {
-      if(zones[0].speakers[i].name === zoneName) 
+    }
+    var zoneNameInt = parseInt(zoneName);
+    for(var i = 0; i < zones[0].speakers.length; i++) {
+      if(zones[0].speakers[i].id == zoneNameInt) {
+        currentSpeakers = [];
+        currentSpeakers[0] = zones[0].speakers[i].id;
         return i;
       }
+    }
   }
+
+  // the animations need to be synchronized
 
   function updateViewForSelectedSpeakers(elem) {
     console.log(elem.id);
@@ -223,8 +241,10 @@
     console.log(overlays);
 
     // when adding to the view, we can show that the speakers that have been selected are already all in the selected speakers
-
+    console.log(elem);
     var zoneIndex = findZoneIndex(elem.id);
+    console.log(typeof currentSpeakers);
+    console.log(currentSpeakers, currentSpeakers.length);
     console.log(zoneIndex);
     var zoneOverlayArray = [];
     console.log(elem.id);
@@ -232,8 +252,9 @@
       // change the styling to reflect the view
       elem.style.background = "rgba(63, 81, 181, .25)";
 
-      for(var i = 0; i < zones[zoneIndex].speakers.length; i++) {        // just do this for now
-        var tempOverlay = pulsateCircle(i, features[zones[zoneIndex].speakers[i].id - 1].getGeometry().getCoordinates());
+      for(var i = 0; i < currentSpeakers.length; i++) {        // just do this for now
+        //console.log("current speakers", currentSpeakers);
+        var tempOverlay = pulsateCircle(i, features[currentSpeakers[i] - 1].getGeometry().getCoordinates());
         tempOverlay.id = idIterator;
         mapController.map.addOverlay(tempOverlay);
         zoneOverlayArray.push(tempOverlay.id);
@@ -269,6 +290,7 @@
      // / displayedZones[zones[zoneIndex].name] = undefined;
       mapController.map.updateSize();
       displayedZones[elem.id] = undefined;
+      currentSpeakers = [];
     }
     console.log(displayedZones);
 

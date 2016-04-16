@@ -1,0 +1,266 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/image-icons.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/components/simple-fit.html">
+
+<dom-module id="scheduling-controller-old" class="layout horizontal">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #map {
+        height: 100%;
+        width: 100%;
+      }
+
+      paper-card {
+        padding: 10px;
+        width: 100%;
+        height: 100%;   /* This was 100%, cahnge back if needed */
+        text-align: center;
+      }
+
+      #zoneBtn {
+        background-color: #4285f4;
+        color: #fff;
+        margin-top: 5px;
+        width: 100%;
+      }
+      
+      #pageContainer {
+        text-align: center;
+        height: 100%;
+      }
+
+      #zoneMap {
+        height: 100%;
+      }
+
+      #mainContainer {
+        overflow-y: hidden;
+      }
+
+      #mainContainer.paper-header-panel {
+        position: relative;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        height: 100%;
+      }
+
+      .paper-card .card-content {
+        padding: 0px;
+        height: 200%;
+      }
+      
+      paper-button {
+        background-color: #3f51b5;
+        color: #fff;
+      }
+
+      paper-input /deep/ #input {
+        margin-top: 0px;
+        text-align: center;
+      }
+
+      paper-item::shadow .button-content {
+        padding: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .pagingZoneStyle {
+        background: rgba(63, 81, 181, .1); 
+        border-style: solid; 
+        border-radius: 5px; 
+        border-width: 1px; 
+        border-color: #3f51b5; 
+        margin: 5px; 
+      }
+
+      .times {
+        width: calc(.025 * 100vw);
+        margin-right: calc(.014 * 100vw);
+        margin-top: calc(-.015 * 100vh);
+      }
+
+    </style>
+    <div id="pagingMapContainer" style="width: 75%; height: 100%; float: left;">
+  <simple-fit class="container">
+    <paper-card style="width: 70%; margin-top: 22%" class="flex self-center card-no-max-width" heading="Scheduling">
+  		<div class="card-content">	
+		  	<div id="radio-container">
+		      <paper-radio-group id="schedulingMode" selected="{{mode}}">
+		        <!-- <paper-radio-button id="informationButton" name="information" class="flex">Information</paper-radio-button> -->
+		        <paper-radio-button id="every"     name="every"     class="flex">Every...</paper-radio-button>
+		        <paper-radio-button id="specific"  name="specific"  class="flex">At this time...</paper-radio-button>
+		      </paper-radio-group>
+			     	<div class="layout horizontal">
+		      		<paper-checkbox style="margin-left: 15%; margin-right: 5%;">Recurring</paper-checkbox>
+				    <paper-input class="times" label="Year"></paper-input>
+				    <paper-input class="times" label="Month"></paper-input>
+				    <paper-input class="times" label="Week"></paper-input>
+				    <paper-input class="times" label="Day"></paper-input>
+				    <paper-input class="times" label="Hour"></paper-input>
+				    <paper-input class="times" label="Minute"></paper-input>
+				    <paper-input class="times" label="Second"></paper-input>
+				    <paper-dropdown-menu label="">
+					  <paper-menu class="dropdown-content">
+					    <paper-item>AM</paper-item>
+					    <paper-item>PM</paper-item>
+					  </paper-menu>
+					</paper-dropdown-menu>
+			      </div>
+		    </div>
+		</div>
+  <div class="card-actions">
+    <paper-button on-click="scheduleTime">Create Event</paper-button>
+  </div>
+</paper-card>
+</simple-fit>
+
+    </div>
+    <div id="currentTimers" style="border-left: 2px solid #3f51b5; margin-left: 75%; width: 25%; height: 90%;">
+      <body class="fullbleed layout vertical">
+        <paper-header-panel mode="waterfall" style="overflow-y: hidden; background-color: #fff">
+          <paper-toolbar>
+            <div style="text-align: center; width: 100%;"><font style="font-size: 22px;">Current Timers<font><h6 style="margin: 0px; text-align: center;"></h6><h6 style="margin: 0px; text-align: center;"></div>
+          </paper-toolbar>
+          <div id="dropShadow" class="style-scope paper-header-panel has-shadow"></div>
+          <div id="pagingSpeakerHolder"></div>
+        </paper-header-panel>
+      </body>
+    </div>
+
+    <div id="buttonHolder" style="border-left: 2px solid #3f51b5; border-top: 2px solid #3f51b5; background-color: #fff; margin-left: 75%; width: 25%; height: 9.8%;">
+      <paper-card class="layout horizontal">
+        <div class="card-content">
+          <paper-button on-click="_dial" style="margin-left: 95%; font-size: 14px;">Create Event</paper-button></div>
+          <!-- <paper-dropdown-menu id="zoneCallingMenu" no-label-float label="Zone:" style="margin-top: 4%; margin-left: 8%;"> -->
+          <paper-listbox id="callingListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+            <!--<template if="{{this.speaker.Response}}">
+              <paper-dropdown-menu selected="{{selected}}">
+                <template repeat="{{label in this.speaker.PresetNames}}">
+                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
+                </template>
+              </paper-dropdown-menu>  
+            </template>-->      <!-- this needs to be populated and lifted up -->
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </paper-card>
+    </div>
+                    <!-- A rougue missing tag, why is this here? -->
+    <paper-toast id="toast"></span>Zone Created!</paper-toast>
+    <!-- <paper-card id="popup">
+      <div>Current Zone: <span><b>{{selected.zone.name}}</b></span></div>
+      <div><paper-button id="zoneBtn" on-click="_assignZone">assign zone</paper-button></div>
+    </paper-card> -->
+    <paper-dialog id="dialog">
+      <zone-assigner on-zoneupdated="_refreshSpeaker" id="zoneAssigner" speaker="{{selected}}" zones="{{zones}}"></zone-assigner>
+    </paper-dialog>
+
+
+
+    <paper-dialog id="zoneDialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
+      <h1 style="text-align: center;">Calling selected...</h1>
+      <!-- <div style="text-align: center;">Enter a name for the new zone below</div> -->
+      <!-- <div class="message">{{err}}</font></div> -->
+      <!-- <paper-input id="popupInput" label="" placeholder="Enter Name for Zone" text-align="center"></paper-input> -->
+      <div class="buttons" class="layout horizontal">
+      <!-- <paper-button ondialog-confirm on-click="_acceptPressed">Create</paper-button> -->
+      <paper-button center-justified flex dialog-dismiss on-click style="margin: 0.5em 4.5em .5em 0em;" ="_cancelPressed">Cancel</paper-button>
+    </div>
+
+
+    <iron-ajax
+      id="scheduleTimeAjax"
+      url="/system/scheduleTime/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
+
+    <!-- <help-panel></help-panel> -->
+  </template>
+
+<script>
+
+	
+ Polymer({
+      is: 'scheduling-controller-old',
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+      	animationConfig: {
+          value: function() {
+            return {
+              'entry': {
+                  name: 'fade-in-animation',
+                  node: this
+                },
+              'exit': {
+                // provided by neon-animation-animations/fade-out-animation.html
+                name: 'slide-left-animation',
+                node: this
+              }
+            }
+          }
+        }
+      },
+
+      scheduleTime: function() {
+      	console.log("--------- starting call ----------");
+
+
+
+      	var scheduleTimeAjax = document.querySelector("#scheduleTimeAjax");
+		console.log(scheduleTimeAjax);
+      	var times = document.getElementsByClassName("times");
+		console.log(times);
+
+		scheduleTimeAjax.body = {
+			"year":   parseInt(times[0].value),
+			"month":  parseInt(times[1].value),
+			"week":   parseInt(times[2].value),
+			"day":    parseInt(times[3].value),
+			"hour":   parseInt(times[4].value),
+			"minute": parseInt(times[5].value),
+			"second": parseInt(times[6].value)
+		};
+
+		console.log(scheduleTimeAjax.body);
+
+		scheduleTimeAjax.generateRequest();
+
+
+
+      	console.log("--------- starting call ----------");
+	  },
+
+      ready: function() {
+      	console.log("hi its me");
+      }
+
+    });
+
+</script>
+
+
+
+</dom-module>

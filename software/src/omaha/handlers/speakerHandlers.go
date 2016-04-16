@@ -10,7 +10,7 @@ import (
 	"strings"
 	"strconv"
 	"math"
-	"time"
+	//"time"
 )
 
 type speakerPutRequest struct {
@@ -20,58 +20,58 @@ type speakerPutRequest struct {
 }
 
 type speakerResponse struct {
-	Volume					int8		`json:"volume"`
-	Music 					int8		`json:"music"`
-	Paging 					int8		`json:"paging"`
-	Masking 				int8		`json:"masking"`
-	Effectiveness 			int8		`json:"effectiveness"`
-	Pleasantness 			int8		`json:"pleasantness"`
-	FadeTime				int8		`json:"fadetime"`
-	FadeLevel				int8		`json:"fadelevel"`
+	Volume									int8		`json:"volume"`
+	Music 									int8		`json:"music"`
+	Paging 									int8		`json:"paging"`
+	Masking 								int8		`json:"masking"`
+	Effectiveness 					int8		`json:"effectiveness"`
+	Pleasantness 						int8		`json:"pleasantness"`
+	FadeTime								int8		`json:"fadetime"`
+	FadeLevel								int8		`json:"fadelevel"`
 
-	Target[][]				float64		`json:["target"]`
-	TargetNames[]			string		`json:["targetNames"]`
-	CurrentTarget[21]		float64		`json:["currentTarget"]` 
+	Target[][]							float64		`json:["target"]`
+	TargetNames[]						string		`json:["targetNames"]`
+	CurrentTarget[21]				float64		`json:["currentTarget"]` 
 
-	Equalizer[][]			float64		`json:["equalizer"]`
-	PresetNames[]			string		`json:["presetNames"]`
-	CurrentPreset[21]		float64		`json:["currentPreset"]`
+	Equalizer[][]						float64		`json:["equalizer"]`
+	PresetNames[]						string		`json:["presetNames"]`
+	CurrentPreset[21]				float64		`json:["currentPreset"]`
 
-	MusicEqualizer[][]		float64		`json:["musicEqualizer"]`
-	MusicPresetNames[]		string		`json:["musicPresetNames"]`
+	MusicEqualizer[][]			float64		`json:["musicEqualizer"]`
+	MusicPresetNames[]			string		`json:["musicPresetNames"]`
 	CurrentMusicPreset[21]	float64		`json:["currentMusicPreset"]` 
 
-	PagingEqualizer[][]		float64		`json:["pagingEqualizer"]`
-	PagingPresetNames[]		string		`json:["pagingPresetNames"]`
+	PagingEqualizer[][]			float64		`json:["pagingEqualizer"]`
+	PagingPresetNames[]			string		`json:["pagingPresetNames"]`
 	CurrentPagingPreset[21]	float64		`json:["currentPagingPreset"]` 
 
-	Err     				string 		`json:"err"`
-	Speaker					int8		`json:"speaker"`
-	Name					string		`json:"name"`
-	EqualizerMode			int8		`json:"equalizerMode"`
+	Err     								string 		`json:"err"`
+	Speaker									int8			`json:"speaker"`
+	Name										string		`json:"name"`
+	EqualizerMode						int8			`json:"equalizerMode"`
 }
 
 type speakerGetRequest struct {
-	Speaker		int8		`json:"speaker"`
+	Speaker	int8		`json:"speaker"`
 }
 
 type keepAlive struct {
 	ID			int8		`json:"id"`
-	Status		int8		`json:"status"`
+	Status	int8		`json:"status"`
 }
 
 type addPresetData struct {
 	Speaker		int8		`json:"speaker"`
-	Name		string		`json:"name"`
-	Type 		int			`json:"type"`
-	Constants	string		`json:"constants"`
-	Target		string		`json:"target"`
+	Name			string	`json:"name"`
+	Type 			int			`json:"type"`
+	Constants	string	`json:"constants"`
+	Target		string	`json:"target"`
 	Update 		bool		`json:"update"`
 }
 
 type changeEQModeData struct {
 	Speaker int8	`json:"speaker"`
-	Mode	int8	`json:"mode"`
+	Mode		int8	`json:"mode"`
 }
 
 type pagingRequest struct {
@@ -79,51 +79,44 @@ type pagingRequest struct {
 }
 
 type zoneData struct {
-	ZoneName	string	`json:"name"`
-	Speakers[] 	int8	`json:["speakers"]`
+	ZoneName		string	`json:"name"`
+	Speakers[] 	int8		`json:["speakers"]`
 }
 
 type speakerAttributes struct {
-	Volume    		string 		`json:"volume"`
-	//Music			int8 		`json:"musicVolume"`
-	Pleasantness 	int8 		`json:"effectiveness"`
-	Effectiveness 	int8 		`json:"pleasantness"`
-	LED       		bool 		`json:"led"` 
-
-	Equalizer 		string		`json:"equalizer"`
+	Volume    			string 		`json:"volume"`
+	//Music					int8 			`json:"musicVolume"`
+	Pleasantness 		int8 			`json:"effectiveness"`
+	Effectiveness 	int8 			`json:"pleasantness"`
+	LED       			bool 			`json:"led"` 
+	Equalizer 			string		`json:"equalizer"`
 	MusicEqualizer 	string		`json:"musicEqualizer"`
 	PagingEqualizer string		`json:"pagingEqualizer"`
-
-	ZoneID 			int8 		`json:"zoneId"`
-	Paging			string		`json:"paging"`
-	Target			string		`json:"target"`
-}
+	ZoneID 					int8 			`json:"zoneId"`
+	Paging					string		`json:"paging"`
+	Target					string		`json:"target"`
+}	
 
 type timeSchedule struct {
-	Year	int8	`json:"year"`
-	Month	int8	`json:"month"`
-	Week	int8	`json:"week"`
-	Day		int8	`json:"day"`
-	Hour	int8	`json:"hour"`
-	Minute	int8	`json:"minute"`
-	Second	int8	`json:"second"`
+	Times[25] 	int	`json:["times"]` 
+	Day					int	`json:"day"`
 
-	Name	int8	`json:"name"`
-	Action	int8	`json:"action"`		// this might need to be an array
+	// Name	int8	`json:"name"`
+	// Action	int8	`json:"action"`		// this might need to be an array
 
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error {
-	"volume":		updateSpeakerVolume,
+	"volume":			updateSpeakerVolume,
 	//"music":		updateSpeakerMusic,
 	"averaging":	updateSpeakerAveragingMode,
 	"led":       	updateSpeakerLED,
 	"equalizer": 	updateSpeakerEqualizer,
 	//"fadelevel":	updateSpeakerFadeLevel,
 	//"fadetime":	updateSpeakerFadeTime,
-	"paging":		updateSpeakerPaging,
+	"paging":			updateSpeakerPaging,
 	"zoneId": 		updateSpeakerZoneID,
-	"target":		updateSpeakerTarget,
+	"target":			updateSpeakerTarget,
 }
 
 func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerStatus) error {
@@ -844,32 +837,40 @@ func ScheduleTime(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
     //w.Write(getGenericSuccessResponse())
 
-	currentTime := time.Now()
+
+	//log.Println("\n\n\n\n\n------------- STARTING --------------\n\n\n\n\n")
+
+	log.Println(timeGiven)
+	//currentTime := time.Now()
 
     //userGiven := time.Date(2016, 5, 4, 16, 15, 0, 0, currentTime.Location())
-    current := time.Now()
-    userGiven2 := time.Date(2016, 4, 5, 15, 41, 0, 0, currentTime.Location())
+    //current := time.Now()
 
-    yearDifference := userGiven2.Year() - current.Year()
+    //log.Println(current)
+	//userGiven2 := time.Date(current.Year(), current.Month(), current.Day(), current.Hour(), current.Minute(), current.Second() + 15, 0, currentTime.Location())
+      //userGiven2 := time.Date(timeGiven.Year, time.Month(timeGiven.Month + 1), timeGiven.Day, timeGiven.Hour, timeGiven.Minute, timeGiven.Second, 0, currentTime.Location())
+    //log.Println(userGiven2)
+
+    /*yearDifference := userGiven2.Year() - current.Year()
     monthDifference := int(userGiven2.Month()) - int(current.Month())
     dayDifference := userGiven2.Day() - current.Day()
     hourDifference := userGiven2.Hour() - current.Hour()
     minuteDifference := userGiven2.Minute() - current.Minute()
     secondDifference := userGiven2.Second() - current.Second()
+*/
+    //log.Println("Timer will go off in", yearDifference, "years", monthDifference, "month/s", dayDifference, "day/s", minuteDifference, "minute/s", secondDifference, "second/s")
+    //amountInSeconds := (yearDifference * 366 * 24 * 60 * 60) + (monthDifference * 30 * 24 * 60 * 60) + (dayDifference * 24 * 60 * 60 ) + (hourDifference * 60 * 60) + (minuteDifference * 60) + secondDifference
+    //log.Println(amountInSeconds)
 
-    log.Println("Timer will go off in", yearDifference, "years", monthDifference, "month/s", dayDifference, "day/s", minuteDifference, "minute/s", secondDifference, "second/s")
-    amountInSeconds := (yearDifference * 366 * 24 * 60 * 60) + (monthDifference * 30 * 24 * 60 * 60) + (dayDifference * 24 * 60 * 60 ) + (hourDifference * 60 * 60) + (minuteDifference * 60) + secondDifference
-    log.Println(amountInSeconds)
 
-
+	/*log.Println("\n\n\n\n\n------------- ENDING --------------\n\n\n\n\n")
     //log.Println(userGiven.AddDate(userGiven2.Year(), -int(userGiven2.Month()), -userGiven2.Day()))
 
 
     ticker := time.NewTicker(1 * time.Second)
-    quit := make(chan struct{})
+    quit := make(chan bool)
     go func() {
     	// write to database
         for {
@@ -884,12 +885,14 @@ func ScheduleTime(w http.ResponseWriter, r *http.Request) {
         }
      }()
 
-     time.Sleep(time.Duration(amountInSeconds + 1)  * time.Second)
+     //time.Sleep(time.Duration(amountInSeconds + 1)  * time.Second)
 
      log.Println("times up!");
 
-     // write the success afterwards, might not need this 
-     //w.Write(getGenericSuccessResponse())
+     quit <- true			// now it quits
+
+     // write the success afterwards, might not need this */
+     w.Write(getGenericSuccessResponse())
 }
 
 

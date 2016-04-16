@@ -1,0 +1,420 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/image-icons.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/components/simple-fit.html">
+<link rel="stylesheet" href="jquery-ui-1.11.4.css">
+<script src="jquery-1.10.2.js" type="text/jscript"></script>
+<script src="Chart.js" type="text/jscript"></script>
+<script src="jquery-ui-1.11.4.js" type="text/jscript"></script>
+<script src="jquery.ui.touch-punch.js" type="text/jscript"></script>
+
+<dom-module id="scheduling-controller" class="layout horizontal">
+
+  <template>
+
+    <style>
+      :host {
+        display: block;
+      }
+
+      #map {
+        height: 100%;
+        width: 100%;
+      }
+
+      paper-card {
+        padding: 10px;
+        width: 100%;
+        text-align: center;
+      }
+
+      #zoneBtn {
+        background-color: #4285f4;
+        color: #fff;
+        margin-top: 5px;
+        width: 100%;
+      }
+      
+      #pageContainer {
+        text-align: center;
+        height: 100%;
+      }
+
+      #zoneMap {
+        height: 100%;
+      }
+
+      #mainContainer {
+        overflow-y: hidden;
+      }
+
+      #mainContainer.paper-header-panel {
+        position: relative;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        height: 100%;
+      }
+      
+      paper-button {
+        background-color: #3f51b5;
+        color: #fff;
+      }
+
+      paper-input /deep/ #input {
+        margin-top: 0px;
+        text-align: center;
+      }
+
+      paper-item::shadow .button-content {
+        padding: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .pagingZoneStyle {
+        background: rgba(63, 81, 181, .1); 
+        border-style: solid; 
+        border-radius: 5px; 
+        border-width: 1px; 
+        border-color: #3f51b5; 
+        margin: 5px; 
+      }
+
+      .times {
+        width: calc(.02 * 100vw);
+        margin-right: calc(.0118 * 100vw);
+        margin-top: calc(-.015 * 100vh);
+      }
+
+    </style>
+       <paper-card heading="Scheduling" elevation="4">
+      <div class="card-content">
+
+		<canvas id="timingChart" style="margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);" class="chartClass"></canvas>
+	        <div class="horizontal layout" id="adjustment" style="height: calc(.025 * 100vh); margin-top: calc(.0 * 100vh); margin-bottom: 10px;">
+	          <!-- try doing a no float and then just putting 0 and making it start default? -->
+	          <paper-input class="times" name="00:00"   on-input="redrawTimingOnInput" center-justified style="margin-left: calc(.025 * 100vw);"></paper-input>
+	          <paper-input class="times" name="01:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="02:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="03:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="04:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="05:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="06:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="07:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="08:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="09:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="10:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="11:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="12:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="13:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="14:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="15:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="16:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="17:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="18:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="19:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="20:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="21:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="22:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="23:00"   on-input="redrawTimingOnInput" ></paper-input>
+	          <paper-input class="times" name="24:00"   on-input="redrawTimingOnInput" ></paper-input>
+	        </div>
+	       </div>
+<div class="card-actions">
+	  <paper-dropdown-menu id="dayMenu" style="margin-top: 10px; margin-left: calc(.27 * 100vw);" no-label-float label="Day:" vertical-align="top" horizontal-align="left">
+    	<paper-listbox id="dayListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+          <!--<template if="{{this.speaker.Response}}">
+            <paper-dropdown-menu selected="{{selected}}">
+              <template repeat="{{label in this.speaker.PresetNames}}">
+                <paper-item value="{{i}}" label="{{label}}"></paper-item>
+              </template>
+            </paper-dropdown-menu>  
+          </template>-->   
+	      <paper-item id="Sunday" value="0">Sunday</paper-item>
+	      <paper-item id="Monday" value="1">Monday</paper-item>
+	      <paper-item id="Tuesday" value="2">Tuesday</paper-item>
+	      <paper-item id="Wednesday" value="3">Wednesday</paper-item>
+	      <paper-item id="Thursday" value="4">Thursday</paper-item>
+	      <paper-item id="Friday" value="5">Friday</paper-item>
+	      <paper-item id="Saturday" value="6">Saturday</paper-item>
+	    </paper-listbox>
+	  </paper-dropdown-menu>
+
+	  <paper-button center-justified flex dialog-dismiss style="margin-top: 10px; margin-left: calc(.01 * 100vw);" on-click="scheduleTime">Apply</paper-button>
+		</div>
+		</paper-card>
+                  <!-- A rougue missing tag, why is this here? -->
+  	<paper-toast id="toast"></span>Zone Created!</paper-toast>
+    <!-- <paper-card id="popup">
+      <div>Current Zone: <span><b>{{selected.zone.name}}</b></span></div>
+      <div><paper-button id="zoneBtn" on-click="_assignZone">assign zone</paper-button></div>
+    </paper-card> -->
+    <paper-dialog id="dialog">
+      <zone-assigner on-zoneupdated="_refreshSpeaker" id="zoneAssigner" speaker="{{selected}}" zones="{{zones}}"></zone-assigner>
+    </paper-dialog>
+
+
+
+  	<paper-dialog id="zoneDialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
+    <h1 style="text-align: center;">Calling selected...</h1>
+    <!-- <div style="text-align: center;">Enter a name for the new zone below</div> -->
+    <!-- <div class="message">{{err}}</font></div> -->
+    <!-- <paper-input id="popupInput" label="" placeholder="Enter Name for Zone" text-align="center"></paper-input> -->
+
+
+
+			<paper-toast id="errorAdjustToast"></paper-toast>
+    <div class="buttons" class="layout horizontal">
+    <!-- <paper-button ondialog-confirm on-click="_acceptPressed">Create</paper-button> -->
+    	<paper-button center-justified flex dialog-dismiss style="margin: 0.5em 4.5em .5em 0em;" on-click="_cancelPressed">Cancel</paper-button>
+  	</div>
+
+
+    <iron-ajax
+      id="scheduleTimeAjax"
+      url="/system/scheduleTime/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
+
+    <!-- <help-panel></help-panel> -->
+  </template>
+
+<script>
+
+    var timingDataArray = [10, 10, 10, 10, 10, 10, 25, 45, 80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 80, 45, 25, 10, 10, 10, 10];
+    console.log(timingDataArray.length);
+
+    //var labels = ["7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM", "12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM"];
+
+    var timingLabels = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"];
+
+    console.log(timingLabels.length);
+
+    var timingData = {
+      labels: timingLabels,
+      datasets: [{
+        fillColor: "rgba(63, 81, 181, 0.25)",
+        strokeColor: "#3f51b5",
+        pointColor: "#fff",
+        pointStrokeColor: "#3f51b5",  
+        data: [10, 10, 10, 10, 10, 10, 25, 45, 80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 80, 45, 25, 10, 10, 10, 10]
+      }]
+    };
+
+    var timingLineAttributes = {
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: 0,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+
+    var timingResizeLineAttributes = {
+      animation: false,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: 0,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    var timingRedrawLineAttributes = {
+      showTooltips: true,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: 0,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+
+    var myChart_timing;
+
+    var canvas_timing = document.getElementById("timingChart");
+    var chart_width_scalar_timing = .8;
+    var chart_height_scalar_timing = .55;
+
+
+  $(document).ready(function() {
+  	console.log("helo");
+    canvas_timing = document.getElementById("timingChart");
+    canvas_timing.width = $(window).width() * chart_width_scalar_timing;
+    canvas_timing.height = $(window).height() * chart_height_scalar_timing;
+
+    $(document.getElementsByClassName("times")).each(function(i) {
+      this.value = timingDataArray[i];
+    });
+    console.log(timingData, timingLineAttributes);
+    myChart_timing = new Chart(canvas_timing.getContext("2d")).Line(timingData, timingLineAttributes);
+  });
+
+  $(window).resize(function() {
+    $($(canvas_timing).parent()).prepend("<canvas id=\"timingChart\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
+
+    console.log(canvas_timing);
+
+    canvas_timing.remove();
+    console.log(canvas_timing);
+
+    canvas_timing = document.getElementById("timingChart");
+    canvas_timing.width = $(window).width() * chart_width_scalar_timing;
+    canvas_timing.height = $(window).height() * chart_height_scalar_timing;
+    console.log(canvas_timing.getContext("2d"));
+    myChart_timing = new Chart(canvas_timing.getContext("2d")).Line(timingData, timingResizeLineAttributes);
+
+    console.log(canvas_timing);
+  });
+
+	
+ Polymer({
+      is: 'scheduling-controller',
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+      	animationConfig: {
+          value: function() {
+            return {
+              'entry': {
+                  name: 'fade-in-animation',
+                  node: this
+                },
+              'exit': {
+                // provided by neon-animation-animations/fade-out-animation.html
+                name: 'slide-left-animation',
+                node: this
+              }
+            }
+          }
+        }
+      },
+
+      scheduleTime: function() {
+
+	      var scheduleTimeAjax = document.querySelector("#scheduleTimeAjax");
+				console.log(scheduleTimeAjax);
+		    var times = document.getElementsByClassName("times");
+				console.log(times.length);
+
+				var timesArray = [];
+				for (var i = 0; i < times.length; i++) {
+					var timesParse = parseInt(times[i].value);
+					if(isNaN(timesParse)) {
+						return;
+					}
+					timesArray.push(timesParse);
+				}
+
+				console.log(this.$.dayListbox.selected);
+
+				console.log(timesArray.length);
+
+				scheduleTimeAjax.body = {
+					"times": timesArray,
+					"day": parseInt(this.$.dayListbox.selected)
+				};
+				console.log(timesArray);
+
+				console.log(scheduleTimeAjax.body);
+
+				scheduleTimeAjax.generateRequest();
+		  },
+
+    	redrawTimingOnInput: redrawTimingOnInput,
+
+    	_logResponse: function(event, data) {
+    		console.log(data.response);
+    	},
+
+      ready: function() {    	
+  			this.$.dayListbox.selected = "3"; // just a demo, load the one that was last modified
+      	console.log("hi its me");
+      }
+
+    });
+
+
+  function redrawTiming(drawingData, drawingLineAttributes) {
+    $($(canvas_timing).parent()).prepend("<canvas id=\"timingChart\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
+    canvas_timing.remove();
+    console.log($(canvas_timing));
+
+    canvas_timing = document.getElementById("timingChart");
+    canvas_timing.width = $(window).width() * chart_width_scalar_timing;
+    canvas_timing.height = $(window).height() * chart_height_scalar_timing;
+    myChart_timing = new Chart(canvas_timing.getContext("2d")).Line(drawingData, drawingLineAttributes);
+
+  }
+
+  function redrawTimingOnInput() {
+    var errorAdjustToast = document.getElementById("errorAdjustToast");
+    var strokeColor = "#3f51b5";
+    var pointStrokeColor = "#3f51b5";
+    var fillColor = "rgba(63, 81, 181, .25)";
+
+    console.log(timingDataArray);
+
+    $(document.getElementsByClassName("times")).each(function(i) {
+      console.log(timingDataArray.length);
+      if(this.value > -1 && this.value < 101 && this.value !== "") {
+        timingDataArray[i] = parseInt(this.value);
+      } else {
+        timingDataArray[i] = null;
+        
+        // Set the error colors
+        strokeColor = "#F33F31";
+        pointStrokeColor = "#F33F31";
+        fillColor = "rgba(243, 63, 49, .25)";
+
+        if(isNaN(this.value)) {
+          errorAdjustToast.text = "Invalid entry for " + timingLabels[i] + "Hz: Only numerical values are accepted";
+          errorAdjustToast.show();
+        } else if (this.value === "") {
+
+        } else {
+          errorAdjustToast.text = "Invalid entry for " + timingLabels[i] + "Hz: Accepted range of values is -20 to 80";
+          errorAdjustToast.show();
+        }
+      }
+      //console.log(dataArray);
+    });
+
+    var timingRedrawData = {
+      timingLabels,
+      datasets: [{
+        fillColor: fillColor,
+        strokeColor: strokeColor,
+        pointColor: "#fff",
+        pointStrokeColor: pointStrokeColor,  
+        data: timingDataArray,
+        }]
+    };
+
+    redrawTiming(timingRedrawData, timingRedrawLineAttributes);
+  }
+
+</script>
+
+
+
+</dom-module>

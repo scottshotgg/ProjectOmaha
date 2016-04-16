@@ -13,6 +13,13 @@ body {
   margin: 0 auto;
 }
 
+.card-no-max-width {
+  background: #FFFFFF;
+  max-width: 78%;
+  padding: 24px;
+  margin: 0 auto;
+}
+
 #overlay {
   position: fixed;
   width: 100%;
