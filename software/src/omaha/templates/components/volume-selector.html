@@ -31,8 +31,8 @@
         margin-top: 10px;
       }
     </style>
-   <paper-card heading="Volume" elevation="4">
-      <div class="card-content">
+   <paper-card  id="volumeCard" heading="Volume" elevation="4">
+      <div id="test" class="card-content">
 
         <div id="slider" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
@@ -190,6 +190,16 @@
       },
 
       ready: function() {
+        console.log(localStorage.getItem("level"));
+
+        // what should the default values be?
+        switch(parseInt(localStorage.getItem("level"))) {
+          case 0:
+            this.$.volume3.disabled = true;
+            this.$.volume5.disabled = true;
+            break;
+        }
+
         this.internalVolume = this.volume;
         console.log("I am ready " + this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume) + " " + this.internalSoundMaskingVolume;
       }

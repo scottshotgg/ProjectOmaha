@@ -1,5 +1,6 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-material/paper-material.html">
 
 
 
@@ -33,10 +34,10 @@
     <div>
       <paper-button on-click="_selectSpeaker">speaker</paper-button>
     </div>
-    <div>
+    <div id="zoneSelectionButton">
       <paper-button on-click="_selectZone">zone</paper-button>
     </div>
-    <div>
+    <div id="allZoneSelectionButton">
       <paper-button on-click="_selectAllZone">all zone</paper-button>
     </div>
   </template>
@@ -62,5 +63,12 @@
         this.fire('allzoneselected', {zone: 1})
       }
     });
+
+    $(document).ready(function() {
+      if(parseInt(localStorage.getItem("level")) == 0) {
+          document.getElementById("zoneSelectionButton").innerHTML = "";
+          document.getElementById("allZoneSelectionButton").innerHTML = "";
+      }
+  });
   </script>
 </dom-module>

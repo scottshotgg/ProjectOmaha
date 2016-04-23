@@ -17,6 +17,12 @@
 <link rel="import" href="/components/scheduling-controller.html">
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/ >
 
+<link rel="stylesheet" href="jquery-ui-1.11.4.css">
+<script src="jquery-1.10.2.js" type="text/jscript"></script>
+<!--<script src="jquery-2.2.0.js"></script>-->
+<script src="jquery-ui-1.11.4.js" type="text/jscript"></script>
+<script src="jquery.ui.touch-punch.js" type="text/jscript"></script>
+
 <dom-module id="open-map-controller">
   <template>
     <style>
@@ -41,8 +47,22 @@
         margin-left: 10px;
       }
     </style>
-    <div id="map" class="map">
+
+
+    <div id="mapContainer" style="width: 92%; height: 100%; float: left; visibility: visible;">
+      <div id="map" class="map"></div>
     </div>
+
+    <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 92%; min-width: 154px; height: 100%;">
+      
+      <div id="goodCircle" style="visibility: visible; background: #27e833; position: absolute; top: calc(.0075 * 100vw); border-radius: 1000px; margin-left: calc(.0075 * 100vw); margin-bottom: calc(.015 * 100vw); height: calc(.12 * 100vh); width: calc(.12 * 100vh);"></div> 
+      <div id="badCircle" style="visibility: hidden; background: #f9152f; position: absolute; top: calc(.0075 * 100vw); border-radius: 1000px; margin-left: calc(.0075 * 100vw); margin-bottom: calc(.015 * 100vw); height: calc(.12 * 100vh); width: calc(.12 * 100vh);"></div>
+      <div id="statusFont" style="position: absolute;  margin-left: calc(.014 * 100vw); top: calc(.085 * 100vw);"><font style="font-size: 24px;"> SYSTEM STATUS: </font>
+      <div id="goodFont" style="visibility: visible; position: absolute;  margin-left: calc(.0075 * 100vw);"> <font color="#27e833" style="font-size: 24px;">GOOD</font></div>
+      <div id="badFont" style="visibility: hidden; position: absolute;  margin-left: calc(.0115 * 100vw);"> <font color="#f9152f" style="font-size: 24px;">BAD</font></div>
+
+    </div>
+    
     <paper-card id="popup">  
       <speaker-tooltip id="speaker-tooltip" on-speakerselected="_selectSpeaker" on-zoneselected="_selectZone" speaker="{{selected}}"></speaker-tooltip>
     </paper-card>
@@ -50,7 +70,7 @@
     <paper-card id="test">
       <div>Status: Broken :(</div>
     </paper-card>
-    <help-panel></help-panel>
+    <!-- <help-panel></help-panel> -->
 
     <iron-ajax
           id="frontendSpeakerUpdateAjax"
@@ -65,6 +85,12 @@
   </template>
   <script>
 
+  $(document).ready(function() {
+    console.log($(document.getElementById("goodOrBadFont")).innerWidth(), $(document.getElementById("selectedSpeakers")).innerWidth());
+  });
+
+  // center this stuff based on their size
+
   var savedResolution;
   var savedStyle = [];
   var savedStyle_i = 1;
@@ -72,7 +98,11 @@
   var controllers = []; 
   var renderMapCopy;
   var vectorLayerCopy;
-    
+  var goodCircle = document.getElementById("goodCircle");
+  var goodFont = document.getElementById("goodFont"); 
+  var badCircle = document.getElementById("badCircle");
+  var badFont = document.getElementById("badFont"); 
+
     Polymer({
       is: 'open-map-controller',
 
@@ -100,6 +130,8 @@
       
       _selectSpeaker: function() {
         this._hideOverlay();
+
+        console.log("i am fired");
 
         //var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
         // here is where we should pass it to the backend i think and quickly get the information
@@ -163,6 +195,7 @@
 
         // Setting speaker-tooltip information
         // the zones will need to be joined by ", "
+        console.log(this.$$);
         if(a.speaker.name !== "") {
           var tooltipInformation = "<b id=\"name\">" + a.speaker.name + "</b><br><b id=\"speaker\">Speaker ID: " + a.speaker.id + "</b><br><b id=\"zone\">Zone ID: " + a.speaker.zoneID + "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
           console.log("i am here");
@@ -184,6 +217,9 @@
         a.speaker.MusicPresetNames   = [];
         a.speaker.CurrentMusicPreset = [];
 
+        a.speaker.PagingPresetNames   = [];
+        a.speaker.CurrentPagingPreset = [];
+
         a.speaker.Target        = [];
         a.speaker.Equalizer     = [];
 
@@ -204,6 +240,11 @@
           console.log(i, data.response.MusicPresetNames[i]);
         }
 
+        for (i in data.response.PagingPresetNames) {
+          a.speaker.PagingPresetNames[i] = data.response.PagingPresetNames[i].replace("\n", "");
+          console.log(i, data.response.PagingPresetNames[i]);
+        }
+
         for (i in data.response.CurrentPreset) {
           a.speaker.CurrentPreset[i] = data.response.CurrentPreset[i];
           console.log(i, data.response.CurrentPreset[i]);
@@ -212,6 +253,11 @@
         for (i in data.response.CurrentMusicPreset) {
           a.speaker.CurrentMusicPreset[i] = data.response.CurrentMusicPreset[i];
           console.log(i, data.response.CurrentMusicPreset[i]);
+        } 
+
+        for (i in data.response.CurrentPagingPreset) {
+          a.speaker.CurrentPagingPreset[i] = data.response.CurrentPagingPreset[i];
+          console.log(i, data.response.CurrentPagingPreset[i]);
         } 
 
         for (i in data.response.CurrentTarget) {
@@ -233,11 +279,6 @@
 
         //console.log(dataArray);
 
-        for(i in data.response.Target) {
-          a.speaker.Target[i] = data.response.Target[i];
-          console.log(data.response.TargetNames[i], data.response.Target[i]);
-        }
-
         for(i in data.response.Equalizer) {
           a.speaker.Equalizer[i] = data.response.Equalizer[i];
           console.log(data.response.PresetNames[i], data.response.Equalizer[i]);
@@ -246,6 +287,16 @@
         for(i in data.response.MusicEqualizer) {
           a.speaker.MusicEqualizer[i] = data.response.MusicEqualizer[i];
           console.log(data.response.MusicPresetNames[i], data.response.MusicEqualizer[i]);
+        }
+
+        for(i in data.response.PagingEqualizer) {
+          a.speaker.PagingEqualizer[i] = data.response.PagingEqualizer[i];
+          console.log(data.response.PagingPresetNames[i], data.response.PagingEqualizer[i]);
+        }
+
+        for(i in data.response.Target) {
+          a.speaker.Target[i] = data.response.Target[i];
+          console.log(data.response.TargetNames[i], data.response.Target[i]);
         }
 
         a.speaker.Response = "true";
@@ -537,6 +588,16 @@
           src: "/css/brokenlink.png"
         })
       });
+      console.log(statusCircle);
+
+      // update the system status icon
+      goodCircle.style.visibility = "hidden";
+      badCircle.style.visibility = "visibility";
+      goodFont.style.visibility = "hidden";
+      badFont.style.visibility = "visibility";
+
+      // we also need to add something to track which speakers are fine and which ones arent so that we
+      // can do instant updating
 
       // this thing also needs to remove the possibility to communicate with the speaker, remove the pop-up
 
@@ -552,6 +613,8 @@
                       })
                     })
                 });
+
+       // update the statuscircle thing
     }
 
     features[i].setStyle(style);

@@ -41,16 +41,87 @@ func LoginAccount(username, password string) (string, error) {
 	return sessionHash, nil
 }
 
+func GetLevelOfAccount(username string) int {
+	var level = 0
+	err := DB.QueryRow(`SELECT level FROM account WHERE username=?`, username).Scan(&level)
+	if(err != nil) {
+		log.Println("we got le error on GetLevelOfAccount")
+	}
+
+	log.Println(level)
+	return level
+}
+
+func GetSpeakerForAccount(username string) int {
+	var speakerID = -1
+	err := DB.QueryRow(`SELECT speaker FROM AccountToSpeakers WHERE uid=(SELECT uid FROM account where username=?)`, username).Scan(&speakerID)
+	if(err != nil) {
+		log.Println("we got le error on GetSpeakerForAccount")
+	}
+
+	log.Println("this is the shit mayne", speakerID)
+	return speakerID
+}
+
+func GetZoneForAccount(username string) int {
+	var zoneID = -1
+	err := DB.QueryRow(`SELECT zone FROM AccountToMaskingZones WHERE uid=(SELECT uid FROM account where username=?)`, username).Scan(&zoneID)
+	if(err != nil) {
+		log.Println("we got le error on GetZoneForAccount")
+	}
+
+	log.Println("this is the shit mayne", zoneID)
+
+	//var zoneArray = GetZone(int8(zoneID))
+
+	return zoneID
+}
+
 // CreateAccount inserts a row in the account table with the given configuration
-func CreateAccount(username, password, name string) error {
+
+// later on make the email a net/mail type and use the AddressParser to do some shit
+func CreateAccount(level int, username string, password string, name string, email string, phone string, speakerID int, zoneID int) error {
 	hashByte, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hash := string(hashByte)
 	_, err := DB.Exec(`INSERT INTO account 
-		(username, name, hash)
-		VALUES (?, ?, ?)
-		`, username, name, hash)
+		(level, username, name, email, phone, hash)
+		VALUES (?, ?, ?, ?, ?, ?)
+		`, level, username, name, email, phone, hash)
 	if err == nil {
 		log.Printf("Created account %s\n", username)
+
+	var uid int
+
+	DB.QueryRow(`
+		SELECT uid 
+		FROM account
+		where username=? 
+		`, username).Scan(&uid)
+
+	if(speakerID > 0) {
+		_, err := DB.Exec(`
+			INSERT INTO AccountToSpeakers 
+			VALUES (?, ?)
+			`, uid, speakerID)
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			log.Printf("Created speaker link\n")
+		}
+	}
+
+	if(zoneID > 0) {
+		_, err := DB.Exec(`
+			INSERT INTO AccountToMaskingZones 
+			VALUES (?, ?)
+			`, uid, zoneID)
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			log.Printf("Created zone link\n")
+		}
+	}
+
 		return nil
 	}
 	switch err.(sqlite3.Error).Code {
@@ -61,6 +132,20 @@ func CreateAccount(username, password, name string) error {
 		log.Fatal(err)
 		return nil
 	}
+
+	// insert the speakers or zones that they control
+
+	/*_, err := DB.Exec(`
+		INSERT INTO AccountToSpeakers 
+		VALUES (?, ?)
+		`, )
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Printf("Created paging zone %s\n", name)
+	}*/
+
+
 	return nil
 }
 
@@ -73,10 +158,13 @@ func getCreateAccountStmt() (*sql.Stmt, error) {
 
 func createAccountTable() {
 	_, err := DB.Exec(`
-		CREATE TABLE  account (
+		CREATE TABLE account (
 			uid INTEGER PRIMARY KEY AUTOINCREMENT,
+			level INTEGER NOT NULL,
 			username VARCHAR(20) NOT NULL UNIQUE,
-			name VARCHAR(20),
+			name VARCHAR(40),
+			email VARCHAR(40),
+			phone VARCHAR(40),
 			hash CHAR(60) NOT NULL
 		);
 
@@ -90,15 +178,61 @@ func createAccountTable() {
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		log.Println("Created account table")
+		log.Println("Created table account")
 	}
 
-	CreateAccount("admin", "password", "admin")
-	CreateAccount("andy", "andy", "andy")
-	CreateAccount("danny", "danny", "danny")
-	CreateAccount("bruce", "bruce", "bruce")
-	CreateAccount("scott", "scott", "scott")
-	CreateAccount("eric", "eric", "eric")
+	CreateAccount(2, "admin", "password", "admin", "", "", 1, -1)
+	CreateAccount(2, "andy", "andy", "andy", "", "", 62, -1)
+	CreateAccount(2, "danny", "danny", "danny", "", "", 1, -1)
+	CreateAccount(2,  "bruce", "bruce", "bruce", "", "", 1, -1)
+	CreateAccount(2, "scott", "scott", "scott", "", "", 62, 1)
+	CreateAccount(1, "max", "max", "max", "", "", 62, -1)
+	CreateAccount(0, "eric", "eric", "eric", "", "", 62, -1)
+}
+
+func createAccountToSpeakersTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE  AccountToSpeakers (
+			uid INTEGER REFERENCES account(uid),
+			speaker INTEGER REFERENCES Speaker(SpeakerID),
+			PRIMARY KEY (uid, speaker)
+		);
+	`)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created table AccountToSpeakers")
+	}
+}
+
+func createAccountToMaskingZonesTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE  AccountToMaskingZones (
+			uid INTEGER REFERENCES account(uid),
+			zone INTEGER REFERENCES zone(zoneID),
+			PRIMARY KEY (uid, zone)
+		);
+	`)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created table AccountToMaskingZones")
+	}
+}
+
+func createAccountToPagingZonesTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE  AccountToPagingZones (
+			uid INTEGER REFERENCES account(uid),
+			zone INTEGER REFERENCES zone(zoneID),
+			PRIMARY KEY (uid, zone)
+		);
+	`)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created table AccountToPagingZones")
+	}
 }
 
 // IsSessionHashValid checks if the given hash is present in the database

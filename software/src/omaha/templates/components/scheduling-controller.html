@@ -130,7 +130,7 @@
 	        </div>
 	       </div>
 <div class="card-actions">
-	  <paper-dropdown-menu id="dayMenu" style="margin-top: 10px; margin-left: calc(.27 * 100vw);" no-label-float label="Day:" vertical-align="top" horizontal-align="left">
+	  <paper-dropdown-menu id="dayMenu" style="margin-top: 10px; margin-left: calc(0 * 100vw);" no-label-float label="Day:" vertical-align="top" horizontal-align="left">
     	<paper-listbox id="dayListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
           <!--<template if="{{this.speaker.Response}}">
             <paper-dropdown-menu selected="{{selected}}">
@@ -211,13 +211,14 @@
         strokeColor: "#3f51b5",
         pointColor: "#fff",
         pointStrokeColor: "#3f51b5",  
-        data: [10, 10, 10, 10, 10, 10, 25, 45, 80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 80, 45, 25, 10, 10, 10, 10]
+        data: [10, 10, 10, 10, 10, 10, 25, 45, 80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 80, 45, 25, 10, 5, 8, 10]
       }]
     };
 
     var timingLineAttributes = {
       scaleOverride: true,
-      scaleSteps: 10,
+      scaleSteps: 10,   
+    	scaleLabel : "<%= value + \"%\" %>",
       scaleStartValue: 0,
       scaleStepWidth: 10,
       scaleShowLabels: true,

@@ -30,27 +30,27 @@ func createSpeakerTable() {
 			status INTEGER DEFAULT 0,
 			equalizerMode INTEGER DEFAULT 0,
 
-			pBand0 REAL, 
-			pBand1 REAL, 
-			pBand2 REAL, 
-			pBand3 REAL, 
-			pBand4 REAL, 
-			pBand5 REAL, 
-			pBand6 REAL, 
-			pBand7 REAL, 
-			pBand8 REAL, 
-			pBand9 REAL, 
-			pBand10 REAL, 
-			pBand11 REAL, 
-			pBand12 REAL, 
-			pBand13 REAL, 
-			pBand14 REAL, 
-			pBand15 REAL, 
-			pBand16 REAL, 
-			pBand17 REAL, 
-			pBand18 REAL, 
-			pBand19 REAL, 
-			pBand20 REAL,
+			eBand0, 		
+			eBand1, 
+			eBand2, 
+			eBand3, 
+			eBand4, 
+			eBand5, 
+			eBand6, 
+			eBand7, 
+			eBand8, 
+			eBand9, 
+			eBand10, 
+			eBand11, 
+			eBand12, 
+			eBand13, 
+			eBand14, 
+			eBand15, 
+			eBand16, 
+			eBand17, 
+			eBand18, 
+			eBand19, 
+			eBand20,
 
 			mBand0 REAL, 
 			mBand1 REAL, 
@@ -73,6 +73,28 @@ func createSpeakerTable() {
 			mBand18 REAL, 
 			mBand19 REAL, 
 			mBand20 REAL,
+
+			pBand0 REAL, 
+			pBand1 REAL, 
+			pBand2 REAL, 
+			pBand3 REAL, 
+			pBand4 REAL, 
+			pBand5 REAL, 
+			pBand6 REAL, 
+			pBand7 REAL, 
+			pBand8 REAL, 
+			pBand9 REAL, 
+			pBand10 REAL, 
+			pBand11 REAL, 
+			pBand12 REAL, 
+			pBand13 REAL, 
+			pBand14 REAL, 
+			pBand15 REAL, 
+			pBand16 REAL, 
+			pBand17 REAL, 
+			pBand18 REAL, 
+			pBand19 REAL, 
+			pBand20 REAL,
 			
 			tBand0 REAL, 
 			tBand1 REAL, 
@@ -199,6 +221,42 @@ func createMusicEqualizerPresetsTable() {
 	}
 }
 
+func createPagingEqualizerPresetsTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE PagingEqualizerPresets (
+			speakerID INTEGER,
+			name varchar(50) PRIMARY KEY,
+			whichPreset INTEGER,
+			band0 REAL,
+			band1 REAL,
+			band2 REAL,
+			band3 REAL,
+			band4 REAL,
+			band5 REAL,
+			band6 REAL,
+			band7 REAL,
+			band8 REAL,
+			band9 REAL,
+			band10 REAL,
+			band11 REAL,
+			band12 REAL,
+			band13 REAL,
+			band14 REAL,
+			band15 REAL,
+			band16 REAL,
+			band17 REAL,
+			band18 REAL,
+			band19 REAL,
+			band20 REAL
+		)
+	`) // needs to be an equalizer thing in here
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created paging equalizer table")
+	}
+}
+
 func createTargetsTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE Targets (
@@ -231,7 +289,7 @@ func createTargetsTable() {
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		log.Println("Created speaker table")
+		log.Println("Created targets table")
 	}
 }
 
@@ -255,27 +313,27 @@ func GetAllSpeakers() []*ControllerStatus {
 			status,
 			equalizerMode,
 
-			pBand0, 		
-			pBand1, 
-			pBand2, 
-			pBand3, 
-			pBand4, 
-			pBand5, 
-			pBand6, 
-			pBand7, 
-			pBand8, 
-			pBand9, 
-			pBand10, 
-			pBand11, 
-			pBand12, 
-			pBand13, 
-			pBand14, 
-			pBand15, 
-			pBand16, 
-			pBand17, 
-			pBand18, 
-			pBand19, 
-			pBand20,
+			eBand0, 		
+			eBand1, 
+			eBand2, 
+			eBand3, 
+			eBand4, 
+			eBand5, 
+			eBand6, 
+			eBand7, 
+			eBand8, 
+			eBand9, 
+			eBand10, 
+			eBand11, 
+			eBand12, 
+			eBand13, 
+			eBand14, 
+			eBand15, 
+			eBand16, 
+			eBand17, 
+			eBand18, 
+			eBand19, 
+			eBand20,
 
 			mBand0, 
 			mBand1, 
@@ -298,6 +356,28 @@ func GetAllSpeakers() []*ControllerStatus {
 			mBand18, 
 			mBand19, 
 			mBand20,
+
+			pBand0, 		
+			pBand1, 
+			pBand2, 
+			pBand3, 
+			pBand4, 
+			pBand5, 
+			pBand6, 
+			pBand7, 
+			pBand8, 
+			pBand9, 
+			pBand10, 
+			pBand11, 
+			pBand12, 
+			pBand13, 
+			pBand14, 
+			pBand15, 
+			pBand16, 
+			pBand17, 
+			pBand18, 
+			pBand19, 
+			pBand20,
 			
 			tBand0, 
 			tBand1, 
@@ -347,27 +427,27 @@ func GetAllSpeakers() []*ControllerStatus {
 		var equalizerMode int8
 		// var currentMode int
 		// var whichPreset int
-		var pBand0 float64			// why do we need to pull all of this stuff, this can be optimized!!
-		var pBand1 float64
-		var pBand2 float64
-		var pBand3 float64
-		var pBand4 float64
-		var pBand5 float64
-		var pBand6 float64
-		var pBand7 float64
-		var pBand8 float64
-		var pBand9 float64
-		var pBand10 float64
-		var pBand11 float64
-		var pBand12 float64
-		var pBand13 float64
-		var pBand14 float64
-		var pBand15 float64
-		var pBand16 float64
-		var pBand17 float64
-		var pBand18 float64
-		var pBand19 float64
-		var pBand20 float64
+		var eBand0 float64			// why do we need to pull all of this stuff, this can be optimized!!
+		var eBand1 float64
+		var eBand2 float64
+		var eBand3 float64
+		var eBand4 float64
+		var eBand5 float64
+		var eBand6 float64
+		var eBand7 float64
+		var eBand8 float64
+		var eBand9 float64
+		var eBand10 float64
+		var eBand11 float64
+		var eBand12 float64
+		var eBand13 float64
+		var eBand14 float64
+		var eBand15 float64
+		var eBand16 float64
+		var eBand17 float64
+		var eBand18 float64
+		var eBand19 float64
+		var eBand20 float64
 
 		var mBand0 float64
 		var mBand1 float64
@@ -390,6 +470,28 @@ func GetAllSpeakers() []*ControllerStatus {
 		var mBand18 float64
 		var mBand19 float64
 		var mBand20 float64
+
+		var pBand0 float64			// why do we need to pull all of this stuff, this can be optimized!!
+		var pBand1 float64
+		var pBand2 float64
+		var pBand3 float64
+		var pBand4 float64
+		var pBand5 float64
+		var pBand6 float64
+		var pBand7 float64
+		var pBand8 float64
+		var pBand9 float64
+		var pBand10 float64
+		var pBand11 float64
+		var pBand12 float64
+		var pBand13 float64
+		var pBand14 float64
+		var pBand15 float64
+		var pBand16 float64
+		var pBand17 float64
+		var pBand18 float64
+		var pBand19 float64
+		var pBand20 float64
 
 		var tBand0 float64
 		var tBand1 float64
@@ -431,28 +533,30 @@ func GetAllSpeakers() []*ControllerStatus {
 			&status,
 			&equalizerMode,		
 
+			// we may not even need to scan all this.....
+
 			// Current preset bands
-			&pBand0,
-			&pBand1,
-			&pBand2,
-			&pBand3,
-			&pBand4,
-			&pBand5,
-			&pBand6,
-			&pBand7,
-			&pBand8,
-			&pBand9,
-			&pBand10,
-			&pBand11,
-			&pBand12,
-			&pBand13,
-			&pBand14,
-			&pBand15,
-			&pBand16,
-			&pBand17,
-			&pBand18,
-			&pBand19,
-			&pBand20,
+			&eBand0,
+			&eBand1,
+			&eBand2,
+			&eBand3,
+			&eBand4,
+			&eBand5,
+			&eBand6,
+			&eBand7,
+			&eBand8,
+			&eBand9,
+			&eBand10,
+			&eBand11,
+			&eBand12,
+			&eBand13,
+			&eBand14,
+			&eBand15,
+			&eBand16,
+			&eBand17,
+			&eBand18,
+			&eBand19,
+			&eBand20,
 
 			// Current music preset bands
 			&mBand0,
@@ -476,6 +580,28 @@ func GetAllSpeakers() []*ControllerStatus {
 			&mBand18,
 			&mBand19,
 			&mBand20,
+
+			&pBand0,
+			&pBand1,
+			&pBand2,
+			&pBand3,
+			&pBand4,
+			&pBand5,
+			&pBand6,
+			&pBand7,
+			&pBand8,
+			&pBand9,
+			&pBand10,
+			&pBand11,
+			&pBand12,
+			&pBand13,
+			&pBand14,
+			&pBand15,
+			&pBand16,
+			&pBand17,
+			&pBand18,
+			&pBand19,
+			&pBand20,
 
 			// Current target bands
 			&tBand0,
@@ -543,7 +669,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var status int
 	var equalizerMode int8
 
-	var band0 float64			// not using these bands, take these out later
+	var band0 float64
 	var band1 float64
 	var band2 float64
 	var band3 float64
@@ -565,27 +691,27 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var band19 float64
 	var band20 float64
 
-	var pBand0 float64
-	var pBand1 float64
-	var pBand2 float64
-	var pBand3 float64
-	var pBand4 float64
-	var pBand5 float64
-	var pBand6 float64
-	var pBand7 float64
-	var pBand8 float64
-	var pBand9 float64
-	var pBand10 float64
-	var pBand11 float64
-	var pBand12 float64
-	var pBand13 float64
-	var pBand14 float64
-	var pBand15 float64
-	var pBand16 float64
-	var pBand17 float64
-	var pBand18 float64
-	var pBand19 float64
-	var pBand20 float64
+	var eBand0 float64
+	var eBand1 float64
+	var eBand2 float64
+	var eBand3 float64
+	var eBand4 float64
+	var eBand5 float64
+	var eBand6 float64
+	var eBand7 float64
+	var eBand8 float64
+	var eBand9 float64
+	var eBand10 float64
+	var eBand11 float64
+	var eBand12 float64
+	var eBand13 float64
+	var eBand14 float64
+	var eBand15 float64
+	var eBand16 float64
+	var eBand17 float64
+	var eBand18 float64
+	var eBand19 float64
+	var eBand20 float64
 
 	var mBand0 float64
 	var mBand1 float64
@@ -608,6 +734,28 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var mBand18 float64
 	var mBand19 float64
 	var mBand20 float64
+
+	var pBand0 float64
+	var pBand1 float64
+	var pBand2 float64
+	var pBand3 float64
+	var pBand4 float64
+	var pBand5 float64
+	var pBand6 float64
+	var pBand7 float64
+	var pBand8 float64
+	var pBand9 float64
+	var pBand10 float64
+	var pBand11 float64
+	var pBand12 float64
+	var pBand13 float64
+	var pBand14 float64
+	var pBand15 float64
+	var pBand16 float64
+	var pBand17 float64
+	var pBand18 float64
+	var pBand19 float64
+	var pBand20 float64
 
 	var tBand0 float64
 	var tBand1 float64
@@ -643,27 +791,27 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			status,
 			equalizerMode,
 
-			pBand0, 
-			pBand1, 
-			pBand2, 
-			pBand3, 
-			pBand4, 
-			pBand5, 
-			pBand6, 
-			pBand7, 
-			pBand8, 
-			pBand9, 
-			pBand10, 
-			pBand11, 
-			pBand12, 
-			pBand13, 
-			pBand14, 
-			pBand15, 
-			pBand16, 
-			pBand17, 
-			pBand18, 
-			pBand19, 
-			pBand20,
+			eBand0, 		
+			eBand1, 
+			eBand2, 
+			eBand3, 
+			eBand4, 
+			eBand5, 
+			eBand6, 
+			eBand7, 
+			eBand8, 
+			eBand9, 
+			eBand10, 
+			eBand11, 
+			eBand12, 
+			eBand13, 
+			eBand14, 
+			eBand15, 
+			eBand16, 
+			eBand17, 
+			eBand18, 
+			eBand19, 
+			eBand20,
 
 			mBand0, 
 			mBand1, 
@@ -686,6 +834,28 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			mBand18, 
 			mBand19, 
 			mBand20,
+
+			pBand0, 
+			pBand1, 
+			pBand2, 
+			pBand3, 
+			pBand4, 
+			pBand5, 
+			pBand6, 
+			pBand7, 
+			pBand8, 
+			pBand9, 
+			pBand10, 
+			pBand11, 
+			pBand12, 
+			pBand13, 
+			pBand14, 
+			pBand15, 
+			pBand16, 
+			pBand17, 
+			pBand18, 
+			pBand19, 
+			pBand20,
 			
 			tBand0, 
 			tBand1, 
@@ -726,27 +896,27 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&equalizerMode,
 
 			// Current preset bands
-			&pBand0,
-			&pBand1,
-			&pBand2,
-			&pBand3,
-			&pBand4,
-			&pBand5,
-			&pBand6,
-			&pBand7,
-			&pBand8,
-			&pBand9,
-			&pBand10,
-			&pBand11,
-			&pBand12,
-			&pBand13,
-			&pBand14,
-			&pBand15,
-			&pBand16,
-			&pBand17,
-			&pBand18,
-			&pBand19,
-			&pBand20,
+			&eBand0,
+			&eBand1,
+			&eBand2,
+			&eBand3,
+			&eBand4,
+			&eBand5,
+			&eBand6,
+			&eBand7,
+			&eBand8,
+			&eBand9,
+			&eBand10,
+			&eBand11,
+			&eBand12,
+			&eBand13,
+			&eBand14,
+			&eBand15,
+			&eBand16,
+			&eBand17,
+			&eBand18,
+			&eBand19,
+			&eBand20,
 
 			// Current music preset bands
 			&mBand0,
@@ -770,6 +940,29 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&mBand18,
 			&mBand19,
 			&mBand20,
+
+			// Current preset bands
+			&pBand0,
+			&pBand1,
+			&pBand2,
+			&pBand3,
+			&pBand4,
+			&pBand5,
+			&pBand6,
+			&pBand7,
+			&pBand8,
+			&pBand9,
+			&pBand10,
+			&pBand11,
+			&pBand12,
+			&pBand13,
+			&pBand14,
+			&pBand15,
+			&pBand16,
+			&pBand17,
+			&pBand18,
+			&pBand19,
+			&pBand20,
 
 			// Current target bands
 			&tBand0,
@@ -819,12 +1012,16 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		EqualizerMode: equalizerMode,
 
 		CurrentPreset: [21] float64 {
-			pBand0, pBand1, pBand2, pBand3, pBand4, pBand5, pBand6, pBand7, pBand8, pBand9, pBand10, pBand11, 
-			pBand12, pBand13, pBand14, pBand15, pBand16, pBand17, pBand18, pBand19, pBand20 },
+			eBand0, eBand1, eBand2, eBand3, eBand4, eBand5, eBand6, eBand7, eBand8, eBand9, eBand10, eBand11, 
+			eBand12, eBand13, eBand14, eBand15, eBand16, eBand17, eBand18, eBand19, eBand20 },
 
 		CurrentMusicPreset: [21] float64 {
 			mBand0, mBand1, mBand2, mBand3, mBand4, mBand5, mBand6, mBand7, mBand8, mBand9, mBand10, mBand11, 
 			mBand12, mBand13, mBand14, mBand15, mBand16, mBand17, mBand18, mBand19, mBand20 },
+
+		CurrentPagingPreset: [21] float64 {
+			pBand0, pBand1, pBand2, pBand3, pBand4, pBand5, pBand6, pBand7, pBand8, pBand9, pBand10, pBand11, 
+			pBand12, pBand13, pBand14, pBand15, pBand16, pBand17, pBand18, pBand19, pBand20 },
 
 		CurrentTarget: [21] float64 {
 			tBand0, tBand1, tBand2, tBand3, tBand4, tBand5, tBand6, tBand7, tBand8, tBand9, tBand10, tBand11, 
@@ -959,6 +1156,71 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		log.Fatal(err)
 	}
 
+	rows, err = DB.Query(`
+	SELECT 	name, whichPreset, 
+			band0,
+			band1,
+			band2,
+			band3,
+			band4,
+			band5,
+			band6,
+			band7,
+			band8,
+			band9,
+			band10,
+			band11,
+			band12,
+			band13,
+			band14,
+			band15,
+			band16,
+			band17,
+			band18,
+			band19,			
+			band20
+	FROM PagingEqualizerPresets
+	WHERE speakerID=?;
+	`, speakerID)
+
+	for rows.Next() {
+
+		err = rows.Scan(&presetName, &whichPreset, 
+				&band0,
+				&band1,
+				&band2,
+				&band3,
+				&band4,
+				&band5,
+				&band6,
+				&band7,
+				&band8,
+				&band9,
+				&band10,
+				&band11,
+				&band12,
+				&band13,
+				&band14,
+				&band15,
+				&band16,
+				&band17,
+				&band18,
+				&band19,
+				&band20)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+			
+			speaker.PagingPresetNames = append(speaker.PagingPresetNames, presetName)
+			speaker.PagingEqualizer = append(speaker.PagingEqualizer, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
+			log.Println(speaker.PagingPresetNames, speaker.PagingEqualizer)		// make sure that the two arrays are the same size
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	rows, errr := DB.Query(`
 	SELECT 	name, whichPreset, 
 			band0,
@@ -1079,8 +1341,22 @@ func SavePreset(speakerId int8, name string, constants []string) {
 func SaveMusicPreset(speakerId int8, name string, constants []string) {
 
 	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
-	log.Println("SavePreset: I am firing")
+	log.Println("SaveMusicPreset: I am firing")
 	var stringOfStatement string = "INSERT into MusicEqualizerPresets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
+	}
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+}
+
+func SavePagingPreset(speakerId int8, name string, constants []string) {
+
+	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
+	log.Println("SavePagingPreset: I am firing")
+	var stringOfStatement string = "INSERT into PagingEqualizerPresets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
 	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
 		log.Fatal(errr)			
@@ -1174,13 +1450,15 @@ func SaveBand(speaker *ControllerStatus, band int, level float64, target int) { 
 
 	switch target {
 		case 0:
-			stringOfStatement = "UPDATE speaker SET pBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+			stringOfStatement = "UPDATE speaker SET eBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
 		case 1:
 			stringOfStatement = "UPDATE speaker SET mBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
 		case 2:
+			stringOfStatement = "UPDATE speaker SET pBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
+		case 3:
 			stringOfStatement = "UPDATE speaker SET tBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
 		default:
-			log.Println("SAVEBAND WAS PASSED AN INVALID TARGET VALUE")
+			log.Println("SAVEBAND WAS PASSED AN INVALID PRESET OR TARGET VALUE")
 	}
 	//stmt, err := DB.Prepare()			// this might need to be prepared afterwards
 	log.Println("SaveBand: I am firing")
@@ -1285,27 +1563,27 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			status,
 			equalizerMode,
 
-			pBand0, 
-			pBand1, 
-			pBand2, 
-			pBand3, 
-			pBand4, 
-			pBand5, 
-			pBand6, 
-			pBand7, 
-			pBand8, 
-			pBand9, 
-			pBand10, 
-			pBand11, 
-			pBand12, 
-			pBand13, 
-			pBand14, 
-			pBand15, 
-			pBand16, 
-			pBand17, 
-			pBand18, 
-			pBand19, 
-			pBand20,
+			eBand0, 		
+			eBand1, 
+			eBand2, 
+			eBand3, 
+			eBand4, 
+			eBand5, 
+			eBand6, 
+			eBand7, 
+			eBand8, 
+			eBand9, 
+			eBand10, 
+			eBand11, 
+			eBand12, 
+			eBand13, 
+			eBand14, 
+			eBand15, 
+			eBand16, 
+			eBand17, 
+			eBand18, 
+			eBand19, 
+			eBand20,
 
 			mBand0, 
 			mBand1, 
@@ -1328,6 +1606,28 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			mBand18, 
 			mBand19, 
 			mBand20,
+
+			pBand0, 
+			pBand1, 
+			pBand2, 
+			pBand3, 
+			pBand4, 
+			pBand5, 
+			pBand6, 
+			pBand7, 
+			pBand8, 
+			pBand9, 
+			pBand10, 
+			pBand11, 
+			pBand12, 
+			pBand13, 
+			pBand14, 
+			pBand15, 
+			pBand16, 
+			pBand17, 
+			pBand18, 
+			pBand19, 
+			pBand20,
 			
 			tBand0, 
 			tBand1, 
@@ -1351,7 +1651,8 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			tBand19, 
 			tBand20)
 		VALUES ("", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		`)
 	if err != nil {

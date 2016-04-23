@@ -31,15 +31,25 @@ func InitDB() {
 	// user table doesn't exist
 	case err == sql.ErrNoRows:
 		// create all tables
+
+		// this was changed around on 4/19, change back if needed
+		createAccountToSpeakersTable()
+		createAccountToMaskingZonesTable()
+		createAccountToPagingZonesTable()
 		createAccountTable()
 		createSpeakerTable()
+		
 		createZoneTable()
 		createPagingZoneTable()
-		createEqualizerPresetsTable()
-		createMusicEqualizerPresetsTable()
+
 		createTargetsTable()
 		createZoneToSpeakerTable()
 		createPagingZoneToSpeakerTable()
+		
+		createEqualizerPresetsTable()
+		createMusicEqualizerPresetsTable()
+		createPagingEqualizerPresetsTable()
+
 		prepareStatements()
 		populateSpeakerTable()
 	case err != nil:

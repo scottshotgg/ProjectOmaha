@@ -1,0 +1,25 @@
+scottgaydos@Scotts-MacBook-Pro:~/Documents/Development/go timing test$ cd ~/Desktop/untitled\ folder/
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder$ ls
+total 24
+drwxr-xr-x   7 scottgaydos  staff    238 Apr 16 16:03 .
+drwx------+ 22 scottgaydos  staff    748 Apr 16 16:02 ..
+-rw-r--r--@  1 scottgaydos  staff  10244 Apr 16 16:08 .DS_Store
+drwxr-xr-x  13 scottgaydos  staff    442 Apr 16 16:08 c-c++
+drwxr-xr-x  23 scottgaydos  staff    782 Apr 16 16:07 go
+drwxr-xr-x  13 scottgaydos  staff    442 Apr 16 16:08 various
+drwxr-xr-x  39 scottgaydos  staff   1326 Apr 16 16:05 web
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder$ cd go
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder/go$ grep "" * | wc -l
+    4058
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder/go$ cd ../c-c++/
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder/c-c++$ grep "" * | wc -l
+     986
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder/c-c++$ cd ../web/
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder/web$ grep "" * | wc -l
+    9262
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder/web$ cd ../
+.DS_Store  c-c++/     go/        various/   web/       
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder/web$ cd ../various/
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder/various$ grep "" * | wc -l
+     729
+scottgaydos@Scotts-MacBook-Pro:~/Desktop/untitled folder/various$ 15035 lines of code!!

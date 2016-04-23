@@ -58,13 +58,29 @@
     <div class="message">{{err}}</div>
     <div class="success">{{successMsg}}</div>
     <form on-iron-form-submit="_submit" is="iron-form" id="form">
-      <paper-input id="username" name="username" label="Username" required></paper-input>
-      <paper-input id="password" name="password" label="Password" type="password" required></paper-input>
-      <paper-input id="confirm" name="confirm" label="Confirm Password" type="password" required></paper-input>
-      <paper-button raised on-click="_submit">Create Account</paper-button>
-      <paper-progress id="progress" value="100"></paper-progress>
-      <!-- We should be able to press enter to submit. This button with type submit is required to do so. -->
-      <button class="hidden" type="submit">I should be hidden</button>
+      <div>
+        <paper-input style="float: left;" id="username" name="username" label="Username" required></paper-input>
+        <paper-input style="float: right;" id="password" name="password" label="Password" type="password" required></paper-input>
+      <div>
+      <br><br><br><br><br>
+      <div>
+        <paper-input id="name" name="name" label="Full Name"></paper-input>
+      </div>
+      <div>  
+        <paper-input style="float: left;" id="email" name="email" label="Email"></paper-input>
+        <paper-input style="float: right;" id="phone" name="phone" label="Phone"></paper-input>
+      </div>    
+      <br><br><br><br><br>
+      <div>
+        <paper-input style="float: left;" id="speakerid" name="speakerid" label="SpeakerID"></paper-input>
+        <paper-input style="float: right;" id="zoneid" name="zoneid" label="ZoneID"></paper-input>
+      </div>
+      <br><br><br><br><br>
+        <paper-input id="confirm" name="confirm" label="Confirm Password" type="password" required></paper-input>
+        <paper-button raised on-click="_submit">Create Account</paper-button>
+        <paper-progress id="progress" value="100"></paper-progress>
+        <!-- We should be able to press enter to submit. This button with type submit is required to do so. -->
+        <button class="hidden" type="submit">I should be hidden</button>
     </form>
     <iron-ajax
         id="loginAjax"
@@ -102,9 +118,20 @@
             return;
           }, 1000);
         } else {
+          // some checking needs to be done on this
           this.$.loginAjax.body = {
-            username: this.$.username.value,
-            password: this.$.password.value
+            level:      parseInt(localStorage.getItem("level")) - 1,
+            username:   this.$.username.value,
+            password:   this.$.password.value,
+            name:       this.$.name.value,
+            email:      this.$.email.value,
+            phone:      this.$.phone.value,
+            speakerid:  parseInt(this.$.speakerid.value), 
+            zoneid:     parseInt(this.$.zoneid.value)
+
+            /*
+            name:     this.$.name.value,
+            */
           }
           this.$.loginAjax.generateRequest();
         }

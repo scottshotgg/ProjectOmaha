@@ -8,9 +8,11 @@ import (
 )
 
 type systemStatusResponse struct {
-	Zones 		[]*database.Zone	`json:"zones"`
+	Zones 			[]*database.Zone	`json:"zones"`
 	PagingZones []*database.Zone	`json:"pagingZones"`
 	//Status	[]int				`json:"status"`
+
+	// this is where we could have some IP analysis to see whether or not we should preload certain data or not
 }
 
 

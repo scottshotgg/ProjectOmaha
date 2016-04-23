@@ -9,6 +9,9 @@
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 
+<link rel="import" href="/components/omaha-app.html">
+
+
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/ >
 
 <dom-module id="login-form">
@@ -81,6 +84,10 @@
       },
 
       _handleLogin: function(event, data, x) {
+        console.log(data.response);
+        localStorage.setItem('level', data.response.level);
+        localStorage.setItem('speakerid', data.response.speakerid);
+        localStorage.setItem('zoneid', data.response.zoneid);
         if(data.response.hash !== undefined) {
           var sessionCookie = "session=" + data.response.hash + ";";
           document.cookie = sessionCookie;

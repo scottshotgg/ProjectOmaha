@@ -20,14 +20,14 @@ type speakerPutRequest struct {
 }
 
 type speakerResponse struct {
-	Volume									int8		`json:"volume"`
-	Music 									int8		`json:"music"`
-	Paging 									int8		`json:"paging"`
-	Masking 								int8		`json:"masking"`
-	Effectiveness 					int8		`json:"effectiveness"`
-	Pleasantness 						int8		`json:"pleasantness"`
-	FadeTime								int8		`json:"fadetime"`
-	FadeLevel								int8		`json:"fadelevel"`
+	Volume									int8			`json:"volume"`
+	Music 									int8			`json:"music"`
+	Paging 									int8			`json:"paging"`
+	Masking 								int8			`json:"masking"`
+	Effectiveness 					int8			`json:"effectiveness"`
+	Pleasantness 						int8			`json:"pleasantness"`
+	FadeTime								int8			`json:"fadetime"`
+	FadeLevel								int8			`json:"fadelevel"`
 
 	Target[][]							float64		`json:["target"]`
 	TargetNames[]						string		`json:["targetNames"]`
@@ -285,6 +285,41 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 
 				break;
 			}
+
+			case 2: {
+				for  i := 0; i < len(constants); i++ {
+					floatParse, err := strconv.ParseFloat(constants[i], 64)
+					if err != nil {
+						panic(err)		// test if this returns
+					}
+					if(floatParse != speaker.CurrentMusicPreset[k]) {			// change this to pull from the db, it might already do that
+						whole := math.Floor(floatParse)
+
+						decimal := math.Abs(whole - floatParse) * 100
+
+						//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+						//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
+						log.Println("Whole value:", int8(whole))
+						//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+						log.Println("Decimal value:", int8(decimal))
+						speaker.CurrentPagingPreset[k] = floatParse	// this needs checking
+						//log.Printf("You changed band %d to level %d", k, floatParse)
+					//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+						database.SaveBand(speaker, k, floatParse, 2)
+					}
+
+					floatParse, err = strconv.ParseFloat(constants[i], 64)
+					if err != nil {
+						panic(err)		// test if this returns
+					}
+					k++
+				}
+
+				break;
+			}
+
+			default: 
+				log.Println("updateSpeakerEqualizer is getting the wrong value....")
 		}
 
 		
@@ -600,6 +635,13 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 			controller.CurrentMusicPreset[12], controller.CurrentMusicPreset[13], controller.CurrentMusicPreset[14], controller.CurrentMusicPreset[15], 
 			controller.CurrentMusicPreset[16], controller.CurrentMusicPreset[17], controller.CurrentMusicPreset[18], controller.CurrentMusicPreset[19], 
 			controller.CurrentMusicPreset[20] }, 
+		CurrentPagingPreset: [21] float64 {
+			controller.CurrentPagingPreset[0], controller.CurrentPagingPreset[1], controller.CurrentPagingPreset[2], controller.CurrentPagingPreset[3], 
+			controller.CurrentPagingPreset[4], controller.CurrentPagingPreset[5], controller.CurrentPagingPreset[6], controller.CurrentPagingPreset[7], 
+			controller.CurrentPagingPreset[8], controller.CurrentPagingPreset[9], controller.CurrentPagingPreset[10], controller.CurrentPagingPreset[11], 
+			controller.CurrentPagingPreset[12], controller.CurrentPagingPreset[13], controller.CurrentPagingPreset[14], controller.CurrentPagingPreset[15], 
+			controller.CurrentPagingPreset[16], controller.CurrentPagingPreset[17], controller.CurrentPagingPreset[18], controller.CurrentPagingPreset[19], 
+			controller.CurrentPagingPreset[20] }, 
 		CurrentTarget: [21] float64 {
 			controller.CurrentTarget[0], controller.CurrentTarget[1], controller.CurrentTarget[2], controller.CurrentTarget[3],
 			controller.CurrentTarget[4], controller.CurrentTarget[5], controller.CurrentTarget[6], controller.CurrentTarget[7], 
@@ -642,8 +684,7 @@ func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 		case 1:
 			database.SaveMusicPreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
 		case 2:
-			// you dont do anything right now, shuddup
-			database.SavePreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+			database.SavePagingPreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
 		default: 
 			log.Println("AddPresetHandler MESSED UP SOMEHOW")
 	}

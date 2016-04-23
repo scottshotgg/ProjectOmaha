@@ -17,12 +17,12 @@
       }
     </style>
     <paper-menu attr-for-selected="page" id="menu" selected="{{selected}}">
-      <paper-item page="information">Information<iron-icon  class="icon" icon="dashboard"></iron-icon></paper-item>
-      <paper-item page="map">Map<iron-icon                  class="icon" icon="maps:map"></iron-icon></paper-item>
-      <paper-item page="accountCreation">Admin<iron-icon    class="icon" icon="account-circle"></iron-icon></paper-item>
+      <paper-item id="mapInformation" page="information">Information<iron-icon  class="icon" icon="dashboard"></iron-icon></paper-item>
+      <paper-item id="mainMap" page="map">Map<iron-icon                  class="icon" icon="maps:map"></iron-icon></paper-item>
+      <paper-item id="accountCreation" page="accountCreation">Admin<iron-icon    class="icon" icon="account-circle"></iron-icon></paper-item>
       <!-- <paper-item page="zoneCreation">Zone Creation</paper-item> -->
-      <paper-item page="zoneMap">Update Zones<iron-icon     class="icon" icon="settings-overscan"></iron-icon></paper-item>
-      <paper-item page="pagingMap">Paging Dialer<iron-icon         class="icon" icon="maps:local-phone"></iron-icon></paper-item>
+      <paper-item id="mapForZone" page="zoneMap">Update Zones<iron-icon     class="icon" icon="settings-overscan"></iron-icon></paper-item>
+      <paper-item id="mapForPaging" page="pagingMap">Paging Dialer<iron-icon  class="icon" icon="maps:local-phone"></iron-icon></paper-item>
     </paper-menu>
   </template>
   <script>

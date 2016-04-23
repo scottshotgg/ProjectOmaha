@@ -5,11 +5,34 @@ import (
 	"fmt"
 	"html/template"
 	"log"
-	"net"
+	//"net"
 	"net/http"
 	"omaha/database"
 	"omaha/util"
 )
+
+type loginPostRequest struct {
+	Username  string  `json:"username"`
+	Password  string  `json:"password"`
+}
+
+type loginPostResponse struct {
+	Hash  		string  `json:"hash"`
+	Level 		int			`json:"level"`
+	SpeakerID int			`json:"speakerid"`
+	ZoneID		int			`json:"zoneid"`
+}
+
+type accountCreationRequest struct {
+	Level			int		  `json:"level"`
+	Username	string	`json:"username"`
+	Password	string	`json:"password"`
+	Name			string  `json:"name"`
+	Email			string	`json:"email"`
+	Phone 		string	`json:"phone"`
+	SpeakerID int			`json:"speakerid"`
+	ZoneID		int			`json:"zoneid"`
+}
 
 func AppHandler(w http.ResponseWriter, r *http.Request) {
 	omahaDir := util.GetOmahaPath()
@@ -37,34 +60,34 @@ func redirectToLoginHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
-type loginPostRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type loginPostResponse struct {
-	Hash string `json:"hash"`
-}
-
 func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("LOGIN")
-	host, _, _ := net.SplitHostPort(r.RemoteAddr)
-	if host == "::1" {
+
+	// uncomment this stuff later 
+	//host, _, _ := net.SplitHostPort(r.RemoteAddr)
+	/*if host == "::1" {
 		w.Write(getGenericSuccessResponse())
 		return
-	}
+	}*/
 	loginRequest := &loginPostRequest{}
 	err := json.NewDecoder(r.Body).Decode(loginRequest)
+	log.Println(*loginRequest)
 	if err != nil {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	} else {
 		hash, err := database.LoginAccount(loginRequest.Username, loginRequest.Password)
+		var level = database.GetLevelOfAccount(loginRequest.Username)
+		var speakerID = database.GetSpeakerForAccount(loginRequest.Username)
+		var zoneID = database.GetZoneForAccount(loginRequest.Username)
+
+		log.Println("This is ths level that you are looking for ", level)
 		if err != nil {
 			w.Write(getGenericErrorResponse(err.Error()))
 			return
 		}
-		response := &loginPostResponse{hash}
+
+		response := &loginPostResponse{hash, level, speakerID, zoneID}
 		var responseObj []byte
 		responseObj, err = json.Marshal(response)
 		if err != nil {
@@ -87,11 +110,6 @@ func LoginPageHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
-type accountCreationRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 func AccountCreationHandler(w http.ResponseWriter, r *http.Request) {
 	accountRequest := &accountCreationRequest{}
 	err := json.NewDecoder(r.Body).Decode(accountRequest)
@@ -100,7 +118,9 @@ func AccountCreationHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
-	err = database.CreateAccount(accountRequest.Username, accountRequest.Password, "")
+
+	// Change this data based on something later
+	err = database.CreateAccount(accountRequest.Level, accountRequest.Username, accountRequest.Password, accountRequest.Name, accountRequest.Email, accountRequest.Phone, accountRequest.SpeakerID, accountRequest.ZoneID)
 	if err != nil {
 		w.Write(getGenericErrorResponse(err.Error()))
 	} else {

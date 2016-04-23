@@ -21,6 +21,8 @@
 <link rel="import" href="/components/zone-creation-form.html">
 <link rel="import" href="/components/simple-fit.html">
 <link rel="import" href="/components/omaha-drawer.html">
+<link rel="import" href="/components/login-form.html">
+
 <!-- <link rel="import" href="/components/paging-controller-navbar.html"> -->
 
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/ >
@@ -92,6 +94,7 @@
         </paper-dialog>
       </paper-header-panel>
     </paper-drawer-panel>
+    <paper-toast id="errorNoAccessToast"></paper-toast>
 
     <iron-ajax
       id="systemStatusAjax"
@@ -116,6 +119,12 @@
   <script>
 
     // this interval should be determined by 1000 * number of controllers
+
+    var localLevel = parseInt(localStorage.getItem("level"));
+
+    var localSpeakerID = parseInt(localStorage.getItem("speakerid"));
+    var localZoneID = parseInt(localStorage.getItem("zoneid"));
+
 
     var lastSelected = 0;
     var zones;
@@ -161,9 +170,27 @@
         var speaker = e.detail.speaker;
         console.log(e);
         console.log(speaker);     // just testing
+        console.log(localStorage.getItem("speakerid"));
+        /*var speakersFromZones = [];
+
+        console.log(zones.length);
+        if(localZoneID != -1) {
+          for(var i = 0; i < zones.length; i++) {
+            if(zones[i].zoneID == localZoneID) {
+              console.log("found it", zones[i].speakers.length, zones[i]);
+              for(var j = 0; j < zones[i].speakers.length; j++) {
+                speakersFromZones[j] = zones[i].speakers[j].id;
+              }
+              break;
+            }
+          }
+        }*/
+
+        //console.log(speakersFromZones);
+
         if(speaker === undefined) {
           this.$.dialog.open();
-        } else {
+        } else if(speaker.id == localSpeakerID || speaker.zone.zoneID == localZoneID || localZoneID == 1 || localLevel > 0) {
           this.$.controller.speaker = speaker;
           console.log(this.$.speaker);
           this.$.nav.showBackArrow();
@@ -206,6 +233,13 @@
             handles[i + 21].style.bottom = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + "%";
             $("#text" + (parseInt(i + 21) + 1)).val(controller.speaker.CurrentMusicPreset[i]);
             iirConstants[i + 21] = controller.speaker.CurrentMusicPreset[i];
+          }
+          for (var i = 0; i < controller.speaker.CurrentPagingPreset.length; i++) {   // this was "current" for some reason
+            console.log("I am here");
+            sliders[i + 42].style.height = (controller.speaker.CurrentPagingPreset[i] + 40) * 2 + "%";
+            handles[i + 42].style.bottom = (controller.speaker.CurrentPagingPreset[i] + 40) * 2 + "%";
+            $("#text" + (parseInt(i + 42) + 1)).val(controller.speaker.CurrentPagingPreset[i]);
+            iirConstants[i + 42] = controller.speaker.CurrentPagingPreset[i];
           }
           /* this is for the paging
           for (var i = 0; i < controller.speaker.CurrentMusicPreset.length; i++) {   // this was "current" for some reason
@@ -294,7 +328,38 @@
               Polymer.dom(targetListbox).appendChild(temp);
             }
           }
+        } else {
+          // might make this an onclick so that it will show you where the speaker is
+          /*if(localSpeakerID != -1) {
+            this.$.errorNoAccessToast.innerHTML = "You only have access to speaker " + localSpeakerID;
+          } else {
+            this.$.errorNoAccessToast.innerHTML = "You don't have access to any speakers!";
+          }
+
+          if(localZoneID != -1) {
+            if(this.$.errorNoAccessToast.innerHTML.length == 0) 
+              this.$.errorNoAccessToast.innerHTML += "You only have access to zone " + localZoneID;
+          } else {
+            this.$.errorNoAccessToast.innerHTML += "You don't have access to any zones!";
+          }*/
+
+          this.$.errorNoAccessToast.innerHTML = "You only have access to";
+          if(localSpeakerID > 0) {
+            this.$.errorNoAccessToast.innerHTML += " speaker " + localSpeakerID;
+            if(localZoneID > 0)
+              this.$.errorNoAccessToast.innerHTML += " and zone " + localZoneID;
+          }
+          else if(localZoneID > 0)
+            this.$.errorNoAccessToast.innerHTML += " zone " + localZoneID;
+          else
+            this.$.errorNoAccessToast.innerHTML = "You don't have access to anything!";
+
+          this.$.errorNoAccessToast.duration = 2000;
+          this.$.errorNoAccessToast.show();
+          console.log("{username} does not have access to this speaker");
+
         }
+
       },
       
       _zoneSelected: function(e) {
@@ -477,17 +542,18 @@
           updateMapForError(data.response.id, (this.controllers[data.response.id - 1].status) === 0 ? true : false);
           //console.log("THIS IS THE DATA RESPONSE YOU ARE LOOKING FOR", data.response.id, data.response.status);
           this.controllers[data.response.id - 1].status = data.response.status;
+
         }
         //console.log(this.controllers[data.response.id].status);
       },
 
-      ready: function() {
+      ready: function() {       
         this.$.systemStatusAjax.generateRequest();
         this.$.nav.hideBackArrow();
         this.$.panel.forceNarrow = true;
 
         controllerUpdateAjax = this.$.controllerUpdateAjax;
-
+        setUI();
 
         (function keepAlive() {                   // this is asynchonous and a better usage that using setInterval
           controllerUpdateAjax.generateRequest();
@@ -505,5 +571,36 @@
       }
 
     });
+  
+  function setUI() {
+    switch(localLevel) {
+      case 0:
+        Polymer.dom(mode).removeChild(pagingButtonRC);
+        Polymer.dom(mode).removeChild(schedulingButton);
+
+        Polymer.dom(menu).removeChild(accountCreation);
+        Polymer.dom(menu).removeChild(mapForZone);
+        Polymer.dom(menu).removeChild(mapForPaging);
+      case 1:
+        Polymer.dom(mode).removeChild(targetButton);
+        Polymer.dom(mode).removeChild(equalizerButton);
+
+        break;
+      default:
+        console.log("lel");
+    }
+  }
+
+  $(document).ready(function() {
+    var radioContainer = document.getElementById("radio-container");
+    var mode = document.getElementById("mode");
+    console.log(mode);
+
+    //Polymer.dom(mode).removeChild(targetButton);
+    
+    //targetButton.style.visibility = "hidden";
+    //radioContainer.innerHTML = "<paper-radio-group id=\"mode\" selected=\"{{mode}}\"><paper-radio-button id=\"volumeButton\"     name=\"volume\"     class=\"flex\">Volume</paper-radio-button><paper-radio-button id=\"averagingButton\"  name=\"averaging\"  class=\"flex\">Comfort Ratio</paper-radio-button><paper-radio-button id=\"targetButton\"     name=\"target\"     class=\"flex\">Target</paper-radio-button><paper-radio-button id=\"equalizerButton\"  name=\"equalizer\"  class=\"flex\">Equalizers</paper-radio-button><paper-radio-button id=\"pagingButton\"     name=\"paging\"     class=\"flex\">Paging</paper-radio-button><paper-radio-button id=\"schedulingButton\" name=\"scheduling\" class=\"flex\">Scheduling</paper-radio-button>";
+    console.log("THIS IS ME");
+  });
   </script>
 </dom-module>
