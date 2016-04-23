@@ -189,7 +189,7 @@ func createAccountTable() {
 	CreateAccount(1, "max", "max", "max", "", "", 62, -1)
 	CreateAccount(0, "eric", "eric", "eric", "", "", 62, -1)
 }
-
+ 
 func createAccountToSpeakersTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE  AccountToSpeakers (
