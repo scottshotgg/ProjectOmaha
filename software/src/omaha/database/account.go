@@ -28,11 +28,23 @@ func LoginAccount(username, password string) (string, error) {
 		return "", errors.New("Invalid password")
 	}
 	sessionHash := generateSessionHash()
+
+	var userID int
+
+	err = DB.QueryRow(`
+		SELECT uid
+		FROM account
+		WHERE username=?`, username).Scan(&userID)
+	
+	log.Println(userID)
+
+	// might need to check whether or not there is a session already and then act
+	// upon that
 	_, err = DB.Exec(`
 		INSERT INTO accountSession
 		(sessionKey, userID)
 		VALUES (?, ?)
-		`, sessionHash, 0)
+		`, sessionHash, userID)
 	if err != nil {
 		log.Fatal(err)
 		return "", err
@@ -54,23 +66,37 @@ func GetLevelOfAccount(username string) int {
 
 func GetSpeakerForAccount(username string) int {
 	var speakerID = -1
-	err := DB.QueryRow(`SELECT speaker FROM AccountToSpeakers WHERE uid=(SELECT uid FROM account where username=?)`, username).Scan(&speakerID)
+	err := DB.QueryRow(`
+		SELECT speaker 
+		FROM AccountToSpeakers 
+		WHERE uid=(
+			SELECT uid 
+			FROM account 
+			WHERE username=?)
+			`, username).Scan(&speakerID)
 	if(err != nil) {
 		log.Println("we got le error on GetSpeakerForAccount")
 	}
 
-	log.Println("this is the shit mayne", speakerID)
+	log.Println("this is the speaker", speakerID)
 	return speakerID
 }
 
 func GetZoneForAccount(username string) int {
 	var zoneID = -1
-	err := DB.QueryRow(`SELECT zone FROM AccountToMaskingZones WHERE uid=(SELECT uid FROM account where username=?)`, username).Scan(&zoneID)
+	err := DB.QueryRow(`
+		SELECT zone 
+		FROM AccountToMaskingZones 
+		WHERE uid=(
+			SELECT uid 
+			FROM account 
+			WHERE username=?)
+			`, username).Scan(&zoneID)
 	if(err != nil) {
 		log.Println("we got le error on GetZoneForAccount")
 	}
 
-	log.Println("this is the shit mayne", zoneID)
+	log.Println("this is the zone", zoneID)
 
 	//var zoneArray = GetZone(int8(zoneID))
 
@@ -181,6 +207,7 @@ func createAccountTable() {
 		log.Println("Created table account")
 	}
 
+	/*
 	CreateAccount(2, "admin", "password", "admin", "", "", 1, -1)
 	CreateAccount(2, "andy", "andy", "andy", "", "", 62, -1)
 	CreateAccount(2, "danny", "danny", "danny", "", "", 1, -1)
@@ -188,6 +215,8 @@ func createAccountTable() {
 	CreateAccount(2, "scott", "scott", "scott", "", "", 62, 1)
 	CreateAccount(1, "max", "max", "max", "", "", 62, -1)
 	CreateAccount(0, "eric", "eric", "eric", "", "", 62, -1)
+	*/
+	CreateAccount(2, "super", "super", "superuser", "", "", -1, -1)
 }
  
 func createAccountToSpeakersTable() {
@@ -245,6 +274,43 @@ func IsSessionHashValid(hash string) bool {
 		log.Fatal(err)
 	}
 	return count == 1
+}
+
+func AuthenticatePermissionFromHash(hash string) int {
+	var permission = 0
+	log.Println(hash)
+	err := DB.QueryRow(`
+		SELECT level 
+		FROM account 
+		WHERE uid=(
+			SELECT userID 
+			FROM accountSession 
+			WHERE sessionkey=?)
+		`, hash).Scan(&permission)
+	if(err != nil) {
+		log.Println("we got le error bro")
+	}
+	log.Println(permission)
+	return permission
+}
+
+func AuthenticateSpeakerFromHash(hash string) int {
+	var speaker = 0
+	err := DB.QueryRow(`
+		SELECT speaker
+		FROM AccountToSpeakers
+		WHERE uid=(
+			SELECT uid
+			FROM accountSession
+			WHERE sessionKey=?)
+		`, hash).Scan(&speaker)
+
+	if(err != nil) {
+		log.Println("got an error retrieving speaker")
+	}
+
+	log.Println(speaker)
+	return speaker
 }
 
 func generateSessionHash() string {

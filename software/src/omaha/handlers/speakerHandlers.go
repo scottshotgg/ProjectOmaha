@@ -24,6 +24,14 @@ type speakerResponse struct {
 	Music 									int8			`json:"music"`
 	Paging 									int8			`json:"paging"`
 	Masking 								int8			`json:"masking"`
+
+	LowerMusicThreshold			int8			`json:"lowerMusicThreshold"`
+	UpperMusicThreshold			int8			`json:"upperMusicThreshold"`
+	LowerPagingThreshold		int8			`json:"lowerPagingThreshold"`
+	UpperPagingThreshold		int8			`json:"upperPagingThreshold"`
+	LowerMaskingThreshold		int8			`json:"lowerMaskingThreshold"`
+	UpperMaskingThreshold		int8			`json:"upperMaskingThreshold"`
+
 	Effectiveness 					int8			`json:"effectiveness"`
 	Pleasantness 						int8			`json:"pleasantness"`
 	FadeTime								int8			`json:"fadetime"`
@@ -49,6 +57,7 @@ type speakerResponse struct {
 	Speaker									int8			`json:"speaker"`
 	Name										string		`json:"name"`
 	EqualizerMode						int8			`json:"equalizerMode"`
+	SchedulingMode					int8			`json:"schedulingMode"`
 }
 
 type speakerGetRequest struct {
@@ -85,6 +94,7 @@ type zoneData struct {
 
 type speakerAttributes struct {
 	Volume    			string 		`json:"volume"`
+	Threshold				string		`json:"threshold"`
 	//Music					int8 			`json:"musicVolume"`
 	Pleasantness 		int8 			`json:"effectiveness"`
 	Effectiveness 	int8 			`json:"pleasantness"`
@@ -104,6 +114,16 @@ type timeSchedule struct {
 	// Name	int8	`json:"name"`
 	// Action	int8	`json:"action"`		// this might need to be an array
 
+}
+
+type thresholdRequest struct {
+	Speaker									int8	`json:"speaker"`
+	LowerMusicThreshold			int8	`json:"musicMin"`
+	UpperMusicThreshold			int8	`json:"musicMax"`
+	LowerPagingThreshold		int8	`json:"pagingMin"`
+	UpperPagingThreshold		int8	`json:"pagingMax"`
+	LowerMaskingThreshold		int8	`json:"maskingMin"`
+	UpperMaskingThreshold		int8	`json:"maskingMax"`
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error {
@@ -203,6 +223,9 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.Contr
 }
 
 func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	/*if(!database.AuthenticatePermissionFromHash(session.Value) > 1) {
+		return
+	}*/
 	log.Println(attr.Equalizer)
 
 	constants := strings.Fields(attr.Equalizer)		// do not publish this function without checking for type/value errors
@@ -352,6 +375,9 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 }
 
 func updateSpeakerMusicEqualizer(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	/*if(!database.AuthenticatePermissionFromHash(session.Value) > 1) {
+		return
+	}*/
 	log.Println(attr, speaker)
 
 	constants := strings.Fields(attr.MusicEqualizer)		// do not publish this function without checking for type/value errors
@@ -398,6 +424,13 @@ func updateSpeakerMusicEqualizer(attr *speakerAttributes, speaker *database.Cont
 }
 
 func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	//session, _ := r.Cookie("session")
+	//log.Println(session.Value)
+
+	/*if(!database.AuthenticatePermissionFromHash(session.Value) > 1) {
+		return
+	}*/
+
 	constants := strings.Fields(attr.Target)		// do not publish this function without checking for type/value errors
 	//log.Println(constants)
 
@@ -570,6 +603,17 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	session, _ := r.Cookie("session")
+	log.Println(session.Value)
+	if(int(speakerRequest.Speaker) == database.AuthenticateSpeakerFromHash(session.Value) || database.AuthenticatePermissionFromHash(session.Value) > 0) {
+		log.Println("authenticated bro")
+	} else {
+		log.Println("invalid request")
+		w.Write(getGenericErrorResponse("invalid speaker request: permission"))
+		return
+	}
+
+
 	for _, attr := range speakerRequest.UpdatedAttributes {
 		err = speakerUpdateHandlers[attr](&speakerRequest.AttributeValues, controller)		// change these names to be more goddamn consistent, this code is fucking hard to read
 
@@ -617,6 +661,16 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 		Music: 			controller.VolumeLevel[1], 
 		Paging: 		controller.VolumeLevel[2], 
 		Masking: 		controller.VolumeLevel[3], 
+
+
+		LowerMusicThreshold:		controller.LowerThreshold[0],
+		UpperMusicThreshold:		controller.UpperThreshold[0],
+		LowerPagingThreshold:		controller.LowerThreshold[1],
+		UpperPagingThreshold:		controller.UpperThreshold[1],
+		LowerMaskingThreshold:	controller.LowerThreshold[2],
+		UpperMaskingThreshold:	controller.UpperThreshold[2],
+
+
 		Effectiveness: 	controller.Effectiveness,
 		Pleasantness:	controller.Pleasantness,
 		FadeTime: 		controller.PagingLevel[0], 
@@ -655,7 +709,8 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 		PresetNames: 		controller.PresetNames, 
 		MusicEqualizer:		controller.MusicEqualizer,
 		MusicPresetNames:	controller.MusicPresetNames, 
-		EqualizerMode:		controller.EqualizerMode }
+		EqualizerMode:		controller.EqualizerMode, 
+		SchedulingMode:		controller.SchedulingMode }
 	//log.Println(controller)
 	return speakerResponse
 }
@@ -864,6 +919,33 @@ func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this
 
 // need to take into account daylight savings
 
+/*func changeSchedulingMode(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	status := system.GetSystemStatus()
+
+	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
+	changeEQModeRequest := &changeEQModeData{}
+	err := json.NewDecoder(r.Body).Decode(changeEQModeRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("ChangeEQMode json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	err = database.ChangeSchedulingMode(changeEQModeRequest.Speaker, changeEQModeRequest.Mode)
+
+	// this should tell the controller to send out the packets for the music constants
+	// should also call to change the status in the database to music mode
+
+
+	log.Println("I got you packet dude, sendin one back", changeEQModeRequest)
+	//log.Println(addPresetRequest)
+	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}*/
+
 func ScheduleTime(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
@@ -935,6 +1017,61 @@ func ScheduleTime(w http.ResponseWriter, r *http.Request) {
      // write the success afterwards, might not need this */
      w.Write(getGenericSuccessResponse())
 }
+
+func ThresholdHandler(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	status := system.GetSystemStatus()
+	log.Println(status)
+	thresholdData := &thresholdRequest{}		// this is not a preset, but it is the same data
+	err := json.NewDecoder(r.Body).Decode(thresholdData)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("AddTargetHandler json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+	//log.Println("I got you packet dude, sendin one back")
+	log.Println(thresholdData)
+
+	session, _ := r.Cookie("session")
+	log.Println(session.Value)
+	log.Println(thresholdData.Speaker)
+
+	if(int(thresholdData.Speaker) == database.AuthenticateSpeakerFromHash(session.Value) || database.AuthenticatePermissionFromHash(session.Value) > 0) {
+		database.UpdateThreshold(thresholdData.Speaker, thresholdData.LowerMusicThreshold, thresholdData.UpperMusicThreshold, thresholdData.LowerPagingThreshold,	thresholdData.UpperPagingThreshold,	thresholdData.LowerMaskingThreshold, thresholdData.UpperMaskingThreshold)
+	}
+
+
+
+
+	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
+
+	// make a split string fucntion when you fee like it
+
+	//constants := strings.Fields(addPresetRequest.Constants)		// do not publish this function without checking for type/value errors
+	//log.Println(constants)
+	/*var constantsInts [21] int8
+
+	if(len(constants) < 21) {
+		return //errors.New("Invalid amount of constants")
+	}
+
+	var k = 0
+	for _, i := range constants {
+		intParse, err := strconv.Atoi(i)
+		if err != nil {
+			panic(err)		// test if this returns
+		}
+
+			constantsInts[k] = int8(intParse)	// this needs checking
+		}
+			k++*/
+
+		//log.Println("constantsInts: ", constantsInts)
 
 
 // Example handler

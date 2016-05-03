@@ -25,7 +25,7 @@ var Commands struct {
 	InitializeFilter   		byte
 	SetID              		byte
 	GetID              		byte
-	SetEQMode				byte
+	SetEQMode							byte
 }
 
 func init() { // Can we not just set these up ^ there so that we don't

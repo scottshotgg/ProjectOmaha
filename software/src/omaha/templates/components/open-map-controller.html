@@ -85,6 +85,9 @@
   </template>
   <script>
 
+  var LowerThreshold = [];
+  var UpperThreshold = [];
+
   $(document).ready(function() {
     console.log($(document.getElementById("goodOrBadFont")).innerWidth(), $(document.getElementById("selectedSpeakers")).innerWidth());
   });
@@ -172,11 +175,30 @@
         a.speaker.VolumeLevel[1] = data.response.music;
         a.speaker.VolumeLevel[2] = data.response.paging;
         a.speaker.VolumeLevel[3] = data.response.masking;
+
+        a.speaker.LowerThreshold = [];
+        a.speaker.UpperThreshold = [];
+
+        a.speaker.LowerThreshold[0] = data.response.lowerMusicThreshold
+        a.speaker.UpperThreshold[0] = data.response.upperMusicThreshold
+        a.speaker.LowerThreshold[1] = data.response.lowerPagingThreshold
+        a.speaker.UpperThreshold[1] = data.response.upperPagingThreshold
+        a.speaker.LowerThreshold[2] = data.response.lowerMaskingThreshold
+        a.speaker.UpperThreshold[2] = data.response.upperMaskingThreshold
+
+        LowerThreshold[0] = data.response.lowerMusicThreshold
+        UpperThreshold[0] = data.response.upperMusicThreshold
+        LowerThreshold[1] = data.response.lowerPagingThreshold
+        UpperThreshold[1] = data.response.upperPagingThreshold
+        LowerThreshold[2] = data.response.lowerMaskingThreshold
+        UpperThreshold[2] = data.response.upperMaskingThreshold
+
         a.speaker.Effectiveness = data.response.effectiveness;
         a.speaker.Pleasantness = data.response.pleasantness;
         a.speaker.FadeTime = data.response.fadetime;
         a.speaker.FadeLevel = data.response.fadelevel;
         a.speaker.EqualizerMode = data.response.equalizerMode;
+        a.speaker.SchedulingMode = data.response.schedulingMode;
 
         if(a.speaker.EqualizerMode == 1) {
           equalizerSelector.selected = "music";
@@ -192,6 +214,17 @@
           //equalizerMenu.style.visibility = "hidden";
           // add one for paging menu here if we need it
         }
+        console.log(schedulingSelector);
+
+        if(a.speaker.SchedulingMode == 0) {
+          schedulingSelector.selected = "basic";
+          drawBasic();
+        } else {
+          schedulingSelector.selected = "advanced";
+          drawAdvanced();
+        }
+
+        console.log("i have applied the selected value", schedulingSelector.selected, schedulingSelector);
 
         // Setting speaker-tooltip information
         // the zones will need to be joined by ", "

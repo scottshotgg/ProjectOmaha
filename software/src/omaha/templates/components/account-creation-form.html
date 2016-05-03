@@ -118,6 +118,7 @@
             return;
           }, 1000);
         } else {
+          hash = document.cookie.split('; ');
           // some checking needs to be done on this
           this.$.loginAjax.body = {
             level:      parseInt(localStorage.getItem("level")) - 1,
@@ -128,10 +129,7 @@
             phone:      this.$.phone.value,
             speakerid:  parseInt(this.$.speakerid.value), 
             zoneid:     parseInt(this.$.zoneid.value)
-
-            /*
-            name:     this.$.name.value,
-            */
+            //cookie:     hash[1]
           }
           this.$.loginAjax.generateRequest();
         }

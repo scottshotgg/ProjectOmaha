@@ -206,6 +206,13 @@
           document.getElementById('volume4').value = this.$.controller.speaker.VolumeLevel[2];
           document.getElementById('volume5').value = this.$.controller.speaker.VolumeLevel[3];
 
+          document.getElementById('musicMin').value = this.$.controller.speaker.LowerThreshold[0];
+          document.getElementById('musicMax').value = this.$.controller.speaker.UpperThreshold[0];
+          document.getElementById('pagingMin').value = this.$.controller.speaker.LowerThreshold[1];
+          document.getElementById('pagingMax').value = this.$.controller.speaker.UpperThreshold[1];
+          document.getElementById('maskingMin').value = this.$.controller.speaker.LowerThreshold[2];
+          document.getElementById('maskingMax').value = this.$.controller.speaker.UpperThreshold[2];
+
           console.log(document.getElementById('equalizerMenu'));
 
           // Set averaging mode
@@ -577,6 +584,7 @@
       case 0:
         Polymer.dom(mode).removeChild(pagingButtonRC);
         Polymer.dom(mode).removeChild(schedulingButton);
+        Polymer.dom(menu).removeChild(averagingButton);
 
         Polymer.dom(menu).removeChild(accountCreation);
         Polymer.dom(menu).removeChild(mapForZone);

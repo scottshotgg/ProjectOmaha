@@ -18,6 +18,7 @@ func InitializeHandlers() {
 	http.Handle("/system/", GenericHandler{GET: SystemStatusHandler})
 	http.Handle("/system/controllerUpdate/", GenericHandler{GET: ControllerUpdateHandler})
 	http.Handle("/system/speaker/", GenericHandler{PUT: SpeakerPutHandler})
+	http.Handle("/system/threshold/", GenericHandler{PUT: ThresholdHandler})
 	http.Handle("/system/backtofront/", GenericHandler{POST: SpeakerGetHandler})
 	http.Handle("/system/addPreset/", GenericHandler{PUT: AddPresetHandler})
 	http.Handle("/system/changeEQMode/", GenericHandler{PUT: ChangeEQMode})
@@ -26,6 +27,8 @@ func InitializeHandlers() {
 	http.Handle("/system/pagingRequest/", GenericHandler{POST: PagingRequestHandler})
 	http.Handle("/system/createZone/", GenericHandler{PUT: CreateZoneHandler})
 	http.Handle("/system/createPagingZone/", GenericHandler{PUT: CreatePagingZoneHandler})
+
+	// V this should change to schedulingHandler / timeHandler or something
 	http.Handle("/system/scheduleTime/", GenericHandler{PUT: ScheduleTime})
 
 	// I'll consolidate these later, easier to forge my own path for now

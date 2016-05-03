@@ -32,6 +32,7 @@ type accountCreationRequest struct {
 	Phone 		string	`json:"phone"`
 	SpeakerID int			`json:"speakerid"`
 	ZoneID		int			`json:"zoneid"`
+	//Cookie		string	`json:"cookie"`
 }
 
 func AppHandler(w http.ResponseWriter, r *http.Request) {
@@ -87,13 +88,17 @@ func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		response := &loginPostResponse{hash, level, speakerID, zoneID}
-		var responseObj []byte
-		responseObj, err = json.Marshal(response)
-		if err != nil {
-			log.Fatal(err)
-		}
-		w.Write(responseObj)
+		println("this is the hash that you are looking for", hash)
+
+		//if(database.AuthenticateHash()) {
+			response := &loginPostResponse{hash, level, speakerID, zoneID}
+			var responseObj []byte
+			responseObj, err = json.Marshal(response)
+			if err != nil {
+				log.Fatal(err)
+			}
+			w.Write(responseObj)
+		//}
 	}
 }
 
@@ -120,10 +125,15 @@ func AccountCreationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Change this data based on something later
-	err = database.CreateAccount(accountRequest.Level, accountRequest.Username, accountRequest.Password, accountRequest.Name, accountRequest.Email, accountRequest.Phone, accountRequest.SpeakerID, accountRequest.ZoneID)
-	if err != nil {
-		w.Write(getGenericErrorResponse(err.Error()))
-	} else {
-		w.Write(getGenericSuccessResponse())
+	session, _ := r.Cookie("session")
+	log.Println(session.Value)
+
+	if(database.AuthenticatePermissionFromHash(session.Value) > 0) {
+		err = database.CreateAccount(accountRequest.Level, accountRequest.Username, accountRequest.Password, accountRequest.Name, accountRequest.Email, accountRequest.Phone, accountRequest.SpeakerID, accountRequest.ZoneID)
+		if err != nil {
+			w.Write(getGenericErrorResponse(err.Error()))
+		} else {
+			w.Write(getGenericSuccessResponse())
+		}
 	}
 }

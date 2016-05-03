@@ -5,7 +5,9 @@
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/components/speaker-controller.html">
 <!--<link rel="import" href="/bower_components/paper-checkbox//paper-checkbox.html">-->
 
 <dom-module id="volume-selector">
@@ -34,6 +36,14 @@
    <paper-card  id="volumeCard" heading="Volume" elevation="4">
       <div id="test" class="card-content">
 
+        <!-- 
+        <div id="sliderInvis" class="layout horizontal">
+          <paper-input id="volumeMin" style="margin-left: .5%; width: 30px;" label="Min" placeholder=""></paper-input>
+          <paper-slider id="volumeInvis" style="visibility: hidden;" pin min="0" max="100"></paper-slider>
+          <paper-input id="volumeMax" style="margin-right: .5%; width: 30px;" label="Max" placeholder="" text-align="center"></paper-input>
+        </div>
+        -->
+
         <div id="slider" class="layout horizontal">
           <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
           <paper-slider id="volume2" pin min="0" max="100" value="{{internalVolume}}"></paper-slider>
@@ -44,26 +54,44 @@
 
         <h1 id="musicvolume"> Music Volume </h1>
 
+        <div id="sliderInvis2" class="layout horizontal">
+          <paper-input id="musicMin" style="margin-left: .5%; width: 30px;" label="Min" placeholder=""></paper-input>
+          <paper-slider id="volumeInvis2" style="visibility: hidden;" pin min="0" max="100"></paper-slider>
+          <paper-input id="musicMax" style="margin-right: .5%; width: 30px;" label="Max" placeholder="" text-align="center"></paper-input>
+        </div>
+
         <div id="slider2" class="layout horizontal">
-          <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
+          <paper-icon-button icon="remove" on-click="decrementMusicVolume"></paper-icon-button>
           <paper-slider id="volume3" pin min="0" max="100" value="{{internalMusicVolume}}"></paper-slider>
-          <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
+          <paper-icon-button icon="add" on-click="incrementMusicVolume"></paper-icon-button>
         </div>
 
         <h1 id="pagingvolumelabel"> Paging Volume </h1>
 
+        <div id="sliderInvis3" class="layout horizontal">
+          <paper-input id="pagingMin" style="margin-left: .5%; width: 30px;" label="Min" placeholder=""></paper-input>
+          <paper-slider id="volumeInvis3" style="visibility: hidden;" pin min="0" max="100"></paper-slider>
+          <paper-input id="pagingMax" style="margin-right: .5%; width: 30px;" label="Max" placeholder="" text-align="center"></paper-input>
+        </div>
+
         <div id="slider3" class="layout horizontal">
-          <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
+          <paper-icon-button icon="remove" on-click="decrementPagingVolume"></paper-icon-button>
           <paper-slider id="volume4" pin min="1" max="100" value="{{internalPagingVolume}}"></paper-slider>
-          <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
+          <paper-icon-button icon="add" on-click="incrementPagingVolume"></paper-icon-button>
         </div>
 
         <h1 id="soundmaskingvolume"> Sound Masking Volume </h1>
 
+        <div id="sliderInvis4" class="layout horizontal">
+          <paper-input id="maskingMin" style="margin-left: .5%; width: 30px;" label="Min" placeholder=""></paper-input>
+          <paper-slider id="volumeInvis4" style="visibility: hidden;" pin min="0" max="100"></paper-slider>
+          <paper-input id="maskingMax" style="margin-right: .5%; width: 30px;" label="Max" placeholder="" text-align="center"></paper-input>
+        </div>
+
         <div id="slider4" class="layout horizontal">
-          <paper-icon-button icon="remove" on-click="decrementVolume"></paper-icon-button>
+          <paper-icon-button icon="remove" on-click="decrementMaskingVolume"></paper-icon-button>
           <paper-slider id="volume5" pin min="1" max="100" value="{{internalSoundMaskingVolume}}"></paper-slider>
-          <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
+          <paper-icon-button icon="add" on-click="incrementMaskingVolume"></paper-icon-button>
         </div>
 
       </div>
@@ -72,8 +100,24 @@
       </div>
     </paper-card>
     <paper-toast id="toast">Volume set to <span>{{volume}}</span></paper-toast>
+
+    <paper-toast id="invalidVolumeToast">Volume settings must be within the minimum and maximum settings</paper-toast>
+
+    <iron-ajax
+          id="thresholdValue"
+          url="/system/threshold/"
+          method="PUT"
+          content-type="application/json"
+          handle-as="json"
+          on-response="_logResponse"
+          debounce-duration="300">
+    </iron-ajax>
+
   </template>
   <script>
+
+    var localLevelForVolumeSelector = parseInt(localStorage.getItem("level"));
+
     Polymer({
       is: 'volume-selector',
       
@@ -149,6 +193,31 @@
       },*/
       
       _setVolumeClicked: function() {
+        if(localLevelForVolumeSelector > 0) {
+          this.$.thresholdValue.body = {
+            "speaker": speakerid, 
+
+            "musicMin":   ((!isNaN(parseInt(this.$.musicMin.value)))   ? parseInt(this.$.musicMin.value)   : 0),
+            "musicMax":   ((!isNaN(parseInt(this.$.musicMax.value)))   ? parseInt(this.$.musicMax.value)   : 100),
+
+            "pagingMin":  ((!isNaN(parseInt(this.$.pagingMin.value)))  ? parseInt(this.$.pagingMin.value)  : 0),
+            "pagingMax":  ((!isNaN(parseInt(this.$.pagingMax.value)))  ? parseInt(this.$.pagingMax.value)  : 100),
+
+            "maskingMin": ((!isNaN(parseInt(this.$.maskingMin.value))) ? parseInt(this.$.maskingMin.value) : 0),
+            "maskingMax": ((!isNaN(parseInt(this.$.maskingMax.value))) ? parseInt(this.$.maskingMax.value) : 100)
+          };
+          this.$.thresholdValue.generateRequest();
+        }
+
+        if(localLevelForVolumeSelector < 1 && 
+          (this.$.volume3.value < this.$.musicMin.value || this.$.volume3.value > this.$.musicMax.value || 
+          this.$.volume4.value < this.$.pagingMin.value || this.$.volume4.value > this.$.pagingMax.value || 
+          this.$.volume5.value < this.$.maskingMin.value || this.$.volume5.value > this.$.maskingMax.value)) {
+
+          this.$.invalidVolumeToast.show();
+          return;
+        }
+
         this.volume = this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume + " " + this.internalSoundMaskingVolume;
         //this.musicVolume = this.internalVolume2;
         this.$.toast.show();
@@ -159,6 +228,9 @@
         // change these to work for all the sliders
       
       decrementVolume: function() {
+        if(localLevelForVolumeSelector < 1) {
+          return;
+        }
         this.$.volume2.decrement();
         this.$.volume2._expandKnob();
         if(this.prevTimeout != 0) {
@@ -172,8 +244,119 @@
       },
       
       incrementVolume: function() {
+        if(localLevelForVolumeSelector < 1) {
+          return;
+        }
         this.$.volume2.increment();
         this.$.volume2._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      decrementMusicVolume: function() {
+        if(this.internalMusicVolume - 1 < LowerThreshold[0] && localLevelForVolumeSelector < 1) {
+          // display some message
+
+          return;
+        }
+        this.$.volume3.decrement();
+        this.$.volume3._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      incrementMusicVolume: function() {
+        if(this.internalMusicVolume + 1 > UpperThreshold[0] && localLevelForVolumeSelector < 1) {
+          // display some message
+
+          return;
+        }
+        this.$.volume3.increment();
+        this.$.volume3._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      decrementPagingVolume: function() {
+        if(this.internalPagingVolume - 1 < LowerThreshold[1] && localLevelForVolumeSelector < 1) {
+          // display some message
+
+          return;
+        }
+        this.$.volume4.decrement();
+        this.$.volume4._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      incrementPagingVolume: function() {
+        if(this.internalPagingVolume + 1 > UpperThreshold[1] && localLevelForVolumeSelector < 1) {
+          // display some message
+
+          return;
+        }
+        this.$.volume4.increment();
+        this.$.volume4._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      decrementMaskingVolume: function() {
+        if(this.internalMaskingVolume - 1 < LowerThreshold[2] && localLevelForVolumeSelector < 1) {
+          // display some message
+
+          return;
+        }
+        this.$.volume5.decrement();
+        this.$.volume5._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      incrementMaskingVolume: function() {
+        if(this.internalMaskingVolume + 1 > UpperThreshold[2] && localLevelForVolumeSelector < 1) {
+          // display some message
+
+          return;
+        }
+        this.$.volume5.increment();
+        this.$.volume5._expandKnob();
         if(this.prevTimeout != 0) {
           window.clearTimeout(this.prevTimeout)
         }
@@ -187,16 +370,43 @@
       resetKnob: function(elem) {
         elem.prevTimeout = 0;
         elem.$.volume2._resetKnob();
+        elem.$.volume3._resetKnob();
+        elem.$.volume4._resetKnob();
+        elem.$.volume5._resetKnob();
+      },
+
+      _logResponse: function(event, data) {
+        console.log(data.response);
       },
 
       ready: function() {
-        console.log(localStorage.getItem("level"));
+        console.log(speakerid);
+        console.log(this, "\n", this.$, "\n", this.$.speakerId);
 
-        // what should the default values be?
-        switch(parseInt(localStorage.getItem("level"))) {
+        switch(localLevelForVolumeSelector) {
           case 0:
-            this.$.volume3.disabled = true;
-            this.$.volume5.disabled = true;
+            
+            //Polymer.dom(this.$.test).removeChild(this.$.sliderInvis);
+            //Polymer.dom(this.$.test).removeChild(this.$.sliderInvis2);
+            //Polymer.dom(this.$.test).removeChild(this.$.sliderInvis3);
+            //Polymer.dom(this.$.test).removeChild(this.$.sliderInvis4);
+
+
+            this.$.musicMin.disabled = true;
+            this.$.musicMax.disabled = true;
+
+            this.$.pagingMin.disabled = true;
+            this.$.pagingMax.disabled = true;
+            
+            this.$.maskingMin.disabled = true;
+            this.$.maskingMax.disabled = true;
+
+            this.$.volume2.disabled = true;
+            //Polymer.dom(volumeCard).removeChild(averagingButton);
+            //Polymer.dom(volumeCard).removeChild(averagingButton);
+            //Polymer.dom(volumeCard).removeChild(averagingButton);
+            //Polymer.dom(volumeCard).removeChild(averagingButton);
+
             break;
         }
 

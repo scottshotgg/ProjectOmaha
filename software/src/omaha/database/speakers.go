@@ -19,38 +19,48 @@ func createSpeakerTable() {
 			name varchar(50),
 			y INTEGER,
 			x INTEGER,
-			volumeLevel INTEGER,
-			musicLevel INTEGER,
-			pagingLevel INTEGER,
-			soundMaskingLevel INTEGER,
+			volumeLevel INTEGER DEFAULT 0,
+			musicLevel INTEGER DEFAULT 0,
+			pagingLevel INTEGER DEFAULT 0,
+			soundMaskingLevel INTEGER DEFAULT 0,
+
+			lowerMusicThreshold INTEGER DEFAULT 0,
+			lowerPagingThreshold INTEGER DEFAULT 0,
+			lowerMaskingThreshold INTEGER DEFAULT 0,
+
+			upperMusicThreshold INTEGER DEFAULT 100,
+			upperPagingThreshold INTEGER DEFAULT 100,
+			upperMaskingThreshold INTEGER DEFAULT 100,
+
 			fadeTime INTEGER,
 			fadeLevel INTEGER,
 			effectiveness INTEGER,
 			pleasantness INTEGER,
 			status INTEGER DEFAULT 0,
 			equalizerMode INTEGER DEFAULT 0,
+			schedulingMode INTEGER DEFAULT 0,
 
-			eBand0, 		
-			eBand1, 
-			eBand2, 
-			eBand3, 
-			eBand4, 
-			eBand5, 
-			eBand6, 
-			eBand7, 
-			eBand8, 
-			eBand9, 
-			eBand10, 
-			eBand11, 
-			eBand12, 
-			eBand13, 
-			eBand14, 
-			eBand15, 
-			eBand16, 
-			eBand17, 
-			eBand18, 
-			eBand19, 
-			eBand20,
+			eBand0 REAL, 		
+			eBand1 REAL, 
+			eBand2 REAL, 
+			eBand3 REAL, 
+			eBand4 REAL, 
+			eBand5 REAL, 
+			eBand6 REAL, 
+			eBand7 REAL, 
+			eBand8 REAL, 
+			eBand9 REAL, 
+			eBand10 REAL, 
+			eBand11 REAL, 
+			eBand12 REAL, 
+			eBand13 REAL, 
+			eBand14 REAL, 
+			eBand15 REAL, 
+			eBand16 REAL, 
+			eBand17 REAL, 
+			eBand18 REAL, 
+			eBand19 REAL, 
+			eBand20 REAL,
 
 			mBand0 REAL, 
 			mBand1 REAL, 
@@ -306,13 +316,23 @@ func GetAllSpeakers() []*ControllerStatus {
 			musicLevel,
 			pagingLevel,
 			soundMaskingLevel,
+
+			lowerMusicThreshold,
+			lowerPagingThreshold,
+			lowerMaskingThreshold,
+
+			upperMusicThreshold,
+			upperPagingThreshold,
+			upperMaskingThreshold,
+
 			fadeTime,
 			fadeLevel,
 			effectiveness,
 			pleasantness,
 			status,
 			equalizerMode,
-
+			schedulingMode,
+			
 			eBand0, 		
 			eBand1, 
 			eBand2, 
@@ -419,12 +439,22 @@ func GetAllSpeakers() []*ControllerStatus {
 		var musicLevel int8
 		var pagingLevel int8
 		var soundMaskingLevel int8
+
+		var lowerMusicThreshold int8
+		var lowerPagingThreshold int8
+		var lowerMaskingThreshold int8
+
+		var upperMusicThreshold int8
+		var upperPagingThreshold int8
+		var upperMaskingThreshold int8
+
 		var fadeTime int8
 		var fadeLevel int8
 		var effectiveness int8
 		var pleasantness int8
 		var status int
 		var equalizerMode int8
+		var schedulingMode int8
 		// var currentMode int
 		// var whichPreset int
 		var eBand0 float64			// why do we need to pull all of this stuff, this can be optimized!!
@@ -526,12 +556,19 @@ func GetAllSpeakers() []*ControllerStatus {
 			&musicLevel,
 			&pagingLevel,
 			&soundMaskingLevel,
+			&lowerMusicThreshold,
+			&lowerPagingThreshold,
+			&lowerMaskingThreshold,
+			&upperMusicThreshold,
+			&upperPagingThreshold,
+			&upperMaskingThreshold,
 			&fadeTime,
 			&fadeLevel,
 			&effectiveness,
 			&pleasantness,
 			&status,
-			&equalizerMode,		
+			&equalizerMode,	
+			&schedulingMode,		
 
 			// we may not even need to scan all this.....
 
@@ -636,11 +673,20 @@ func GetAllSpeakers() []*ControllerStatus {
 		speaker.Name = name
 		speaker.Status = status
 		speaker.EqualizerMode = equalizerMode
+		speaker.SchedulingMode = schedulingMode
 
 		speaker.VolumeLevel[0] = int8(volumeLevel)
 		speaker.VolumeLevel[1] = int8(musicLevel)
 		speaker.VolumeLevel[2] = int8(pagingLevel)
 		speaker.VolumeLevel[3] = int8(soundMaskingLevel)
+
+		speaker.LowerThreshold[0] = int8(lowerMusicThreshold)
+		speaker.LowerThreshold[1] = int8(lowerPagingThreshold)
+		speaker.LowerThreshold[2] = int8(lowerMusicThreshold)
+
+		speaker.UpperThreshold[0] = int8(upperMusicThreshold)
+		speaker.UpperThreshold[1] = int8(upperPagingThreshold)
+		speaker.UpperThreshold[2] = int8(upperMusicThreshold)
 
 		speaker.PagingLevel[0] = int8(fadeTime)
 		speaker.PagingLevel[1] = int8(fadeLevel)
@@ -656,6 +702,12 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var musicLevel int8
 	var pagingLevel int8
 	var soundMaskingLevel int8
+	var lowerMusicThreshold int8
+	var lowerPagingThreshold int8
+	var lowerMaskingThreshold int8
+	var upperMusicThreshold int8
+	var upperPagingThreshold int8
+	var upperMaskingThreshold int8
 	var fadeTime int8
 	var fadeLevel int8
 	var effectiveness int8
@@ -668,6 +720,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var whichPreset int
 	var status int
 	var equalizerMode int8
+	var schedulingMode int8
 
 	var band0 float64
 	var band1 float64
@@ -784,12 +837,22 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			musicLevel,
 			pagingLevel,
 			soundMaskingLevel,
+
+			lowerMusicThreshold,
+			lowerPagingThreshold,
+			lowerMaskingThreshold,
+
+			upperMusicThreshold,
+			upperPagingThreshold,
+			upperMaskingThreshold,
+
 			fadeTime,
 			fadeLevel,
 			effectiveness,
 			pleasantness,
 			status,
 			equalizerMode,
+			schedulingMode,
 
 			eBand0, 		
 			eBand1, 
@@ -888,12 +951,19 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&musicLevel,
 			&pagingLevel,
 			&soundMaskingLevel,
+			&lowerMusicThreshold,
+			&lowerPagingThreshold,
+			&lowerMaskingThreshold,
+			&upperMusicThreshold,
+			&upperPagingThreshold,
+			&upperMaskingThreshold,
 			&fadeTime,
 			&fadeLevel,
 			&effectiveness,
 			&pleasantness,
 			&status,
 			&equalizerMode,
+			&schedulingMode,
 
 			// Current preset bands
 			&eBand0,
@@ -1001,6 +1071,16 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			pagingLevel, 
 			soundMaskingLevel }, 
 
+		LowerThreshold: [3] int8 {
+			lowerMusicThreshold,
+			lowerPagingThreshold,
+			lowerMaskingThreshold },		
+
+		UpperThreshold: [3] int8 {
+			upperMusicThreshold,
+			upperPagingThreshold,
+			upperMaskingThreshold	},
+ 
 		PagingLevel: [2] int8 {
 			fadeTime, 
 			fadeLevel }, 
@@ -1010,6 +1090,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		ID: speakerID, 
 		Status: status,
 		EqualizerMode: equalizerMode,
+		SchedulingMode: schedulingMode,
 
 		CurrentPreset: [21] float64 {
 			eBand0, eBand1, eBand2, eBand3, eBand4, eBand5, eBand6, eBand7, eBand8, eBand9, eBand10, eBand11, 
@@ -1278,8 +1359,8 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		}
 
 		speaker.TargetNames = append(speaker.TargetNames, targetName)
-			speaker.Target = append(speaker.Target, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
-			log.Println(speaker.TargetNames, speaker.Target)		// make sure that the two arrays are the same size
+		speaker.Target = append(speaker.Target, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
+		log.Println(speaker.TargetNames, speaker.Target)		// make sure that the two arrays are the same size
 
 		//log.Println("current", current)
 
@@ -1415,6 +1496,25 @@ func SaveVolume(speaker *ControllerStatus) {
 	log.Println(speaker)
 }
 
+
+func UpdateThreshold(speaker int8, musicMin int8, musicMax int8, pagingMin int8, pagingMax int8, maskingMin int8, maskingMax int8) {
+	log.Println("UpdateThreshold: I am firing")
+	_, err := DB.Exec(`
+		UPDATE speaker
+		SET 
+			lowerMusicThreshold = ?,
+			lowerPagingThreshold = ?,
+			lowerMaskingThreshold = ?,
+			upperMusicThreshold = ?,
+			upperPagingThreshold = ?,
+			upperMaskingThreshold = ?
+		WHERE speakerID = ?
+			`, musicMin, musicMax, pagingMin, pagingMax, maskingMin, maskingMax, speaker)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func SaveFade(speaker *ControllerStatus) {
 	log.Println("SaveFade: I am firing")
 	_, err := DB.Exec(`
@@ -1502,6 +1602,16 @@ func ChangeEQMode(speaker int8, mode int8) error {
 	return nil
 }
 
+func ChangeSchedulingMode(speaker int8, mode int8) error {
+	var statement = "UPDATE speaker SET schedulingMode = ? WHERE speakerID = ?"
+	_, err := DB.Exec(statement, mode, speaker)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return nil
+}
+
 func CreatePagingZone(speakers []int8, name string) error {
 	log.Println(name, speakers)
 
@@ -1552,10 +1662,20 @@ func CreateZone(speakers []int8, name string) error {
 
 func getInsertSpeakerStatement() (*sql.Stmt, error) {
 	stmt, err := DB.Prepare(`INSERT INTO speaker 
-		(name, x, y, volumeLevel,
+		(name, x, y, 
+			volumeLevel,
 			musicLevel,
 			pagingLevel,
 			soundMaskingLevel,
+
+			lowerMusicThreshold,
+			lowerPagingThreshold,
+			lowerMaskingThreshold,
+
+			upperMusicThreshold,
+			upperPagingThreshold,
+			upperMaskingThreshold,
+
 			fadeTime,
 			fadeLevel,
 			effectiveness,
@@ -1650,10 +1770,10 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 			tBand18, 
 			tBand19, 
 			tBand20)
-		VALUES ("", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+		VALUES ("", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		`)
 	if err != nil {
 		return nil, err

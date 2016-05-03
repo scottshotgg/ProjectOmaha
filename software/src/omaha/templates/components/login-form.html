@@ -89,8 +89,8 @@
         localStorage.setItem('speakerid', data.response.speakerid);
         localStorage.setItem('zoneid', data.response.zoneid);
         if(data.response.hash !== undefined) {
-          var sessionCookie = "session=" + data.response.hash + ";";
-          document.cookie = sessionCookie;
+          var sessionCookie = data.response.hash;
+          document.cookie = "session=" + sessionCookie + ";";
           document.location.href = "/app/"
         } else if (data.response.success){
           document.location.href = "/app/"

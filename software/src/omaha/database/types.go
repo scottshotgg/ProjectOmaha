@@ -15,6 +15,8 @@ type ControllerStatus struct {
 	Effectiveness						int8 			`json:"effectiveness"`
 	Pleasantness						int8 			`json:"Pleasantness"`
 	VolumeLevel[4]  				int8 			`json:["volumeLevel"]`
+	LowerThreshold[3] 			int8 			`json:["lowerThreshold"]`
+	UpperThreshold[3] 			int8 			`json:["upperThreshold"]`
 	PagingLevel[2]					int8			`json:["pagingLevel"]`
 
 	Target[][]							float64		`json:["target"]`
@@ -36,6 +38,7 @@ type ControllerStatus struct {
 	WhichPreset							int				`json:"whichPreset"`			// really need to delete this or w/e
 	Status 									int				`json:"status"`
 	EqualizerMode						int8			`json:"equalizerMode"`
+	SchedulingMode					int8			`json:"schedulingMode"`
 }
 
 type Zone struct {
