@@ -1,15 +1,15 @@
 package system
 
 var Commands struct {
-	KeepAlive				byte
+	KeepAlive							byte
 	SetVolume          		byte
 	GetVolume          		byte
 	SetSoundMaskingVolume	byte
 	GetSoundMaskingVolume	byte
-	SetMusicVolume			byte
-	SetPaging				byte
-	SetFadeTime				byte
-	SetFadeLevel			byte
+	SetMusicVolume				byte
+	SetPaging							byte
+	SetFadeTime						byte
+	SetFadeLevel					byte
 	AreYouAlive        		byte // Not sure how to implement this, could split off another thread and make a ticker, http://stackoverflow.com/questions/16466320/is-there-a-way-to-do-repetitive-tasks-at-intervals-in-golang
 	ResetSpeaker       		byte
 	ResetFIFO          		byte
@@ -30,27 +30,27 @@ var Commands struct {
 
 func init() { // Can we not just set these up ^ there so that we don't
 	// have to write all the commands out twice?
-	Commands.KeepAlive = 				byte('K')
-	Commands.SetVolume = 				byte('S')
-	Commands.GetVolume = 				byte('s')
+	Commands.KeepAlive = 							byte('K')
+	Commands.SetVolume = 							byte('S')
+	Commands.GetVolume = 							byte('s')
 	Commands.SetSoundMaskingVolume = 	byte('W')
 	Commands.GetSoundMaskingVolume = 	byte('w')
-	Commands.SetMusicVolume = 			byte('M')		// Change this to something when we figure out wtf is going on
-	Commands.SetPaging = 				byte('p')
-	Commands.AreYouAlive = 				byte('U')
-	Commands.ResetSpeaker = 			byte('R')
-	Commands.ResetFIFO = 				byte('r')
-	Commands.GetLEDStatus = 			byte('l')
-	Commands.GetSPL = 					byte('m')              // get microphone level, essentially
-	Commands.SetFilter = 				byte('I')           // This needs to have a O or o to indicate the filter sent with it
-	Commands.GetFilter = 				byte('i')
+	Commands.SetMusicVolume = 				byte('M')		// Change this to something when we figure out wtf is going on
+	Commands.SetPaging = 							byte('p')
+	Commands.AreYouAlive = 						byte('U')
+	Commands.ResetSpeaker = 					byte('R')
+	Commands.ResetFIFO = 							byte('r')
+	Commands.GetLEDStatus = 					byte('l')
+	Commands.GetSPL = 								byte('m')              // get microphone level, essentially
+	Commands.SetFilter = 							byte('I')           // This needs to have a O or o to indicate the filter sent with it
+	Commands.GetFilter = 							byte('i')
 	Commands.SetAveragingFilter = 		byte('a')
-	Commands.GetSpeakerVoltage = 		byte('V') // This may or may not be implemented
-	Commands.GetMCUVoltage = 			byte('v')     // This may or may not be implemented
-	Commands.InitializeFilter = 		byte('f')
-	Commands.SetID = 					byte('W')
-	Commands.GetID = 					byte('w')
-	Commands.SetEQMode =				byte('P')
+	Commands.GetSpeakerVoltage = 			byte('V') // This may or may not be implemented
+	Commands.GetMCUVoltage = 					byte('v')     // This may or may not be implemented
+	Commands.InitializeFilter = 			byte('f')
+	Commands.SetID = 									byte('W')
+	Commands.GetID = 									byte('w')
+	Commands.SetEQMode =							byte('P')
 	//Commands.SetFadeTime = byte(' ')
 	//Commands.SetFadeLevel = byte(' ')
 }

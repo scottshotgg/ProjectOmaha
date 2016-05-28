@@ -104,30 +104,6 @@
           </paper-toolbar>
           <div id="dropShadow" class="style-scope paper-header-panel has-shadow"></div>
           <div id="pagingSpeakerHolder">
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Marketing</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Lobby</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Conference Room 1</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Andy</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Bruce</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">Danny</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-             <paper-item center-justified flex class="pagingZoneStyle"><font style="text-align: center; width: 100%;">"And Another One"</font></paper-item>
-
           </div>
         </paper-header-panel>
       </body>
@@ -212,6 +188,7 @@
         return i;
       }
     }
+
     for(var i = 0; i < pagingZones.length; i++) {
       if(pagingZones[i].name === zoneName) {
         console.log(pagingZones[i]);
@@ -221,6 +198,7 @@
         return i;
       }
     }
+    
     var zoneNameInt = parseInt(zoneName);
     for(var i = 0; i < zones[0].speakers.length; i++) {
       if(zones[0].speakers[i].id == zoneNameInt) {

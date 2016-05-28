@@ -4,11 +4,21 @@
 <link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
 
-<link rel="import" href="/components/simple-fit.html">
-<link rel="import" href="/components/volume-selector.html">
-<link rel="import" href="/components/light-controller.html">
-<link rel="import" href="/components/averaging-controller.html">
-<!--<link rel="import" href="/components/map-controller.html">-->
+<link rel="import" href="../simple-fit.html">
+<link rel="import" href="../information-viewer.html">
+<link rel="import" href="../volume-selector.html">
+<link rel="import" href="target-selector-zone.html">
+<link rel="import" href="../averaging-controller.html">
+<link rel="import" href="equalizer-controller-zone.html">
+<link rel="import" href="../paging-controller.html">
+<link rel="import" href="scheduling-controller-zone.html">
+
+<link rel="stylesheet" href="../jquery-ui-1.11.4.css">
+<script src="../jquery-1.10.2.js" type="text/jscript"></script>
+<script src="../Chart.js" type="text/jscript"></script>
+<script src="../jquery-ui-1.11.4.js" type="text/jscript"></script>
+<script src="../jquery.ui.touch-punch.js" type="text/jscript"></script>
+
 <dom-module id="zone-controller">
   <template>
     <style>
@@ -25,11 +35,26 @@
       }
       
       volume-selector {
-        width: 30%;
-        min-width: 300px;
+        width: 70%;
+      }
+      
+      paging-controller {
+        width: 70%;
       }
 
-      @media (min-width: 500px) {
+      equalizer-controller-zone {
+        width: 90%;
+        min-width: 300px;
+        /*height: calc(60% + calc(.6 * 100vw));*/
+        height: 100%;
+      }
+
+      averaging-controller {
+        width: 80%;
+        height: 100%;
+      }
+
+      @media (min-width: 769px) {
         paper-radio-group {
           @apply(--layout-vertical);
         }
@@ -44,7 +69,7 @@
         }
       }
 
-      @media (max-width: 499px) {
+      @media (max-width: 768px) {
         paper-radio-group {
           @apply(--layout-horizontal)
         }
@@ -60,29 +85,61 @@
         volume-selector, light-controller {
           margin-top: 20px;
         }
-
       }
 
-    </style>
+  </style>
     <div id="radio-container" class="layout horizontal">
-      <paper-radio-group selected="{{mode}}" id="mode">
-        <paper-radio-button name="volume" class="flex">Volume</paper-radio-button>
-        <!--<paper-radio-button name="averaging" class="flex">Averaging</paper-radio-button>-->
-        <paper-radio-button name="light" class="flex">LED</paper-radio-button>
+      <paper-radio-group id="mode" style="margin-left: 15%;" selected="{{mode}}">
+        <paper-radio-button id="volumeButtonZone"     name="volume"         class="flex"><h3>Volume</h3></paper-radio-button>
+        <paper-radio-button id="averagingButtonZone"  name="averagingZone"  class="flex"><h3>Comfort Ratio</h3></paper-radio-button>
+        <paper-radio-button id="targetButtonZone"     name="targetZone"     class="flex"><h3>Target</h3></paper-radio-button>
+        <paper-radio-button id="equalizerButtonZone"  name="equalizerZone"  class="flex"><h3>Equalizers</h3></paper-radio-button>
+        <paper-radio-button id="pagingButtonRCZone"   name="pagingZone"     class="flex"><h3>Paging</h3></paper-radio-button>
+        <paper-radio-button id="schedulingButtonZone" name="schedulingZone" class="flex"><h3>Scheduling</h3></paper-radio-button>
+      
       </paper-radio-group>
     </div>
     <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
-      <neon-animatable page="light" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+
+      <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
-          <light-controller id="light" led-on="{{ledOn}}"></light-controller>
+          <volume-selector id="volumeZone" speaker-id="[[speakerId]]" volume="{{volumeLevel}}" musicVolume="{{musicLevel}}"></volume-selector>
         </simple-fit>
       </neon-animatable>
-      <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
+
+      <neon-animatable page="averagingZone" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
-          <volume-selector id="volume" volume="{{volume}}"></volume-selector>
+          <averaging-controller id="averagingZone" speaker-id="[[speakerId]]" averagingForZone="[[averagingForZone]]"></averaging-controller>
+        </simple-fit>
+      </neon-animatable> 
+      
+      <neon-animatable page="targetZone" id="target-selector-zone" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+        <simple-fit class="container">
+          <target-selector-zone id="targetZone" speakerZone="[[speakerZone]]" targetZone="{{targetZone}}"></target-selector-zone>
         </simple-fit>
       </neon-animatable>
+      
+      <neon-animatable page="equalizerZone" id="equalizer-controller-zone" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+        <simple-fit class="container">
+          <equalizer-controller-zone id="equalizerZone" speaker-id="[[speakerId]]" speaker="[[speaker]]" equalizer="{{equalizerone}}" music="{{musicone}}"></equalizer-controller-zone>
+        </simple-fit>
+      </neon-animatable>
+      
+      <neon-animatable page="pagingZone" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+        <simple-fit class="container">
+          <paging-controller id="pagingZone" speaker-id="[[speakerId]]" paging="{{pagingLevel}}"></paging-controller>
+        </simple-fit>
+      </neon-animatable>
+
+      <neon-animatable page="schedulingZone" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+        <simple-fit class="container">
+           <scheduling-controller-zone center-center id="schedulingZone" speaker="[[speaker]]"></scheduling-controller-zone>
+        </simple-fit>
+      </neon-animatable> 
+      
+
     </neon-animated-pages>
+
     <iron-ajax
           id="speakerUpdateAjax"
           url="/system/speaker/"
@@ -90,7 +147,9 @@
           content-type="application/json"
           handle-as="json"
           on-response="_logResponse"
-          debounce-duration="300"></iron-ajax>
+          debounce-duration="300">
+    </iron-ajax>
+
   </template>
   <script>
     Polymer({
@@ -116,16 +175,45 @@
           value: "volume"
         },
 
-        ledOn: {
-          type: Boolean,
-          value: true,
-          observer: '_ledUpdate'
-        },
-        volume: {
+        speakerId: {
           type: Number,
-          value: 0,
+          value: 0
+        },
+
+        volumeLevel: {    // this shit and all the other shitters were volumeone for some reason ??? changed to volumeLevel
+          type: String,
+          value: "0",
           observer: '_volumeUpdate'
         },
+        
+        musicLevel: {
+          type: Number,
+          value: 0
+        },
+
+        pagingLevel: {
+          type: String,
+          value: "0",
+          observer: '_pagingUpdate'
+        },
+
+        equalizerone: {
+          type: String,
+          value: "0",
+          observer: '_equalizerUpdate'
+        },
+
+        musicone: {
+          type: String,
+          value: "0",
+          observer: '_equalizerUpdate'
+        },
+
+        /*target: {
+          type: String,
+          value: "0",
+          observer: '_targetUpdate'
+        },*/
 
         animationConfig: {
           value: function() {
@@ -144,31 +232,12 @@
         }
       },
 
-      _ledUpdate: function() {
-        /*
-          We only want to notify the server of changes if this is after ready() has been called.
-          This is because _ledUpdate is triggered when initially setting values received from the server
-        */
-        if(this.isReady) {
-          var self = this;
-          self.zone.speakers.forEach(function(speaker){
-            speaker.ledOn = self.ledOn;
-            var updatedAttributes = ["led"];
-            var attributeValues = {
-              "led": self.ledOn,
-            };
-            self.$.speakerUpdateAjax.body = {
-              "updatedAttributes": updatedAttributes, 
-              "attributeValues": attributeValues,
-              "speaker": speaker.id
-            };
-            self.$.speakerUpdateAjax.generateRequest();
-          });
-          
-        }
+      _speakerSelected: function() {
+          console.log("this shit is working");
       },
 
       _volumeUpdate: function() {
+        /*
         if(this.isReady) {
           var self = this;
           self.zone.speakers.forEach(function(speaker){
@@ -184,8 +253,107 @@
             };
             self.$.speakerUpdateAjax.generateRequest();
           });
-        }
+        }*/
+      },
 
+      _pagingUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["paging"];
+          var attributeValues = {
+            "paging": this.pagingLevel,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+        console.log("_pagingUpdate " + this.pagingLevel);
+      },
+
+      /*
+      _musicVolumeUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["musicVolume"];
+          var attributeValues = {
+            "musicVolume": this.musicVolumeLevel,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+        console.log("_musicVolumeLevel " + this.musicVolumeLevel);
+      },
+      */
+
+      _equalizerUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["equalizer"];
+          var attributeValues = {
+            "equalizer": this.equalizerone,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+
+          console.log(this.$.speakerUpdateAjax.body);
+
+        }
+      },
+
+      _musicEqualizerUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["music"];
+          var attributeValues = {
+            "music": this.musicone,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+
+          console.log(this.$.speakerUpdateAjax.body);
+
+        }
+      },
+
+      _targetUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["target"];
+          var attributeValues = {
+            "target": this.target,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+
+      _targetUpdateZone: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["target"];
+          var attributeValues = {
+            "target": this.target,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
       },
 
       _logResponse: function(event, data) {
@@ -193,19 +361,33 @@
       },
 
       _initializeStatus: function(speaker) {
-        this.ledOn = true;
+        this.speakerId = speaker.id;
+        speakerid = speaker.id;
+        this.volume = speaker.VolumeLevel[0];
+        this.equalizer = speaker.equalizerone;
+      },
+
+      _speakerUpdated: function() {
+        this.isReady = false;
+        this._initializeStatus(this.speaker);
+        this.isReady = true;
+      },
+
+      ready: function() {
+        console.log(document.getElementById('target'));
+        //if(this.speaker !== undefined)
+          this._initializeStatus(this.speaker);
+        this.isReady = true;
+        console.log("this is the zone flag", zoneFlag);
+      },
+
+      _initializeStatus: function(speaker) {
         this.volume = 0;
       },
 
       _zoneUpdated: function() {
         this.isReady = false;
         this._initializeStatus();
-        this.isReady = true;
-      },
-
-      ready: function() {
-        if(this.speaker !== undefined)
-          this._initializeStatus(this.speaker);
         this.isReady = true;
       }
     });

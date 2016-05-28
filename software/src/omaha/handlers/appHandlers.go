@@ -81,6 +81,7 @@ func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 		var level = database.GetLevelOfAccount(loginRequest.Username)
 		var speakerID = database.GetSpeakerForAccount(loginRequest.Username)
 		var zoneID = database.GetZoneForAccount(loginRequest.Username)
+		//var allZone = database.GetAllZone(loginRequest.Username)
 
 		log.Println("This is ths level that you are looking for ", level)
 		if err != nil {

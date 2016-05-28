@@ -27,9 +27,21 @@ func InitializeHandlers() {
 	http.Handle("/system/pagingRequest/", GenericHandler{POST: PagingRequestHandler})
 	http.Handle("/system/createZone/", GenericHandler{PUT: CreateZoneHandler})
 	http.Handle("/system/createPagingZone/", GenericHandler{PUT: CreatePagingZoneHandler})
-
-	// V this should change to schedulingHandler / timeHandler or something
 	http.Handle("/system/scheduleTime/", GenericHandler{PUT: ScheduleTime})
+
+
+	// Zone handlers
+
+	http.Handle("/system/zone/updateVolumesZone/", GenericHandler{PUT: UpdateVolumesZone})
+	http.Handle("/system/zone/threshold/", GenericHandler{PUT: ThresholdHandlerZone})
+	http.Handle("/system/zone/updateAveragingZone/", GenericHandler{PUT: UpdateAveragingZone})
+	http.Handle("/system/zone/updateTargetZone/", GenericHandler{PUT: UpdateSpeakerTargetZone})
+	http.Handle("/system/zone/updateEqualizerZone/", GenericHandler{PUT: UpdateSpeakerEqualizerZone})
+	http.Handle("/system/zone/addPreset/", GenericHandler{PUT: AddPresetHandlerZone})
+	http.Handle("/system/zone/updatePagingValuesZone/", GenericHandler{PUT: UpdatePagingValuesZone})
+	http.Handle("/system/zone/scheduleTimeZone/", GenericHandler{PUT: ScheduleTimeZone})
+	http.Handle("/system/zone/addTarget/", GenericHandler{PUT: AddTargetHandlerZone})
+	http.Handle("/system/zone/changeEQModeZone/", GenericHandler{PUT: ChangeEQModeZone})
 
 	// I'll consolidate these later, easier to forge my own path for now
 	http.Handle("/system/zone/", GenericHandler{POST: ZonePostHandler})

@@ -58,6 +58,8 @@ type speakerResponse struct {
 	Name										string		`json:"name"`
 	EqualizerMode						int8			`json:"equalizerMode"`
 	SchedulingMode					int8			`json:"schedulingMode"`
+
+	Schedule[][]						int				`json:"schedule"'`
 }
 
 type speakerGetRequest struct {
@@ -71,6 +73,16 @@ type keepAlive struct {
 
 type addPresetData struct {
 	Speaker		int8		`json:"speaker"`
+	Name			string	`json:"name"`
+	Type 			int			`json:"type"`
+	Constants	string	`json:"constants"`
+	Target		string	`json:"target"`
+	Update 		bool		`json:"update"`
+}
+
+
+type addPresetZoneData struct {
+	Zone			int8		`json:"zone"`
 	Name			string	`json:"name"`
 	Type 			int			`json:"type"`
 	Constants	string	`json:"constants"`
@@ -108,12 +120,13 @@ type speakerAttributes struct {
 }	
 
 type timeSchedule struct {
-	Times[25] 	int	`json:["times"]` 
-	Day					int	`json:"day"`
-
-	// Name	int8	`json:"name"`
-	// Action	int8	`json:"action"`		// this might need to be an array
-
+	Speaker			int8	`json:"speaker"`
+	Mode				int		`json:"mode"`
+	Interval		int		`json:"interval"`
+	Start 			int		`json:"start"`
+	End 				int		`json:"end"`
+	Day					int		`json:"day"`
+	Times[24] 	int		`json:["times"]` 
 }
 
 type thresholdRequest struct {
@@ -124,6 +137,58 @@ type thresholdRequest struct {
 	UpperPagingThreshold		int8	`json:"pagingMax"`
 	LowerMaskingThreshold		int8	`json:"maskingMin"`
 	UpperMaskingThreshold		int8	`json:"maskingMax"`
+}
+
+type volumesZoneData struct {
+	Zone		int8	`json:"zone"`
+	Volume	int8	`json:"volume"`
+	Music		int8	`json:"music"`
+	Paging	int8	`json:"paging"`
+	Masking	int8	`json:"masking"`
+}
+
+type thresholdZoneRequest struct {
+	Zone										int8	`json:"zone"`
+	LowerMusicThreshold			int8	`json:"musicMin"`
+	UpperMusicThreshold			int8	`json:"musicMax"`
+	LowerPagingThreshold		int8	`json:"pagingMin"`
+	UpperPagingThreshold		int8	`json:"pagingMax"`
+	LowerMaskingThreshold		int8	`json:"maskingMin"`
+	UpperMaskingThreshold		int8	`json:"maskingMax"`
+}
+
+type averagingZoneData struct {
+	Zone					int8	`json:"zone"`
+	Pleasantness	int8	`json:"effectiveness"`
+	Effectiveness	int8 	`json:"pleasantness"`
+}
+
+type targetZoneData struct {
+	Zone			int8		`json:"zone"`
+	Constants string 	`json:"constants"`
+	Mode			int8		`json:"mode"`
+}
+
+type updatePagingValuesData struct {
+	Zone					int8	`json:"zone"`
+	FadeTime			int8	`json:"fadeTime"`
+	FadeLevel			int8	`json:"fadeLevel"`
+	PagingVolume	int8	`json:"pagingVolume"`
+}	
+
+type timeScheduleZone struct {
+	Zone				int8	`json:"zone"`
+	Mode				int		`json:"mode"`
+	Interval		int		`json:"interval"`
+	Start 			int		`json:"start"`
+	End 				int		`json:"end"`
+	Day					int		`json:"day"`
+	Times[24] 	int		`json:["times"]` 
+}
+
+type changeEQModeZoneData struct {
+	Zone		int8		`json:"zone"`
+	Mode		int8	`json:"mode"`
 }
 
 var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.ControllerStatus) error {
@@ -138,6 +203,543 @@ var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.Contro
 	"zoneId": 		updateSpeakerZoneID,
 	"target":			updateSpeakerTarget,
 }
+
+func UpdateVolumesZone(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
+	volumesZoneRequest := &volumesZoneData{}
+	err := json.NewDecoder(r.Body).Decode(volumesZoneRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("volumesZoneRequest json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	zone := database.GetZone(volumesZoneRequest.Zone)
+
+	for x := range zone.Speakers {
+		if volumesZoneRequest.Volume >= 0 && volumesZoneRequest.Volume <= 100 && volumesZoneRequest.Music >= 0 && volumesZoneRequest.Music <= 100 && volumesZoneRequest.Paging >= 0 && volumesZoneRequest.Paging <= 100 && volumesZoneRequest.Masking >= 0 && volumesZoneRequest.Masking <= 100 {
+			//log.Printf("Telling speaker %d to set volume to %d\n", speaker.ID, attr.Volume)
+			
+			log.Println(zone.Speakers[x].VolumeLevel)
+
+			if(volumesZoneRequest.Volume != zone.Speakers[x].VolumeLevel[0]) {
+				zone.Speakers[x].VolumeLevel[0] = volumesZoneRequest.Volume
+				zone.VolumeLevel[0] = volumesZoneRequest.Volume
+				system.SetVolume(zone.Speakers[x])
+				// will have to do a SetVolumeZone maybe 	
+			}
+			if(volumesZoneRequest.Music != zone.Speakers[x].VolumeLevel[1]) {
+				zone.Speakers[x].VolumeLevel[1] = volumesZoneRequest.Music
+				zone.VolumeLevel[1] = volumesZoneRequest.Music
+				system.SetMusicVolume(zone.Speakers[x])
+			}
+			if(volumesZoneRequest.Paging != zone.Speakers[x].VolumeLevel[2]) {
+				zone.Speakers[x].VolumeLevel[2] = volumesZoneRequest.Paging
+				zone.VolumeLevel[2] = volumesZoneRequest.Paging
+				system.SetPaging(zone.Speakers[x], volumesZoneRequest.Paging)		// 0 means volume adjustment
+			}
+			if(volumesZoneRequest.Masking != zone.Speakers[x].VolumeLevel[3]) {
+				zone.Speakers[x].VolumeLevel[3] = volumesZoneRequest.Masking
+				zone.VolumeLevel[3] = volumesZoneRequest.Masking
+				system.SetSoundMaskingVolume(zone.Speakers[x])		// 0 means volume adjustment
+			}
+			//if(l != 0) {
+			defer database.SaveVolume(zone.Speakers[x])		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
+			defer database.SaveVolumeZone(zone)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
+		}
+		w.Write(getGenericSuccessResponse())
+	}
+}
+
+func ThresholdHandlerZone(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	status := system.GetSystemStatus()
+	log.Println(status)
+	thresholdZoneData := &thresholdZoneRequest{}		// this is not a preset, but it is the same data
+	err := json.NewDecoder(r.Body).Decode(thresholdZoneData)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("AddTargetHandler json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+	//log.Println("I got you packet dude, sendin one back")
+	log.Println(thresholdZoneData)
+
+	session, _ := r.Cookie("session")
+	log.Println(session.Value)
+	log.Println(thresholdZoneData.Zone)
+
+	if(int(thresholdZoneData.Zone) == database.AuthenticateZoneFromHash(session.Value) || database.AuthenticatePermissionFromHash(session.Value) > 0) {
+		zone := database.GetZone(thresholdZoneData.Zone)
+		log.Println("authenticated in this shit")
+		for x := range zone.Speakers {
+			database.UpdateThreshold(zone.Speakers[x].ID, thresholdZoneData.LowerMusicThreshold, thresholdZoneData.UpperMusicThreshold, thresholdZoneData.LowerPagingThreshold,	thresholdZoneData.UpperPagingThreshold,	thresholdZoneData.LowerMaskingThreshold, thresholdZoneData.UpperMaskingThreshold)
+		} 
+		database.UpdateThresholdZone(zone.ZoneID, thresholdZoneData.LowerMusicThreshold, thresholdZoneData.UpperMusicThreshold, thresholdZoneData.LowerPagingThreshold,	thresholdZoneData.UpperPagingThreshold,	thresholdZoneData.LowerMaskingThreshold, thresholdZoneData.UpperMaskingThreshold)
+	}
+	// else don't write anything to let anyone trying to intrude whether they are failing or not
+
+	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
+func UpdateAveragingZone(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
+	averagingZoneRequest := &averagingZoneData{}
+	err := json.NewDecoder(r.Body).Decode(averagingZoneRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("averagingZoneRequest json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	if averagingZoneRequest.Effectiveness > 0 && averagingZoneRequest.Effectiveness < 11 && averagingZoneRequest.Pleasantness > 0 && averagingZoneRequest.Pleasantness < 11 {	
+		zone := database.GetZone(averagingZoneRequest.Zone)
+		for x := range zone.Speakers {
+			log.Printf("Telling speaker %d to set effectiveness to %d and pleasantness to %d\n", zone.Speakers[x].ID, averagingZoneRequest.Effectiveness, averagingZoneRequest.Pleasantness)
+			system.SetAveragingMode(zone.Speakers[x], averagingZoneRequest.Effectiveness + averagingZoneRequest.Pleasantness)
+			zone.Speakers[x].Effectiveness = averagingZoneRequest.Effectiveness 
+			zone.Speakers[x].Pleasantness = averagingZoneRequest.Pleasantness
+			zone.Effectiveness = averagingZoneRequest.Effectiveness
+			zone.Pleasantness = averagingZoneRequest.Pleasantness
+			database.SaveAveraging(zone.Speakers[x])
+		}
+		database.SaveAveragingZone(zone)
+	}
+
+	w.Write(getGenericSuccessResponse())
+}
+
+func UpdateSpeakerTargetZone(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	status := system.GetSystemStatus()
+	targetZoneRequest := &targetZoneData{}
+	err := json.NewDecoder(r.Body).Decode(targetZoneRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("updateSpeakerTargetZone json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	zone := database.GetZone(targetZoneRequest.Zone)
+
+	constants := strings.Fields(targetZoneRequest.Constants)		// do not publish this function without checking for type/value errors
+	log.Println(constants)
+
+	if(len(constants) < 21) {
+		// make a better error
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	var k = 0
+	for _, i := range constants {
+		floatParse, err := strconv.ParseFloat(i, 64)
+		if err != nil {
+			panic(err)		// test if this returns
+		}
+		//constantsInts = append(constantsInts, int8(floatParse))
+		for j := range zone.Speakers {
+			if(floatParse != zone.Speakers[j].CurrentTarget[k]) {			// change this to pull from the db, it might already do that
+				whole := math.Floor(floatParse)
+				decimal := math.Abs(whole - floatParse) * 100
+
+				//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+				//system.SetEqualizerConstant(speaker, int8(whole), int8(k))
+				log.Println("\n\n", whole, "\n\n")
+				//system.SetEqualizerConstant(speaker, int8(decimal), int8(k))
+				log.Println("\n\n", decimal, "\n\n")
+				zone.Speakers[j].CurrentTarget[k] = floatParse	// this needs checking
+				//log.Printf("You changed band %d to level %d", k, floatParse)
+			//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+				database.SaveBand(zone.Speakers[j], k, floatParse, 3)
+				log.Println("band", k, "value", floatParse)
+			}
+			log.Printf("Telling speaker %d to change target to %s", zone.Speakers[j].ID, constants)
+		}
+		database.SaveBandZone(zone, k, floatParse, 3)
+		k++
+
+		//log.Println("constantsInts: ", constantsInts)
+	}
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
+
+func UpdateSpeakerEqualizerZone(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+	/*if(!database.AuthenticatePermissionFromHash(session.Value) > 1) {
+		return
+	}*/
+	equalizerZoneRequest := &targetZoneData{}
+	err := json.NewDecoder(r.Body).Decode(equalizerZoneRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("updateSpeakerEqualizerZone json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	constants := strings.Fields(equalizerZoneRequest.Constants)		// do not publish this function without checking for type/value errors
+	//log.Println(constants)
+
+	if(len(constants) < 21) {
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	var k = 0
+		//constantsInts = append(constantsInts, int8(floatParse))
+		// zone needs to have its own equalizer mode
+		switch(equalizerZoneRequest.Mode) {
+			case 0: {
+				zone := database.GetZone(equalizerZoneRequest.Zone)
+				for  i := 0; i < len(constants); i++ {
+					for j := range zone.Speakers {
+						speaker := database.GetSpeaker(zone.Speakers[j].ID)
+						floatParse, err := strconv.ParseFloat(constants[i], 64)
+						if err != nil {
+							panic(err)		// test if this returns
+						}
+						if(floatParse != speaker.CurrentPreset[i]) {			// change this to pull from the db, it might already do that
+							whole := math.Floor(floatParse)
+
+							decimal := math.Abs(whole - floatParse) * 100
+
+							//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+							system.SetEqualizerConstant(speaker, int8(whole), int8(i), false)
+							log.Println("Whole value:", int8(whole))
+							system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+							log.Println("Decimal value:", int8(decimal))
+							speaker.CurrentPreset[i] = floatParse	// this needs checking
+							//log.Printf("You changed band %d to level %d", k, floatParse)
+						//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+							database.SaveBand(speaker, i, floatParse, 0)
+							database.SaveBandZone(zone, i, floatParse, 0)
+						}
+					}
+				}
+				k++
+
+				break;
+			}
+
+			case 1: {
+				zone := database.GetZone(equalizerZoneRequest.Zone)
+				for  i := 0; i < len(constants); i++ {
+					for j := range zone.Speakers {
+						speaker := database.GetSpeaker(zone.Speakers[j].ID)
+						floatParse, err := strconv.ParseFloat(constants[i], 64)
+						if err != nil {
+							panic(err)		// test if this returns
+						}
+						if(floatParse != speaker.CurrentMusicPreset[i]) {			// change this to pull from the db, it might already do that
+							whole := math.Floor(floatParse)
+
+							decimal := math.Abs(whole - floatParse) * 100
+
+							//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+							//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
+							log.Println("Whole value:", int8(whole))
+							//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+							log.Println("Decimal value:", int8(decimal))
+							speaker.CurrentMusicPreset[i] = floatParse	// this needs checking
+							//log.Printf("You changed band %d to level %d", k, floatParse)
+						//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+							database.SaveBand(speaker, i, floatParse, 1)
+							database.SaveBandZone(zone, i, floatParse, 1)
+						}
+					}
+					k++
+				}
+
+				break;
+			}
+
+			case 2: {
+				zone := database.GetZone(equalizerZoneRequest.Zone)
+				for  i := 0; i < len(constants); i++ {
+					for j := range zone.Speakers {
+						speaker := database.GetSpeaker(zone.Speakers[j].ID)
+						floatParse, err := strconv.ParseFloat(constants[i], 64)
+						if err != nil {
+							panic(err)		// test if this returns
+						}
+						if(floatParse != speaker.CurrentMusicPreset[i]) {			// change this to pull from the db, it might already do that
+							whole := math.Floor(floatParse)
+
+							decimal := math.Abs(whole - floatParse) * 100
+
+							//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+							//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
+							log.Println("Whole value:", int8(whole))
+							//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+							log.Println("Decimal value:", int8(decimal))
+							speaker.CurrentPagingPreset[i] = floatParse	// this needs checking
+							//log.Printf("You changed band %d to level %d", k, floatParse)
+						//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+							database.SaveBand(speaker, i, floatParse, 2)
+							database.SaveBandZone(zone, i, floatParse, 2)
+						}
+						log.Printf("Telling speaker %d to change equalizer to %s", speaker, constants)
+					}
+					k++
+				}
+
+				break;
+			}
+
+			default: 
+				log.Println("updateSpeakerEqualizer is getting the wrong value....")
+		}
+
+	w.Write(getGenericSuccessResponse())
+}
+
+
+func AddPresetHandlerZone(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+
+	addPresetRequestZone := &addPresetZoneData{}
+	err := json.NewDecoder(r.Body).Decode(addPresetRequestZone)
+	//controller := database.GetSpeaker(speakerRequest.Speaker)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("AddPresetHandler json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	log.Println(addPresetRequestZone)
+
+	switch addPresetRequestZone.Type {
+		case 0:
+			zone := database.GetZone(addPresetRequestZone.Zone)
+			for x := range zone.Speakers {
+				database.SavePreset(zone.Speakers[x].ID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+			}
+			database.SavePresetZone(zone.ZoneID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+		case 1:
+			zone := database.GetZone(addPresetRequestZone.Zone)
+			for x := range zone.Speakers {
+				database.SaveMusicPreset(zone.Speakers[x].ID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+			}
+			database.SaveMusicPresetZone(zone.ZoneID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+		case 2:		
+			zone := database.GetZone(addPresetRequestZone.Zone)
+			for x := range zone.Speakers {
+				database.SavePagingPreset(zone.Speakers[x].ID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+			}
+			database.SavePagingPresetZone(zone.ZoneID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+		default: 
+			log.Println("AddPresetHandler MESSED UP SOMEHOW")
+	}
+
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
+
+func UpdatePagingValuesZone(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+	/*if(!database.AuthenticatePermissionFromHash(session.Value) > 1) {
+		return
+	}*/
+	updatePagingValuesRequest := &updatePagingValuesData{}
+	err := json.NewDecoder(r.Body).Decode(updatePagingValuesRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("updateSpeakerEqualizerZone json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	if updatePagingValuesRequest.FadeTime > -1 && updatePagingValuesRequest.FadeTime < 101 && updatePagingValuesRequest.FadeLevel > -1 && updatePagingValuesRequest.FadeLevel < 101 && updatePagingValuesRequest.PagingVolume > -1 && updatePagingValuesRequest.PagingVolume < 101 {	
+		zone := database.GetZone(updatePagingValuesRequest.Zone)
+		for x := range zone.Speakers {
+			if(updatePagingValuesRequest.FadeTime != zone.Speakers[x].PagingLevel[0]) {
+					zone.Speakers[x].PagingLevel[0] = updatePagingValuesRequest.FadeTime
+					zone.PagingLevel[0] = updatePagingValuesRequest.FadeTime
+					system.SetPaging(zone.Speakers[x], updatePagingValuesRequest.FadeTime + 101) 	// offset tells the mcu to set fade time	
+					database.SaveFade(zone.Speakers[x])		// we can optimize this by reducing the generality of the functio}
+			}
+			if(updatePagingValuesRequest.FadeLevel != zone.Speakers[x].PagingLevel[1] && updatePagingValuesRequest.FadeLevel != 0) {
+					zone.Speakers[x].PagingLevel[1] = updatePagingValuesRequest.FadeLevel
+					system.SetPaging(zone.Speakers[x], updatePagingValuesRequest.FadeLevel)
+				  database.SaveFade(zone.Speakers[x])
+			}
+			if(updatePagingValuesRequest.PagingVolume != zone.Speakers[x].VolumeLevel[2]) {
+				zone.Speakers[x].VolumeLevel[2] = updatePagingValuesRequest.PagingVolume
+				system.SetPaging(zone.Speakers[x], updatePagingValuesRequest.PagingVolume)
+				database.SaveVolume(zone.Speakers[x])
+			}
+		}
+		zone.PagingLevel[0] = updatePagingValuesRequest.FadeTime
+		zone.PagingLevel[1] = updatePagingValuesRequest.FadeLevel
+		zone.VolumeLevel[2] = updatePagingValuesRequest.PagingVolume
+		database.SaveFadeZone(zone)
+		database.SaveVolumeZone(zone)
+	} else {
+		return
+	}
+
+	return
+}
+
+
+func AddTargetHandlerZone(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	status := system.GetSystemStatus()
+
+	addPresetRequestZone := &addPresetZoneData{}		// this is not a preset, but it is the same data
+	err := json.NewDecoder(r.Body).Decode(addPresetRequestZone)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("AddTargetHandler json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+	zone := database.GetZone(addPresetRequestZone.Zone)
+	for x := range zone.Speakers {
+		database.SaveTarget(zone.Speakers[x].ID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+	}
+	database.SaveTargetZone(addPresetRequestZone.Zone, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
+
+func ScheduleTimeZone(w http.ResponseWriter, r *http.Request) {
+	status := system.GetSystemStatus()
+
+	timeGivenZone := &timeScheduleZone{}
+	err := json.NewDecoder(r.Body).Decode(timeGivenZone)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("ScheduleTimeZone json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	log.Println(timeGivenZone)
+	zone := database.GetZone(timeGivenZone.Zone)
+	for x := range zone.Speakers {
+		database.UpdateSchedule(zone.Speakers[x].ID, timeGivenZone.Day, timeGivenZone.Interval, timeGivenZone.Start, timeGivenZone.End, timeGivenZone.Times)
+		err = database.ChangeSchedulingMode(zone.Speakers[x].ID, timeGivenZone.Mode)
+  }//w.Write(getGenericSuccessResponse())
+
+	database.UpdateScheduleZone(zone.ZoneID, timeGivenZone.Day, timeGivenZone.Interval, timeGivenZone.Start, timeGivenZone.End, timeGivenZone.Times)
+ 	err = database.ChangeSchedulingModeZone(zone.ZoneID, timeGivenZone.Mode)
+
+
+	//log.Println("\n\n\n\n\n------------- STARTING --------------\n\n\n\n\n")
+
+	log.Println("THIS IS THE TIME GIVEN", timeGivenZone)
+	//currentTime := time.Now()
+
+    //userGiven := time.Date(2016, 5, 4, 16, 15, 0, 0, currentTime.Location())
+    //current := time.Now()
+
+    //log.Println(current)
+	//userGiven2 := time.Date(current.Year(), current.Month(), current.Day(), current.Hour(), current.Minute(), current.Second() + 15, 0, currentTime.Location())
+      //userGiven2 := time.Date(timeGiven.Year, time.Month(timeGiven.Month + 1), timeGiven.Day, timeGiven.Hour, timeGiven.Minute, timeGiven.Second, 0, currentTime.Location())
+    //log.Println(userGiven2)
+
+    /*yearDifference := userGiven2.Year() - current.Year()
+    monthDifference := int(userGiven2.Month()) - int(current.Month())
+    dayDifference := userGiven2.Day() - current.Day()
+    hourDifference := userGiven2.Hour() - current.Hour()
+    minuteDifference := userGiven2.Minute() - current.Minute()
+    secondDifference := userGiven2.Second() - current.Second()
+*/
+    //log.Println("Timer will go off in", yearDifference, "years", monthDifference, "month/s", dayDifference, "day/s", minuteDifference, "minute/s", secondDifference, "second/s")
+    //amountInSeconds := (yearDifference * 366 * 24 * 60 * 60) + (monthDifference * 30 * 24 * 60 * 60) + (dayDifference * 24 * 60 * 60 ) + (hourDifference * 60 * 60) + (minuteDifference * 60) + secondDifference
+    //log.Println(amountInSeconds)
+
+
+	/*log.Println("\n\n\n\n\n------------- ENDING --------------\n\n\n\n\n")
+    //log.Println(userGiven.AddDate(userGiven2.Year(), -int(userGiven2.Month()), -userGiven2.Day()))
+
+
+    ticker := time.NewTicker(1 * time.Second)
+    quit := make(chan bool)
+    go func() {
+    	// write to database
+        for {
+           select {
+            case <- ticker.C:
+                log.Println("I'm about to do something")
+            case <- quit:
+                ticker.Stop()
+                log.Println("I quit!")
+                return
+            }
+        }
+     }()
+
+     //time.Sleep(time.Duration(amountInSeconds + 1)  * time.Second)
+
+     log.Println("times up!");
+
+     quit <- true			// now it quits
+
+     // write the success afterwards, might not need this */
+     w.Write(getGenericSuccessResponse())
+}
+
+
+func ChangeEQModeZone(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	status := system.GetSystemStatus()
+
+	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
+	changeEQModeZoneRequest := &changeEQModeZoneData{}
+	err := json.NewDecoder(r.Body).Decode(changeEQModeZoneRequest)
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("changeEQModeZone json decoding error: %s\n", err)
+		}
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	zone := database.GetZone(changeEQModeZoneRequest.Zone)
+
+	for j := range zone.Speakers {
+		err = database.ChangeEQMode(zone.Speakers[j].ID, changeEQModeZoneRequest.Mode)
+		_, err = system.SetEQMode(zone.Speakers[j].ID, changeEQModeZoneRequest.Mode)
+	}
+	err = database.ChangeEQModeZone(zone.ZoneID, changeEQModeZoneRequest.Mode)
+	// this should tell the controller to send out the packets for the music constants
+	// should also call to change the status in the database to music mode
+
+
+	log.Println("I got you packet dude, sendin one back", changeEQModeZoneRequest)
+	//log.Println(addPresetRequest)
+	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+}
+
 
 func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 
@@ -244,106 +846,106 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 	var k = 0
 		//constantsInts = append(constantsInts, int8(floatParse))
 
-		switch(speaker.EqualizerMode) {
-			case 0: {
-				for  i := 0; i < len(constants); i++ {
-					floatParse, err := strconv.ParseFloat(constants[i], 64)
-					if err != nil {
-						panic(err)		// test if this returns
-					}
-					if(floatParse != speaker.CurrentPreset[k]) {			// change this to pull from the db, it might already do that
-						whole := math.Floor(floatParse)
+	switch(speaker.EqualizerMode) {
+		case 0: {
+			for  i := 0; i < len(constants); i++ {
+				floatParse, err := strconv.ParseFloat(constants[i], 64)
+				if err != nil {
+					panic(err)		// test if this returns
+				}
+				if(floatParse != speaker.CurrentPreset[i]) {			// change this to pull from the db, it might already do that
+					whole := math.Floor(floatParse)
 
-						decimal := math.Abs(whole - floatParse) * 100
+					decimal := math.Abs(whole - floatParse) * 100
 
-						//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-						system.SetEqualizerConstant(speaker, int8(whole), int8(k), false)
-						log.Println("Whole value:", int8(whole))
-						system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
-						log.Println("Decimal value:", int8(decimal))
-						speaker.CurrentPreset[k] = floatParse	// this needs checking
-						//log.Printf("You changed band %d to level %d", k, floatParse)
-					//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-						database.SaveBand(speaker, k, floatParse, 0)
-					}
-
-					floatParse, err = strconv.ParseFloat(constants[i], 64)
-					if err != nil {
-						panic(err)		// test if this returns
-					}
-					k++
+					//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+					system.SetEqualizerConstant(speaker, int8(whole), int8(i), false)
+					log.Println("Whole value:", int8(whole))
+					system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+					log.Println("Decimal value:", int8(decimal))
+					speaker.CurrentPreset[i] = floatParse	// this needs checking
+					//log.Printf("You changed band %d to level %d", k, floatParse)
+				//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+					database.SaveBand(speaker, i, floatParse, 0)
 				}
 
-				break;
-			}
-
-			case 1: {
-				for  i := 0; i < len(constants); i++ {
-					floatParse, err := strconv.ParseFloat(constants[i], 64)
-					if err != nil {
-						panic(err)		// test if this returns
-					}
-					if(floatParse != speaker.CurrentMusicPreset[k]) {			// change this to pull from the db, it might already do that
-						whole := math.Floor(floatParse)
-
-						decimal := math.Abs(whole - floatParse) * 100
-
-						//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-						//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
-						log.Println("Whole value:", int8(whole))
-						//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
-						log.Println("Decimal value:", int8(decimal))
-						speaker.CurrentMusicPreset[k] = floatParse	// this needs checking
-						//log.Printf("You changed band %d to level %d", k, floatParse)
-					//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-						database.SaveBand(speaker, k, floatParse, 1)
-					}
-
-					floatParse, err = strconv.ParseFloat(constants[i], 64)
-					if err != nil {
-						panic(err)		// test if this returns
-					}
-					k++
+				floatParse, err = strconv.ParseFloat(constants[i], 64)
+				if err != nil {
+					panic(err)		// test if this returns
 				}
-
-				break;
+				k++
 			}
 
-			case 2: {
-				for  i := 0; i < len(constants); i++ {
-					floatParse, err := strconv.ParseFloat(constants[i], 64)
-					if err != nil {
-						panic(err)		// test if this returns
-					}
-					if(floatParse != speaker.CurrentMusicPreset[k]) {			// change this to pull from the db, it might already do that
-						whole := math.Floor(floatParse)
-
-						decimal := math.Abs(whole - floatParse) * 100
-
-						//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-						//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
-						log.Println("Whole value:", int8(whole))
-						//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
-						log.Println("Decimal value:", int8(decimal))
-						speaker.CurrentPagingPreset[k] = floatParse	// this needs checking
-						//log.Printf("You changed band %d to level %d", k, floatParse)
-					//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-						database.SaveBand(speaker, k, floatParse, 2)
-					}
-
-					floatParse, err = strconv.ParseFloat(constants[i], 64)
-					if err != nil {
-						panic(err)		// test if this returns
-					}
-					k++
-				}
-
-				break;
-			}
-
-			default: 
-				log.Println("updateSpeakerEqualizer is getting the wrong value....")
+			break;
 		}
+
+		case 1: {
+			for  i := 0; i < len(constants); i++ {
+				floatParse, err := strconv.ParseFloat(constants[i], 64)
+				if err != nil {
+					panic(err)		// test if this returns
+				}
+				if(floatParse != speaker.CurrentMusicPreset[i]) {			// change this to pull from the db, it might already do that
+					whole := math.Floor(floatParse)
+
+					decimal := math.Abs(whole - floatParse) * 100
+
+					//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+					//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
+					log.Println("Whole value:", int8(whole))
+					//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+					log.Println("Decimal value:", int8(decimal))
+					speaker.CurrentMusicPreset[i] = floatParse	// this needs checking
+					//log.Printf("You changed band %d to level %d", k, floatParse)
+				//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+					database.SaveBand(speaker, i, floatParse, 1)
+				}
+
+				floatParse, err = strconv.ParseFloat(constants[i], 64)
+				if err != nil {
+					panic(err)		// test if this returns
+				}
+				k++
+			}
+
+			break;
+		}
+
+		case 2: {
+			for  i := 0; i < len(constants); i++ {
+				floatParse, err := strconv.ParseFloat(constants[i], 64)
+				if err != nil {
+					panic(err)		// test if this returns
+				}
+				if(floatParse != speaker.CurrentMusicPreset[i]) {			// change this to pull from the db, it might already do that
+					whole := math.Floor(floatParse)
+
+					decimal := math.Abs(whole - floatParse) * 100
+
+					//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+					//system.SetEqualizerConstant(speaker, int8(whole), int8(k + 21), false)
+					log.Println("Whole value:", int8(whole))
+					//system.SetEqualizerConstant(speaker, int8(decimal), 21, true)
+					log.Println("Decimal value:", int8(decimal))
+					speaker.CurrentPagingPreset[i] = floatParse	// this needs checking
+					//log.Printf("You changed band %d to level %d", k, floatParse)
+				//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+					database.SaveBand(speaker, i, floatParse, 2)
+				}
+
+				floatParse, err = strconv.ParseFloat(constants[i], 64)
+				if err != nil {
+					panic(err)		// test if this returns
+				}
+				k++
+			}
+
+			break;
+		}
+
+		default: 
+			log.Println("updateSpeakerEqualizer is getting the wrong value....")
+	}
 
 		
 		//constantsInts = append(constantsInts, int8(floatParse))
@@ -460,17 +1062,17 @@ func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerSt
 			log.Println("\n\n", whole, "\n\n")
 			//system.SetEqualizerConstant(speaker, int8(decimal), int8(k))
 			log.Println("\n\n", decimal, "\n\n")
-			speaker.CurrentPreset[k] = floatParse	// this needs checking
+			speaker.CurrentTarget[k] = floatParse	// this needs checking
 			//log.Printf("You changed band %d to level %d", k, floatParse)
 		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, floatParse, 2)
+			database.SaveBand(speaker, k, floatParse, 3)
 		}
 			k++
 
 		//log.Println("constantsInts: ", constantsInts)
 	}
 
-	log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
+	log.Printf("Telling speaker %d to change target to %s", speaker.ID, constants)
 
 	return nil
 }
@@ -710,7 +1312,8 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 		MusicEqualizer:		controller.MusicEqualizer,
 		MusicPresetNames:	controller.MusicPresetNames, 
 		EqualizerMode:		controller.EqualizerMode, 
-		SchedulingMode:		controller.SchedulingMode }
+		SchedulingMode:		controller.SchedulingMode,
+		Schedule:					controller.Schedule }
 	//log.Println(controller)
 	return speakerResponse
 }
@@ -960,12 +1563,16 @@ func ScheduleTime(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(timeGiven)
+
+	database.UpdateSchedule(timeGiven.Speaker, timeGiven.Day, timeGiven.Interval, timeGiven.Start, timeGiven.End, timeGiven.Times)
+	err = database.ChangeSchedulingMode(timeGiven.Speaker, timeGiven.Mode)
     //w.Write(getGenericSuccessResponse())
 
 
 	//log.Println("\n\n\n\n\n------------- STARTING --------------\n\n\n\n\n")
 
-	log.Println(timeGiven)
+	log.Println("THIS IS THE TIME GIVEN", timeGiven)
 	//currentTime := time.Now()
 
     //userGiven := time.Date(2016, 5, 4, 16, 15, 0, 0, currentTime.Location())
@@ -1094,28 +1701,47 @@ func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this
 	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
 	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
 }
-*/
 
-
-	// make a split string fucntion when you fee like it
-
-	//constants := strings.Fields(addPresetRequest.Constants)		// do not publish this function without checking for type/value errors
+	constants := strings.Fields(attr.Target)		// do not publish this function without checking for type/value errors
 	//log.Println(constants)
-	/*var constantsInts [21] int8
+
+	for i := range speaker.Target {
+		log.Println(speaker.Target[i])
+	}
 
 	if(len(constants) < 21) {
-		return //errors.New("Invalid amount of constants")
+		return errors.New("Invalid amount of constants")
 	}
 
 	var k = 0
 	for _, i := range constants {
-		intParse, err := strconv.Atoi(i)
+		floatParse, err := strconv.ParseFloat(i, 64)
 		if err != nil {
 			panic(err)		// test if this returns
 		}
+		//constantsInts = append(constantsInts, int8(floatParse))
 
-			constantsInts[k] = int8(intParse)	// this needs checking
+		if(floatParse != speaker.CurrentTarget[k]) {			// change this to pull from the db, it might already do that
+			whole := math.Floor(floatParse)
+
+			decimal := math.Abs(whole - floatParse) * 100
+
+			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
+			//system.SetEqualizerConstant(speaker, int8(whole), int8(k))
+			log.Println("\n\n", whole, "\n\n")
+			//system.SetEqualizerConstant(speaker, int8(decimal), int8(k))
+			log.Println("\n\n", decimal, "\n\n")
+			speaker.CurrentTarget[k] = floatParse	// this needs checking
+			//log.Printf("You changed band %d to level %d", k, floatParse)
+		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
+			database.SaveBand(speaker, k, floatParse, 2)
 		}
-			k++*/
+			k++
 
 		//log.Println("constantsInts: ", constantsInts)
+	}
+
+	log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
+
+	return nil
+}*/

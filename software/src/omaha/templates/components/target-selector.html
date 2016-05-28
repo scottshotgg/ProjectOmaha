@@ -44,7 +44,7 @@
       }
 
     </style>
-   <paper-card heading="Target" elevation="4">
+   <paper-card id="target" heading="Target" elevation="4">
       <div class="card-content">
         <canvas id="targetChart" style="margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);" class="chartClass"></canvas>
         <div class="horizontal layout" id="adjustment" style="height: calc(.05 * 100vh); margin-top: calc(.0 * 100vh);">
@@ -250,6 +250,7 @@
       },*/
       
       _setTargetClicked: function() {
+        console.log("i got pressed _setTargetClicked");
         var checkInt = 0;
         var checkBands = [];
         var targetText = "Invalid input at ";
@@ -279,12 +280,16 @@
           this.$.toaster.text = targetText;
           this.$.toaster.show();
         } else {
+          console.log("can you just fucking work", this.target, dataArray);
           this.dataArrayString = dataArray.join(", ");
+          console.log("current target length", this.speaker.CurrentTarget.length);
           for (var i = 0; i < this.speaker.CurrentTarget.length; i++) { 
             this.speaker.CurrentTarget[i] = dataArray[i];
             //console.log(dataArray[i]);
           }
+          console.log("can you just fucking work", this.target, dataArray);
           this.target = dataArray.join(" ");
+          console.log(this.target, dataArray);
           //console.log(this.$);
           console.log(dataArray);
           //console.log(this.dataArrayString);
@@ -299,6 +304,7 @@
       },
 
       _acceptPressed: function(event) {
+        console.log("i got pressed _acceptPressed");
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
         var ifvar = 0;
         if(this.speaker.TargetNames.length > 0) {
@@ -346,7 +352,7 @@
           var length = this.speaker.Target.length;
           //console.log(length);
 
-          console.log(dataArray);
+          console.log("dataArray length", dataArray);
 
          /* var dataArrayCopy = dataArray.slice();
 
@@ -431,6 +437,7 @@
 
 
       ready: function() {
+        console.log("target stuff", this.internalTarget, this.target);
         this.internalTarget = this.target;
         console.log("I am ready " + this.internalTarget);
       }
@@ -491,6 +498,7 @@
     console.log(dataArray);
 
     $(document.getElementsByClassName("inputs")).each(function(i) {
+      console.log("this is the i thing that we printed", i);
       console.log(dataArray.length);
       if(this.value > -21 && this.value < 81 && this.value !== "") {
         dataArray[i] = parseInt(this.value);

@@ -8,8 +8,7 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <!--<link rel="import" href="/bower_components/paper-checkbox//paper-checkbox.html">-->
 
-
-THIS FILE IS DEPRECATED; SHOULD NOT BE USED AT ALL
+<link rel="import" href="/components/omaha-app.html">
 
 
 <dom-module id="paging-controller">
@@ -80,6 +79,17 @@ THIS FILE IS DEPRECATED; SHOULD NOT BE USED AT ALL
           debounce-duration="300">
     </iron-ajax>
 
+    <iron-ajax
+          id="updatePagingValuesZone"
+          url="/system/zone/updatePagingValuesZone/"
+          method="PUT"
+          content-type="application/json"
+          handle-as="json"
+          on-response="_logResponse"
+          debounce-duration="300">
+    </iron-ajax>
+
+
   </template>
   <script>
     var on = 0;
@@ -136,9 +146,22 @@ THIS FILE IS DEPRECATED; SHOULD NOT BE USED AT ALL
       */
       
       _setPagingClicked: function() {
-        this.paging = this.internalFadeTime + " " + this.internalFadeLevel + " " + this.internalPagingVolume;
-        this.$.toast.show();
-        console.log("_setPagingClicked");
+        if(zoneFlag == 0) {
+          this.paging = this.internalFadeTime + " " + this.internalFadeLevel + " " + this.internalPagingVolume;
+          this.$.toast.show();
+          console.log("_setPagingClicked");
+        } else {
+          this.$.updatePagingValuesZone.body = {
+            "zone": speaker.zone.zoneID,
+            "fadeTime": this.internalFadeTime,
+            "fadeLevel": this.internalFadeLevel,
+            "pagingVolume": this.internalPagingVolume
+          };
+
+          this.$.updatePagingValuesZone.generateRequest();
+          console.log(this.$.updatePagingValuesZone.body);
+          console.log("hi");
+        }
       },
 
       _sendPageClicked: function() {
@@ -165,6 +188,8 @@ THIS FILE IS DEPRECATED; SHOULD NOT BE USED AT ALL
             "speaker": this.speakerId
         };
         this.$.pagingRequest.generateRequest();
+
+        // one of these needs to be made for zones
 
         console.log("Making a paging request ", this.speakerId, this.$.pagingRequest.body);
         this.$.toasty.show();

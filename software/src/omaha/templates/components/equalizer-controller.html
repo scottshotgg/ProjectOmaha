@@ -18,6 +18,8 @@
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="/components/simple-fit.html">
 
+<link rel="import" href="/components/omaha-app.html">
+
 <link rel="stylesheet" href="jquery-ui-1.11.4.css">
 <script src="jquery-1.10.2.js" type="text/jscript"></script>
 <!--<script src="jquery-2.2.0.js"></script>-->
@@ -206,8 +208,7 @@
 
     <paper-dialog id="switchingEQModeDialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true" style="height: 250px; width: 500px;">
       <h2 style="text-align: center; padding-top: 24px; padding-bottom: 5px; margin: 0px;">Warning</h2>
-      <div id="eqmode" style="text-align: center; margin-top: 0px; padding: 5% 5% 5% 5%;">
-      </div>
+      <div id="eqmode" style="text-align: center; margin-top: 0px; padding: 5% 5% 5% 5%;"></div>
       <div class="butons" style="position: absolute; left: 60px; top: 150px; margin: 0; border-top: 1px rgba(201, 201, 201, .6) solid; padding: 5%;">
       <paper-button ondialog-confirm style="margin: 0.5em 1em 0.5em 1em;" on-click="_switchPressed">Switch</paper-button>
       <paper-button dialog-dismiss on-click="_cancelSwitchPressed">Cancel</paper-button></div>
@@ -249,7 +250,7 @@
         </paper-dropdown-menu>
 
         <paper-dropdown-menu class="papercardcenter" id="pagingMenu" style="position: absolute; left: 48.5%; visibility: hidden;" no-label-float label="Paging Preset:">
-          <paper-listbox id="musicListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+          <paper-listbox id="pagingListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
             <!--<template if="{{this.speaker.Response}}">
               <paper-dropdown-menu selected="{{selected}}">
                 <template repeat="{{label in this.speaker.PresetNames}}">
@@ -346,6 +347,10 @@
     handles_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
     background_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");*/
 
+    //if(zoneFlag == 1) {
+      console.log("equalizer zoneFlag", zoneFlag);
+//    }
+
     sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
     handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
     background = document.getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
@@ -369,7 +374,7 @@
 
   var iirConstants = [];
 
-  for(loopVar = 0; loopVar < 63; loopVar++) { // watch out! we got a static over here
+  for(loopVar = 0; loopVar < 63; loopVar++) {
     iirConstants[loopVar] = 0;
   }
   console.log(iirConstants);
@@ -386,19 +391,20 @@
         break;
       }
       case "paging": {
-        document.getElementById("eqmode").innerHTML = "You are switching the speaker to paging mode<br>idk if this is gonna be in here yet or why we need it";
+        document.getElementById("eqmode").innerHTML = "You are switching the speaker to paging mode;<br>Something needs to go here, ask Matt"
         break;
       }
     }
     document.querySelector("#switchingEQModeDialog").toggle();
+    console.log("i got here");
   }
 
   function modeChanged(mode) {
 
     switch(mode) {
       case "masking":
-        musicMenu.style.visibility = "hidden";
         equalizerMenu.style.visibility = "visible";
+        musicMenu.style.visibility = "hidden";
         pagingMenu.style.visibility = "hidden";
         showEqualizerSwitchDialog("masking");
         break;
@@ -411,8 +417,8 @@
         break;
       
       case "paging":
-        musicMenu.style.visibility = "hidden";
         equalizerMenu.style.visibility = "hidden";
+        musicMenu.style.visibility = "hidden";
         pagingMenu.style.visibility = "visible";
         showEqualizerSwitchDialog("paging");
         break;
@@ -457,13 +463,16 @@
       
       _setEqualizerClicked: function() {
 
+        console.log("equalizer clicked zoneFlag", zoneFlag);
+
         var checkInt = 0;
         var checkBands = [];
         var equalizerText = "Invalid input at ";
 
         $(document.getElementsByClassName("level")).each(function(i) {
+          typeof this.value;
           if(isNaN(this.value) || this.value == "" || this.value < -40 || this.value > 10) {
-            console.log(this.name);
+            console.log(this, this.name, this.value);
             checkInt++;
             checkBands.push(this.name); // may have to put new string here
           }
@@ -475,7 +484,7 @@
           } else {
             for (var i = 0; i < checkBands.length - 1; i++) {
               equalizerText += checkBands[i] + "Hz, "
-            }z
+            }
             equalizerText += "and " + checkBands[checkBands.length - 1] + "Hz";
           }
           this.$.equalizerToast.duration = 2000 + (500 * checkBands.length);
@@ -484,9 +493,9 @@
         } else {
 
 
-          this.equalizer = iirConstants.slice(0 + (21 * typeFound), 21 + (22 * typeFound)).join(" ");  // this gets sent to the backend because Go's Fields(String) function works only with whitespaces
+          this.equalizer = iirConstants.slice(0 + (21 * typeFound), 21 + (21 * typeFound)).join(" ");  // this gets sent to the backend because Go's Fields(String) function works only with whitespaces
           console.log(this.equalizer);
-          this.iirConstantsString = iirConstants.slice(0 + (21 * typeFound), 21 + (22 * typeFound)).join(", ");  // this is for the toast message
+          this.iirConstantsString = iirConstants.slice(0 + (21 * typeFound), 21 + (21 * typeFound)).join(", ");  // this is for the toast message
 
 
           this.$.equalizerToast.text = "Equalizer set to " + this.iirConstantsString;
@@ -502,6 +511,7 @@
 
       _logResponse: function(event, data) {
         console.log("shuddup");
+        console.log(event, data);
       },
       /*
       decrementVolume: function() {
@@ -531,8 +541,6 @@
       },*/
 
       _acceptPressed: function(event) {
-
-
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
         var ifvar = 0;
         if(this.speaker.PresetNames.length > 0) {
@@ -760,6 +768,7 @@
           sliders[i].style.background = "#3f51b5";
           handles[i].style.background = "#3f51b5";
           background[i].style.background = "rgba(63, 81, 181, .2)";
+
           sliders[i].style.height = (iirConstants[i] + 40) * 2 + "%";
           handles[i].style.bottom = (iirConstants[i] + 40) * 2 + "%";
         }
@@ -843,6 +852,7 @@ $(function() {
       //console.log(this);
 
       console.log("this is me, the eq: ", i);
+      var texts = $("#text" + (i + 1) + ":nth-child(1)");
       $(this).slider({
         orientation: "vertical",
         range: "min",
@@ -861,375 +871,18 @@ $(function() {
           sliders[i].style.background = "#3f51b5";
           handles[i].style.background = "#3f51b5";
           background[i].style.background = "rgba(63, 81, 181, .2)";
-          $("#text" + (i + 1)).val(ui.value);
+          //$("#text" + (i + 1)).val(ui.value);
+          console.log(texts);
+          $(texts[0]).val(ui.value);
 
           iirConstants[i] = ui.value;
         }
-      });
-      $("#text" + (i + 1)).val($(".custom > .custom_slider").slider("value"));
+      });        
+      //$("#text" + (i + 1)).val($(".custom > .custom_slider").slider("value"));
+      $(texts[0]).val($(".custom > .custom_slider").slider("value"));
+      console.log(texts);
     });
   });
-
-  /*$(function() {
-    $(document.getElementById("custom_container_masking").getElementsByClassName("custom_slider")).each(function(i) {
-
-      //console.log(this);
-
-      $(this).slider({
-        orientation: "vertical",
-        range: "min",
-        step: .01,
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          isThereAnError = false;
-          sliders[i].style.background = "#3f51b5";
-          handles[i].style.background = "#3f51b5";
-          background[i].style.background = "rgba(63, 81, 181, .2)";
-          $("#text" + (i + 1)).val(ui.value);
-          iirConstants[i] = ui.value;
-        }
-      });
-      $("#text" + (i + 1)).val($(".custom > .custom_slider").slider("value"));
-    });
-
-  });
-
-  $(function() {
-    $(document.getElementById("custom_container_music").getElementsByClassName("custom_slider")).each(function(i) {
-
-      //console.log(this);
-
-      $(this).slider({
-        orientation: "vertical",
-        range: "min",
-        step: .01,
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          isThereAnError = false;
-          sliders[i + 21].style.background = "#3f51b5";
-          handles[i + 21].style.background = "#3f51b5";
-          background[i + 21].style.background = "rgba(63, 81, 181, .2)";
-          $("#text" + (i + 22)).val(ui.value);
-          iirConstants[i] = ui.value;
-        }
-      });
-      $("#text" + (i + 22)).val($(".custom > .custom_slider").slider("value"));
-    });
-
-  });
-
-  $(function() {
-    $(document.getElementById("custom_container_paging").getElementsByClassName("custom_slider")).each(function(i) {
-
-      //console.log(this);
-
-      $(this).slider({
-        orientation: "vertical",
-        range: "min",
-        step: .01,
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          isThereAnError = false;
-          sliders[i + 42].style.background = "#3f51b5";
-          handles[i + 42].style.background = "#3f51b5";
-          background[i + 42].style.background = "rgba(63, 81, 181, .2)";
-          $("#text" + (i + 43)).val(ui.value);
-          iirConstants[i] = ui.value;
-        }
-      });
-      $("#text" + (i + 43)).val($(".custom > .custom_slider").slider("value"));
-    });
-
-  });*/
-    
-/*
-    $(function() {
-      $( ".custom.one > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        //step: .5,
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          sliders[0].style.background = "#3f51b5";
-          handles[0].style.background = "#3f51b5";      // try to revamp this to make this better
-          background[0].style.background = "rgba(63, 81, 181, .2)";
-          $( "#text1" ).val( ui.value);
-          iirConstants[0] = ui.value;
-          //console.log(iirConstants[0] + " - | - " + ui.value);    // remove all of these when finished with them
-        }
-      });
-      $( ".custom.two > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text2" ).val( ui.value);
-          console.log(ui.value);
-          iirConstants[1] = ui.value;
-          //console.log(iirConstants[1] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.three > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text3" ).val( ui.value);
-          iirConstants[2] = ui.value;
-          //console.log(iirConstants[2] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.four > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text4" ).val( ui.value);
-          iirConstants[3] = ui.value;
-          //console.log(iirConstants[3] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.five > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text5" ).val( ui.value);
-          iirConstants[4] = ui.value;
-          //console.log(iirConstants[4] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.six > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text6" ).val( ui.value);
-          iirConstants[5] = ui.value;
-          //console.log(iirConstants[5] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.seven > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text7" ).val( ui.value);
-          iirConstants[6] = ui.value;
-          //console.log(iirConstants[6] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.eight > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text8" ).val( ui.value);
-          iirConstants[7] = ui.value;
-          //console.log(iirConstants[7] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.nine > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text9" ).val( ui.value);
-          iirConstants[8] = ui.value;
-          //console.log(iirConstants[8] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.ten > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text10" ).val( ui.value);
-          iirConstants[9] = ui.value;
-          //console.log(iirConstants[9] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.eleven > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text11" ).val( ui.value);
-          iirConstants[10] = ui.value;
-          //console.log(iirConstants[10] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.twelve > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text12" ).val( ui.value);
-          iirConstants[11] = ui.value;
-          //console.log(iirConstants[11] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.thirteen > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text13" ).val( ui.value);
-          iirConstants[12] = ui.value;
-          //console.log(iirConstants[12] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.fourteen > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text14" ).val( ui.value);
-          iirConstants[13] = ui.value;
-          //console.log(iirConstants[13] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.fifteen > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text15" ).val( ui.value);
-          iirConstants[14] = ui.value;
-          //console.log(iirConstants[14] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.sixteen > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text16" ).val( ui.value);
-          iirConstants[15] = ui.value;
-          //console.log(iirConstants[15] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.seventeen > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text17" ).val( ui.value);
-          iirConstants[16] = ui.value;
-          //console.log(iirConstants[16] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.eighteen > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text18" ).val( ui.value);
-          iirConstants[17] = ui.value;
-          //console.log(iirConstants[17] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.nineteen > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text19" ).val( ui.value);
-          iirConstants[18] = ui.value;
-          //console.log(iirConstants[18] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.twenty > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text20" ).val( ui.value);
-          iirConstants[19] = ui.value;
-          //console.log(iirConstants[19] + " - | - " + ui.value);
-        }
-      });
-      $( ".custom.twentyone > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          $( "#text21" ).val( ui.value);
-          iirConstants[20] = ui.value;
-          //console.log(iirConstants[20] + " - | - " + ui.value);
-        }
-      });*/
-
-      /*$( "#text1" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text2" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text3" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text4" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text5" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text6" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text7" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text8" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text9" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text10" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text11" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text12" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text13" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text14" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text15" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text16" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text17" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text18" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text19" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text20" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
-      $( "#text21" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );*/
-    //});
 
   } else {
       console.log("there is not enough space to display the equalizer");

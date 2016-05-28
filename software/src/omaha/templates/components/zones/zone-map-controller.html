@@ -717,7 +717,7 @@
                   style[zone] = {};
                   style[zone].style = [new ol.style.Style({
                         image: new ol.style.Circle({
-                            radius: 15/Math.max(resolution,1),
+                            radius: 15 / Math.max(resolution, 1),
                             stroke: new ol.style.Stroke({
                                 color: '#000000'
                             }),
@@ -840,6 +840,10 @@
         console.log(selectedFeatures);
         selectedFeatures.clear();
         });
+      },
+
+      _logResponse: function(event, data) {
+        console.log("this is the zone response", data.response);
       }
     });
 

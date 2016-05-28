@@ -15,7 +15,15 @@
 <link rel="import" href="/components/speaker-tooltip.html">
 <link rel="import" href="/components/target-selector.html">
 <link rel="import" href="/components/scheduling-controller.html">
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/ >
+
+
+<link rel="import" href="/components/zones/scheduling-controller-zone.html">
+<link rel="import" href="/components/zones/target-selector-zone.html">
+
+
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+
+<link rel="import" href="/components/omaha-app.html">
 
 <link rel="stylesheet" href="jquery-ui-1.11.4.css">
 <script src="jquery-1.10.2.js" type="text/jscript"></script>
@@ -57,7 +65,10 @@
       
       <div id="goodCircle" style="visibility: visible; background: #27e833; position: absolute; top: calc(.0075 * 100vw); border-radius: 1000px; margin-left: calc(.0075 * 100vw); margin-bottom: calc(.015 * 100vw); height: calc(.12 * 100vh); width: calc(.12 * 100vh);"></div> 
       <div id="badCircle" style="visibility: hidden; background: #f9152f; position: absolute; top: calc(.0075 * 100vw); border-radius: 1000px; margin-left: calc(.0075 * 100vw); margin-bottom: calc(.015 * 100vw); height: calc(.12 * 100vh); width: calc(.12 * 100vh);"></div>
-      <div id="statusFont" style="position: absolute;  margin-left: calc(.014 * 100vw); top: calc(.085 * 100vw);"><font style="font-size: 24px;"> SYSTEM STATUS: </font>
+      <!-- make a div here -->
+      <div style="margin-left: calc(.025 * 100vw);">
+        <div id="statusFont" style="position: absolute; top: calc(.085 * 100vw);"><font style="font-size: 24px;"> SYSTEM STATUS: </font>
+      <div>
       <div id="goodFont" style="visibility: visible; position: absolute;  margin-left: calc(.0075 * 100vw);"> <font color="#27e833" style="font-size: 24px;">GOOD</font></div>
       <div id="badFont" style="visibility: hidden; position: absolute;  margin-left: calc(.0115 * 100vw);"> <font color="#f9152f" style="font-size: 24px;">BAD</font></div>
 
@@ -167,7 +178,7 @@
       },
 
       _logResponse: function(event, data) {
-        console.log(data.response);
+        console.log("this is the speaker response", data.response);
         var a = document.getElementById('speaker-tooltip');   // I guess I'll just keep this as 'a'
   
         a.speaker.name = data.response.name;
@@ -200,6 +211,8 @@
         a.speaker.EqualizerMode = data.response.equalizerMode;
         a.speaker.SchedulingMode = data.response.schedulingMode;
 
+        a.speaker.Schedule = data.response.schedule;
+
         if(a.speaker.EqualizerMode == 1) {
           equalizerSelector.selected = "music";
           lastEQMode = "music";
@@ -215,14 +228,23 @@
           // add one for paging menu here if we need it
         }
         console.log(schedulingSelector);
+        speaker = a.speaker;
 
         if(a.speaker.SchedulingMode == 0) {
           schedulingSelector.selected = "basic";
+          schedulingSelectorZone.selected = "basic";
           drawBasic();
+          drawBasicZone();
         } else {
           schedulingSelector.selected = "advanced";
+          schedulingSelectorZone.selected = "advanced";
           drawAdvanced();
+          drawAdvancedZone();
         }
+
+
+        //this.loadDay();
+        console.log(document.querySelector("#scheduling-controller"));
 
         console.log("i have applied the selected value", schedulingSelector.selected, schedulingSelector);
 
@@ -300,7 +322,6 @@
           dataArray[i] = a.speaker.CurrentTarget[i];
         }
 
-
         $(document.getElementsByClassName("inputs")).each(function(j) {
           this.value = dataArray[j];
         });
@@ -337,6 +358,210 @@
         console.log("Speaker", a.speaker);
         //speaker.volumeLevel = data.response.volume;
         //console.log(speaker.volumeLevel);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+          =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+                                                        ZONE TIME
+          =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        */
+
+        console.log("zones", zones[a.speaker.zone.zoneID - 1]);
+
+        zone = zones[a.speaker.zone.zoneID - 1];
+
+        a.speaker.name = data.response.name;
+        a.speaker.VolumeLevel[0] = data.response.volume;
+        a.speaker.VolumeLevel[1] = data.response.music;
+        a.speaker.VolumeLevel[2] = data.response.paging;
+        a.speaker.VolumeLevel[3] = data.response.masking;
+
+        a.speaker.LowerThreshold = [];
+        a.speaker.UpperThreshold = [];
+
+        a.speaker.LowerThreshold[0] = data.response.lowerMusicThreshold
+        a.speaker.UpperThreshold[0] = data.response.upperMusicThreshold
+        a.speaker.LowerThreshold[1] = data.response.lowerPagingThreshold
+        a.speaker.UpperThreshold[1] = data.response.upperPagingThreshold
+        a.speaker.LowerThreshold[2] = data.response.lowerMaskingThreshold
+        a.speaker.UpperThreshold[2] = data.response.upperMaskingThreshold
+
+        LowerThreshold[0] = data.response.lowerMusicThreshold
+        UpperThreshold[0] = data.response.upperMusicThreshold
+        LowerThreshold[1] = data.response.lowerPagingThreshold
+        UpperThreshold[1] = data.response.upperPagingThreshold
+        LowerThreshold[2] = data.response.lowerMaskingThreshold
+        UpperThreshold[2] = data.response.upperMaskingThreshold
+
+        a.speaker.Effectiveness = data.response.effectiveness;
+        a.speaker.Pleasantness = data.response.pleasantness;
+        a.speaker.FadeTime = data.response.fadetime;
+        a.speaker.FadeLevel = data.response.fadelevel;
+        a.speaker.EqualizerMode = data.response.equalizerMode;
+        a.speaker.SchedulingMode = data.response.schedulingMode;
+
+        a.speaker.Schedule = data.response.schedule;
+
+        if(a.speaker.EqualizerMode == 1) {
+          equalizerSelector.selected = "music";
+          lastEQMode = "music";
+          getValues();
+          musicMenu.style.visibility = "visible";
+          equalizerMenu.style.visibility = "hidden";
+        } else if(a.speaker.EqualizerMode == 2) {
+          equalizerSelector.selected = "paging"; 
+          lastEQMode = "paging";
+          getValues();
+          //musicMenu.style.visibility = "visible";
+          //equalizerMenu.style.visibility = "hidden";
+          // add one for paging menu here if we need it
+        }
+        console.log(schedulingSelector);
+        speaker = a.speaker;
+
+        if(a.speaker.SchedulingMode == 0) {
+          schedulingSelector.selected = "basic";
+          schedulingSelectorZone.selected = "basic";
+          drawBasic();
+          drawBasicZone();
+        } else {
+          schedulingSelector.selected = "advanced";
+          schedulingSelectorZone.selected = "advanced";
+          drawAdvanced();
+          drawAdvancedZone();
+        }
+
+
+        //this.loadDay();
+        console.log(document.querySelector("#scheduling-controller"));
+
+        console.log("i have applied the selected value", schedulingSelector.selected, schedulingSelector);
+
+        // Setting speaker-tooltip information
+        // the zones will need to be joined by ", "
+        console.log(this.$$);
+        if(a.speaker.name !== "") {
+          var tooltipInformation = "<b id=\"name\">" + a.speaker.name + "</b><br><b id=\"speaker\">Speaker ID: " + a.speaker.id + "</b><br><b id=\"zone\">Zone ID: " + a.speaker.zoneID + "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
+          console.log("i am here");
+        } else {
+          console.log("i am not here");
+          var tooltipInformation = "<b id=\"speaker\">Speaker ID: " + a.speaker.id + "</b><br><b id=\"zone\">Zone ID: " + a.speaker.zone.zoneID + "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
+        }
+        document.getElementById("tooltipInformation").innerHTML = tooltipInformation;
+
+        console.log("Response:", data.response);
+        console.log("Speaker:", a.speaker);
+
+        a.speaker.TargetNames   = [];
+        a.speaker.CurrentTarget = [];
+
+        a.speaker.PresetNames   = [];
+        a.speaker.CurrentPreset = [];
+
+        a.speaker.MusicPresetNames   = [];
+        a.speaker.CurrentMusicPreset = [];
+
+        a.speaker.PagingPresetNames   = [];
+        a.speaker.CurrentPagingPreset = [];
+
+        a.speaker.Target        = [];
+        a.speaker.Equalizer     = [];
+
+        a.speaker.Music         = [];
+
+        for (i in data.response.TargetNames) {
+          a.speaker.TargetNames[i] = data.response.TargetNames[i].replace("\n", "");
+          console.log(i, data.response.TargetNames[i]);
+        }
+
+        for (i in data.response.PresetNames) {
+          a.speaker.PresetNames[i] = data.response.PresetNames[i].replace("\n", "");
+          console.log(i, data.response.PresetNames[i]);
+        }
+
+        for (i in data.response.MusicPresetNames) {
+          a.speaker.MusicPresetNames[i] = data.response.MusicPresetNames[i].replace("\n", "");
+          console.log(i, data.response.MusicPresetNames[i]);
+        }
+
+        for (i in data.response.PagingPresetNames) {
+          a.speaker.PagingPresetNames[i] = data.response.PagingPresetNames[i].replace("\n", "");
+          console.log(i, data.response.PagingPresetNames[i]);
+        }
+
+        for (i in data.response.CurrentPreset) {
+          a.speaker.CurrentPreset[i] = data.response.CurrentPreset[i];
+          console.log(i, data.response.CurrentPreset[i]);
+        }
+
+        for (i in data.response.CurrentMusicPreset) {
+          a.speaker.CurrentMusicPreset[i] = data.response.CurrentMusicPreset[i];
+          console.log(i, data.response.CurrentMusicPreset[i]);
+        } 
+
+        for (i in data.response.CurrentPagingPreset) {
+          a.speaker.CurrentPagingPreset[i] = data.response.CurrentPagingPreset[i];
+          console.log(i, data.response.CurrentPagingPreset[i]);
+        } 
+
+        for (i in data.response.CurrentTarget) {
+          a.speaker.CurrentTarget[i] = data.response.CurrentTarget[i];
+          console.log(i, data.response.CurrentTarget[i]);
+          //dataArray.push(data.response.CurrentTarget[i]);
+          dataArray[i] = a.speaker.CurrentTarget[i];
+        }
+
+        $(document.getElementsByClassName("inputs-zone")).each(function(j) {
+          dataArrayZone[j] = 0;    // take this out later
+          this.value = dataArrayZone[j];
+        });
+        //document.getElementById("targetListbox").selected = "Currently Applied";
+        //document.getElementById("equalizerListbox").selected = "Currently Applied";
+        redrawOnInputZone();
+
+        dataArray = [];
+        dataArrayZone = [];
+
+        //console.log(dataArray);
+
+        for(i in data.response.Equalizer) {
+          a.speaker.Equalizer[i] = data.response.Equalizer[i];
+          console.log(data.response.PresetNames[i], data.response.Equalizer[i]);
+        }
+
+        for(i in data.response.MusicEqualizer) {
+          a.speaker.MusicEqualizer[i] = data.response.MusicEqualizer[i];
+          console.log(data.response.MusicPresetNames[i], data.response.MusicEqualizer[i]);
+        }
+
+        for(i in data.response.PagingEqualizer) {
+          a.speaker.PagingEqualizer[i] = data.response.PagingEqualizer[i];
+          console.log(data.response.PagingPresetNames[i], data.response.PagingEqualizer[i]);
+        }
+
+        for(i in data.response.Target) {
+          a.speaker.Target[i] = data.response.Target[i];
+          console.log(data.response.TargetNames[i], data.response.Target[i]);
+        }
+
+        a.speaker.Response = "true";
+
+        console.log("Speaker", a.speaker);
       },
     
       renderMap: function() {
@@ -432,6 +657,7 @@
         var vectorLayer = new ol.layer.Vector({
             source: vectorSource,
             style: function(feature, resolution) {
+              console.log(feature.getProperties().speaker);
               var zone = feature.getProperties().speaker.zone.name;
               if(!(zone in colorMap)) {
                 var color;

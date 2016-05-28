@@ -11,10 +11,12 @@ import (
 
 // DB is the object used to access the database
 var (
-	DB                    *sql.DB
-	insertSpeakerStmt     *sql.Stmt
-	addSpeakerToZonesStmt *sql.Stmt
+	DB                    			*sql.DB
+	insertSpeakerStmt     			*sql.Stmt
+	addSpeakerToZonesStmt 			*sql.Stmt
 	addSpeakerToPagingZonesStmt *sql.Stmt
+	addSpeakerToSchedulingStmt	*sql.Stmt
+	addZoneToSchedulingStmt			*sql.Stmt
 )
 
 // InitDB creates the DB variable. If the database hasn't been created yet, it will be created.
@@ -50,7 +52,17 @@ func InitDB() {
 		createMusicEqualizerPresetsTable()
 		createPagingEqualizerPresetsTable()
 
+
+		createTargetsTableZone()
+		createEqualizerPresetsTableZone()
+		createMusicEqualizerPresetsTableZone()
+		createPagingEqualizerPresetsTableZone()
+
+		createSchedulingTable()
+		createSchedulingTableZone()
+
 		prepareStatements()
+		populateZoneTable()
 		populateSpeakerTable()
 	case err != nil:
 		log.Fatal(err)
@@ -68,6 +80,10 @@ func prepareStatements() {
 		log.Fatal(err)
 	}
 	addSpeakerToPagingZonesStmt, err = getAddSpeakerToPagingZonesStmt()
+	if err != nil {
+		log.Fatal(err)
+	}
+	addSpeakerToSchedulingStmt, err = getAddSpeakerToSchedulingStmt()
 	if err != nil {
 		log.Fatal(err)
 	}

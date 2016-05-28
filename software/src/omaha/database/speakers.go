@@ -163,114 +163,6 @@ func createEqualizerPresetsTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE EqualizerPresets (
 			speakerID INTEGER,
-			name varchar(50) PRIMARY KEY,
-			whichPreset INTEGER,
-			band0 REAL,
-			band1 REAL,
-			band2 REAL,
-			band3 REAL,
-			band4 REAL,
-			band5 REAL,
-			band6 REAL,
-			band7 REAL,
-			band8 REAL,
-			band9 REAL,
-			band10 REAL,
-			band11 REAL,
-			band12 REAL,
-			band13 REAL,
-			band14 REAL,
-			band15 REAL,
-			band16 REAL,
-			band17 REAL,
-			band18 REAL,
-			band19 REAL,
-			band20 REAL
-		)
-	`) // needs to be an equalizer thing in here
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println("Created equalizer table")
-	}
-}
-
-func createMusicEqualizerPresetsTable() {
-	_, err := DB.Exec(`
-		CREATE TABLE MusicEqualizerPresets (
-			speakerID INTEGER,
-			name varchar(50) PRIMARY KEY,
-			whichPreset INTEGER,
-			band0 REAL,
-			band1 REAL,
-			band2 REAL,
-			band3 REAL,
-			band4 REAL,
-			band5 REAL,
-			band6 REAL,
-			band7 REAL,
-			band8 REAL,
-			band9 REAL,
-			band10 REAL,
-			band11 REAL,
-			band12 REAL,
-			band13 REAL,
-			band14 REAL,
-			band15 REAL,
-			band16 REAL,
-			band17 REAL,
-			band18 REAL,
-			band19 REAL,
-			band20 REAL
-		)
-	`) // needs to be an equalizer thing in here
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println("Created music equalizer table")
-	}
-}
-
-func createPagingEqualizerPresetsTable() {
-	_, err := DB.Exec(`
-		CREATE TABLE PagingEqualizerPresets (
-			speakerID INTEGER,
-			name varchar(50) PRIMARY KEY,
-			whichPreset INTEGER,
-			band0 REAL,
-			band1 REAL,
-			band2 REAL,
-			band3 REAL,
-			band4 REAL,
-			band5 REAL,
-			band6 REAL,
-			band7 REAL,
-			band8 REAL,
-			band9 REAL,
-			band10 REAL,
-			band11 REAL,
-			band12 REAL,
-			band13 REAL,
-			band14 REAL,
-			band15 REAL,
-			band16 REAL,
-			band17 REAL,
-			band18 REAL,
-			band19 REAL,
-			band20 REAL
-		)
-	`) // needs to be an equalizer thing in here
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println("Created paging equalizer table")
-	}
-}
-
-func createTargetsTable() {
-	_, err := DB.Exec(`
-		CREATE TABLE Targets (
-			speakerID INTEGER PRIMARY KEY,
 			name varchar(50),
 			whichPreset INTEGER,
 			band0 REAL,
@@ -293,7 +185,119 @@ func createTargetsTable() {
 			band17 REAL,
 			band18 REAL,
 			band19 REAL,
-			band20 REAL
+			band20 REAL,
+			PRIMARY KEY (speakerID, name)
+		)
+	`) // needs to be an equalizer thing in here
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created equalizer table")
+	}
+}
+
+func createMusicEqualizerPresetsTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE MusicEqualizerPresets (
+			speakerID INTEGER,
+			name varchar(50),
+			whichPreset INTEGER,
+			band0 REAL,
+			band1 REAL,
+			band2 REAL,
+			band3 REAL,
+			band4 REAL,
+			band5 REAL,
+			band6 REAL,
+			band7 REAL,
+			band8 REAL,
+			band9 REAL,
+			band10 REAL,
+			band11 REAL,
+			band12 REAL,
+			band13 REAL,
+			band14 REAL,
+			band15 REAL,
+			band16 REAL,
+			band17 REAL,
+			band18 REAL,
+			band19 REAL,
+			band20 REAL,
+			PRIMARY KEY (speakerID, name)
+		)
+	`) // needs to be an equalizer thing in here
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created music equalizer table")
+	}
+}
+
+func createPagingEqualizerPresetsTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE PagingEqualizerPresets (
+			speakerID INTEGER,
+			name varchar(50),
+			whichPreset INTEGER,
+			band0 REAL,
+			band1 REAL,
+			band2 REAL,
+			band3 REAL,
+			band4 REAL,
+			band5 REAL,
+			band6 REAL,
+			band7 REAL,
+			band8 REAL,
+			band9 REAL,
+			band10 REAL,
+			band11 REAL,
+			band12 REAL,
+			band13 REAL,
+			band14 REAL,
+			band15 REAL,
+			band16 REAL,
+			band17 REAL,
+			band18 REAL,
+			band19 REAL,
+			band20 REAL,
+			PRIMARY KEY (speakerID, name)
+		)
+	`) // needs to be an equalizer thing in here
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created paging equalizer table")
+	}
+}
+
+func createTargetsTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE Targets (
+			speakerID INTEGER,
+			name varchar(50),
+			whichPreset INTEGER,
+			band0 REAL,
+			band1 REAL,
+			band2 REAL,
+			band3 REAL,
+			band4 REAL,
+			band5 REAL,
+			band6 REAL,
+			band7 REAL,
+			band8 REAL,
+			band9 REAL,
+			band10 REAL,
+			band11 REAL,
+			band12 REAL,
+			band13 REAL,
+			band14 REAL,
+			band15 REAL,
+			band16 REAL,
+			band17 REAL,
+			band18 REAL,
+			band19 REAL,
+			band20 REAL,
+			PRIMARY KEY (speakerID, name)
 		)
 	`) // needs to be an equalizer thing in here
 	if err != nil {
@@ -303,6 +307,46 @@ func createTargetsTable() {
 	}
 }
 
+func createSchedulingTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE Scheduling (
+			speakerID INTEGER,
+			day INT,
+			interval INT,
+			start INT,
+			end INT,
+			hour0 INT,
+			hour1 INT,
+			hour2 INT,
+			hour3 INT,
+			hour4 INT,
+			hour5 INT,
+			hour6 INT,
+			hour7 INT,
+			hour8 INT,
+			hour9 INT,
+			hour10 INT,
+			hour11 INT,
+			hour12 INT,
+			hour13 INT,
+			hour14 INT,
+			hour15 INT,
+			hour16 INT,
+			hour17 INT,
+			hour18 INT,
+			hour19 INT,
+			hour20 INT,
+			hour21 INT,
+			hour22 INT,
+			hour23 INT
+		)
+	`) // needs to be an equalizer thing in here
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created scheduling table")
+	}
+}
 /*func GetAllStatus() {
 
 }*/
@@ -698,6 +742,8 @@ func GetAllSpeakers() []*ControllerStatus {
 
 // GetSpeaker gets a speaker from the database
 func GetSpeaker(speakerID int8) *ControllerStatus {
+	var speakerid int8
+
 	var volumeLevel int8
 	var musicLevel int8
 	var pagingLevel int8
@@ -832,6 +878,37 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var tBand19 float64
 	var tBand20 float64
 
+
+//	var interval int
+	var day int
+	var interval int
+	var start int
+	var end int
+	var hour0 int
+	var hour1 int
+	var hour2 int
+	var hour3 int
+	var hour4 int
+	var hour5 int
+	var hour6 int
+	var hour7 int
+	var hour8 int
+	var hour9 int
+	var hour10 int
+	var hour11 int
+	var hour12 int
+	var hour13 int
+	var hour14 int
+	var hour15 int
+	var hour16 int
+	var hour17 int
+	var hour18 int
+	var hour19 int
+	var hour20 int
+	var hour21 int
+	var hour22 int
+	var hour23 int
+
 	err := DB.QueryRow(`
 		SELECT name, x, y, volumeLevel,
 			musicLevel,
@@ -941,6 +1018,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			tBand18, 
 			tBand19, 
 			tBand20
+
 		FROM speaker
 		WHERE speakerID=?;
 		`, speakerID).Scan(
@@ -1303,7 +1381,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	}
 
 	rows, errr := DB.Query(`
-	SELECT 	name, whichPreset, 
+	SELECT name, whichPreset, 
 			band0,
 			band1,
 			band2,
@@ -1330,29 +1408,30 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	`, speakerID)
 
 	for rows.Next() {
-
-		err = rows.Scan(&targetName, &whichPreset, 
-				&band0,
-				&band1,
-				&band2,
-				&band3,
-				&band4,
-				&band5,
-				&band6,
-				&band7,
-				&band8,
-				&band9,
-				&band10,
-				&band11,
-				&band12,
-				&band13,
-				&band14,
-				&band15,
-				&band16,
-				&band17,
-				&band18,
-				&band19,
-				&band20)
+		err = rows.Scan(
+			&targetName, 
+			&whichPreset, 
+			&band0,
+			&band1,
+			&band2,
+			&band3,
+			&band4,
+			&band5,
+			&band6,
+			&band7,
+			&band8,
+			&band9,
+			&band10,
+			&band11,
+			&band12,
+			&band13,
+			&band14,
+			&band15,
+			&band16,
+			&band17,
+			&band18,
+			&band19,
+			&band20)
 
 		if errr != nil {
 			log.Fatal(err)
@@ -1380,6 +1459,55 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		log.Fatal(err)
 	}
 
+
+	rows, errr = DB.Query(`
+		SELECT * 
+		FROM Scheduling
+		WHERE speakerID = ?
+		`, speakerID)
+
+	for rows.Next() {
+		err = rows.Scan(
+			//&interval,
+			&speakerid,
+			&day,
+			&interval,
+			&start,
+			&end,
+			&hour0,
+			&hour1,
+			&hour2,
+			&hour3,
+			&hour4,
+			&hour5,
+			&hour6,
+			&hour7,
+			&hour8,
+			&hour9,
+			&hour10,
+			&hour11,
+			&hour12,
+			&hour13,
+			&hour14,
+			&hour15,
+			&hour16,
+			&hour17,
+			&hour18,
+			&hour19,
+			&hour20,
+			&hour21,
+			&hour22,
+			&hour23)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		//log.Println(day)
+		// interval needs to go in here as well
+		speaker.Schedule = append(speaker.Schedule, []int {day, interval, start, end, hour0, hour1, hour2, hour3, hour4, hour5, hour6, hour7, hour8, hour9, hour10, hour11, hour12, hour13, hour14, hour15, hour16, hour17, hour18, hour19, hour20, hour21, hour22, hour23})
+
+	}
 	//log.Println(speaker.Music)
 
 	// it is pulling from here but we need to figure out a way to distinguish which one should be loaded
@@ -1389,6 +1517,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	//log.Println(speaker.VolumeLevel
 	return speaker
 }
+
 
 func UpdateStatus(ID int8, status int8) {
 	log.Println("Saving status")
@@ -1405,6 +1534,57 @@ func UpdateStatus(ID int8, status int8) {
 	log.Println(ID, status)
 }
 
+
+func UpdateSchedule(speakerid int8, day int, interval int, start int, end int, times [24]int) {
+	log.Println("UpdateSchedule")
+	log.Println(speakerid, start, end, times, day)
+
+	for x := 0; x < len(times); x++ {
+
+		var stringOfStatement string = "UPDATE Scheduling SET hour" + strconv.Itoa(x) + "=? WHERE speakerID=? AND day=?"
+		_, err := DB.Exec(stringOfStatement, times[x], speakerid, day)	
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			log.Println("updated hour", x, speakerid, times[x], day)
+		}
+
+		stringOfStatement = "UPDATE Scheduling SET interval=?, start=?, end=? WHERE speakerID=? AND day=?"
+		_, err = DB.Exec(stringOfStatement, interval, start, end, speakerid, day)
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			log.Println("updated hour", x, speakerid, times[x], day)
+		}
+	}
+}
+
+
+func UpdateScheduleZone(zoneid int8, day int, interval int, start int, end int, times [24]int) {
+	log.Println("UpdateScheduleZone")
+	log.Println(zoneid, start, end, times, day)
+
+	for x := 0; x < len(times); x++ {
+
+		var stringOfStatement string = "UPDATE SchedulingZone SET hour" + strconv.Itoa(x) + "=? WHERE zoneID=? AND day=?"
+		_, err := DB.Exec(stringOfStatement, times[x], zoneid, day)	
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			log.Println("updated hour", x, zoneid, times[x], day)
+		}
+
+		stringOfStatement = "UPDATE SchedulingZone SET interval=?, start=?, end=? WHERE zoneID=? AND day=?"
+		_, err = DB.Exec(stringOfStatement, interval, start, end, zoneid, day)
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			log.Println("updated hour", x, zoneid, times[x], day)
+		}
+	}
+}
+
+
 func SavePreset(speakerId int8, name string, constants []string) {
 
 	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
@@ -1418,6 +1598,7 @@ func SavePreset(speakerId int8, name string, constants []string) {
 
 	//statement, err := DB.Prepare(stringOfStatement)
 }
+
 
 func SaveMusicPreset(speakerId int8, name string, constants []string) {
 
@@ -1433,6 +1614,7 @@ func SaveMusicPreset(speakerId int8, name string, constants []string) {
 	//statement, err := DB.Prepare(stringOfStatement)
 }
 
+
 func SavePagingPreset(speakerId int8, name string, constants []string) {
 
 	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
@@ -1446,6 +1628,7 @@ func SavePagingPreset(speakerId int8, name string, constants []string) {
 
 	//statement, err := DB.Prepare(stringOfStatement)
 }
+
 
 // wtf is this for, cant remember why I created this
 func UpdateTarget(speakerId int8, name string, constants []string) {
@@ -1477,6 +1660,81 @@ func SaveTarget(speakerId int8, name string, constants []string) {
 	//statement, err := DB.Prepare(stringOfStatement)
 }
 
+
+func SavePresetZone(zoneid int8, name string, constants []string) {
+
+	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
+	log.Println("SavePresetZone: I am firing")
+	var stringOfStatement string = "INSERT into EqualizerPresetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
+	}
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+}
+
+func SaveMusicPresetZone(zoneid int8, name string, constants []string) {
+
+	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
+	log.Println("SaveMusicPresetZone: I am firing")
+	var stringOfStatement string = "INSERT into MusicEqualizerPresetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
+	}
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+}
+
+func SavePagingPresetZone(zoneid int8, name string, constants []string) {
+
+	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
+	log.Println("SavePagingPresetZone: I am firing")
+	var stringOfStatement string = "INSERT into PagingEqualizerPresetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
+	}
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+}
+
+
+// wtf is this for, cant remember why I created this
+func UpdateTargetZone(zoneid int8, name string, constants []string) {
+
+	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
+	log.Println("SaveTargetZone: I am firing")
+	var stringOfStatement string = "INSERT into TargetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
+	}
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+}
+
+
+func SaveTargetZone(zoneid int8, name string, constants []string) {
+
+	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
+	log.Println("SaveTargetZone: I am firing")
+	var stringOfStatement string = "INSERT into TargetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
+	}
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+}
+
+
 // SaveSpeaker saves the speaker provided to the database
 // reduce the generality if performance wanes and we need it
 func SaveVolume(speaker *ControllerStatus) {
@@ -1496,9 +1754,26 @@ func SaveVolume(speaker *ControllerStatus) {
 	log.Println(speaker)
 }
 
+func SaveVolumeZone(zone *Zone) {
+	log.Println("SaveVolumeZone: I am firing")
+	_, err := DB.Exec(`
+		UPDATE zone
+		SET
+			volumeLevel = ?,
+			musicLevel = ?,
+			pagingLevel = ?,
+			soundMaskingLevel = ?
+		WHERE zoneID = ?
+	`, zone.VolumeLevel[0], zone.VolumeLevel[1], zone.VolumeLevel[2], zone.VolumeLevel[3], zone.ZoneID)	// the volumeLevel needs to change
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(zone)
+}
+
 
 func UpdateThreshold(speaker int8, musicMin int8, musicMax int8, pagingMin int8, pagingMax int8, maskingMin int8, maskingMax int8) {
-	log.Println("UpdateThreshold: I am firing")
+	log.Println("UpdateThreshold: I am firing", speaker)
 	_, err := DB.Exec(`
 		UPDATE speaker
 		SET 
@@ -1515,6 +1790,26 @@ func UpdateThreshold(speaker int8, musicMin int8, musicMax int8, pagingMin int8,
 	}
 }
 
+
+func UpdateThresholdZone(zone int8, musicMin int8, musicMax int8, pagingMin int8, pagingMax int8, maskingMin int8, maskingMax int8) {
+	log.Println("UpdateThreshold: I am firing", zone)
+	_, err := DB.Exec(`
+		UPDATE zone
+		SET 
+			lowerMusicThreshold = ?,
+			lowerPagingThreshold = ?,
+			lowerMaskingThreshold = ?,
+			upperMusicThreshold = ?,
+			upperPagingThreshold = ?,
+			upperMaskingThreshold = ?
+		WHERE zoneID = ?
+			`, musicMin, musicMax, pagingMin, pagingMax, maskingMin, maskingMax, zone)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+
 func SaveFade(speaker *ControllerStatus) {
 	log.Println("SaveFade: I am firing")
 	_, err := DB.Exec(`
@@ -1528,6 +1823,22 @@ func SaveFade(speaker *ControllerStatus) {
 		log.Fatal(err)
 	}
 }
+
+
+func SaveFadeZone(zone *Zone) {
+	log.Println("SaveFade: I am firing")
+	_, err := DB.Exec(`
+		UPDATE zone
+		SET
+			fadeTime = ?,
+			fadeLevel = ?
+		WHERE zoneID = ?
+	`, zone.PagingLevel[0], zone.PagingLevel[1], zone.ZoneID)	// the volumeLevel needs to change
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 
 func SaveAveraging(speaker *ControllerStatus) {
 	log.Println("SaveAveraging: I am firing")
@@ -1543,12 +1854,26 @@ func SaveAveraging(speaker *ControllerStatus) {
 	}
 }
 
-// make a command to save the band
 
-func SaveBand(speaker *ControllerStatus, band int, level float64, target int) { // this should return an error here if something is wrong
+func SaveAveragingZone(zone *Zone) {
+	log.Println("SaveAveragingZone: I am firing")
+	_, err := DB.Exec(`
+		UPDATE zone
+		SET
+			effectiveness = ?,
+			pleasantness = ?
+		WHERE zoneID = ?
+	`, zone.Effectiveness, zone.Pleasantness, zone.ZoneID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+
+func SaveBand(speaker *ControllerStatus, band int, level float64, typeOfPreset int) { // this should return an error here if something is wrong
 	var stringOfStatement string
 
-	switch target {
+	switch typeOfPreset {
 		case 0:
 			stringOfStatement = "UPDATE speaker SET eBand" + strconv.Itoa(band) + " = ? WHERE speakerID = ?"
 		case 1:
@@ -1568,6 +1893,34 @@ func SaveBand(speaker *ControllerStatus, band int, level float64, target int) { 
 	//statement, err := DB.Prepare(stringOfStatement)
 	// need to check whether or not this is null or w/e before sending it off
 	_, errr := DB.Exec(stringOfStatement, level, speaker.ID)		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
+	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+		log.Fatal(errr)			
+	}
+}
+
+func SaveBandZone(zone *Zone, band int, level float64, typeOfPreset int) { // this should return an error here if something is wrong
+	var stringOfStatement string
+
+	switch typeOfPreset {
+		case 0:
+			stringOfStatement = "UPDATE zone SET eBand" + strconv.Itoa(band) + " = ? WHERE zoneID = ?"
+		case 1:
+			stringOfStatement = "UPDATE zone SET mBand" + strconv.Itoa(band) + " = ? WHERE zoneID = ?"
+		case 2:
+			stringOfStatement = "UPDATE zone SET pBand" + strconv.Itoa(band) + " = ? WHERE zoneID = ?"
+		case 3:
+			stringOfStatement = "UPDATE zone SET tBand" + strconv.Itoa(band) + " = ? WHERE zoneID = ?"
+		default:
+			log.Println("SAVEBANDZONE WAS PASSED AN INVALID PRESET OR TARGET VALUE")
+	}
+
+	log.Println("SaveBandZone: I am firing")
+
+	//log.Println(stringOfStatement)
+
+	//statement, err := DB.Prepare(stringOfStatement)
+	// need to check whether or not this is null or w/e before sending it off
+	_, errr := DB.Exec(stringOfStatement, level, zone.ZoneID)		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
 	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
 		log.Fatal(errr)			
 	}
@@ -1602,9 +1955,29 @@ func ChangeEQMode(speaker int8, mode int8) error {
 	return nil
 }
 
-func ChangeSchedulingMode(speaker int8, mode int8) error {
+func ChangeEQModeZone(zone int8, mode int8) error {
+	var statement = "UPDATE zone SET equalizerMode = ? WHERE zoneID = ?"
+	_, err := DB.Exec(statement, mode, zone)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return nil
+}
+
+func ChangeSchedulingMode(speaker int8, mode int) error {
 	var statement = "UPDATE speaker SET schedulingMode = ? WHERE speakerID = ?"
 	_, err := DB.Exec(statement, mode, speaker)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return nil
+}
+
+func ChangeSchedulingModeZone(zone int8, mode int) error {
+	var statement = "UPDATE zone SET schedulingMode = ? WHERE zoneID = ?"
+	_, err := DB.Exec(statement, mode, zone)
 
 	if err != nil {
 		log.Fatal(err)
@@ -1797,12 +2170,19 @@ func populateSpeakerTable() {
 	insertSpeakerStmt = tx.Stmt(insertSpeakerStmt)
 	addSpeakerToZonesStmt = tx.Stmt(addSpeakerToZonesStmt)
 	addSpeakerToPagingZonesStmt = tx.Stmt(addSpeakerToPagingZonesStmt)
+	addSpeakerToSchedulingStmt = tx.Stmt(addSpeakerToSchedulingStmt)
+
 	speakerLocations := getSpeakerLocations()
 	for _, speakerLoc := range speakerLocations {
 		id := addSpeaker(speakerLoc)
 		addSpeakerToAllZones(id)
+		addSpeakerSchedule(id)
 	}
 	tx.Commit()
+}
+
+func populateZoneTable() {
+	AddZone("all_masking")
 }
 
 type speakerLocation struct {

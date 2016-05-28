@@ -13,6 +13,8 @@
 <link rel="import" href="/components/paging-controller.html">
 <link rel="import" href="/components/scheduling-controller.html">
 
+<link rel="import" href="/components/omaha-app.html">
+
 <link rel="stylesheet" href="jquery-ui-1.11.4.css">
 <script src="jquery-1.10.2.js" type="text/jscript"></script>
 <script src="Chart.js" type="text/jscript"></script>
@@ -93,25 +95,25 @@
     </style>
     <div id="radio-container" class="layout horizontal">
       <paper-radio-group id="mode" style="margin-left: 15%;" selected="{{mode}}">
-        <paper-radio-button id="volumeButton"     name="volume"     class="flex"><h3>Volume</h3></paper-radio-button>
-        <paper-radio-button id="averagingButton"  name="averaging"  class="flex"><h3>Comfort Ratio</h3></paper-radio-button>
-        <paper-radio-button id="targetButton"     name="target"     class="flex"><h3>Target</h3></paper-radio-button>
-        <paper-radio-button id="equalizerButton"  name="equalizer"  class="flex"><h3>Equalizers</h3></paper-radio-button>
-        <paper-radio-button id="pagingButtonRC"     name="paging"     class="flex"><h3>Paging</h3></paper-radio-button>
-        <paper-radio-button id="schedulingButton" name="scheduling" class="flex"><h3>Scheduling</h3></paper-radio-button>
+        <paper-radio-button id="volumeButton"     name="volume"     class="flex"><h3 style="margin-left: 10%">Volume</h3></paper-radio-button>
+        <paper-radio-button id="averagingButton"  name="averaging"  class="flex"><h3 style="margin-left: 10%">Comfort Ratio</h3></paper-radio-button>
+        <paper-radio-button id="targetButton"     name="target"     class="flex"><h3 style="margin-left: 10%">Target</h3></paper-radio-button>
+        <paper-radio-button id="equalizerButton"  name="equalizer"  class="flex"><h3 style="margin-left: 10%">Equalizers</h3></paper-radio-button>
+        <paper-radio-button id="pagingButtonRC"   name="paging"     class="flex"><h3 style="margin-left: 10%">Paging</h3></paper-radio-button>
+        <paper-radio-button id="schedulingButton" name="scheduling" class="flex"><h3 style="margin-left: 10%">Scheduling</h3></paper-radio-button>
       </paper-radio-group>
     </div>
     <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
 
       <neon-animatable page="volume" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
-          <volume-selector id="volume" speakerId="[[speaker.id]]" volume="{{volumeLevel}}" musicVolume="{{musicLevel}}"></volume-selector>
+          <volume-selector id="volume" speaker-id="[[speakerId]]" volume="{{volumeLevel}}" musicVolume="{{musicLevel}}"></volume-selector>
         </simple-fit>
       </neon-animatable>
 
       <neon-animatable page="averaging" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
-          <averaging-controller id="averaging" speaker-id="[[speakerId]]" averaging="[[averaging]]"></averaging-controller>
+          <averaging-controller id="averaging" speaker="[[speaker]]" averaging="[[averaging]]"></averaging-controller>
         </simple-fit>
       </neon-animatable>
 
@@ -135,7 +137,7 @@
 
       <neon-animatable page="scheduling" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
         <simple-fit class="container">
-           <scheduling-controller center-center page="scheduling" id="scheduling"></scheduling-controller>
+           <scheduling-controller center-center page="scheduling" id="scheduling" speaker="[[speaker]]"></scheduling-controller>
         </simple-fit>
       </neon-animatable> 
 
@@ -186,12 +188,6 @@
         speakerId: {
           type: Number,
           value: 0
-        },
-
-        ledOn: {
-          type: Boolean,
-          value: true,
-          observer: '_ledUpdate'
         },
 
         volumeLevel: {    // this shit and all the other shitters were volumeone for some reason ??? changed to volumeLevel
@@ -248,25 +244,6 @@
 
       _speakerSelected: function() {
           console.log("this shit is working");
-      },
-
-      _ledUpdate: function() {
-        /*
-          We only want to notify the server of changes if this is after ready() has been called.
-          This is because _ledUpdate is triggered when initially setting values received from the server
-        */
-        if(this.isReady) {
-          var updatedAttributes = ["led"];
-          var attributeValues = {
-            "led": this.ledOn,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
-        }
       },
 
       _volumeUpdate: function() {
@@ -371,6 +348,21 @@
         }
       },
 
+      _targetUpdateZone: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["target"];
+          var attributeValues = {
+            "target": this.target,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+
       _logResponse: function(event, data) {
         console.log(data.response);
       },
@@ -378,7 +370,6 @@
       _initializeStatus: function(speaker) {
         this.speakerId = speaker.id;
         speakerid = speaker.id;
-        //this.ledOn = speaker.ledOn;
         this.volume = speaker.VolumeLevel[0];
         this.equalizer = speaker.equalizerone;
       },
@@ -394,6 +385,7 @@
         if(this.speaker !== undefined)
           this._initializeStatus(this.speaker);
         this.isReady = true;
+        console.log("this is the zone flag", zoneFlag);
       }
     });
   

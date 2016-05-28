@@ -1,0 +1,1291 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/components/simple-fit.html">
+
+<link rel="import" href="/components/omaha-app.html">
+
+<link rel="stylesheet" href="../jquery-ui-1.11.4.css">
+<script src="../jquery-1.10.2.js" type="text/jscript"></script>
+<!--<script src="jquery-2.2.0.js"></script>-->
+<script src="../jquery-ui-1.11.4.js" type="text/jscript"></script>
+<script src="../jquery.ui.touch-punch.js" type="text/jscript"></script>
+
+<dom-module id="equalizer-controller-zone">
+  <template>
+
+    <style>
+      :host {
+        display: block;
+      }
+
+      #slider {
+        width: 100%;
+        height: calc(85% - .3 * 100vw);
+        margin-bottom: calc(.03 * 100vh);
+      }
+
+      paper-card {
+        width: 100%;
+        height: 100%;   /* This was 100%, cahnge back if needed */
+        text-align: center;   /* center was not here and then i put it here, take out if it fucks up */
+      }
+
+      .papercardleft {
+        text-align: left;
+      }
+
+      .papercardcenter {
+        text-align: center;
+      }
+
+      .paper-card .card-content {
+        padding: 0px;
+        height: 200%;
+      }
+      
+      paper-button {
+        background-color: #3f51b5;
+        color: #fff;
+        margin-top: 1px;
+      }
+
+      paper-input /deep/ #input {
+        margin-top: 0px;
+        text-align: center;
+      }
+
+      .message {
+        color: var(--paper-red-500);
+        size: 5px;
+      }
+
+      paper-dropdown-menu {
+        text-align: center;
+      }
+
+      #equalizerSelectorZone {
+        margin-bottom: 2%;      /* this might need to change to something that is calculated */
+      }
+
+    </style>
+
+   <paper-card heading="Equalizer" elevation="4">
+      <div style="height: calc(.68 * 100vh);" class="card-content">         <!-- something might need to be done about the growing to adjust for .6 -> .68 -->
+
+        <paper-radio-group id="equalizerSelectorZone" selected="{{mode}}">
+          <paper-radio-button id="maskingButtonZone" name="masking"  onclick="modeChangedZone('masking')"   class="flex">Masking</paper-radio-button>
+          <paper-radio-button id="musicButtonZone"   name="music"    onclick="modeChangedZone('music')"     class="flex">Music</paper-radio-button>
+          <paper-radio-button id="pagingButtonZone"  name="paging"   onclick="modeChangedZone('paging')"    class="flex">Paging</paper-radio-button>
+        </paper-radio-group>
+
+        <neon-animated-pages attr-for-selected="page" selected="[[mode]]" class="flex">
+
+          <neon-animatable page="masking" style="height: calc(.6 * 100vh);" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+            <simple-fit class="container">
+
+              <div id="sliderequalizer_masking" class="layout horizontal">
+                <div id="custom_container_masking">     <!-- change the custom class names back is shit hits the fan -->
+                  <div class="custom" style="margin-left: 4%;"> <input id="text1" name="80" class="levelZone  " tabindex=1 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
+                  <div class="custom"> <input id="text2" name="100" class="levelZone" tabindex=2 oninput="inputChangedZone()"/> <div class="custom_slider_zone" class="masking" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
+                  <div class="custom"> <input id="text3" name="125" class="levelZone" tabindex=3 oninput="inputChangedZone()"/> <div class="custom_slider_zone" class="masking" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
+                  <div class="custom"> <input id="text4" name="160" class="levelZone" tabindex=4 oninput="inputChangedZone()"/><div class="custom_slider_zone" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
+                  <div class="custom"> <input id="text5" name="200" class="levelZone" tabindex=5 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer5"}}></div><input class="bands" value="200" readonly/></div>
+                  <div class="custom"> <input id="text6" name="250" class="levelZone" tabindex=6 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer6"}}></div><input class="bands" value="250" readonly/></div>
+                  <div class="custom"> <input id="text7" name="315" class="levelZone" tabindex=7 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer7"}}></div><input class="bands" value="315" readonly/></div>
+                  <div class="custom"> <input id="text8" name="400" class="levelZone" tabindex=8 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer8"}}></div><input class="bands" value="400" readonly/></div>
+                  <div class="custom"> <input id="text9" name="500" class="levelZone" tabindex=9 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer9"}}></div><input class="bands" value="500" readonly/></div>
+                  <div class="custom"> <input id="text10" name="630" class="levelZone" tabindex=10 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer10"}}></div><input class="bands" value="630" readonly/></div>
+                  <div class="custom"> <input id="text11" name="800" class="levelZone" tabindex=11 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer11"}}></div><input class="bands" value="800" readonly/></div>
+                  <div class="custom"> <input id="text12" name="1k" class="levelZone" tabindex=12 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer12"}}></div><input class="bands" value="1k" readonly/></div>
+                  <div class="custom"> <input id="text13" name="1.25k" class="levelZone" tabindex=13 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer13"}}></div><input class="bands" value="1.25k" readonly/></div>
+                  <div class="custom"> <input id="text14" name="1.6k" class="levelZone" tabindex=14 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer14"}}></div><input class="bands" value="1.6k" readonly/></div>
+                  <div class="custom"> <input id="text15" name="2k" class="levelZone" tabindex=15 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer15"}}></div><input class="bands" value="2k" readonly/></div>
+                  <div class="custom"> <input id="text16" name="2.5k" class="levelZone" tabindex=16 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer16"}}></div><input class="bands" value="2.5k" readonly/></div>
+                  <div class="custom"> <input id="text17" name="3.15k" class="levelZone" tabindex=17 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer17"}}></div><input class="bands" value="3.15k" readonly/></div>
+                  <div class="custom"> <input id="text18" name="4k" class="levelZone" tabindex=18 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer18"}}></div><input class="bands" value="4k" readonly/></div>
+                  <div class="custom"> <input id="text19" name="5k" class="levelZone" tabindex=19 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer19"}}></div><input class="bands" value="5k" readonly/></div>
+                  <div class="custom"> <input id="text20" name="6.3k" class="levelZone" tabindex=20 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer20"}}></div><input class="bands" value="6.3k" readonly/></div>
+                  <div class="custom"> <input id="text21" name="8k" class="levelZone" tabindex=21 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer21"}></div><input class="bands" value="8k" readonly/></div>
+                </div>
+              </div>
+              
+            </simple-fit>
+          </neon-animatable>
+
+          <neon-animatable page="music" style="height: calc(.6 * 100vh);" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+            <simple-fit class="container">
+              
+            <div id="sliderequalizer_music" class="layout horizontal">
+                <div id="custom_container_music">     <!-- change the custom class names back is shit hits the fan -->
+                  <div class="custom" style="margin-left: 4%;"> <input id="text22" name="80" class="levelZone" tabindex=1 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
+                  <div class="custom music"> <input id="text23" name="100" class="levelZone" tabindex=2 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
+                  <div class="custom"> <input id="text24" name="125" class="levelZone" tabindex=3 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
+                  <div class="custom"> <input id="text25" name="160" class="levelZone" tabindex=4 oninput="inputChangedZone()"/><div class="custom_slider_zone" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
+                  <div class="custom"> <input id="text26" name="200" class="levelZone" tabindex=5 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer5"}}></div><input class="bands" value="200" readonly/></div>
+                  <div class="custom"> <input id="text27" name="250" class="levelZone" tabindex=6 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer6"}}></div><input class="bands" value="250" readonly/></div>
+                  <div class="custom"> <input id="text28" name="315" class="levelZone" tabindex=7 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer7"}}></div><input class="bands" value="315" readonly/></div>
+                  <div class="custom"> <input id="text29" name="400" class="levelZone" tabindex=8 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer8"}}></div><input class="bands" value="400" readonly/></div>
+                  <div class="custom"> <input id="text30" name="500" class="levelZone" tabindex=9 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer9"}}></div><input class="bands" value="500" readonly/></div>
+                  <div class="custom"> <input id="text31" name="630" class="levelZone" tabindex=10 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer10"}}></div><input class="bands" value="630" readonly/></div>
+                  <div class="custom"> <input id="text32" name="800" class="levelZone" tabindex=11 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer11"}}></div><input class="bands" value="800" readonly/></div>
+                  <div class="custom"> <input id="text33" name="1k" class="levelZone" tabindex=12 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer12"}}></div><input class="bands" value="1k" readonly/></div>
+                  <div class="custom"> <input id="text34" name="1.25k" class="levelZone" tabindex=13 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer13"}}></div><input class="bands" value="1.25k" readonly/></div>
+                  <div class="custom"> <input id="text35" name="1.6k" class="levelZone" tabindex=14 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer14"}}></div><input class="bands" value="1.6k" readonly/></div>
+                  <div class="custom"> <input id="text36" name="2k" class="levelZone" tabindex=15 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer15"}}></div><input class="bands" value="2k" readonly/></div>
+                  <div class="custom"> <input id="text37" name="2.5k" class="levelZone" tabindex=16 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer16"}}></div><input class="bands" value="2.5k" readonly/></div>
+                  <div class="custom"> <input id="text38" name="3.15k" class="levelZone" tabindex=17 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer17"}}></div><input class="bands" value="3.15k" readonly/></div>
+                  <div class="custom"> <input id="text39" name="4k" class="levelZone" tabindex=18 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer18"}}></div><input class="bands" value="4k" readonly/></div>
+                  <div class="custom"> <input id="text40" name="5k" class="levelZone" tabindex=19 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer19"}}></div><input class="bands" value="5k" readonly/></div>
+                  <div class="custom"> <input id="text41" name="6.3k" class="levelZone" tabindex=20 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer20"}}></div><input class="bands" value="6.3k" readonly/></div>
+                  <div class="custom"> <input id="text42" name="8k" class="levelZone" tabindex=21 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer21"}></div><input class="bands" value="8k" readonly/></div>
+                </div>
+              </div>
+
+            </simple-fit>
+          </neon-animatable>
+
+          <neon-animatable page="paging" style="height: calc(.6 * 100vh);" class="horizontal layout" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+            <simple-fit class="container">
+              
+            <div id="sliderequalizer_paging" class="layout horizontal">
+                <div id="custom_container_paging">     <!-- change the custom class names back is shit hits the fan -->
+                  <div class="custom" style="margin-left: 4%;"> <input id="text43" name="80" class="levelZone" tabindex=1 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
+                  <div class="custom"> <input id="text44" name="100" class="levelZone" tabindex=2 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
+                  <div class="custom"> <input id="text45" name="125" class="levelZone" tabindex=3 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
+                  <div class="custom"> <input id="text46" name="160" class="levelZone" tabindex=4 oninput="inputChangedZone()"/><div class="custom_slider_zone" value={{"equalizer4"}}></div><input class="bands" value="160" readonly/></div>
+                  <div class="custom"> <input id="text47" name="200" class="levelZone" tabindex=5 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer5"}}></div><input class="bands" value="200" readonly/></div>
+                  <div class="custom"> <input id="text48" name="250" class="levelZone" tabindex=6 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer6"}}></div><input class="bands" value="250" readonly/></div>
+                  <div class="custom"> <input id="text49" name="315" class="levelZone" tabindex=7 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer7"}}></div><input class="bands" value="315" readonly/></div>
+                  <div class="custom"> <input id="text50" name="400" class="levelZone" tabindex=8 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer8"}}></div><input class="bands" value="400" readonly/></div>
+                  <div class="custom"> <input id="text51" name="500" class="levelZone" tabindex=9 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer9"}}></div><input class="bands" value="500" readonly/></div>
+                  <div class="custom"> <input id="text52" name="630" class="levelZone" tabindex=10 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer10"}}></div><input class="bands" value="630" readonly/></div>
+                  <div class="custom"> <input id="text53" name="800" class="levelZone" tabindex=11 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer11"}}></div><input class="bands" value="800" readonly/></div>
+                  <div class="custom"> <input id="text54" name="1k" class="levelZone" tabindex=12 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer12"}}></div><input class="bands" value="1k" readonly/></div>
+                  <div class="custom"> <input id="text55" name="1.25k" class="levelZone" tabindex=13 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer13"}}></div><input class="bands" value="1.25k" readonly/></div>
+                  <div class="custom"> <input id="text56" name="1.6k" class="levelZone" tabindex=14 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer14"}}></div><input class="bands" value="1.6k" readonly/></div>
+                  <div class="custom"> <input id="text57" name="2k" class="levelZone" tabindex=15 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer15"}}></div><input class="bands" value="2k" readonly/></div>
+                  <div class="custom"> <input id="text58" name="2.5k" class="levelZone" tabindex=16 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer16"}}></div><input class="bands" value="2.5k" readonly/></div>
+                  <div class="custom"> <input id="text59" name="3.15k" class="levelZone" tabindex=17 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer17"}}></div><input class="bands" value="3.15k" readonly/></div>
+                  <div class="custom"> <input id="text60" name="4k" class="levelZone" tabindex=18 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer18"}}></div><input class="bands" value="4k" readonly/></div>
+                  <div class="custom"> <input id="text61" name="5k" class="levelZone" tabindex=19 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer19"}}></div><input class="bands" value="5k" readonly/></div>
+                  <div class="custom"> <input id="text62" name="6.3k" class="levelZone" tabindex=20 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer20"}}></div><input class="bands" value="6.3k" readonly/></div>
+                  <div class="custom"> <input id="text63" name="8k" class="levelZone" tabindex=21 oninput="inputChangedZone()"/> <div class="custom_slider_zone" value={{"equalizer21"}></div><input class="bands" value="8k" readonly/></div>
+                </div>
+              </div>
+              
+            </simple-fit>
+          </neon-animatable>
+        </neon-animated-pages>
+      </div>
+
+      <!-- entry-animation="scale-up-animation" exit-animation="fade-out-animation" -->
+    <paper-dialog id="dialogZone" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
+      <h1 style="text-align: center;">Add Preset</h1>
+      <div style="text-align: center;">Enter the name for the new preset below</div>
+      <div class="message">{{err}}</div>
+      <paper-input id="popupInputZone" label="" placeholder="Enter new preset name" text-align="center"></paper-input>
+      <div class="buttons">
+        <paper-button ondialog-confirm on-click="_acceptPressedZone">Add</paper-button>
+        <paper-button dialog-dismiss on-click="_cancelPressedZone">Cancel</paper-button>
+    </div>
+    </paper-dialog>
+
+    <paper-dialog id="switchingEQModeDialogZone" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true" style="height: 250px; width: 500px;">
+      <h2 style="text-align: center; padding-top: 24px; padding-bottom: 5px; margin: 0px;">Warning</h2>
+      <div id="eqmodeZone" style="text-align: center; margin-top: 0px; padding: 5% 5% 5% 5%;">
+      </div>
+      <div class="butons" style="position: absolute; left: 60px; top: 150px; margin: 0; border-top: 1px rgba(201, 201, 201, .6) solid; padding: 5%;">
+      <paper-button ondialog-confirm style="margin: 0.5em 1em 0.5em 1em;" on-click="_switchPressedZone">Switch</paper-button>
+      <paper-button dialog-dismiss on-click="_cancelSwitchPressedZone">Cancel</paper-button></div>
+    </paper-dialog>
+
+      <div class="card-actions">
+        <!-- <paper-checkbox class="papercardcenter" style="text-align: center;" checked>Apply Adjustment Based Presets</paper-checkbox> -->
+        <!--
+        <paper-checkbox checked>Checkbox</paper-checkbox>
+        <paper-checkbox disabled>Disabled</paper-checkbox>
+        -->
+        <paper-button class="papercardcenter" on-click="_setEqualizerClickedZone">set equalizer</paper-button>
+        <paper-dropdown-menu class="papercardcenter" id="equalizerMenuZone" no-label-float label="Equalizer Preset:">
+          <paper-listbox id="equalizerListboxZone" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+            <!--<template if="{{this.speaker.Response}}">
+              <paper-dropdown-menu selected="{{selected}}">
+                <template repeat="{{label in this.speaker.PresetNames}}">
+                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
+                </template>
+              </paper-dropdown-menu>  
+            </template>-->
+              <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
+              <paper-item id="Add New Preset" value="Add New Preset">Add New Preset</paper-item>   
+          </paper-listbox>
+        </paper-dropdown-menu>
+
+        <paper-dropdown-menu class="papercardcenter" id="musicMenuZone" style="position: absolute; left: 48.5%; visibility: hidden;" no-label-float label="Music Preset:">
+          <paper-listbox id="musicListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+            <!--<template if="{{this.speaker.Response}}">
+              <paper-dropdown-menu selected="{{selected}}">
+                <template repeat="{{label in this.speaker.PresetNames}}">
+                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
+                </template>
+              </paper-dropdown-menu>  
+            </template>-->
+              <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
+              <paper-item id="Add New Preset" value="Add New Preset">Add New Preset</paper-item>  
+          </paper-listbox>
+        </paper-dropdown-menu>
+
+        <paper-dropdown-menu class="papercardcenter" id="pagingMenuZone" style="position: absolute; left: 48.5%; visibility: hidden;" no-label-float label="Paging Preset:">
+          <paper-listbox id="pagingListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
+            <!--<template if="{{this.speaker.Response}}">
+              <paper-dropdown-menu selected="{{selected}}">
+                <template repeat="{{label in this.speaker.PresetNames}}">
+                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
+                </template>
+              </paper-dropdown-menu>  
+            </template>-->
+              <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
+              <paper-item id="Add New Preset" value="Add New Preset">Add New Preset</paper-item>  
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <span>{{value}}</span>
+      </div>
+    </paper-card>
+    <paper-toast id="equalizerToastZone"></paper-toast>
+    <paper-toast id="toastyZone" z-index: "60"></paper-toast>
+
+    <iron-ajax
+      id="addPresetAjaxZone"
+      url="/system/zone/addPreset/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax
+      id="updateEqualizerZone"
+      url="/system/zone/updateEqualizerZone/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax
+      id="changeEQModeAjaxZone"
+      url="/system/zone/changeEQModeZone/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
+  </template>
+  <script>
+
+  var slidersZone;
+  var handlesZone;
+  var backgroundZone;
+
+  //var fragment = create("<paper-item id=" + "name" + " value=" + "custom" + ">" + "custom" + "</paper-item>"); 
+  var equalizerToastZone = 0;
+  var equalizerModeZone;
+  var typeFoundZone = 0;
+
+
+  function getValuesZone() {
+    switch (equalizerModeZone.selected) {
+      case "masking": 
+        typeFoundZone = 0;
+        console.log(equalizerModeZone.selected);
+        break;
+      case "music":
+        typeFoundZone = 1;
+        console.log(equalizerModeZone.selected);
+        break;
+      case "paging":
+        typeFoundZone = 2;
+        console.log(equalizerModeZone.selected);
+        break;
+
+      default:
+        console.log("something is messed up with the equalizerModeZone = this.$.equalizerSelectorZone.selected;");
+      }
+
+      return typeFoundZone;
+  }
+
+
+  $(document).ready(function() {
+    /*slidersZone_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+    handlesZone_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+    background_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("custom_slider_zone style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
+
+    slidersZone_music = document.getElementById("sliderequalizer_music").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+    handlesZone_music = document.getElementById("sliderequalizer_music").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+    background_music = document.getElementById("sliderequalizer_music").getElementsByClassName("custom_slider_zone style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
+
+    slidersZone_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+    handlesZone_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+    background_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("custom_slider_zone style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");*/
+
+    //if(zoneFlag == 1) {
+      console.log("equalizer zoneFlag", zoneFlag);
+//    }
+
+    slidersZone = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+    handlesZone = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+    backgroundZone = document.getElementsByClassName("custom_slider_zone style-scope equalizer-controller-zone ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
+
+    console.log(slidersZone, "\n", handlesZone, "\n", background);
+
+  });
+  
+  var lastSelectedZone = 0;
+  var isThereAnErrorZone = false;
+
+
+
+  var lastEQModeZone = "masking";
+//  document.getElementById(equalizerListboxZone).selected = "Currently Applied";
+
+  //PresetNames[] = {"hi", "my", "name", "is", "scott"};
+  
+
+  //document.getElementById("custom").appendChild(temp);    make this work
+
+  var iirConstantsZone = [];
+
+  for(loopVar = 0; loopVar < 63; loopVar++) {
+    iirConstantsZone[loopVar] = 0;
+  }
+  console.log(iirConstantsZone);
+
+  function showEqualizerSwitchDialogZone(mode) {
+    console.log(mode);
+    switch(mode) {
+      case "masking": {
+        document.getElementById("eqmodeZone").innerHTML = "You are switching the speaker to masking mode<br>In this mode, the speaker will produce equalized white noise and unequalized music.";
+        break;
+      }
+      case "music": {
+        document.getElementById("eqmodeZone").innerHTML = "You are switching the speaker to music mode<br>In this mode the speaker will produce equalized music only.";
+        break;
+      }
+      case "paging": {
+        document.getElementById("eqmodeZone").innerHTML = "You are switching the speaker to paging mode;<br>Something needs to go here, ask Matt"
+        break;
+      }
+    }
+    document.querySelector("#switchingEQModeDialogZone").toggle(); 
+    console.log("i got here zone");
+  }
+
+  function modeChangedZone(mode) {
+
+    switch(mode) {
+      case "masking":
+        musicMenuZone.style.visibility = "hidden";
+        equalizerMenuZone.style.visibility = "visible";
+        pagingMenuZone.style.visibility = "hidden";
+        showEqualizerSwitchDialogZone("masking");
+        break;
+
+      case "music":
+        equalizerMenuZone.style.visibility = "hidden";
+        musicMenuZone.style.visibility = "visible";
+        pagingMenuZone.style.visibility = "hidden";
+        showEqualizerSwitchDialogZone("music");
+        break;
+      
+      case "paging":
+        musicMenuZone.style.visibility = "hidden";
+        equalizerMenuZone.style.visibility = "hidden";
+        pagingMenuZone.style.visibility = "visible";
+        showEqualizerSwitchDialogZone("paging");
+        break;
+
+      default: 
+        console.log("SOMETHING WAS WRONG WITH WHAT WAS PASSED TO modeChangedZone()");
+    }
+  }
+
+
+    Polymer({
+      is: 'equalizer-controller-zone',
+      
+      properties: {
+        internalEqualizer: String,
+
+        mode: {
+        type:  String,
+        value: "masking"
+        },
+
+        speakerId: {
+          type: Number
+        },
+
+        speaker: {
+          type: Object
+        },
+
+        equalizer: {
+          type: String,
+          notify: true,
+          observer: '_setInternalEqualizerZone'
+        }
+      },
+
+
+      _setInternalEqualizerZone: function(iirConstantsStringZone) {
+        this.internalEqualizer = iirConstantsStringZone;
+        console.log("_setInternalEqualizerZone " + iirConstantsStringZone);
+      },
+      
+      _setEqualizerClickedZone: function() {
+
+        console.log("equalizer clicked zoneFlag", zoneFlag);
+
+        var checkIntZone = 0;
+        var checkBandsZone = [];
+        var equalizerTextZone = "Invalid input at ";
+
+        $(document.getElementsByClassName("levelZone")).each(function(i) {
+          typeof this.value;
+          if(isNaN(this.value) || this.value == "" || this.value < -40 || this.value > 10) {
+            console.log(this.name);
+            checkIntZone++;
+            checkBandsZone.push(this.name); // may have to put new string here
+          }
+        });
+
+        if(checkIntZone > 0) {
+          if(checkBandsZone.length == 1) {
+            equalizerTextZone += checkBandsZone[0] + "Hz";
+          } else {
+            for (var i = 0; i < checkBandsZone.length - 1; i++) {
+              equalizerTextZone += checkBandsZone[i] + "Hz, "
+            }
+            equalizerTextZone += "and " + checkBandsZone[checkBandsZone.length - 1] + "Hz";
+          }
+          this.$.equalizerToastZone.duration = 2000 + (500 * checkBandsZone.length);
+          this.$.equalizerToastZone.text = equalizerTextZone;
+          this.$.equalizerToastZone.show();
+        } else {
+          //this.equalizer = iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (22 * typeFoundZone)).join(" ");  // this gets sent to the backend because Go's Fields(String) function works only with whitespaces
+          console.log(this.equalizer);
+          this.iirConstantsStringZone = iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(", ");  // this is for the toast message
+
+
+          this.$.equalizerToastZone.text = "Equalizer set to " + this.iirConstantsStringZone;
+          this.$.equalizerToastZone.show();
+          console.log("_setEqualizerClickedZone"); 
+          console.log(this.iirConstantsStringZone);
+          
+          // make this zone wide
+          for (var i = 0; i < speaker.CurrentPreset.length; i++) { 
+            //speaker.CurrentPreset[i] = iirConstantsZone[i];
+          }
+
+          // these might need to change back
+          console.log(iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).length);
+
+          this.$.updateEqualizerZone.body = {
+            "zone": speaker.zone.zoneID,
+            "constants": iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(" "),
+            "mode": getValuesZone()
+          };
+          this.$.updateEqualizerZone.generateRequest();
+        }
+      },
+
+      _logResponse: function(event, data) {
+        console.log("shuddup");
+        console.log(event, data);
+      },
+      /*
+      decrementVolume: function() {
+        this.$.volume2.decrement();
+        this.$.volume2._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      incrementVolume: function() {
+        this.$.volume2.increment();
+        this.$.volume2._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },*/
+
+      _acceptPressedZone: function(event) {
+        var name = this.$.popupInputZone.value.valueOf().replace("\n", "").replace("\t", "");
+        var ifvar = 0;
+        if(speaker.zone.PresetNames.length > 0) {
+          for(var i = 0; i < speaker.zone.PresetNames.length; i++) {
+            if(name.toLowerCase() == speaker.zone.PresetNames[i].valueOf().toLowerCase()) {
+              console.log("same name dude");
+              ifvar++;    // make more checks dummy
+            }
+          }
+        }
+
+        if(ifvar > 0) {
+          console.log("we are in here right now");
+          this.err = "Invalid name: Name already taken";
+          this.$.toastyZone.text = this.err;
+          this.$.toastyZone.show();
+        } else {
+          this.$.addPresetAjaxZone.body = {
+            "zone": speaker.zone.zoneID,
+            "name": name,
+            "type": getValuesZone(),
+            "constants": iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(" "),
+            // Maybe we should add a currently applied thing in here or something
+          };
+
+          console.log(iirConstantsZone.join(" "));
+
+          console.log("addPresetAjaxZone:", addPresetAjaxZone.body);
+          this.$.addPresetAjaxZone.generateRequest();
+
+          this.$.dialogZone.toggle();
+
+          this.$.toastyZone.text = "Added preset: " + name + " " + iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(" ");
+          console.log(this.$.toastyZone.text);
+
+          this.$.toastyZone.show();
+
+          temp = document.createElement("paper-item");
+          temp.setAttribute("value", name);
+          temp.setAttribute("id", name);
+          // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
+          temp.innerHTML = name;
+          Polymer.dom(this.$.equalizerListboxZone).appendChild(temp);
+
+          var length = speaker.zone.Equalizer.length;
+          console.log(length);
+
+          console.log(iirConstantsZone);
+
+          var iirConstantsCopy = iirConstantsZone.slice();
+
+          console.log("iirConstantsCopy: ", iirConstantsCopy);
+          speaker.zone.Equalizer.push(iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)));    // change this to iirConstantsCopy if it breaks
+          //}
+
+          speaker.zone.PresetNames[speaker.zone.PresetNames.length] = name;
+
+          console.log(speaker.zone.Equalizer);
+
+          this.$.equalizerListboxZone.selected = name;
+          //this.$.toastyZone.text = "";
+          this.$.popupInputZone.value = "";
+        }
+      },
+
+      _cancelPressedZone: function(event) {
+        // make something that will capture the last thing clicked and keep track of that and change it to that when they click cancel
+
+        this.$.equalizerListboxZone.selected = -1;
+
+        console.log(lastSelectedZone);
+
+      },
+
+      _switchPressedZone: function(event) {
+        // make a call to change the equalizer constants and turn on music mode
+
+        this.$.changeEQModeAjaxZone.body = {
+          "zone":  speaker.zone.zoneID,
+          "mode":  getValuesZone()
+        };
+
+        this.$.changeEQModeAjaxZone.generateRequest();
+
+        this.$.switchingEQModeDialogZone.toggle();
+        lastEQModeZone = this.$.equalizerSelectorZone.selected;
+        console.log(lastEQModeZone);
+      },
+
+      _cancelSwitchPressedZone: function(event) {
+        //musicMenuZone.style.visibility = "hidden";
+        //equalizerMenuZone.style.visibility = "visible";
+
+        switch(lastEQModeZone) {
+          case "masking":
+            musicMenuZone.style.visibility = "hidden";
+            pagingMenuZone.style.visibility = "hidden";
+            equalizerMenuZone.style.visibility = "visible";
+            break;
+
+          case "music":
+            musicMenuZone.style.visibility = "visible";
+            equalizerMenuZone.style.visibility = "hidden";
+            pagingMenuZone.style.visibility = "hidden";
+            break;
+
+          case "paging":
+            pagingMenuZone.style.visibility = "visible";
+            equalizerMenuZone.style.visibility = "hidden";
+            musicMenuZone.style.visibility = "hidden";
+
+
+          default:
+        }
+        this.$.equalizerSelectorZone.selected = lastEQModeZone;
+        //this.$.switchingToMusicDialog.toggle();
+
+      },
+
+      listeners: {
+        'equalizerListboxZone.iron-select': '_presetSelectionChangedZone'
+      },
+      
+      // this will need some typeFoundZone modifications
+      _presetSelectionChangedZone: function(event) {
+        console.log(this.speakerId);    // This says the speakerId is undefined
+
+        //var menu = document.getElementById('equalizerMenuZone');
+        console.log(this.speaker);
+
+        //if(this.$.menu.selected + 1)
+
+        //menu.averaging = this.$.menu.selected + 1;
+
+        var selected = this.$.equalizerListboxZone.selected.valueOf().toLowerCase().replace("\n", "");   // do this for all whitespace character
+
+        //var slidersZone = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
+        //var handlesZone = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+
+        if(selected == "currently applied") {
+          this.$.toastyZone.text = "Currently applied constants loaded! " + iirConstantsZone.join(", ");
+          this.$.toastyZone.show();
+
+          lastSelectedZone = this.$.equalizerListboxZone.selected;
+
+          for (var i = 0; i < speaker.zone.currentPreset.length; i++) { 
+            slidersZone[i].style.height = (speaker.zone.currentPreset[i] + 40) * 2 + "%";    // why does this have to be lower case
+            console.log(this);
+            handlesZone[i].style.bottom = (speaker.zone.currentPreset[i] + 40) * 2 + "%";
+            $("#text" + (parseInt(i) + 1)).val(speaker.zone.currentPreset[i]);
+            iirConstantsZone[i] = speaker.zone.currentPreset[i];       
+          }
+        } else if(selected == "add new preset") {
+            var addPresetAjaxZone = document.getElementById("addPresetAjaxZone");
+            console.log(addPresetAjaxZone);
+            this.$.dialogZone.toggle();
+        } else if(speaker.zone.PresetNames.length > 0) {
+            lastSelectedZone = this.$.equalizerListboxZone.selected;
+            var associationLink = -1;
+            for (k in speaker.zone.PresetNames) {
+              if(selected == speaker.zone.PresetNames[k].valueOf().toLowerCase()) {
+                this.$.toastyZone.text = this.$.equalizerListboxZone.selected + " preset loaded! " + iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(", ");
+                this.$.toastyZone.show();
+                console.log("Zone " + speaker.zone.zoneID + " selected preset: " + selected);
+                // show a toast here with the preset applied message
+                associationLink = k;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
+                console.log("associationLink", associationLink);
+                break;    // this is for efficiency reasons, better to keep it this way if it works
+              }
+            }
+            if(associationLink != -1) {
+              console.log(speaker.zone.Equalizer.length);
+              for (var j = 0; j < speaker.zone.Equalizer[0].length; j++) {   // add associationLink back if this fucks up
+                slidersZone[j + 63].style.height = (speaker.zone.Equalizer[associationLink][j] + 40) * 2 + "%";    // why does this have to be lower case
+                handlesZone[j + 63].style.bottom = (speaker.zone.Equalizer[associationLink][j] + 40) * 2 + "%";
+                $("#text" + (parseInt(j) + 1)).val(speaker.zone.Equalizer[associationLink][j]);
+                iirConstantsZone[j] = speaker.zone.Equalizer[associationLink][j];
+              }
+            }
+          }
+
+          // Need to put a toast thing here like we have on the volume selector page
+         /*
+          var updatedAttributes = ["averaging"];
+          var attributeValues = {
+            "averaging": this.$.menu.selected + 1
+          };
+          this.$.selectModeAjax.body = {              // might use this to put in the database
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,                        
+            "speaker": this.speakerId     // You can see that this is getting zero in the terminal from the print in  speakerHandlers.go. This is because the value for this.speakerId is undefined for some reason. When I hardcoded 107 it worked fine, which is expected. Just not sure why this is getting undefined....
+          };
+          this.$.selectModeAjax.generateRequest();
+      */},
+      
+      resetKnob: function(elem) {
+        elem.prevTimeout = 0;
+        elem.$.volume2._resetKnob();
+      },
+
+      showToast: function() {
+        console.log("gi");
+      },
+
+      ready: function() {
+        console.log("this.$", this.$);
+        this.internalEqualizer = this.iirConstantsStringZone;   // does this need to be equalizer?
+        equalizerToastZone = this.$.equalizerToastZone;
+        equalizerModeZone = this.$.equalizerSelectorZone;
+      }
+    });
+
+    function showToast() {
+      console.log("gi");
+    }
+
+    function inputChangedZone() {
+        var error = false;
+      $(document.getElementsByClassName("levelZone")).each(function(i) {
+        console.log(this.value);
+        if(isNaN(this.value) || this.value == "" || this.value < -40 || this.value > 10) {
+          error = true;
+          //this.value = "what to put here";
+          //slidersZone[i].style.height = null;
+          //handlesZone[i].style.bottom = null;
+          slidersZone[i].style.background = "#F33F31";
+          handlesZone[i].style.background = "#F33F31";
+          backgroundZone[i].style.background = "rgba(243, 63, 49, .2)";
+          
+        } else {        
+          iirConstantsZone[i] = parseInt(this.value);
+          slidersZone[i].style.background = "#3f51b5";
+          handlesZone[i].style.background = "#3f51b5";
+          backgroundZone[i].style.background = "rgba(63, 81, 181, .2)";
+
+          slidersZone[i].style.height = (iirConstantsZone[i] + 40) * 2 + "%";
+          handlesZone[i].style.bottom = (iirConstantsZone[i] + 40) * 2 + "%";
+        }
+      });
+        console.log(error);
+
+        if(error == false) {      // see if we can simplify this
+          isThereAnErrorZone = false;
+        } else {
+          isThereAnErrorZone = true;
+        }
+
+        console.log(isThereAnErrorZone);
+    }
+
+    
+    /*$(window).load(function() {
+      document.querySelector("#card-content").style.height = $(".custom").height() + "px";
+      console.log(document.querySelector("#card-content".height), $("#sliderequalizer"));
+      console.log("loading thing");
+    });*/ 
+    
+
+    /*function clickThis() {
+
+      document.querySelector("#card-content").style.height = $("#custom_container").height() + "px";
+      console.log(document.querySelector("#card-content".height), $("#custom_container").height());
+      console.log("clickThis");
+    }*/
+
+// there was some script endings and shit here, putem back if shit fucks up
+
+  var MIN_WIDTH_SUPPORTED = 0;
+  var MIN_HEIGHT_SUPPORTED = 0;
+  //console.log(navigator);
+
+  if($(window).width() > MIN_WIDTH_SUPPORTED || $(window).height() > MIN_HEIGHT_SUPPORTED) {
+    /*$(function() {
+      $( ".custom > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: 0,
+        max: 20,
+        value: 10,
+        slide: function( event, ui) {
+          var inputs = document.getElementsByClassName("custom");
+          var handlesZone = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+          console.log($(handlesZone[0]).offsetParent().offsetParent());
+          var split = handlesZone[0].className;
+          console.log($(inputs));
+
+          $( "#text1" ).val( $(inputs[0]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text2" ).val( $(inputs[1]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text3" ).val( $(inputs[2]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text4" ).val( $(inputs[3]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text5" ).val( $(inputs[4]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text6" ).val( $(inputs[5]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text7" ).val( $(inputs[6]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text8" ).val( $(inputs[7]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text9" ).val( $(inputs[8]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text10" ).val( $(inputs[9]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text11" ).val( $(inputs[10]).find(".ui-slider-range-min").prop("clientHeight")/10);
+          $( "#text12" ).val( $(inputs[11]).find(".ui-slider-range-min").prop("clientHeight")/10);
+
+          //console.log(document.getElementById("text3").value);
+          //console.log(ui);
+          //console.log($(this).offsetParent());
+          //console.log($(this).offsetParent().attr('className'));
+          //console.log($('#selectable .ui-selected').attr('id'));
+        }
+      });*/
+
+// try this shit out mayne: http://jqueryrain.com/?MnbPPsmf
+
+    
+    // make the equalizer get the constants out to the database here
+
+$(function() {
+    $(".custom_slider_zone").each(function(i) {    // change this back if it messes up
+      j = i - 63;
+      //console.log(this);
+
+      console.log("this is me, the eq: ", i);
+      var texts = $("#text" + (i + 1) +":nth-child(1)");
+      $(this).slider({
+        orientation: "vertical",
+        range: "min",
+        step: .01,
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          isThereAnErrorZone = false;
+
+          /* slidersZone[i + (typeFoundZone * 21)].style.background = "#3f51b5";
+          handlesZone[i + (typeFoundZone * 21)].style.background = "#3f51b5";
+          background[i + (typeFoundZone * 21)].style.background = "rgba(63, 81, 181, .2)";
+          $("#text" + (i + (typeFoundZone * 21) + 1)).val(ui.value); */
+
+          slidersZone[i].style.background = "#3f51b5";
+          handlesZone[i].style.background = "#3f51b5";
+          console.log(i);
+          console.log(texts);
+          backgroundZone[i].style.background = "rgba(63, 81, 181, .2)";
+          $(texts[1]).val(ui.value);
+
+          iirConstantsZone[i] = ui.value;
+        }
+      });
+      $(texts[1]).val($(".custom > .custom_slider_zone").slider("value"));
+      console.log(texts);
+    });
+  });
+
+  /*$(function() {
+    $(document.getElementById("custom_container_masking").getElementsByClassName("custom_slider_zone")).each(function(i) {
+
+      //console.log(this);
+
+      $(this).slider({
+        orientation: "vertical",
+        range: "min",
+        step: .01,
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          isThereAnErrorZone = false;
+          slidersZone[i].style.background = "#3f51b5";
+          handlesZone[i].style.background = "#3f51b5";
+          background[i].style.background = "rgba(63, 81, 181, .2)";
+          $("#text" + (i + 1)).val(ui.value);
+          iirConstantsZone[i] = ui.value;
+        }
+      });
+      $("#text" + (i + 1)).val($(".custom > .custom_slider_zone").slider("value"));
+    });
+
+  });
+
+  $(function() {
+    $(document.getElementById("custom_container_music").getElementsByClassName("custom_slider_zone")).each(function(i) {
+
+      //console.log(this);
+
+      $(this).slider({
+        orientation: "vertical",
+        range: "min",
+        step: .01,
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          isThereAnErrorZone = false;
+          slidersZone[i + 21].style.background = "#3f51b5";
+          handlesZone[i + 21].style.background = "#3f51b5";
+          background[i + 21].style.background = "rgba(63, 81, 181, .2)";
+          $("#text" + (i + 22)).val(ui.value);
+          iirConstantsZone[i] = ui.value;
+        }
+      });
+      $("#text" + (i + 22)).val($(".custom > .custom_slider_zone").slider("value"));
+    });
+
+  });
+
+  $(function() {
+    $(document.getElementById("custom_container_paging").getElementsByClassName("custom_slider_zone")).each(function(i) {
+
+      //console.log(this);
+
+      $(this).slider({
+        orientation: "vertical",
+        range: "min",
+        step: .01,
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          isThereAnErrorZone = false;
+          slidersZone[i + 42].style.background = "#3f51b5";
+          handlesZone[i + 42].style.background = "#3f51b5";
+          background[i + 42].style.background = "rgba(63, 81, 181, .2)";
+          $("#text" + (i + 43)).val(ui.value);
+          iirConstantsZone[i] = ui.value;
+        }
+      });
+      $("#text" + (i + 43)).val($(".custom > .custom_slider_zone").slider("value"));
+    });
+
+  });*/
+    
+/*
+    $(function() {
+      $( ".custom.one > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        //step: .5,
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          slidersZone[0].style.background = "#3f51b5";
+          handlesZone[0].style.background = "#3f51b5";      // try to revamp this to make this better
+          background[0].style.background = "rgba(63, 81, 181, .2)";
+          $( "#text1" ).val( ui.value);
+          iirConstantsZone[0] = ui.value;
+          //console.log(iirConstantsZone[0] + " - | - " + ui.value);    // remove all of these when finished with them
+        }
+      });
+      $( ".custom.two > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text2" ).val( ui.value);
+          console.log(ui.value);
+          iirConstantsZone[1] = ui.value;
+          //console.log(iirConstantsZone[1] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.three > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text3" ).val( ui.value);
+          iirConstantsZone[2] = ui.value;
+          //console.log(iirConstantsZone[2] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.four > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text4" ).val( ui.value);
+          iirConstantsZone[3] = ui.value;
+          //console.log(iirConstantsZone[3] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.five > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text5" ).val( ui.value);
+          iirConstantsZone[4] = ui.value;
+          //console.log(iirConstantsZone[4] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.six > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text6" ).val( ui.value);
+          iirConstantsZone[5] = ui.value;
+          //console.log(iirConstantsZone[5] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.seven > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text7" ).val( ui.value);
+          iirConstantsZone[6] = ui.value;
+          //console.log(iirConstantsZone[6] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.eight > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text8" ).val( ui.value);
+          iirConstantsZone[7] = ui.value;
+          //console.log(iirConstantsZone[7] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.nine > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text9" ).val( ui.value);
+          iirConstantsZone[8] = ui.value;
+          //console.log(iirConstantsZone[8] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.ten > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text10" ).val( ui.value);
+          iirConstantsZone[9] = ui.value;
+          //console.log(iirConstantsZone[9] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.eleven > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text11" ).val( ui.value);
+          iirConstantsZone[10] = ui.value;
+          //console.log(iirConstantsZone[10] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.twelve > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text12" ).val( ui.value);
+          iirConstantsZone[11] = ui.value;
+          //console.log(iirConstantsZone[11] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.thirteen > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text13" ).val( ui.value);
+          iirConstantsZone[12] = ui.value;
+          //console.log(iirConstantsZone[12] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.fourteen > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text14" ).val( ui.value);
+          iirConstantsZone[13] = ui.value;
+          //console.log(iirConstantsZone[13] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.fifteen > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text15" ).val( ui.value);
+          iirConstantsZone[14] = ui.value;
+          //console.log(iirConstantsZone[14] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.sixteen > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text16" ).val( ui.value);
+          iirConstantsZone[15] = ui.value;
+          //console.log(iirConstantsZone[15] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.seventeen > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text17" ).val( ui.value);
+          iirConstantsZone[16] = ui.value;
+          //console.log(iirConstantsZone[16] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.eighteen > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text18" ).val( ui.value);
+          iirConstantsZone[17] = ui.value;
+          //console.log(iirConstantsZone[17] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.nineteen > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text19" ).val( ui.value);
+          iirConstantsZone[18] = ui.value;
+          //console.log(iirConstantsZone[18] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.twenty > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text20" ).val( ui.value);
+          iirConstantsZone[19] = ui.value;
+          //console.log(iirConstantsZone[19] + " - | - " + ui.value);
+        }
+      });
+      $( ".custom.twentyone > .custom_slider_zone" ).slider({
+        orientation: "vertical",
+        range: "min",
+        min: -40,
+        max: 10,
+        value: 0,
+        slide: function( event, ui) {
+          $( "#text21" ).val( ui.value);
+          iirConstantsZone[20] = ui.value;
+          //console.log(iirConstantsZone[20] + " - | - " + ui.value);
+        }
+      });*/
+
+      /*$( "#text1" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text2" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text3" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text4" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text5" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text6" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text7" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text8" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text9" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text10" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text11" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text12" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text13" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text14" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text15" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text16" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text17" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text18" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text19" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text20" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );
+      $( "#text21" ).val( $( ".custom > .custom_slider_zone" ).slider( "value" ) );*/
+    //});
+
+  } else {
+      console.log("there is not enough space to display the equalizer");
+
+      //window.onload = function(){
+        // Use this for loading a different thing when the window loads and the viewport is too small
+      //};      
+    }
+  $(window).resize(function() {
+    if($(window).width() < MIN_WIDTH_SUPPORTED || $(window).height() < MIN_HEIGHT_SUPPORTED) {
+      console.log($(window).width());
+
+      console.log(document.getElementById("eighty").offsetWidth);
+      /*var custom_container = document.getElementById("custom_container");
+      //custom_container.style.visibility = "hidden";
+      var customs = document.getElementsByClassName("custom");
+      console.log(customs);
+      for (i in customs) {
+        //document.getElementById("one").style.width = "30px";
+        //document.getElementById("custom_container").style.width = "350px";
+      }*/
+    } else {
+      var custom_container = document.getElementById("custom_container");
+      //custom_container.style.visibility = "visible";
+    }
+  });
+
+</script>
+</dom-module>

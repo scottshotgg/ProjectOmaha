@@ -179,7 +179,67 @@ paper-tabs paper-tab.iron-selected {
   /*max-height: calc(.02 * 100vh); */
 }
 
+
+.custom > .levelZone {
+  /*
+  color: #f6931f; 
+  */
+  /*border: 1px;
+  border-style: solid;
+  border-color: #3f51b5;*/
+
+  font-weight: bold;
+  font-size: calc(.009 * 100vw);
+  /*width: calc(.028 * 100vw);*/
+  width: 220%;
+  color: #3f51b5;
+  text-align: center;
+  /* Make this a percentage */
+  margin-left: calc(50% - .022 * 100vw);
+  margin-bottom: 100%; /* This as 20 */
+  margin-top: 0%;
+
+  /*max-height: calc(.02 * 100vh); */
+}
+
+.custom > .custom_slider_zone {
+  background: rgba(63, 81, 181, .2);
+  /*height: calc(.35 * 100vh);*/
+  height: calc(100% - .07 * 100vw);
+  /*margin-bottom: calc(.005 * 100vw); */ /* This was 25 */
+  /*margin-left: calc(.004 * 100vw);*/
+  width: 60%;
+  /*width: 50px; /* Change this back */
+}
+
+.custom > .level_zone {
+  /*
+  color: #f6931f; 
+  */
+  /*border: 1px;
+  border-style: solid;
+  border-color: #3f51b5;*/
+
+  font-weight: bold;
+  font-size: calc(.009 * 100vw);
+  /*width: calc(.028 * 100vw);*/
+  width: 220%;
+  color: #3f51b5;
+  text-align: center;
+  /* Make this a percentage */
+  margin-left: calc(50% - .022 * 100vw);
+  margin-bottom: 100%; /* This as 20 */
+  margin-top: 0%;
+
+  /*max-height: calc(.02 * 100vh); */
+}
+
 #equalizerListbox {
+  width: 220px;
+  overflow-x: hidden;
+}
+
+#equalizerListboxZone {
   width: 220px;
   overflow-x: hidden;
 }

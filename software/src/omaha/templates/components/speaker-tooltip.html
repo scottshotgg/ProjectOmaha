@@ -3,6 +3,8 @@
 <link rel="import" href="/bower_components/paper-material/paper-material.html">
 
 
+<link rel="import" href="/components/omaha-app.html">
+
 
 <dom-module id="speaker-tooltip">
   <template>
@@ -51,16 +53,19 @@
       },
 
       _selectSpeaker: function() {
+        zoneFlag = 0;
         this.fire('speakerselected', {speaker: this.speaker});
         console.log(this.speaker)
       },
 
       _selectZone: function() {
+        zoneFlag = 1;
         this.fire('zoneselected', {zone: this.speaker.zone});
       },
 
       _selectAllZone: function() {
-        this.fire('allzoneselected', {zone: 1})
+        zoneFlag = -1;
+        this.fire('zoneselected', {zone: 1})
       }
     });
 

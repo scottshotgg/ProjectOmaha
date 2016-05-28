@@ -62,7 +62,7 @@
           <open-map-controller page="map" id="mapcontroller" zones="{{zones}}" controllers="[[controllers]]" class="fit">
           </open-map-controller>
 
-          <zone-map-controller page="zoneMap" zones="{{zones}}" id="zoneMap" controllers="[[controllers]]" class="fit"></zone-map-controller>
+          <zone-map-controller page="zoneMap" id="zoneMap" zones="{{zones}}" controllers="[[controllers]]" class="fit"></zone-map-controller>
 
           <neon-animatable page="accountCreation" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
             <paper-material class="flex self-center card" elevation="5">
@@ -119,6 +119,9 @@
   <script>
 
     // this interval should be determined by 1000 * number of controllers
+
+    var zoneFlag = 0;
+    var globalZone = 0;
 
     var localLevel = parseInt(localStorage.getItem("level"));
 
@@ -262,7 +265,11 @@
           console.log(document.getElementById("targetListbox"));*/
 
           for (var i = 0; i < this.$.controller.speaker.CurrentTarget.length; i++) {
-            dataArray.push(this.$.controller.speaker.CurrentTarget[i]);
+            dataArray[i] = this.$.controller.speaker.CurrentTarget[i];
+
+            // fix this
+            //dataArrayZone[i] = this.$.controller.speaker.zone.CurrentTarget[i];
+            dataArrayZone[i] = 0;
           }
 
           //Polymer.dom.flush() idk if we need this anymore
@@ -374,10 +381,103 @@
         this.$.zoneController.zone = zone;
         this.selected = "zoneController"
         this.$.nav.showBackArrow();
-        console.log(zone);
+
+
+
+        var zoneVolumePage = document.getElementById("volumeZone"); 
+        console.log(volumeZone, this.volumeZone);
+        // Set volume levels
+        volumeZone.$.volume2.value = zone.VolumeLevel[0];
+        volumeZone.$.volume3.value = zone.VolumeLevel[1];
+        volumeZone.$.volume4.value = zone.VolumeLevel[2];
+        volumeZone.$.volume5.value = zone.VolumeLevel[3];
+
+        volumeZone.$.musicMin.value = zone.LowerThreshold[0];
+        volumeZone.$.pagingMin.value = zone.LowerThreshold[1];
+        volumeZone.$.maskingMin.value = zone.LowerThreshold[2];
+        volumeZone.$.musicMax.value = zone.UpperThreshold[0];
+        volumeZone.$.pagingMax.value = zone.UpperThreshold[1];
+        volumeZone.$.maskingMax.value = zone.UpperThreshold[2];
+
+        averagingZone.$.effectiveness.value = zone.effectiveness;
+        averagingZone.$.pleasantness.value = zone.pleasantness;
+
+        var targetZoneChildren = targetZone.$.adjustment.children;
+        
+        for(var i = 0; i < targetZoneChildren.length; i++) {
+          targetZoneChildren[i].value = zone.currentTarget[i];
+        }
+        redrawOnInputZone();
+
+        var levelZones = document.getElementsByClassName("levelZone");
+        var i = 0;
+
+        for(; i < levelZones.length / 3; i++) {
+          levelZones[i].value = zone.currentPreset[i];
+          sliders[i + 63].style.height = (zone.currentPreset[i] + 40) * 2 + "%";
+          handles[i + 63].style.bottom = (zone.currentPreset[i] + 40) * 2 + "%";
+        }
+
+        for(; i < levelZones.length / 3; i++) {
+          levelZones[i].value = zone.currentMusicPreset[i];
+          sliders[i + 84].style.height = (zone.currentPreset[i] + 40) * 2 + "%";
+          handles[i + 84].style.bottom = (zone.currentPreset[i] + 40) * 2 + "%";
+        }
+
+        for(; i < levelZones.length / 3; i++) {
+          levelZones[i].value = zone.currentPagingPreset[i];
+          sliders[i + 105].style.height = (zone.currentPreset[i] + 40) * 2 + "%";
+          handles[i + 105].style.bottom = (zone.currentPreset[i] + 40) * 2 + "%";
+        }
+
+        pagingZone.$.fadetime.value = zone.PagingLevel[0];
+        pagingZone.$.fadelevel.value = zone.PagingLevel[1];
+        pagingZone.$.pagingvolume.value = zone.VolumeLevel[2];
+
+
+        // Test for null / undefined values and set them to a value
+       
+        if(zone.Equalizer == undefined) {
+          zone.Equalizer = [];
+        }
+
+        if(zone.MusicEqualizer == undefined) {
+          zone.MusicEqualizer = [];
+        }
+
+        if(zone.MusicPresetNames == undefined) {
+          zone.MusicPresetNames = [];
+        }
+
+        if(zone.PagingEqualizer == undefined) {
+          zone.PagingEqualizer = [];
+        }
+
+        if(zone.PagingPresetNames == undefined) {
+          zone.PagingPresetNames = [];
+        }
+
+        if(zone.PresetNames == undefined) {
+          zone.PresetNames = [];
+        }
+
+        if(zone.Target == undefined) {
+          zone.Target = [];
+        }
+
+        if(zone.TargetNames == undefined) {
+          zone.TargetNames = [];
+        }
+        
+
+        console.log("its zonerino time", zone);
       },
 
       _initializeStatus: function(event, data) {
+
+        console.log("data", data.response);
+
+
         var speakers = [];
         var speakersJustID = [];
 
@@ -388,11 +488,14 @@
 
         var innerHTMLString = "";
         zones = data.response.zones;
+        console.log(zones);
         for (var i = 0; i < zones.length; i++) {
           displayedZones[zones[i].name] = undefined;
         }
         var zoneListbox = document.querySelector("#zoneListbox");
         zoneListbox.innerHTML = "";
+
+        console.log("zones", zones);
 
         zones.forEach(function(zone){
           zone.speakers.forEach(function(speaker){
@@ -585,15 +688,16 @@
         Polymer.dom(mode).removeChild(pagingButtonRC);
         Polymer.dom(mode).removeChild(schedulingButton);
         Polymer.dom(menu).removeChild(averagingButton);
-
         Polymer.dom(menu).removeChild(accountCreation);
         Polymer.dom(menu).removeChild(mapForZone);
         Polymer.dom(menu).removeChild(mapForPaging);
+        // Just let it fall through
+
       case 1:
         Polymer.dom(mode).removeChild(targetButton);
         Polymer.dom(mode).removeChild(equalizerButton);
-
         break;
+
       default:
         console.log("lel");
     }

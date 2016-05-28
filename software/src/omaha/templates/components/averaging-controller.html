@@ -13,6 +13,7 @@
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 
+<link rel="import" href="/components/omaha-app.html">
 <!-- Change this to effectivness-comfort slider -->
 
 <dom-module id="averaging-controller">
@@ -126,7 +127,7 @@
         <paper-button on-click="_selectionChanged">set ratio</paper-button>
       </div>
     </paper-card>
-    <!--<paper-toast id="toast">Averaging mode set to <span>{{volume}}</span></paper-toast>-->
+    <paper-toast id="toast"></span></paper-toast>
     <iron-ajax
       id="selectModeAjax"
       url="/system/speaker/"
@@ -134,8 +135,20 @@
       content-type="application/json"
       handle-as="json"
       on-response="_logResponse"
-      debounce-duration="300"></iron-ajax>
+      debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax
+      id="selectModeAjaxZone"
+      url="/system/zone/updateAveragingZone/"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_logResponse"
+      debounce-duration="300">  
+    </iron-ajax>
   </template>
+
   <script>
     Polymer({
       is: 'averaging-controller',
@@ -144,9 +157,14 @@
         //effectiveness: Number,
         //pleasantness: Number,
         averaging: Number,
+
         speakerId: {
             type: Number,
-          }
+          },
+
+        speaker: {
+          type: Object
+        }
       },
        
       /*listeners: {
@@ -167,20 +185,34 @@
         var updatedAttributes = ["averaging"];
 
         attributeValues = {
-          effectiveness: effectiveness.value,
-          pleasantness: pleasantness.value
+          effectiveness: this.$.effectiveness.value,
+          pleasantness: this.$.pleasantness.value
         };
-        this.$.selectModeAjax.body = {
-          "updatedAttributes": updatedAttributes, 
-          "attributeValues": attributeValues,                        
-          "speaker": this.speakerId     // You can see that this is getting zero in the terminal from the print in  speakerHandlers.go. This is because the value for this.speakerId is undefined for some reason. When I hardcoded 107 it worked fine, which is expected. Just not sure why this is getting undefined....
-        };
+        if(zoneFlag == 0) {
+          this.$.selectModeAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,                        
+            "speaker": speaker.id
+          };
 
+          console.log(this.$.selectModeAjax.body);
+          this.$.selectModeAjax.generateRequest();
+        } else {
+          this.$.selectModeAjaxZone.body = {                      
+            "zone": speaker.zone.zoneID,
+            "effectiveness": this.$.effectiveness.value,
+            "pleasantness": this.$.pleasantness.value
+          };
+
+          console.log(this.$.selectModeAjaxZone.body);
+          this.$.selectModeAjaxZone.generateRequest();
+          console.log(zones);
+        }
+        console.log("this is the speaker", speaker);
         var selectModeAjax = document.getElementById("selectModeAjax");
         console.log(selectModeAjax);
-
-        console.log(this.$.selectModeAjax.body);
-        this.$.selectModeAjax.generateRequest();
+        this.$.toast.text = "Effectiveness set to " + this.$.effectiveness.value + ". Pleasantness set to " + this.$.pleasantness.value + "."; 
+        this.$.toast.show();
       },
 
       _logResponse: function(event, data) {

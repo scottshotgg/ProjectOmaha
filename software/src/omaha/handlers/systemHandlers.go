@@ -20,7 +20,7 @@ type systemStatusResponse struct {
 // change the zones and the speakerID to make them visible
 func SystemStatusHandler(w http.ResponseWriter, r *http.Request) {
 	//StatusArray[] = database.GetAllStatus()
-	Zones 		:= database.GetAllZones()			// maybe we should just use this to transfer all of the data\
+	Zones 		:= database.GetAllZones()			// maybe we should just use this to transfer all of the data
 	PagingZones := database.GetAllPagingZones()
 
 	response := &systemStatusResponse{Zones: Zones, PagingZones: PagingZones}

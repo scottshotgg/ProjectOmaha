@@ -313,6 +313,25 @@ func AuthenticateSpeakerFromHash(hash string) int {
 	return speaker
 }
 
+func AuthenticateZoneFromHash(hash string) int {
+	var zone = 0
+	err := DB.QueryRow(`
+		SELECT zone
+		FROM AccountToMaskingZones
+		WHERE uid=(
+			SELECT uid
+			FROM accountSession
+			WHERE sessionKey=?)
+		`, hash).Scan(&zone)
+
+	if(err != nil) {
+		log.Println("got an error retrieving zone")
+	}
+
+	log.Println(zone)
+	return zone
+}
+
 func generateSessionHash() string {
 	var chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	charsSize := big.NewInt(int64(len(chars)))
