@@ -22,7 +22,6 @@
 
 <link rel="stylesheet" href="jquery-ui-1.11.4.css">
 <script src="jquery-1.10.2.js" type="text/jscript"></script>
-<!--<script src="jquery-2.2.0.js"></script>-->
 <script src="jquery-ui-1.11.4.js" type="text/jscript"></script>
 <script src="jquery.ui.touch-punch.js" type="text/jscript"></script>
 
@@ -42,8 +41,8 @@
 
       paper-card {
         width: 100%;
-        height: 100%;   /* This was 100%, cahnge back if needed */
-        text-align: center;   /* center was not here and then i put it here, take out if it fucks up */
+        height: 100%;
+        text-align: center;
       }
 
       .papercardleft {
@@ -80,13 +79,13 @@
       }
 
       #equalizerSelector {
-        margin-bottom: 2%;      /* this might need to change to something that is calculated */
+        margin-bottom: 2%;
       }
 
     </style>
 
    <paper-card heading="Equalizer" elevation="4">
-      <div style="height: calc(.68 * 100vh);" class="card-content">         <!-- something might need to be done about the growing to adjust for .6 -> .68 -->
+      <div style="height: calc(.68 * 100vh);" class="card-content">
 
         <paper-radio-group id="equalizerSelector" selected="{{mode}}">
           <paper-radio-button id="maskingButton" name="masking"  onclick="modeChanged('masking')"   class="flex">Masking</paper-radio-button>
@@ -100,7 +99,7 @@
             <simple-fit class="container">
 
               <div id="sliderequalizer_masking" class="layout horizontal">
-                <div id="custom_container_masking">     <!-- change the custom class names back is shit hits the fan -->
+                <div id="custom_container_masking">
                   <div class="custom" style="margin-left: 4%;"> <input id="text1" name="80" class="level" tabindex=1 oninput="inputChanged()"/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
                   <div class="custom"> <input id="text2" name="100" class="level" tabindex=2 oninput="inputChanged()"/> <div class="custom_slider" class="masking" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
                   <div class="custom"> <input id="text3" name="125" class="level" tabindex=3 oninput="inputChanged()"/> <div class="custom_slider" class="masking" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
@@ -132,7 +131,7 @@
             <simple-fit class="container">
               
             <div id="sliderequalizer_music" class="layout horizontal">
-                <div id="custom_container_music">     <!-- change the custom class names back is shit hits the fan -->
+                <div id="custom_container_music">
                   <div class="custom" style="margin-left: 4%;"> <input id="text22" name="80" class="level" tabindex=1 oninput="inputChanged()"/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
                   <div class="custom music"> <input id="text23" name="100" class="level" tabindex=2 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
                   <div class="custom"> <input id="text24" name="125" class="level" tabindex=3 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
@@ -164,7 +163,7 @@
             <simple-fit class="container">
               
             <div id="sliderequalizer_paging" class="layout horizontal">
-                <div id="custom_container_paging">     <!-- change the custom class names back is shit hits the fan -->
+                <div id="custom_container_paging"> 
                   <div class="custom" style="margin-left: 4%;"> <input id="text43" name="80" class="level" tabindex=1 oninput="inputChanged()"/> <div class="custom_slider" value="{{internalEqualizer}}"></div><input class="bands" id="eighty" value="80" readonly/></div>
                   <div class="custom"> <input id="text44" name="100" class="level" tabindex=2 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer2"}}></div><input class="bands" value="100" readonly/></div>
                   <div class="custom"> <input id="text45" name="125" class="level" tabindex=3 oninput="inputChanged()"/> <div class="custom_slider" value={{"equalizer3"}}></div><input class="bands" value="125" readonly/></div>
@@ -193,8 +192,6 @@
           </neon-animatable>
         </neon-animated-pages>
       </div>
-
-      <!-- entry-animation="scale-up-animation" exit-animation="fade-out-animation" -->
     <paper-dialog id="dialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
       <h1 style="text-align: center;">Add Preset</h1>
       <div style="text-align: center;">Enter the name for the new preset below</div>
@@ -215,21 +212,9 @@
     </paper-dialog>
 
       <div class="card-actions">
-        <!-- <paper-checkbox class="papercardcenter" style="text-align: center;" checked>Apply Adjustment Based Presets</paper-checkbox> -->
-        <!--
-        <paper-checkbox checked>Checkbox</paper-checkbox>
-        <paper-checkbox disabled>Disabled</paper-checkbox>
-        -->
         <paper-button class="papercardcenter" on-click="_setEqualizerClicked">set equalizer</paper-button>
         <paper-dropdown-menu class="papercardcenter" id="equalizerMenu" no-label-float label="Equalizer Preset:">
           <paper-listbox id="equalizerListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
-            <!--<template if="{{this.speaker.Response}}">
-              <paper-dropdown-menu selected="{{selected}}">
-                <template repeat="{{label in this.speaker.PresetNames}}">
-                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
-                </template>
-              </paper-dropdown-menu>  
-            </template>-->
               <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
               <paper-item id="Add New Preset" value="Add New Preset">Add New Preset</paper-item>   
           </paper-listbox>
@@ -237,13 +222,6 @@
 
         <paper-dropdown-menu class="papercardcenter" id="musicMenu" style="position: absolute; left: 48.5%; visibility: hidden;" no-label-float label="Music Preset:">
           <paper-listbox id="musicListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
-            <!--<template if="{{this.speaker.Response}}">
-              <paper-dropdown-menu selected="{{selected}}">
-                <template repeat="{{label in this.speaker.PresetNames}}">
-                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
-                </template>
-              </paper-dropdown-menu>  
-            </template>-->
               <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
               <paper-item id="Add New Preset" value="Add New Preset">Add New Preset</paper-item>  
           </paper-listbox>
@@ -251,13 +229,6 @@
 
         <paper-dropdown-menu class="papercardcenter" id="pagingMenu" style="position: absolute; left: 48.5%; visibility: hidden;" no-label-float label="Paging Preset:">
           <paper-listbox id="pagingListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
-            <!--<template if="{{this.speaker.Response}}">
-              <paper-dropdown-menu selected="{{selected}}">
-                <template repeat="{{label in this.speaker.PresetNames}}">
-                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
-                </template>
-              </paper-dropdown-menu>  
-            </template>-->
               <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
               <paper-item id="Add New Preset" value="Add New Preset">Add New Preset</paper-item>  
           </paper-listbox>
@@ -305,7 +276,6 @@
   var handles;
   var background;
 
-  //var fragment = create("<paper-item id=" + "name" + " value=" + "custom" + ">" + "custom" + "</paper-item>"); 
   var equalizerToast = 0;
   var equalizerMode;
   var typeFound = 0;
@@ -335,22 +305,7 @@
 
 
   $(document).ready(function() {
-    /*sliders_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
-    handles_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
-    background_masking = document.getElementById("sliderequalizer_masking").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
-
-    sliders_music = document.getElementById("sliderequalizer_music").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
-    handles_music = document.getElementById("sliderequalizer_music").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
-    background_music = document.getElementById("sliderequalizer_music").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
-
-    sliders_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
-    handles_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
-    background_paging = document.getElementById("sliderequalizer_paging").getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");*/
-
-    //if(zoneFlag == 1) {
-      console.log("equalizer zoneFlag", zoneFlag);
-//    }
-
+    console.log("equalizer zoneFlag", zoneFlag);
     sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
     handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
     background = document.getElementsByClassName("custom_slider style-scope equalizer-controller ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all");
@@ -365,13 +320,6 @@
 
 
   var lastEQMode = "masking";
-//  document.getElementById(equalizerListbox).selected = "Currently Applied";
-
-  //PresetNames[] = {"hi", "my", "name", "is", "scott"};
-  
-
-  //document.getElementById("custom").appendChild(temp);    make this work
-
   var iirConstants = [];
 
   for(loopVar = 0; loopVar < 63; loopVar++) {
@@ -474,7 +422,7 @@
           if(isNaN(this.value) || this.value == "" || this.value < -40 || this.value > 10) {
             console.log(this, this.name, this.value);
             checkInt++;
-            checkBands.push(this.name); // may have to put new string hereadjustSize
+            checkBands.push(this.name);
           }
         });
 
@@ -493,9 +441,9 @@
         } else {
 
 
-          this.equalizer = iirConstants.slice(0 + (21 * typeFound), 21 + (21 * typeFound)).join(" ");  // this gets sent to the backend because Go's Fields(String) function works only with whitespaces
+          this.equalizer = iirConstants.slice(0 + (21 * typeFound), 21 + (21 * typeFound)).join(" ");
           console.log(this.equalizer);
-          this.iirConstantsString = iirConstants.slice(0 + (21 * typeFound), 21 + (21 * typeFound)).join(", ");  // this is for the toast message
+          this.iirConstantsString = iirConstants.slice(0 + (21 * typeFound), 21 + (21 * typeFound)).join(", ");
 
 
           this.$.equalizerToast.text = "Equalizer set to " + this.iirConstantsString;
@@ -513,32 +461,6 @@
         console.log("shuddup");
         console.log(event, data);
       },
-      /*
-      decrementVolume: function() {
-        this.$.volume2.decrement();
-        this.$.volume2._expandKnob();
-        if(this.prevTimeout != 0) {
-          window.clearTimeout(this.prevTimeout)
-        }
-        var elem = this;
-        var func = this.resetKnob;
-        this.prevTimeout = window.setTimeout(function(){
-          func(elem);
-        }, 500);
-      },
-      
-      incrementVolume: function() {
-        this.$.volume2.increment();
-        this.$.volume2._expandKnob();
-        if(this.prevTimeout != 0) {
-          window.clearTimeout(this.prevTimeout)
-        }
-        var elem = this;
-        var func = this.resetKnob;
-        this.prevTimeout = window.setTimeout(function(){
-          func(elem);
-        }, 500);
-      },*/
 
       _acceptPressed: function(event) {
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
@@ -547,7 +469,7 @@
           for(var i = 0; i < this.speaker.PresetNames.length; i++) {
             if(name.toLowerCase() == this.speaker.PresetNames[i].valueOf().toLowerCase()) {
               console.log("same name dude");
-              ifvar++;    // make more checks dummy
+              ifvar++;
             }
           }
         }
@@ -563,7 +485,6 @@
             "name": name,
             "type": getValues(),
             "constants": iirConstants.join(" "),
-            // Maybe we should add a currently applied thing in here or something
           };
 
           console.log(iirConstants.join(" "));
@@ -581,7 +502,6 @@
           temp = document.createElement("paper-item");
           temp.setAttribute("value", name);
           temp.setAttribute("id", name);
-          // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
           temp.innerHTML = name;
           Polymer.dom(this.$.equalizerListbox).appendChild(temp);
 
@@ -593,7 +513,7 @@
           var iirConstantsCopy = iirConstants.slice();
 
           console.log("iirConstantsCopy: ", iirConstantsCopy);
-          this.speaker.Equalizer.push(iirConstants.slice());    // change this to iirConstantsCopy if it breaks
+          this.speaker.Equalizer.push(iirConstants.slice());
           //}
 
           this.speaker.PresetNames[this.speaker.PresetNames.length] = name;
@@ -601,23 +521,16 @@
           console.log(this.speaker.Equalizer);
 
           this.$.equalizerListbox.selected = name;
-          //this.$.toasty.text = "";
           this.$.popupInput.value = "";
         }
       },
 
       _cancelPressed: function(event) {
-        // make something that will capture the last thing clicked and keep track of that and change it to that when they click cancel
-
         this.$.equalizerListbox.selected = -1;
-
         console.log(lastSelected);
-
       },
 
       _switchPressed: function(event) {
-        // make a call to change the equalizer constants and turn on music mode
-
         this.$.changeEQModeAjax.body = {
           "speaker":  this.speakerId,
           "mode":     getValues(),
@@ -631,9 +544,6 @@
       },
 
       _cancelSwitchPressed: function(event) {
-        //musicMenu.style.visibility = "hidden";
-        //equalizerMenu.style.visibility = "visible";
-
         switch(lastEQMode) {
           case "masking":
             musicMenu.style.visibility = "hidden";
@@ -649,29 +559,17 @@
             console.log("fuck me");
         }
         this.$.equalizerSelector.selected = lastEQMode;
-        //this.$.switchingToMusicDialog.toggle();
-
       },
 
       listeners: {
         'equalizerListbox.iron-select': '_presetSelectionChanged'
       },
-      
-      // this will need some typefound modifications
-      _presetSelectionChanged: function(event) {
-        console.log(this.speakerId);    // This says the speakerId is undefined
 
-        //var menu = document.getElementById('equalizerMenu');
+      _presetSelectionChanged: function(event) {
+        console.log(this.speakerId);
         console.log(this.speaker);
 
-        //if(this.$.menu.selected + 1)
-
-        //menu.averaging = this.$.menu.selected + 1;
-
-        var selected = this.$.equalizerListbox.selected.valueOf().toLowerCase().replace("\n", "");   // do this for all whitespace character
-
-        //var sliders = document.getElementsByClassName("ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min");
-        //var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
+        var selected = this.$.equalizerListbox.selected.valueOf().toLowerCase().replace("\n", "");
 
         if(selected == "currently applied") {
           this.$.toasty.text = "Currently applied constants loaded! " + iirConstants.join(", ");
@@ -680,7 +578,7 @@
           lastSelected = this.$.equalizerListbox.selected;
 
           for (var i = 0; i < this.speaker.CurrentPreset.length; i++) { 
-            sliders[i].style.height = (this.speaker.CurrentPreset[i] + 40) * 2 + "%";    // why does this have to be lower case
+            sliders[i].style.height = (this.speaker.CurrentPreset[i] + 40) * 2 + "%";
             console.log(this);
             handles[i].style.bottom = (this.speaker.CurrentPreset[i] + 40) * 2 + "%";
             $("#text" + (parseInt(i) + 1)).val(this.speaker.CurrentPreset[i]);
@@ -698,36 +596,22 @@
                 this.$.toasty.text = this.$.equalizerListbox.selected + " preset loaded! " + iirConstants.join(", ");
                 this.$.toasty.show();
                 console.log("Speaker " + this.speakerId + " selected preset: " + selected);
-                // show a toast here with the preset applied message
-                associationLink = k;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
+                associationLink = k;
                 console.log("associationLink", associationLink);
-                break;    // this is for efficiency reasons, better to keep it this way if it works
+                break;
               }
             }
             if(associationLink != -1) {
               console.log(this.speaker.Equalizer.length);
-              for (var j = 0; j < this.speaker.Equalizer[0].length; j++) {   // add associationLink back if this fucks up
-                sliders[j].style.height = (this.speaker.Equalizer[associationLink][j] + 40) * 2 + "%";    // why does this have to be lower case
+              for (var j = 0; j < this.speaker.Equalizer[0].length; j++) {
+                sliders[j].style.height = (this.speaker.Equalizer[associationLink][j] + 40) * 2 + "%";
                 handles[j].style.bottom = (this.speaker.Equalizer[associationLink][j] + 40) * 2 + "%";
                 $("#text" + (parseInt(j) + 1)).val(this.speaker.Equalizer[associationLink][j]);
                 iirConstants[j] = this.speaker.Equalizer[associationLink][j];
               }
             }
           }
-
-          // Need to put a toast thing here like we have on the volume selector page
-         /*
-          var updatedAttributes = ["averaging"];
-          var attributeValues = {
-            "averaging": this.$.menu.selected + 1
-          };
-          this.$.selectModeAjax.body = {              // might use this to put in the database
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,                        
-            "speaker": this.speakerId     // You can see that this is getting zero in the terminal from the print in  speakerHandlers.go. This is because the value for this.speakerId is undefined for some reason. When I hardcoded 107 it worked fine, which is expected. Just not sure why this is getting undefined....
-          };
-          this.$.selectModeAjax.generateRequest();
-      */},
+      },
       
       resetKnob: function(elem) {
         elem.prevTimeout = 0;
@@ -740,7 +624,7 @@
 
       ready: function() {
         console.log("this.$", this.$);
-        this.internalEqualizer = this.iirConstantsString;   // does this need to be equalizer?
+        this.internalEqualizer = this.iirConstantsString;
         equalizerToast = this.$.equalizerToast;
         equalizerMode = this.$.equalizerSelector;
       }
@@ -756,9 +640,6 @@
         console.log(this.value);
         if(isNaN(this.value) || this.value == "" || this.value < -40 || this.value > 10) {
           error = true;
-          //this.value = "what to put here";
-          //sliders[i].style.height = null;
-          //handles[i].style.bottom = null;
           sliders[i].style.background = "#F33F31";
           handles[i].style.background = "#F33F31";
           background[i].style.background = "rgba(243, 63, 49, .2)";
@@ -775,7 +656,7 @@
       });
         console.log(error);
 
-        if(error == false) {      // see if we can simplify this
+        if(error == false) {
           isThereAnError = false;
         } else {
           isThereAnError = true;
@@ -784,129 +665,46 @@
         console.log(isThereAnError);
     }
 
-    
-    /*$(window).load(function() {
-      document.querySelector("#card-content").style.height = $(".custom").height() + "px";
-      console.log(document.querySelector("#card-content".height), $("#sliderequalizer"));
-      console.log("loading thing");
-    });*/ 
-    
-
-    /*function clickThis() {
-
-      document.querySelector("#card-content").style.height = $("#custom_container").height() + "px";
-      console.log(document.querySelector("#card-content".height), $("#custom_container").height());
-      console.log("clickThis");
-    }*/
-
-// there was some script endings and shit here, putem back if shit fucks up
-
   var MIN_WIDTH_SUPPORTED = 0;
   var MIN_HEIGHT_SUPPORTED = 0;
-  //console.log(navigator);
 
   if($(window).width() > MIN_WIDTH_SUPPORTED || $(window).height() > MIN_HEIGHT_SUPPORTED) {
-    /*$(function() {
-      $( ".custom > .custom_slider" ).slider({
-        orientation: "vertical",
-        range: "min",
-        min: 0,
-        max: 20,
-        value: 10,
-        slide: function( event, ui) {
-          var inputs = document.getElementsByClassName("custom");
-          var handles = document.getElementsByClassName("ui-slider-handle ui-state-default ui-corner-all");
-          console.log($(handles[0]).offsetParent().offsetParent());
-          var split = handles[0].className;
-          console.log($(inputs));
+    $(function() {
+      $(".custom_slider").each(function(i) {
+        console.log("this is me, the eq: ", i);
+        var texts = $("#text" + (i + 1) + ":nth-child(1)");
+        $(this).slider({
+          orientation: "vertical",
+          range: "min",
+          step: .01,
+          min: -40,
+          max: 10,
+          value: 0,
+          slide: function( event, ui) {
+            isThereAnError = false;
+            sliders[i].style.background = "#3f51b5";
+            handles[i].style.background = "#3f51b5";
+            background[i].style.background = "rgba(63, 81, 181, .2)";
+            console.log(texts);
+            $(texts[0]).val(ui.value);
 
-          $( "#text1" ).val( $(inputs[0]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text2" ).val( $(inputs[1]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text3" ).val( $(inputs[2]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text4" ).val( $(inputs[3]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text5" ).val( $(inputs[4]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text6" ).val( $(inputs[5]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text7" ).val( $(inputs[6]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text8" ).val( $(inputs[7]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text9" ).val( $(inputs[8]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text10" ).val( $(inputs[9]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text11" ).val( $(inputs[10]).find(".ui-slider-range-min").prop("clientHeight")/10);
-          $( "#text12" ).val( $(inputs[11]).find(".ui-slider-range-min").prop("clientHeight")/10);
-
-          //console.log(document.getElementById("text3").value);
-          //console.log(ui);
-          //console.log($(this).offsetParent());
-          //console.log($(this).offsetParent().attr('className'));
-          //console.log($('#selectable .ui-selected').attr('id'));
-        }
-      });*/
-
-// try this shit out mayne: http://jqueryrain.com/?MnbPPsmf
-
-    
-    // make the equalizer get the constants out to the database here
-
-$(function() {
-    $(".custom_slider").each(function(i) {    // change this back if it messes up
-
-      //console.log(this);
-
-      console.log("this is me, the eq: ", i);
-      var texts = $("#text" + (i + 1) + ":nth-child(1)");
-      $(this).slider({
-        orientation: "vertical",
-        range: "min",
-        step: .01,
-        min: -40,
-        max: 10,
-        value: 0,
-        slide: function( event, ui) {
-          isThereAnError = false;
-
-          /* sliders[i + (typeFound * 21)].style.background = "#3f51b5";
-          handles[i + (typeFound * 21)].style.background = "#3f51b5";
-          background[i + (typeFound * 21)].style.background = "rgba(63, 81, 181, .2)";
-          $("#text" + (i + (typeFound * 21) + 1)).val(ui.value); */
-
-          sliders[i].style.background = "#3f51b5";
-          handles[i].style.background = "#3f51b5";
-          background[i].style.background = "rgba(63, 81, 181, .2)";
-          //$("#text" + (i + 1)).val(ui.value);
-          console.log(texts);
-          $(texts[0]).val(ui.value);
-
-          iirConstants[i] = ui.value;
-        }
-      });        
-      //$("#text" + (i + 1)).val($(".custom > .custom_slider").slider("value"));
-      $(texts[0]).val($(".custom > .custom_slider").slider("value"));
-      console.log(texts);
+            iirConstants[i] = ui.value;
+          }
+        });
+        $(texts[0]).val($(".custom > .custom_slider").slider("value"));
+        console.log(texts);
+      });
     });
-  });
-
   } else {
-      console.log("there is not enough space to display the equalizer");
-
-      //window.onload = function(){
-        // Use this for loading a different thing when the window loads and the viewport is too small
-      //};      
+      console.log("there is not enough space to display the equalizer");     
     }
   $(window).resize(function() {
     if($(window).width() < MIN_WIDTH_SUPPORTED || $(window).height() < MIN_HEIGHT_SUPPORTED) {
       console.log($(window).width());
 
       console.log(document.getElementById("eighty").offsetWidth);
-      /*var custom_container = document.getElementById("custom_container");
-      //custom_container.style.visibility = "hidden";
-      var customs = document.getElementsByClassName("custom");
-      console.log(customs);
-      for (i in customs) {
-        //document.getElementById("one").style.width = "30px";
-        //document.getElementById("custom_container").style.width = "350px";
-      }*/
     } else {
       var custom_container = document.getElementById("custom_container");
-      //custom_container.style.visibility = "visible";
     }
   });
 

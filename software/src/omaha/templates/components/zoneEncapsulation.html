@@ -55,27 +55,6 @@ img.onload = function() {
         isDrawingMode: true
     });
 
-  /*  var height = img.height;
-    var width = img.width;
-
-    var window_width = window.innerWidth;
-    var window_height = window.innerHeight;
-
-    var scaled_width = 0;
-    var scaled_height = 0;
-
-    if(window.innerWidth > img.width) {
-        scaled_width = window.innerWidth / img.width;
-    } else {
-        scaled_width = img.width / window.innerWidth;
-    }
-
-    if(window.innerWidth > img.width) {
-        scaled_width = window.innerWidth / img.width;
-    } else {
-        scaled_width = img.width / window.innerWidth;
-    }*/
-
     var imgInstance = new fabric.Image(img, {
         left: (window.innerWidth - img.width / 2) / 2,
         top: (window.innerHeight - img.height / 2) / 2,
@@ -90,8 +69,6 @@ img.onload = function() {
     OwnCanv.on('path:created', function(options) {
         var path = options.path;
         OwnCanv.isDrawingMode = false;
-        //OwnCanv.remove(imgInstance);
-        //OwnCanv.remove(path);
         OwnCanv.clipTo = function(ctx) {
             path.render(ctx);
             console.log(path);
@@ -100,16 +77,5 @@ img.onload = function() {
     });
 }
 
-
-/*$(document).ready(function () {
-  $('#something').imgAreaSelect({ x1: 120, y1: 90, x2: 280, y2: 210 });
-
-  var selection = document.getElementsByClassName("imgareaselect-selection");
-
-  console.log(selection);
-});*/
-
-
-//img.src = "http://upload.wikimedia.org/wikipedia/commons/3/33/Jbassette4.jpg?uselang=fi";
 img.src = "map.png";
 </script>

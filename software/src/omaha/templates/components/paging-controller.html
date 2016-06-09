@@ -6,7 +6,6 @@
 <link rel="import" href="/bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
-<!--<link rel="import" href="/bower_components/paper-checkbox//paper-checkbox.html">-->
 
 <link rel="import" href="/components/omaha-app.html">
 
@@ -41,8 +40,6 @@
           <paper-slider id="fadetime" pin min="0" max="100" value="{{internalFadeTime}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
-
-        <!--<paper-checkbox> Music </paper-checkbox>-->
         
         <h1 id="fadelevelabel"> Fade Level </h1>
 
@@ -108,7 +105,7 @@
           type: Number
         },
 
-        paging: {     // I think this 
+        paging: {
           type: String,
           notify: true,
           observer: '_setInternalPaging'
@@ -119,31 +116,10 @@
         }
       },
 
-     /* properties: {
-        internalLevel: Number,
-
-         level: {
-          type: Number,
-          notify: true,
-          observer: '_setInternalLevel'
-        },
-
-        speakerId: {
-          type: Number
-        }
-      },
-*/
       _setInternalPaging: function(paging) {
         this.internalFadeTime = paging;
         console.log("_setInternalPaging");
       },
-
-      /*
-      _setInternalLevel: function(level) {
-        this.internalLevel = this.level;
-        console.log("_setInternalLevel");
-      },
-      */
       
       _setPagingClicked: function() {
         if(zoneFlag == 0) {
@@ -175,21 +151,11 @@
           on++;
           Polymer.dom(sendPageButton).innerHTML = "send page";
         }
-        
-        /*var pageButton = document.getElementById("sendPageButton");
-
-        if (pageButton.innerHTML === "send page") {
-          pageButton.innerHTML = "stop page";
-        } else {
-          pageButton.innerHTML = "send page";
-        }*/
 
         this.$.pagingRequest.body = {
             "speaker": this.speakerId
         };
         this.$.pagingRequest.generateRequest();
-
-        // one of these needs to be made for zones
 
         console.log("Making a paging request ", this.speakerId, this.$.pagingRequest.body);
         this.$.toasty.show();
@@ -199,49 +165,7 @@
         console.log(data.response);
       },
 
-      // change these to work for all the sliders
-      
-      /*
-      decrementVolume: function() {
-        this.$.volume2.decrement();
-        this.$.volume2._expandKnob();
-        if(this.prevTimeout != 0) {
-          window.clearTimeout(this.prevTimeout)
-        }
-        var elem = this;
-        var func = this.resetKnob;
-        this.prevTimeout = window.setTimeout(function(){
-          func(elem);
-        }, 500);
-      },
-      
-      incrementVolume: function() {
-        this.$.volume2.increment();
-        this.$.volume2._expandKnob();
-        if(this.prevTimeout != 0) {
-          window.clearTimeout(this.prevTimeout)
-        }
-        var elem = this;
-        var func = this.resetKnob;
-        this.prevTimeout = window.setTimeout(function(){
-          func(elem);
-        }, 500);
-      },
-      
-      
-      resetKnob: function(elem) {
-        elem.prevTimeout = 0;
-        elem.$.volume2._resetKnob();
-      },
-
-      */
-
       ready: function() {
-
-        //this.internalVolume = this.volume;
-        //console.log("I am ready " + this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume);
-
-
         this.internalFadeTime = this.paging;
         console.log("I am ready from paging " + this.internalFadeTime);
       }

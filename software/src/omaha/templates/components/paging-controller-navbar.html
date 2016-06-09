@@ -32,7 +32,7 @@
       paper-card {
         padding: 10px;
         width: 100%;
-        height: 100%;   /* This was 100%, cahnge back if needed */
+        height: 100%;
         text-align: center;
       }
 
@@ -113,20 +113,11 @@
       <paper-card class="layout horizontal">
         <div class="card-content">
           <paper-button on-click="_dial" style="margin-left: 95%;">Dial</paper-button></div>
-          <!-- <paper-dropdown-menu id="zoneCallingMenu" no-label-float label="Zone:" style="margin-top: 4%; margin-left: 8%;"> -->
           <paper-listbox id="callingListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
-            <!--<template if="{{this.speaker.Response}}">
-              <paper-dropdown-menu selected="{{selected}}">
-                <template repeat="{{label in this.speaker.PresetNames}}">
-                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
-                </template>
-              </paper-dropdown-menu>  
-            </template>-->      <!-- this needs to be populated and lifted up -->
           </paper-listbox>
         </paper-dropdown-menu>
       </paper-card>
     </div>
-                    <!-- A rougue missing tag, why is this here? -->
     <paper-toast id="toast"></span>Zone Created!</paper-toast>
     <paper-card id="popup">
       <div>Current Zone: <span><b>{{selected.zone.name}}</b></span></div>
@@ -140,17 +131,10 @@
 
     <paper-dialog id="zoneDialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
       <h1 style="text-align: center;">Calling selected...</h1>
-      <!-- <div style="text-align: center;">Enter a name for the new zone below</div> -->
-      <!-- <div class="message">{{err}}</font></div> -->
-      <!-- <paper-input id="popupInput" label="" placeholder="Enter Name for Zone" text-align="center"></paper-input> -->
       <div class="buttons" class="layout horizontal">
-      <!-- <paper-button ondialog-confirm on-click="_acceptPressed">Create</paper-button> -->
       <paper-button center-justified flex dialog-dismiss on-click style="margin: 0.5em 4.5em .5em 0em;" ="_cancelPressed">Cancel</paper-button>
     </div>
 
-
-
-    <!-- <help-panel></help-panel> -->
   </template>
 
   <script>
@@ -165,10 +149,6 @@
   function pulsateCircle(id, coordinates) {
     var elem = document.createElement('div');
     elem.setAttribute('class', 'gps_ring');
-
-    //coordinates[0] += 2;
-    //coordinates[1] -= 2;
-
     return new ol.Overlay({
       id: id,
       element: elem,
@@ -209,8 +189,6 @@
     }
   }
 
-  // the animations need to be synchronized
-
   function updateViewForSelectedSpeakers(elem) {
     console.log(elem.id);
     console.log(features);
@@ -218,7 +196,6 @@
     var overlays = mapController.map.getOverlays();
     console.log(overlays);
 
-    // when adding to the view, we can show that the speakers that have been selected are already all in the selected speakers
     console.log(elem);
     var zoneIndex = findZoneIndex(elem.id);
     console.log(typeof currentSpeakers);
@@ -227,11 +204,9 @@
     var zoneOverlayArray = [];
     console.log(elem.id);
     if(displayedZones[elem.id] === undefined) {
-      // change the styling to reflect the view
       elem.style.background = "rgba(63, 81, 181, .25)";
 
-      for(var i = 0; i < currentSpeakers.length; i++) {        // just do this for now
-        //console.log("current speakers", currentSpeakers);
+      for(var i = 0; i < currentSpeakers.length; i++) {
         var tempOverlay = pulsateCircle(i, features[currentSpeakers[i] - 1].getGeometry().getCoordinates());
         tempOverlay.id = idIterator;
         mapController.map.addOverlay(tempOverlay);
@@ -242,18 +217,13 @@
       mapController.map.updateSize();
     }
     else {
-      // change the styling to reflect the view
       elem.style.background = "rgba(63, 81, 181, .1)";
 
-      //var overlays = mapController.map.getOverlays().clear();     // works to clear everything, use it later for the restart
       var overlays = mapController.map.getOverlays();
       console.log(overlays);
-      //var overlaysCopy = overlays.a.slice();
-      //var overlayLength = overlaysCopy.length;
       console.log(overlays.a.length);
 
       console.log(displayedZones[elem.id]);
-      //for(var j = displayedZones[zones[zoneIndex].name].length - 1; j > 0; j--) {        // just do this for now       shift this down instead of up
       for(var j = displayedZones[elem.id].length - 1; j >= 0; j--) {
         var elementPos = overlays.a.map(function(x) { return x.id; }).indexOf(displayedZones[elem.id][j]);
 
@@ -261,11 +231,6 @@
         console.log(objectFound);
         mapController.map.removeOverlay(objectFound);
       }
-      //console.log(overlays.a.length, overlayLength);
-        
-      //console.log(mapController.map.removeOverlay(pulsateCircle(j, features[zones[zoneIndex].speakers[j].id - 1].getGeometry().getCoordinates())));
-
-     // / displayedZones[zones[zoneIndex].name] = undefined;
       mapController.map.updateSize();
       displayedZones[elem.id] = undefined;
       currentSpeakers = [];
@@ -280,9 +245,6 @@
       console.log(i);
     });
   })();
-
-
-  // the name needs to be limited to 50 characters
 
     var totalInfo = [];
     
@@ -302,7 +264,6 @@
                   node: this
                 },
               'exit': {
-                // provided by neon-animation-animations/fade-out-animation.html
                 name: 'slide-left-animation',
                 node: this
               }
@@ -317,13 +278,9 @@
         console.log("_acceptPressed", totalInfo);
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
 
-        // this is where we strip out the undefineds
-
         this.$.createPagingZoneAjax.body = {
-          // make sure that this isn't empty, do the disable button thing
-          // send the name with this too dummy
           "name":     name,
-          "speakers": totalInfo   // stripem out, maybe we can just takem out when we show them in list
+          "speakers": totalInfo
         }
 
         totalInfo = [];
@@ -358,7 +315,7 @@
         mapController = this;
         mapController.featureMap = {};
         var container = mapController.$.popup;
-        var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+        var overlay = new ol.Overlay(({
           element: container,
           autoPan: true,
           autoPanAnimation: {
@@ -367,10 +324,7 @@
         }));
       
         mapController.overlay = overlay;
-        
-        // Map views always need a projection.  Here we just want to map image
-        // coordinates directly to map coordinates, so we create a projection that uses
-        // the image 4 in pixels.
+
         var extent = [0, 0, 2200, 1700];
         var projection = new ol.proj.Projection({
           code: 'pixel',
@@ -396,40 +350,10 @@
         var style = {}
 
        var allColors = [
-          /*'#795548',
-          '#ff5722',
-          '#ff9800',
-          '#ffc107',
-          //'--paper-yellow-500', this is kinda hard to see
-          '#cddc39',
-          '#8bc34a',
-          '#009688',
-          '#00bcd4',
-          '#03a9f4',
-          '#2196f3',
-          '#3f51b5',
-          '#673ab7',
-          '#9c27b0',
-          '#e91e63',*/
           '#f44336'
         ];
         
         var unusedColors = [
-          '#795548',
-          '#ff5722',
-          '#ff9800',
-          '#ffc107',
-          //'--paper-yellow-500', this is kinda hard to see
-          '#cddc39',
-          '#8bc34a',
-          '#009688',
-          '#00bcd4',
-          '#03a9f4',
-          '#2196f3',
-          '#3f51b5',
-          '#673ab7',
-          '#9c27b0',
-          '#e91e63',
           '#f44336'
         ];
         var colorMap = {};
@@ -464,13 +388,6 @@
                             })
                         })
                     })];
-                  /*
-                    image: new ol.Overlay({
-                                id: id,
-                                element: elem,
-                                position: coordinates,
-                                positioning: 'center-center'
-                              });*/
                     style[zone].resolution = resolution;
                 }
                 return style[zone].style;
@@ -496,26 +413,12 @@
             zoom: 2
           })
         });
-
-        /*var coordsArray = [];
-        for(var i = 0; i < features.length; i++) {
-          coordsArray += features[i].getGeometry().getCoordinates();
-
-          console.log(features[i].getGeometry().getCoordinates());
-        }
-        map.addOverlay(pulsateCircle(coordsArray));
-        */
         mapController.map = map;
 
-        // this is the selection handler for the box dragging
-
-        // we need to add a button if it is a touch screen
         var box = new ol.interaction.Select();
-        //map.addInteraction(box);
 
         var selectedFeatures = box.getFeatures();
 
-        // a DragBox interaction used to select features by drawing boxes
         var dragBox = new ol.interaction.DragBox({
           condition: ol.events.condition.shiftKeyOnly,
           style: new ol.style.Style({
@@ -525,12 +428,7 @@
           })
         });
 
-        //map.addInteraction(dragBox);
-
         dragBox.on('boxend', function(e) {
-          // features that intersect the box are added to the collection of
-          // selected features, and their names are displayed in the "info"
-          // div
           var info = [];
           var extent = dragBox.getGeometry().getExtent();
 
@@ -540,19 +438,13 @@
             console.log(feature);
             selectedFeatures.push(feature);
 
-            // just make it grab every other one
             info.push(feature.B.speaker.id);
           });
           console.log("selectedFeatures: ", selectedFeatures);
 
-          // To make sure that we are no running this on times when nothing is selected
           if (info.length > 0) {
-             //infoBox.innerHTML = info.join(', ');
             console.log("Selected speakers: ", info);
 
-            // i have a feeling that this is not very optimized
-
-            // Here we figure out what is not already in the total selected and add the ones that aren't and delete it if they are
             for (var i = 0; i < info.length; i++) {
               var areYouInThere = totalInfo.indexOf(info[i]);
               if(areYouInThere == -1) {
@@ -560,30 +452,23 @@
                 console.log(totalInfo);
               } else {
                 console.log("Speaker", info[i], "is already in the list of selected speakers.");
-                delete totalInfo[areYouInThere];    // make something for delete
+                delete totalInfo[areYouInThere];
 
                 console.log(totalInfo);
               }
             }
 
             console.log("Total selected speakers: ", totalInfo);
-            // make this a checkbox thing that will fire when checked, which means we need to keep track of two arrays?
             
             console.log("Starting sort: ");
-            // Sort the array so that when we display it, the items are sorted
-            totalInfo = mergeSort(totalInfo);   // This mergeSort isn't any faster wtf
+            totalInfo = mergeSort(totalInfo);
 
-            // Clear the speaker holder element and then reset the entities to everything that has been selected, updating the view if you will
             pagingSpeakerHolder = document.getElementById("pagingSpeakerHolder");
             var innerHTML = "";
             pagingSpeakerHolder.innerHTML = "";
             for (var k = 0; k < totalInfo.length; k++) {
-              // The selections in the total selection array take a value of 'undefined' when deleted, and we don't want those in our view, so we parse them out
               if (totalInfo[k] !== undefined) {
                innerHTML += "<paper-item center-justified flex style=\"border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"> Speaker " + totalInfo[k] + "</paper-item>";
-                //Polymer.dom(speakerHolder).innerHTML = Polymer.dom(speakerHolder).innerHTML + "<paper-item center-justified flex style=\"border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"> Speaker " + totalInfo[k] + "</paper-item>";/* + document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k] + "</paper-item>" +document.getElementById("speakerHolder").innerHTML + "<paper-item> Speaker " + totalInfo[k];*/
-
-                // when we send it off make a new array and splice out the undefineds 
               }
             }
             pagingSpeakerHolder.innerHTML = innerHTML;
@@ -591,44 +476,14 @@
           }
         });
 
-        // clear selection when drawing a new box and when clicking on the map
         dragBox.on('boxstart', function(e) {
 
-          // make something that removes them from the animation here when you feel like it
-
-          //selectedFeatures.clear();
-          //infoBox.innerHTML = '&nbsp;';
         });
         map.on('click', function() {
 
           console.log(selectedFeatures);
           selectedFeatures.clear();
-          //infoBox.innerHTML = '&nbsp;';
         });
-
-        // this is the selection for the tooltip shit
-
-       /* var select = new ol.interaction.Select({
-          style: function(feature, resolution) {
-                var zone = feature.getProperties().speaker.zone.name;
-                return style[zone].style;
-            }
-        });
-        map.addInteraction(select);
-        select.on('select', function(e) {
-            if(e.selected.length > 0) {
-              var speaker = e.selected[0].getProperties().speaker
-
-              mapController.selected = speaker;
-              // get the point's coordinate
-              var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
-              overlay.setPosition(coordinate);
-            } else {
-              // make sure the overlay is hidden
-              mapController._hideOverlay();
-            }
-            
-        }); */
       }
     });
 

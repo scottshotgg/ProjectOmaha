@@ -46,21 +46,6 @@
       },
 
       _createAccountPressed: function() {
-
-        // We need to check whether or not they are logged in, if they are go to user/admin panel
-
-        /*
-
-            If you are already logged in then it will show you information about your account: reset password, change username, security information like your security questions, associated email, change theme option
-
-            Do tool tip stuff for speakers to show status
-
-            
-
-
-
-        */
-
         this.fire('showaccountcreation', {})
         this.showBackArrow();
       },
@@ -79,8 +64,6 @@
         this.$.back.icon = "none";
         this.$.back.disabled = true;
       }
-
-      //console.log(selected);
     });
   </script>
 </dom-module>

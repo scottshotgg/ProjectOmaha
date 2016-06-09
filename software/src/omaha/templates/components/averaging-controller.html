@@ -14,7 +14,6 @@
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="/components/omaha-app.html">
-<!-- Change this to effectivness-comfort slider -->
 
 <dom-module id="averaging-controller">
   <template>
@@ -36,7 +35,6 @@
       }
       
       paper-button {
-        /*background-color: #3367d6;      /* This is not needed and for some reason is still here */
         background-color: #3f51b5;
         color: #fff;
         margin-top: 10px;
@@ -49,7 +47,6 @@
 
       paper-slider {
         width: 100%;
-        /*margin-top: calc(.075 * 100vh);    /* this offset fucks everything up */
       }
 
       paper-item {
@@ -63,7 +60,7 @@
       }
 
       dropdown-content style-scope paper-menu-button x-scope paper-material-0 {
-        overflow: hidden;   /* solve the overflow shit */
+        overflow: hidden;
       }
 
       #invis {
@@ -74,29 +71,6 @@
 
     <paper-card heading="Pleasantness-Effectiveness Ratio"><h6 style="margin: 0;"></h6>
       <div class="card-content">
-        <!--<paper-dropdown-menu no-label-float style="overflow; hidden;" label="Averaging Mode:">
-          <paper-listbox id="menu" class="dropdown-content" value="0">
-            <paper-item>Mode 1</paper-item>
-            <paper-item>Mode 2</paper-item>
-            <paper-item>Mode 3</paper-item>
-            <paper-item>Mode 4</paper-item>
-            <paper-item>Mode 5</paper-item>
-            <paper-item>Mode 6</paper-item>
-            <paper-item>Mode 7</paper-item>
-            <paper-item>Mode 8</paper-item>
-            <paper-item>Mode 9</paper-item>
-            <paper-item>Mode 10</paper-item>
-            <paper-item>Mode 11</paper-item>
-            <paper-item>Mode 12</paper-item>
-            <paper-item>Mode 13</paper-item>
-            <paper-item>Mode 14</paper-item>
-            <paper-item>Mode 15</paper-item>
-            <paper-item>Mode 16</paper-item>
-            <paper-item>Mode 17</paper-item>
-            <paper-item>Mode 18</paper-item>
-            <paper-item>Mode 19</paper-item>
-            <paper-item>Mode 20</paper-item>
-          </paper-listbox>-->
         </paper-dropdown-menu>
         <div id=ec_encap class="layout vertical">
           <div id="ec_style_div" class="layout horizontal">
@@ -112,12 +86,10 @@
 
 
           <h4>Pleasantness</h4>
-            <!-- <paper-icon-button icon="remove" noink style="visibility: hidden;"></paper-icon-button> -->
           <div id="ec_div" class="layout horizontal">
             <paper-icon-button icon="remove" on-click="decrementC"></paper-icon-button>
             <paper-slider id="pleasantness" pin min="0" max="10" step="1" value="{{pleasantness}}"></paper-slider> 
             <paper-icon-button icon="add" on-click="incrementC"></paper-icon-button>
-          <!-- might need to change this is 0 is not an acceptable value -->
           </div>
         </div>
 
@@ -154,8 +126,6 @@
       is: 'averaging-controller',
 
       properties: {
-        //effectiveness: Number,
-        //pleasantness: Number,
         averaging: Number,
 
         speakerId: {
@@ -166,22 +136,14 @@
           type: Object
         }
       },
-       
-      /*listeners: {
-        'menu.iron-select': '_selectionChanged'
-      },*/
       
-      _selectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
-        console.log(this.speakerId);    // This says the speakerId is undefined
+      _selectionChanged: function(event) {
+        console.log(this.speakerId);
 
         var menu = document.getElementById('menu');
 
-        //menu.averaging = this.$.menu.selected + 1;
-
-        //console.log(this.$.menu.selected + 1);
         var attributeValues;
 
-        // Need to put a toast thing here like we have on the volume selector page
         var updatedAttributes = ["averaging"];
 
         attributeValues = {

@@ -14,8 +14,6 @@
 <script src="../Chart.js" type="text/jscript"></script>
 <script src="../jquery-ui-1.11.4.js" type="text/jscript"></script>
 <script src="../jquery.ui.touch-punch.js" type="text/jscript"></script>
-<!--<script src="jquery-2.2.0.js"></script>-->
-<!--<link rel="import" href="/bower_components/paper-checkbox//paper-checkbox.html">-->
 
 <dom-module id="target-selector-zone">
   <template>
@@ -50,7 +48,6 @@
       <div class="card-content">
         <canvas id="targetChartZone" style="margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);" class="chartClass"></canvas>
         <div class="horizontal layout" id="adjustment" style="height: calc(.05 * 100vh); margin-top: calc(.0 * 100vh);">
-          <!-- try doing a no float and then just putting 0 and making it start default? -->
           <paper-input class="inputs-zone" name="80"     on-input="redrawOnInputZone" center-justified style="margin-left: calc(.025 * 100vw);"></paper-input>
           <paper-input class="inputs-zone" name="100"    on-input="redrawOnInputZone" ></paper-input>
           <paper-input class="inputs-zone" name="125"    on-input="redrawOnInputZone" ></paper-input>
@@ -76,16 +73,8 @@
       </div>
       <div class="card-actions">
         <paper-button on-click="_setTargetClickedZone">apply target</paper-button>
-        <!-- try to get this to open up -->
         <paper-dropdown-menu vertical-align="bottom" horizontal-align="left" id="targetMenu" no-label-float label="Target Selection:">
           <paper-listbox id="targetListbox" attr-for-selected="value" selected="{{selection}}" class="dropdown-content" value="0">
-            <!--<template if="{{this.speaker.Response}}">
-              <paper-dropdown-menu selected="{{selected}}">
-                <template repeat="{{label in this.speaker.PresetNames}}">
-                  <paper-item value="{{i}}" label="{{label}}"></paper-item>
-                </template>
-              </paper-dropdown-menu>  
-            </template>-->   
             <paper-item id="Currently Applied" value="Currently Applied">Currently Applied</paper-item>
             <paper-item id="Add New Target" value="Add New Target">Add New Target</paper-item>   
           </paper-listbox>
@@ -93,7 +82,6 @@
       </div>
     </paper-card>
     <paper-toast id="toaster" duration="4000"></span></paper-toast>
-    <!--<paper-toast id="errorAdjustToast"><paper-item id="Add New Target" value="Add New Preset">Add New Preset</paper-item></paper-toast>-->
     <paper-toast id="errorAdjustToast"></paper-toast>
     <paper-dialog id="dialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
       <h1 style="text-align: center;">Add Target</h1>
@@ -181,15 +169,13 @@
       scaleFontSize: 12,
     };
 
-    //redraw(dataArrayZone, lineAttributes);
-
     Polymer({
       is: 'target-selector-zone',
       
       properties: {
         internalTargetZone: String,
 
-        targetZone: {     // I think this 
+        targetZone: {
           type: String,
           notify: true,
           observer: '_setInternalTargetZone'
@@ -239,7 +225,6 @@
             console.log(typeof this.value, parseInt(this.value));
             console.log(this.name);
             checkIntZone++;
-            //checkBandsZone.push(labelsZone[i]); // may have to put new string here
             console.log(checkBandsZone);
           }
         });
@@ -268,12 +253,9 @@
           this.dataArrayZoneString = dataArrayZone.join(", ");
           for (var i = 0; i < speaker.CurrentTarget.length; i++) { 
             speaker.CurrentTarget[i] = dataArrayZone[i];
-            //console.log(dataArrayZone[i]);
           }
           this.target = dataArrayZone.join(" ");
-          //console.log(this.$);
           console.log(dataArrayZone);
-          //console.log(this.dataArrayZoneString);
           this.$.toaster.text = "Target set to: " + dataArrayZone.join(", ") + ", switch to the equalizer page for further adjustment";
           this.$.toaster.show();
           console.log("_setTargetClicked");
@@ -299,7 +281,7 @@
           for(var i = 0; i < speaker.zone.TargetNames.length; i++) {
             if(name.toLowerCase() == speaker.zone.TargetNames[i].valueOf().toLowerCase()) {
               console.log("same name dude");
-              ifvar++;    // make more checks dummy
+              ifvar++;
             }
           }
         }
@@ -315,10 +297,7 @@
             "name": name,
             "update": false,
             "constants": dataArrayZone.join(" ")
-            // Maybe we should add a currently applied thing in here or something
           };
-
-          //console.log(dataArrayZone.join(" "));
 
           console.log("addTargetAjax:", addTargetAjaxZone.body);
           this.$.addTargetAjaxZone.generateRequest();
@@ -333,39 +312,29 @@
           temp = document.createElement("paper-item");
           temp.setAttribute("value", name);
           temp.setAttribute("id", name);
-          // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
           temp.innerHTML = name;
           Polymer.dom(this.$.targetListbox).appendChild(temp);
 
           var length = speaker.zone.Target.length;
-          //console.log(length);
 
           console.log(dataArrayZone);
 
           var dataArrayZoneCopy = dataArrayZone.slice();
 
           console.log("dataArrayZoneCopy: ", dataArrayZoneCopy);
-          
-          //this.speaker.Target.push(dataArrayZone.slice());    // change this to dataArrayZoneCopy if it breaks
-          //}
 
           speaker.zone.TargetNames[speaker.zone.TargetNames.length] = name;
 
           console.log(speaker.zone.Target);
 
           this.$.targetListbox.selected = name;
-          //this.$.toasty.text = "";
           this.$.popupInput.value = "";
         }
       },
 
       _cancelPressed: function(event) {
-        // make something that will capture the last thing clicked and keep track of that and change it to that when they click cancel
-
         this.$.targetListbox.selected = -1;
-
         console.log(lastSelected);
-
       },
 
       listeners: {
@@ -399,10 +368,9 @@
             var associationLink = -1;
             for (k in speaker.zone.TargetNames) {
               if(selected == speaker.zone.TargetNames[k].valueOf().toLowerCase()) {
-                // show a toast here with the preset applied message
-                associationLink = k;   // this will either need to be bounded by the the restriction that two names cannot be the same or we need to check
+                associationLink = k;
                 console.log("associationLink", associationLink);
-                break;    // this is for efficiency reasons, better to keep it this way if it works
+                break;
               }
             }
             if(associationLink != -1) {
@@ -412,7 +380,7 @@
                 dataArrayZone[j] = speaker.zone.Target[associationLink - 1][j]; 
               }
 
-              $(document.getElementsByClassName("inputs-zone")).each(function(k) {   // this can be optimized
+              $(document.getElementsByClassName("inputs-zone")).each(function(k) {
                 this.value = dataArrayZone[k];
               });
 
@@ -511,7 +479,6 @@
           errorAdjustToast.show();
         }
       }
-      //console.log(dataArrayZone);
     });
 
     var redrawDataZone = {

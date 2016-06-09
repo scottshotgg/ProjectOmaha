@@ -8,7 +8,6 @@
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/components/speaker-controller.html">
-<!--<link rel="import" href="/bower_components/paper-checkbox//paper-checkbox.html">-->
 
 <dom-module id="volume-selector">
   <template>
@@ -37,9 +36,7 @@
       <div id="test" class="card-content">
 
         <div id="sliderInvis" class="layout horizontal">
-          <!--<paper-input id="volumeMin" style="margin-left: .5%; width: 30px;" label="Min" placeholder=""></paper-input>-->
           <paper-slider id="volumeInvis" style="visibility: hidden;" pin min="0" max="100"></paper-slider>
-          <!--<paper-input id="volumeMax" style="margin-right: .5%; width: 30px;" label="Max" placeholder="" text-align="center"></paper-input>-->
         </div>
 
         <div id="slider" class="layout horizontal">
@@ -47,8 +44,6 @@
           <paper-slider id="volume2" pin min="0" max="100" value="{{internalVolume}}"></paper-slider>
           <paper-icon-button icon="add" on-click="incrementVolume"></paper-icon-button>
         </div>
-
-        <!--<paper-checkbox> Music </paper-checkbox>-->
 
         <h1 id="musicvolume"> Music Volume </h1>
 
@@ -142,73 +137,21 @@
       properties: {
         internalVolume: String,
 
-        volume: {     // I think this 
+        volume: {
           type: String,
           notify: true,
           observer: '_setInternalVolume'
         },
 
-       /*
-        internaMusiclVolume: String,
-
-         musicVolume: {
-          type: String,
-          notify: true,
-          observer: '_setInternalMusicVolume'
-        },
-        */
-
-        /*internalVolume3: Number,
-
-        pagingVolume: {
-          type: Number,
-          notify: true,
-          observer: '_setInternalMusicVolume'
-        },*/
-
         speakerId: {
           type: Number
         }
       },
-
-      /*
-      properties: {
-        internalVolume2: Number,
-
-         musicVolume: {
-          type: Number,
-          notify: true,
-          observer: '_setInternalMusicVolume'
-        },
-
-        speakerId: {
-          type: Number
-        }
-      },
-      */
 
       _setInternalVolume: function(volume) {
         this.internalVolume = volume;
         console.log("_setInternalVolume");
       },
-
-      /*
-      _setInternalMusicVolume: function(musicVolume) {
-        this.internalMusicVolume = musicVolume;
-        console.log("_setInternalMusicVolume");
-      },
-      */
-
-      // dont know if we even need these observers
-      /* _setInternalMusicVolume: function(musicVolume) {
-        this.internalVolume2 = this.musicVolume;
-        console.log("_setInternalMusicVolume");
-      },
-
-       _setInternalPagingVolume: function(pagingVolume) {
-        this.internalVolume3 = this.musicVolume;
-        console.log("_setInternalPagingVolume");
-      },*/
       
       _setVolumeClicked: function() {
         if(zoneFlag == 0) {
@@ -238,7 +181,6 @@
           }
 
           this.volume = this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume + " " + this.internalSoundMaskingVolume;
-          //this.musicVolume = this.internalVolume2;
           this.$.toast.show();
           console.log("_setVolumeClicked");
         } else {
@@ -276,16 +218,10 @@
             };
             this.$.updateVolumesZone.generateRequest();
           }
-
-          //this.volume = this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume + " " + this.internalSoundMaskingVolume;
-          //this.musicVolume = this.internalVolume2;
           this.$.toast.show();
           console.log("_setVolumeClicked");
         }
       },
-
-
-        // change these to work for all the sliders
       
       decrementVolume: function() {
         if(localLevelForVolumeSelector < 1) {
@@ -321,8 +257,6 @@
       
       decrementMusicVolume: function() {
         if(this.internalMusicVolume - 1 < LowerThreshold[0] && localLevelForVolumeSelector < 1) {
-          // display some message
-
           return;
         }
         this.$.volume3.decrement();
@@ -339,8 +273,6 @@
       
       incrementMusicVolume: function() {
         if(this.internalMusicVolume + 1 > UpperThreshold[0] && localLevelForVolumeSelector < 1) {
-          // display some message
-
           return;
         }
         this.$.volume3.increment();
@@ -357,8 +289,6 @@
       
       decrementPagingVolume: function() {
         if(this.internalPagingVolume - 1 < LowerThreshold[1] && localLevelForVolumeSelector < 1) {
-          // display some message
-
           return;
         }
         this.$.volume4.decrement();
@@ -375,8 +305,6 @@
       
       incrementPagingVolume: function() {
         if(this.internalPagingVolume + 1 > UpperThreshold[1] && localLevelForVolumeSelector < 1) {
-          // display some message
-
           return;
         }
         this.$.volume4.increment();
@@ -393,8 +321,6 @@
       
       decrementMaskingVolume: function() {
         if(this.internalMaskingVolume - 1 < LowerThreshold[2] && localLevelForVolumeSelector < 1) {
-          // display some message
-
           return;
         }
         this.$.volume5.decrement();
@@ -411,8 +337,6 @@
       
       incrementMaskingVolume: function() {
         if(this.internalMaskingVolume + 1 > UpperThreshold[2] && localLevelForVolumeSelector < 1) {
-          // display some message
-
           return;
         }
         this.$.volume5.increment();
@@ -445,12 +369,6 @@
 
         switch(localLevelForVolumeSelector) {
           case 0:
-            
-            //Polymer.dom(this.$.test).removeChild(this.$.sliderInvis);
-            //Polymer.dom(this.$.test).removeChild(this.$.sliderInvis2);
-            //Polymer.dom(this.$.test).removeChild(this.$.sliderInvis3);
-            //Polymer.dom(this.$.test).removeChild(this.$.sliderInvis4);
-
             this.$.musicMin.disabled = true;
             this.$.musicMax.disabled = true;
 
@@ -461,12 +379,6 @@
             this.$.maskingMax.disabled = true;
 
             this.$.volume2.disabled = true;
-
-            //Polymer.dom(volumeCard).removeChild(averagingButton);
-            //Polymer.dom(volumeCard).removeChild(averagingButton);
-            //Polymer.dom(volumeCard).removeChild(averagingButton);
-            //Polymer.dom(volumeCard).removeChild(averagingButton);
-
             break;
         }
 

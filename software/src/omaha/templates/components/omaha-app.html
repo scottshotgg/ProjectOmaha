@@ -23,8 +23,6 @@
 <link rel="import" href="/components/omaha-drawer.html">
 <link rel="import" href="/components/login-form.html">
 
-<!-- <link rel="import" href="/components/paging-controller-navbar.html"> -->
-
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/ >
 
 <dom-module id="omaha-app">
@@ -57,8 +55,6 @@
         <omaha-navbar id="nav" selected="{{selected}}" class="paper-header"></omaha-navbar>
         <neon-animated-pages on-iron-select="refreshMap" id="pages" attr-for-selected="page" class="fit" id="app-pages" selected="{{selected}}">
 
-          <!-- <information-viewer page="information" id="information" zones="{{zones}}" controllers="[[controllers]]" class="fit"></information-viewer> -->
-
           <open-map-controller page="map" id="mapcontroller" zones="{{zones}}" controllers="[[controllers]]" class="fit">
           </open-map-controller>
 
@@ -71,12 +67,6 @@
           </neon-animatable> 
 
           <information-viewer page="information" id="information" zones="{{zones}}" controllers="[[controllers]]" class="fit"></information-viewer>
-
-          <!-- <neon-animatable page="zoneCreation" class="layout horizontal" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
-            <paper-material class="flex self-center card" elevation="5">
-              <zone-creation-form></zone-creation-form>
-            </paper-material>
-          </neon-animatable> -->
 
           <paging-controller-navbar page="pagingMap" id="pagingMap" zones="{{zones}}" controllers="[[controllers]]" class="fit">
           </paging-controller-navbar>
@@ -118,8 +108,6 @@
   </template>
   <script>
 
-    // this interval should be determined by 1000 * number of controllers
-
     var zoneFlag = 0;
     var globalZone = 0;
 
@@ -132,7 +120,6 @@
     var lastSelected = 0;
     var zones;
     var pagingZones;
-    //var all
     var displayedZones = {};
 
     Polymer({
@@ -172,24 +159,8 @@
         console.log(this.$);
         var speaker = e.detail.speaker;
         console.log(e);
-        console.log(speaker);     // just testing
+        console.log(speaker);
         console.log(localStorage.getItem("speakerid"));
-        /*var speakersFromZones = [];
-
-        console.log(zones.length);
-        if(localZoneID != -1) {
-          for(var i = 0; i < zones.length; i++) {
-            if(zones[i].zoneID == localZoneID) {
-              console.log("found it", zones[i].speakers.length, zones[i]);
-              for(var j = 0; j < zones[i].speakers.length; j++) {
-                speakersFromZones[j] = zones[i].speakers[j].id;
-              }
-              break;
-            }
-          }
-        }*/
-
-        //console.log(speakersFromZones);
 
         if(speaker === undefined) {
           this.$.dialog.open();
@@ -198,7 +169,7 @@
           console.log(this.$.speaker);
           this.$.nav.showBackArrow();
 
-          this.selected = "speakerController";      // Don't put this in another listener because if someone clicks on the speaker and just wants to view, no sense in sending everything
+          this.selected = "speakerController";
 
           // Get controller object
           var controller = document.getElementById('controller');
@@ -251,35 +222,20 @@
             $("#text" + (parseInt(i + 42) + 1)).val(controller.speaker.CurrentPagingPreset[i]);
             iirConstants[i + 42] = controller.speaker.CurrentPagingPreset[i];
           }
-          /* this is for the paging
-          for (var i = 0; i < controller.speaker.CurrentMusicPreset.length; i++) {   // this was "current" for some reason
-            console.log("I am here");
-            sliders[i + 21].style.height = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + "%";
-            handles[i + 21].style.bottom = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + "%";
-            $("#text" + (parseInt(i + 21) + 1)).val(controller.speaker.CurrentMusicPreset[i]);
-            iirConstants[i + 21] = controller.speaker.CurrentMusicPreset[i];
-          }*/
-
-        /*  document.getElementById("targetListbox").selected = "Currently Applied";
-
-          console.log(document.getElementById("targetListbox"));*/
 
           for (var i = 0; i < this.$.controller.speaker.CurrentTarget.length; i++) {
             dataArray[i] = this.$.controller.speaker.CurrentTarget[i];
 
-            // fix this
-            //dataArrayZone[i] = this.$.controller.speaker.zone.CurrentTarget[i];
             dataArrayZone[i] = 0;
           }
 
-          //Polymer.dom.flush() idk if we need this anymore
           var equalizerListbox = document.getElementById("equalizerListbox");
           console.log(Polymer.dom(equalizerListbox).children);
 
           var motherPolymer = Polymer.dom(equalizerListbox).children; 
 
           // Remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
-          if(motherPolymer.length > 1) {    // change that 2 to something that is not so fragile      // dont even need to check, think of the numerical analysis of checking
+          if(motherPolymer.length > 1) {
             for (var i = motherPolymer.length - 1; i > 1; i--)
               Polymer.dom(equalizerListbox).removeChild(motherPolymer[i]);
           }
@@ -304,7 +260,7 @@
 
 
           // Remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
-          if(motherPolymer.length > 1) {    // change that 2 to something that is not so fragile      // dont even need to check, think of the numerical analysis of checking
+          if(motherPolymer.length > 1) {
             for (var i = motherPolymer.length - 1; i > 1; i--)
               Polymer.dom(musicListbox).removeChild(motherPolymer[i]);
           }
@@ -314,20 +270,19 @@
               temp = document.createElement("paper-item");
               temp.setAttribute("value", controller.speaker.MusicPresetNames[i].valueOf().replace("\n", ""));
               temp.setAttribute("id", controller.speaker.MusicPresetNames[i].valueOf().replace("\n", ""));
-              // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
               temp.innerHTML = controller.speaker.MusicPresetNames[i].valueOf().replace("\n", "");
               Polymer.dom(musicListbox).appendChild(temp);
             }
           }
 
 
-          //Polymer.dom.flush() idk if we need this anymore
+          
           var targetListbox = document.getElementById("targetListbox");
           console.log(Polymer.dom(targetListbox).children);
           motherPolymer = Polymer.dom(targetListbox).children; 
 
           // Remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
-          if(motherPolymer.length > 1) {    // change that 2 to something that is not so fragile      // dont even need to check, think of the numerical analysis of checking
+          if(motherPolymer.length > 1) {
             for (var i = motherPolymer.length - 1; i > 1; i--)
               Polymer.dom(targetListbox).removeChild(motherPolymer[i]);
           }
@@ -337,26 +292,11 @@
               temp = document.createElement("paper-item");
               temp.setAttribute("value", controller.speaker.TargetNames[i].valueOf().replace("\n", ""));
               temp.setAttribute("id", controller.speaker.TargetNames[i].valueOf().replace("\n", ""));
-              // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
               temp.innerHTML = controller.speaker.TargetNames[i].valueOf().replace("\n", "");
               Polymer.dom(targetListbox).appendChild(temp);
             }
           }
         } else {
-          // might make this an onclick so that it will show you where the speaker is
-          /*if(localSpeakerID != -1) {
-            this.$.errorNoAccessToast.innerHTML = "You only have access to speaker " + localSpeakerID;
-          } else {
-            this.$.errorNoAccessToast.innerHTML = "You don't have access to any speakers!";
-          }
-
-          if(localZoneID != -1) {
-            if(this.$.errorNoAccessToast.innerHTML.length == 0) 
-              this.$.errorNoAccessToast.innerHTML += "You only have access to zone " + localZoneID;
-          } else {
-            this.$.errorNoAccessToast.innerHTML += "You don't have access to any zones!";
-          }*/
-
           this.$.errorNoAccessToast.innerHTML = "You only have access to";
           if(localSpeakerID > 0) {
             this.$.errorNoAccessToast.innerHTML += " speaker " + localSpeakerID;
@@ -385,10 +325,9 @@
         this.selected = "zoneController"
         this.$.nav.showBackArrow();
 
-
-
         var zoneVolumePage = document.getElementById("volumeZone"); 
         console.log(volumeZone, this.volumeZone);
+
         // Set volume levels
         volumeZone.$.volume2.value = zone.VolumeLevel[0];
         volumeZone.$.volume3.value = zone.VolumeLevel[1];
@@ -439,7 +378,6 @@
 
 
         // Test for null / undefined values and set them to a value
-       
         if(zone.Equalizer == undefined) {
           zone.Equalizer = [];
         }
@@ -484,8 +422,6 @@
         var speakers = [];
         var speakersJustID = [];
 
-        // add zone ID to each speaker
-
         var callingInnerHTMLString = "";
         var innerHTMLSpeakersString = "";
 
@@ -505,12 +441,6 @@
             speaker.zone = zone;
           });
         })
-        // populate the speaker array
-        /*
-        zones.forEach(function(zone){
-        Array.prototype.push.apply(speakers, zone.speakers);
-        */
-        //console.log(zones);
 
         callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\"><font style=\"text-align: center; width: 100%; font-weight: bold;\">Masking Zones:</font></paper-item>";
         console.log(data.response);
@@ -534,7 +464,6 @@
 
         innerHTMLString = "";
         pagingZones = data.response.pagingZones;
-        //var pagingZoneListbox = document.querySelector("#pagingZoneListbox");
         pagingZoneListbox.innerHTML = "";
 
         pagingZones.forEach(function(pagingZone){
@@ -548,8 +477,6 @@
         
         for(var i = 0; i < pagingZones.length; i++) {
           displayedZones[pagingZones[i].name] = undefined;
-          //console.log(pagingZones[i], pagingZones[i].name);
-          //console.log(pagingZones);
           innerHTMLString += "<paper-item id=\"" + pagingZones[i].name + "\" value=\"" + pagingZones[i].name + "\"center-justified flex ><font style=\"width: 100%; text-align: center;\">" + pagingZones[i].name + "</font></paper-item>";
 
           callingInnerHTMLString += "<paper-item id=\"" + pagingZones[i].name + "\" value=\"" + pagingZones[i].name + "\" center-justified flex class=\"pagingZoneStyle\" onclick=\"updateViewForSelectedSpeakers(this)\"><font style=\"text-align: center; width: 100%;\">" + pagingZones[i].name + "</font></paper-item>";
@@ -568,17 +495,6 @@
 
         var targetListbox = document.getElementById("targetListbox");
 
-          /*for (i in pagingZones) {
-            console.log("pagingZones", pagingZones);
-            temp = document.createElement("paper-item");
-            temp.setAttribute("value", pagingZones[i].name);
-            temp.setAttribute("id", pagingZones[i].name);
-            // temp.setAttribute("speakerId", controller.speaker.speakerId); try doing some optimization stuff with the speakerId
-            temp.innerHTML = pagingZones[i].name;
-            Polymer.dom(pagingZoneListbox).appendChild(temp);
-          }*/
-
-        // blank
         callingInnerHTMLString += "<paper-item center-justified flex><font style=\"text-align: center; width: 100%;\"></font></paper-item>";
         callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\"><font style=\"text-align: center; width: 100%; font-weight: bold;\">Named Speakers:</font></paper-item>";
         callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\" onclick=\"updateViewForSelectedSpeakers(this)\"><font style=\"text-align: center; width: 100%;\">Dummy name</font></paper-item>";
@@ -595,15 +511,9 @@
           callingInnerHTMLString += "<paper-item id=\"" + zones[0].speakers[k].id + "\" value=\"" + zones[0].speakers[k].id + "\"  center-justified flex class=\"pagingZoneStyle\" onclick=\"updateViewForSelectedSpeakers(this)\"><font style=\"text-align: center; width: 100%;\">Speaker " + zones[0].speakers[k].id + "</font></paper-item>";
         }
 
-
-        var callingListbox = document.querySelector("#callingListbox");
-        //callingListbox.innerHTML = callingInnerHTMLString;
-
         var pagingSpeakerHolder = document.querySelector("#pagingSpeakerHolder");    
         pagingSpeakerHolder.innerHTML = callingInnerHTMLString;
 
-
-        //})
         console.log(this);
         this.controllers = speakers;
         this.zones = zones;
@@ -646,18 +556,12 @@
       },
 
       _keepAliveResponse: function(event, data) {
-        //console.log("Controller update: " + data.response.id + " " + data.response.status);
-
-        //console.log("THIS IS THE DATA RESPONSE YOU ARE LOOKING FOR", this.controllers[data.response.id - 1].status);
         console.log(data.response);
-        if(data.response.status !== this.controllers[data.response.id - 1].status) {      // this should be an array and should also have a case statement that will tell it what image to apply
-          //console.log(this.controllers[data.response.id - 1].status === 0 ? false : true);
+        if(data.response.status !== this.controllers[data.response.id - 1].status) { 
           updateMapForError(data.response.id, (this.controllers[data.response.id - 1].status) === 0 ? true : false);
-          //console.log("THIS IS THE DATA RESPONSE YOU ARE LOOKING FOR", data.response.id, data.response.status);
           this.controllers[data.response.id - 1].status = data.response.status;
 
         }
-        //console.log(this.controllers[data.response.id].status);
       },
 
       ready: function() {       
@@ -668,19 +572,11 @@
         controllerUpdateAjax = this.$.controllerUpdateAjax;
         setUI();
 
-        (function keepAlive() {                   // this is asynchonous and a better usage that using setInterval
+        // this is asynchonous and a better usage that using setInterval
+        (function keepAlive() {
           controllerUpdateAjax.generateRequest();
           setTimeout(keepAlive, 1000);
         })();
-
-
-        /*var myVar = setInterval(myTimer, 1000);     // this timeout might need to be changed depending on what the client is on device wise and the internet speed that they are using
-        function myTimer() {
-          var d = new Date();
-          console.log(d.toLocaleTimeString());
-          //console.log();
-          controllerUpdateAjax.generateRequest();
-        }*/
       }
 
     });
@@ -705,17 +601,6 @@
         console.log("lel");
     }
   }
-
-  $(document).ready(function() {
-    var radioContainer = document.getElementById("radio-container");
-    var mode = document.getElementById("mode");
-    console.log(mode);
-
-    //Polymer.dom(mode).removeChild(targetButton);
-    
-    //targetButton.style.visibility = "hidden";
-    //radioContainer.innerHTML = "<paper-radio-group id=\"mode\" selected=\"{{mode}}\"><paper-radio-button id=\"volumeButton\"     name=\"volume\"     class=\"flex\">Volume</paper-radio-button><paper-radio-button id=\"averagingButton\"  name=\"averaging\"  class=\"flex\">Comfort Ratio</paper-radio-button><paper-radio-button id=\"targetButton\"     name=\"target\"     class=\"flex\">Target</paper-radio-button><paper-radio-button id=\"equalizerButton\"  name=\"equalizer\"  class=\"flex\">Equalizers</paper-radio-button><paper-radio-button id=\"pagingButton\"     name=\"paging\"     class=\"flex\">Paging</paper-radio-button><paper-radio-button id=\"schedulingButton\" name=\"scheduling\" class=\"flex\">Scheduling</paper-radio-button>";
-    console.log("THIS IS ME");
-  });
+  
   </script>
 </dom-module>

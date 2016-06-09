@@ -48,7 +48,7 @@
 
       paper-progress {
         width: 100%;
-        --paper-progress-active-color: #4285f4;  /* this needs to be changed */
+        --paper-progress-active-color: #4285f4;
         --paper-progress-secondary-color: #A5D6A7;
         --paper-progress-container-color: #4CAF50;
       }
@@ -61,7 +61,6 @@
       <paper-input id="name" name="name" label="Zone Name" required></paper-input>
       <paper-button raised on-click="_submit">Create Zone</paper-button>
       <paper-progress id="progress" value="100"></paper-progress>
-      <!-- We should be able to press enter to submit. This button with type submit is required to do so. -->
       <button class="hidden" type="submit">I should be hidden</button>
     </form>
 
