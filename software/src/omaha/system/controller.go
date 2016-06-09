@@ -14,7 +14,6 @@ func KeepAlive(ID int8) (error int8) {
 
     defer func() {
     	if r := recover(); r != nil {
-			log.Println(int8('A'))
         	log.Println("Error reading from the port for controller ", ID, "\n", r)
     		error = -ID
     	}

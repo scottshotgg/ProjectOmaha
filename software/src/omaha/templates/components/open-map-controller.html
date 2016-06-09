@@ -8,6 +8,7 @@
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="/bower_components/paper-tooltipd/paper-tooltip.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
 
 <link rel="import" href="/components/speaker-icon.html">
@@ -61,18 +62,32 @@
       <div id="map" class="map"></div>
     </div>
 
-    <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 92%; min-width: 154px; height: 100%;">
+    <div id="selectedSpeakers" style="border-left: 2px solid #3f51b5; margin-left: 92%; height: 100%;">
       
-      <div id="goodCircle" style="visibility: visible; background: #27e833; position: absolute; top: calc(.0075 * 100vw); border-radius: 1000px; margin-left: calc(.0075 * 100vw); margin-bottom: calc(.015 * 100vw); height: calc(.12 * 100vh); width: calc(.12 * 100vh);"></div> 
+      <div id="goodCircle" style="visibility: visible; background: #27e833; position: absolute; top: calc(.0075 * 100vw); border-radius: 1000px; margin-left: calc(.0075 * 100vw); margin-bottom: calc(.015 * 100vw); height: calc(.065 * 100vw); width: calc(.065 * 100vw);"></div> 
       <div id="badCircle" style="visibility: hidden; background: #f9152f; position: absolute; top: calc(.0075 * 100vw); border-radius: 1000px; margin-left: calc(.0075 * 100vw); margin-bottom: calc(.015 * 100vw); height: calc(.12 * 100vh); width: calc(.12 * 100vh);"></div>
       <!-- make a div here -->
-      <div style="margin-left: calc(.025 * 100vw);">
-        <div id="statusFont" style="position: absolute; top: calc(.085 * 100vw);"><font style="font-size: 24px;"> SYSTEM STATUS: </font>
-      <div>
-      <div id="goodFont" style="visibility: visible; position: absolute;  margin-left: calc(.0075 * 100vw);"> <font color="#27e833" style="font-size: 24px;">GOOD</font></div>
-      <div id="badFont" style="visibility: hidden; position: absolute;  margin-left: calc(.0115 * 100vw);"> <font color="#f9152f" style="font-size: 24px;">BAD</font></div>
-
+      <div id="statusTextEncap" style="width: 100%; position: relative; top: calc(.085 * 100vw);">
+        
+        <div id="system" style="width: 100%; text-align: center;"><font id="systemText" style="font-size: 1.25vw;">SYSTEM</font></div> 
+        <div id="status" style="width: 100%; text-align: center;"><font id="statusText" style="font-size: 1.25vw;">STATUS:</font></div> 
+        <!--
+        <div id="statusFont" style=""><font id="statusFontText" style="font-size: 24px;">SYSTEM STATUS:</font></div>
+        <div id="absolutedGoodAndBad">
+        -->
+          <div id="goodFont" style="width: 100%; text-align: center; position: relative; visibility: visible;"><font id="goodFontText" color="#27e833" style="font-size: 1.25vw;">GOOD</font></div>
+          <div id="badFont" style="width: 100%; text-align: center; position: relative; visibility: hidden;"><font  id="badFontText" color="#f9152f" style="font-size: 1.25vw;">BAD</font></div>
+        <!--
+          <div id="goodFont" style="width: 100%; position: relative; visibility: visible;"><font id="goodFontText" color="#27e833" style="font-size: 24px;">GOOD</font></div>
+          <div id="badFont" style="width: 100%; position: relative; visibility: hidden;"><font  id="badFontText" color="#f9152f" style="font-size: 24px;">BAD</font></div>
+        -->
+        </div>
     </div>
+
+    <paper-tooltip for="goodCircle" offset="0">System is working and everything is fine!</paper-tooltip>
+    <paper-tooltip id="badCircleTooltip" for="badCircle" offset="0"><div id="badCircleText"></div></paper-tooltip>
+    <paper-tooltip for="goodFont" offset="0">System is working and everything is fine!</paper-tooltip>
+    <paper-tooltip id="badFontTooltip" for="badFont" offset="0"><div id="badFontText"></div></paper-tooltip>
     
     <paper-card id="popup">  
       <speaker-tooltip id="speaker-tooltip" on-speakerselected="_selectSpeaker" on-zoneselected="_selectZone" speaker="{{selected}}"></speaker-tooltip>
@@ -101,6 +116,42 @@
 
   $(document).ready(function() {
     console.log($(document.getElementById("goodOrBadFont")).innerWidth(), $(document.getElementById("selectedSpeakers")).innerWidth());
+
+
+
+    /*var statusFont = document.getElementById("statusFont");
+    console.log("statusFont", statusFont);
+    if(statusFont.offsetWidth + document.getElementById("mapContainer").offsetWidth > window.innerWidth) {
+      console.log("hi its me the status checker gajigger");
+      document.getElementById("statusTextEncap").style.width = "";
+      console.log("widths", statusFont.offsetWidth);
+      var statusFontText = document.getElementById("statusFontText");
+      statusFont.style.width = statusFontText.offsetWidth + "px";
+    //  statusFont.style.width = document.getElementById("statusFontText").offsetWidth + "px";
+
+    //  var selectedSpeakersWidth = document.getElementById("selectedSpeakers").offsetWidth;
+      statusFontText.style.marginLeft = (selectedSpeakersWidth - statusFontText.offsetWidth) / 2 + "px";
+
+      var goodFont = document.getElementById("goodFont");
+
+    }*/
+  });
+
+
+  $(window).resize(function() {
+    // if we really want to try and make the minimum width then we need to do some shit with js and make sure it doesnt compare if it is below that
+
+    /*var systemText = document.getElementById("systemText");
+    var statusText = document.getElementById("statusText");
+    console.log("AAAAAß");
+    console.log(systemText.offsetWidth, statusText.offsetWidth);
+    systemText.style.fontSize = .012 * window.innerWidth + "px";
+    statusText.style.fontSize = .012 * window.innerWidth + "px";
+    console.log(systemText.offsetWidth, statusText.offsetWidth);
+    var selectedSpeakersWidth = document.getElementById("selectedSpeakers").offsetWidth;
+    systemText.style.marginLeft = Math.abs(selectedSpeakersWidth - systemText.offsetWidth) / 2 + "px";
+    console.log(systemText.offsetWidth, statusText.offsetWidth);
+    */
   });
 
   // center this stuff based on their size
@@ -360,28 +411,13 @@
         //console.log(speaker.volumeLevel);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         /*
           =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
                                                         ZONE TIME
           =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
         */
 
-        console.log("zones", zones[a.speaker.zone.zoneID - 1]);
+        /*console.log("zones", zones[a.speaker.zone.zoneID - 1]);
 
         zone = zones[a.speaker.zone.zoneID - 1];
 
@@ -445,6 +481,7 @@
           drawAdvanced();
           drawAdvancedZone();
         }
+
 
 
         //this.loadDay();
@@ -561,7 +598,7 @@
 
         a.speaker.Response = "true";
 
-        console.log("Speaker", a.speaker);
+        console.log("Speaker", a.speaker);*/
       },
     
       renderMap: function() {
@@ -678,7 +715,7 @@
                 style[zone] = {};
                 style[zone].style = [new ol.style.Style({
                     image: new ol.style.Circle({
-                      radius: 15/Math.max(resolution, 1),
+                      radius: 15 / Math.max(resolution, 1),
                       stroke: new ol.style.Stroke({
                           color: '#000000'
                       }),
@@ -738,7 +775,8 @@
           view: new ol.View({
             projection: projection,
             center: ol.extent.getCenter(extent),
-            zoom: 2
+            zoom: 6,
+            zoomFactor: 1.35
           })
         });
         mapController.map = map;
@@ -851,10 +889,27 @@
 
       // update the system status icon
       goodCircle.style.visibility = "hidden";
-      badCircle.style.visibility = "visibility";
+      badCircle.style.visibility = "visible";
       goodFont.style.visibility = "hidden";
-      badFont.style.visibility = "visibility";
+      badFont.style.visibility = "visible";
 
+      var badCircleText = document.getElementById("badCircleText");
+      var badFontText = document.getElementById("badFontText");
+
+      // might want to just make this do nothing
+      if(badCircleText.innerHTML.length != 0) {
+        badCircleText.innerHTML = "There was an error trying to retrieve the status for speaker " + features[i].getProperties().speaker.id;
+      } else {
+        badCircleText.innerHTML += ", speaker " + features[i].getProperties().speaker.id; 
+      }
+
+      // might want to just make this do nothing
+      if(badFontText.innerHTML.length != 0) {
+        badFontText.innerHTML = "There was an error trying to retrieve the status for speaker " + features[i].getProperties().speaker.id;
+
+      } else {
+        badFontText.innerHTML += ", speaker " + features[i].getProperties().speaker.id; 
+      }
       // we also need to add something to track which speakers are fine and which ones arent so that we
       // can do instant updating
 
@@ -863,7 +918,7 @@
     } else {
        style = new ol.style.Style({
                     image: new ol.style.Circle({
-                      radius: 15/Math.max(savedResolution, 1),
+                      radius: 15 / Math.max(savedResolution, 1),
                       stroke: new ol.style.Stroke({
                           color: '#000000'
                       }),
@@ -873,7 +928,15 @@
                     })
                 });
 
-       // update the statuscircle thing
+      var badCircleText = document.getElementById("badCircleText");
+      var badFontText = document.getElementById("badFontText");
+      badCircleText.innerHTML = "";
+      badFontText.innerHTML = "";
+       
+      goodCircle.style.visibility = "visible";
+      badCircle.style.visibility = "hidden";
+      goodFont.style.visibility = "visible";
+      badFont.style.visibility = "hidden";
     }
 
     features[i].setStyle(style);

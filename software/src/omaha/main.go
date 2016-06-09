@@ -8,6 +8,7 @@ import (
 	"omaha/database"
 	"omaha/handlers"
 	"omaha/system"
+    "sync"
 )
 
 func schedule(keepAlive func(ID int8) (int8), delay time.Duration, amountOfControllers int8, controllers []*database.ControllerStatus) chan bool {
@@ -17,60 +18,55 @@ func schedule(keepAlive func(ID int8) (int8), delay time.Duration, amountOfContr
     //log.Println(controllers)
 
     status := system.GetSystemStatus()
-    x := 0
+    //x := 0
     go func() {
-        hour := time.After(time.Second)
+        //hour := time.After(time.Second)
         for {
             second := time.After(delay)
             select {
-            case <- second:
-                x += 1
+                case <- second:
+                    /*x += 1
 
-                if(x > 86400) {
-                    // Every 24 hours send the microcontrollers a new schedule
-                    // Every hour send the microcontrollers their schedules
-                    //sendSchedules()
-                }
+                    if(x > 86400) {
+                        // Every 24 hours send the microcontrollers a new schedule
+                        // Every hour send the microcontrollers their schedules
+                        //sendSchedules()
+                    }*/
 
-                //log.Println(controllers)
+                    //log.Println(controllers)
 
-                status.ID = controller + 1
+                    status.ID = controller + 1
 
-                //log.Println(controller)
-               
-                status.BrokenLink = keepAlive(controller)
+                    //log.Println(controller)
+                   
+                    status.BrokenLink = keepAlive(controller)
 
-                //log.Println(controllers[controller])
-                /*for i := 0; i < len(controllers); i++ {
-                    //log.Println(controllers[i])
-                }*/
-                if(status.BrokenLink != int8(controllers[controller].Status)) {
-                    database.UpdateStatus(status.ID, status.BrokenLink)
-                }
+                    //log.Println(controllers[controller])
+                    /*for i := 0; i < len(controllers); i++ {
+                        //log.Println(controllers[i])
+                    }*/
+                    if(status.BrokenLink != int8(controllers[controller].Status)) {
+                        database.UpdateStatus(status.ID, status.BrokenLink)
+                    }
 
-                // repeat the keepAlive until the controller responds, we can also set a bounding here so that it will not be tested regularly after awhile
-                if(status.BrokenLink == 0) {
-                    controller++            // if we get a 0 then move onto the next controller
-                } else {
-                    // at this point we should have a function jump that will use a case and figure out wtf is wrong with the controller, and then we can
-                    // add it to a skipped array (or make a new data structure to support this) if there is UI consent/acknowledgment 
-                }
+                    // repeat the keepAlive until the controller responds, we can also set a bounding here so that it will not be tested regularly after awhile
+                    if(status.BrokenLink == 0) {
+                        controller++            // if we get a 0 then move onto the next controller
+                    } else {
+                        // at this point we should have a function jump that will use a case and figure out wtf is wrong with the controller, and then we can
+                        // add it to a skipped array (or make a new data structure to support this) if there is UI consent/acknowledgment 
+                    }
 
-                //log.Println("I got to here")
-                //log.Println(controller, amountOfControllers)
-                if(controller > amountOfControllers - 1) {
-                    controller = 1
-                    status.ID = 1
-                    //log.Println("I got to here3")
-                }
+                    //log.Println("I got to here")
+                    //log.Println(controller, amountOfControllers)
+                    if(controller > amountOfControllers - 1) {
+                        controller = 1
+                        status.ID = 1
+                        //log.Println("I got to here3")
+                    }
 
-            case <- hour:
-                log.Println("Sending new schedules")
-                hour = time.After(2 * time.Hour)
-                // gonna have to pull from the DB
-
-            case <- stop:
-                return
+                case <- stop:
+                    return
             }
         }
     }()
@@ -86,6 +82,7 @@ func startKeepAlive(amountOfControllers int, controllers []*database.ControllerS
 	}
     schedule(keepAlive, 1 * time.Second, int8(amountOfControllers), controllers)
 }
+
 
 func main() {
 	// initialization
@@ -113,6 +110,14 @@ func main() {
 	log.Println(SystemStatus, amountOfControllers)
 
 	handlers.InitializeHandlers()
+
+    // Only run the startup process if we are not in debug
+    if(*debug == false) {
+        var wg sync.WaitGroup
+        wg.Add(1)
+        system.StartUpProcess(&wg)
+        wg.Wait()
+    }
 
 	log.Println("Starting KeepAlive sequence")
 	startKeepAlive(amountOfControllers, controllers)

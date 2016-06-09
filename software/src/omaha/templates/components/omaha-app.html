@@ -373,6 +373,9 @@
           console.log("{username} does not have access to this speaker");
 
         }
+    var basic_container = document.getElementById("basic_container");
+    var card = document.getElementById("card");
+    basic_container.style.marginLeft = (Math.abs(card.offsetWidth - basic_container.offsetWidth) / 2) - 28 + "px";
 
       },
       

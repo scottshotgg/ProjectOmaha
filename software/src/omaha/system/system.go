@@ -9,10 +9,11 @@ import (
 var status SystemStatus
 
 type SystemStatus struct {
-	debug		bool				`json:"-"`
-	Port 		io.ReadWriteCloser	`json:"-"`
-	ID 			int8				`json:"id"`
-	BrokenLink	int8				`json:"brokenLink"`
+	debug				bool								`json:"-"`
+	finding			bool								`json:"-"`
+	Port 				io.ReadWriteCloser	`json:"-"`
+	ID 					int8								`json:"id"`
+	BrokenLink	int8								`json:"brokenLink"`
 	// damaged controllers in an array here
 }
 
@@ -20,6 +21,14 @@ type SystemStatus struct {
 // It may also be easier to access (programmatically, at least) that way
 func (status *SystemStatus) IsDebug() bool {
 	return status.debug
+}
+
+func (status *SystemStatus) IsFinding() bool {
+	return status.finding
+}
+
+func (status *SystemStatus) SetFinding(finding bool) {
+	status.finding = finding
 }
 
 func InitializeSystemStatus(isDebug bool) (*SystemStatus, int, []*database.ControllerStatus) {		// this might need to change to controllers and return the entire object/pointer 

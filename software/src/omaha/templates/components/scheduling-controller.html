@@ -100,8 +100,8 @@
       }
 
     </style>
-    <paper-card heading="Scheduling" elevation="4">
-      <div id="card-content" class="card-content" style="height: calc(.44 * 100vh);">
+    <paper-card id="card" heading="Scheduling" elevation="4">
+      <div id="card-content" class="card-content" style="margin-right: 0px; height: calc(.35 * 100vh);">
 
       	<paper-radio-group id="schedulingSelector" selected="{{mode}}">
           <paper-radio-button id="basicModeButton" 			name="basic"     onclick="drawBasic()" class="flex">Basic</paper-radio-button>
@@ -348,6 +348,8 @@
 <script>
 
 var timingDataArray = [];
+var defaultWidth = 0;
+var defaultHeight = 0;
 
 //change the offsets to be static values instead of moving with the screen width of percentage wise
 	var schedulingMode;
@@ -361,6 +363,16 @@ var timingDataArray = [];
   var canvas_timing = document.getElementById("timingChart");
   var chart_width_scalar_timing = .8;
   var chart_height_scalar_timing = .52;
+ 	
+
+ 	function saveDefault() {
+ 		if(defaultWidth == 0) {
+ 			defaultWidth = document.getElementById("card-content").offsetWidth;
+ 		}
+ 		if(defaultHeight == 0) {
+ 			defaultHeight = document.getElementById("card-content").offsetHeight;
+ 		}
+ 	}
 
   function drawBasic() {
   	ss.schedulingSelector.selected = "basic";
@@ -370,9 +382,7 @@ var timingDataArray = [];
   	
   	document.getElementById("card-content").style.width = localWidth + "px";
   	document.getElementById("card-content").style.height = localHeight + "px";
-
   	console.log(speaker);
-
 
     loadDayOutside();
 	}
@@ -436,10 +446,25 @@ var timingDataArray = [];
   		var localHeight = $(window).height() * .5;
   		document.getElementById("card-content").style.height = localHeight + "px";
 	  */
-      redrawTimingOnInput()
+      redrawTimingOnInput();
    	}
+   	adjustSize();
 
   });
+
+  function adjustSize() {	
+  	var localWidth = $(window).width() * .2;
+  	var localHeight = $(window).height() * .5;
+
+  	//document.getElementById("card-content").style.width = localWidth + "px";
+  	if(ss.schedulingSelector.selected == "basic") {  
+  		document.getElementById("card-content").style.height = localHeight + "px";
+  		saveDefault();
+	   	var basic_container = document.getElementById("basic_container");
+	   	var card = document.getElementById("card");
+	   	basic_container.style.marginLeft = (Math.abs(card.offsetWidth - basic_container.offsetWidth) / 2) - 28 + "px";
+  	}
+  }
 
   //var labels = ["7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM", "12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM"];
 

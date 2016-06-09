@@ -5,21 +5,99 @@ import (
 	"io"
 	"log"
 	"time"
+  "sync"
 )
 
 var MessageChan chan *ControllerRequest = make(chan *ControllerRequest, 100)
 
+var portMap [] *serial.Config
+var chains[] int8
 type ControllerRequest struct {
 	Data       []byte
 	OnWrite    func() interface{}
 	ResultChan chan interface{}
 }
 
+
+func StartUpProcess(wg *sync.WaitGroup) {
+	status := GetSystemStatus()
+  done := make(chan bool)
+	status.SetFinding(true)
+  go func() {
+      var x int8 = 0
+      chain := 0
+      //var strikes = 0
+      for {
+          second := time.After(1 * time.Second)
+          select {
+              case <- second:
+                  found := KeepAlive(x)
+
+                  // this is just for debug purposes, remove later
+                  // *****************
+                  if(x == 5) {
+                      wg.Done()
+                      done <- true
+                  }
+                  // *****************
+                  // this is just for debug purposes, remove later
+
+                  if(found != 0) {
+                      chains = append(chains, x - 1)
+                      if(chain == 3) {
+                          wg.Done()
+													status.SetFinding(false)
+                          done <- true
+                      } else {
+                          chain++
+                          SwitchTransceiver(chain)  
+                          x = 0
+                      }
+                  } else {
+                      log.Println("Found a speaker")
+                      x++
+                  }
+
+              case <- done:
+                  return
+          }
+      }
+  }() 
+}
+
+func resolveChain(id int8) {
+	transceiver := 0
+	switch {
+		case id > chains[0]:
+			transceiver = 0
+			break
+		case id > chains[1]:
+			transceiver = 1
+			break
+		case id > chains[2]:
+			transceiver = 2
+			break
+		case id > chains[3]:
+			transceiver = 3
+			break
+		default:
+			log.Println("SPEAKER WITH ID:", id, " COULD NOT BE RESOLVED")
+			// panic or something here or tell the website to display something on the interface that an error occured
+	}
+
+	SwitchTransceiver(transceiver)
+
+}
+
 func HandleControllerMessages() {
 	for {
 		req := <-MessageChan
 		status := GetSystemStatus()
+
 		if !status.IsDebug() {
+			if !status.IsFinding() {
+				resolveChain(int8(req.Data[0]))
+			}
 			_, err := status.Port.Write(req.Data)
 
 			if err != nil {
@@ -90,14 +168,24 @@ func (status *SystemStatus) InitializePort() {
 	}*/
 
 	// osx: /dev/cu.uart-34FF466E37414555
+	portMap = append(portMap, &serial.Config{Name: "/dev/ttyUSB0", Baud: 9600, ReadTimeout: time.Second})
+	portMap = append(portMap, &serial.Config{Name: "/dev/ttyUSB1", Baud: 9600, ReadTimeout: time.Second})
+	portMap = append(portMap, &serial.Config{Name: "/dev/ttyUSB2", Baud: 9600, ReadTimeout: time.Second})
+	portMap = append(portMap, &serial.Config{Name: "/dev/ttyUSB3", Baud: 9600, ReadTimeout: time.Second})
 
-	c := &serial.Config{Name: "/dev/ttyUSB0", Baud: 9600, ReadTimeout: time.Second} // Probably want a half a second. This is plenty for the microcontroller to have time to respond
-	s, err := serial.OpenPort(c)                                                    // If it hasn't responded by now then it isn't going to most likely
-	if err != nil {                                                                 // Actually, you can't do this, for some reason it has to be an int value and cant be a floating value
+	SwitchTransceiver(0)
+}
+
+// this might need a more appropriate name
+func SwitchTransceiver(id int) {
+	status := GetSystemStatus()
+
+	s, err := serial.OpenPort(portMap[id])                                                    
+	if err != nil {                                                                 
 		log.Fatal(err)
 	}
 
-	log.Println("Hello " + c.Name)
+	log.Println("Hello " + portMap[id].Name)
 
-	status.Port = s
+	status.Port = s	
 }
