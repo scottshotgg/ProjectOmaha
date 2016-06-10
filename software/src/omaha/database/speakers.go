@@ -9,9 +9,9 @@ import (
 	"strconv"
 )
 
-// createSpeakerTable creates the speaker table in the database
-// tab this shit over if you get bored
-// make one of these for the presets also
+/*
+	createSpeakerTable creates the Speaker table in the database.
+*/
 func createSpeakerTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE speaker (
@@ -128,7 +128,7 @@ func createSpeakerTable() {
 			tBand19 REAL, 
 			tBand20 REAL
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -137,27 +137,7 @@ func createSpeakerTable() {
 }
 
 /*
-paBand0 REAL, 
-			paBand1 REAL, 
-			paBand2 REAL, 
-			paBand3 REAL, 
-			paBand4 REAL, 
-			paBand5 REAL, 
-			paBand6 REAL, 
-			paBand7 REAL, 
-			paBand8 REAL, 
-			paBand9 REAL, 
-			paBand10 REAL, 
-			paBand11 REAL, 
-			paBand12 REAL, 
-			paBand13 REAL, 
-			paBand14 REAL, 
-			paBand15 REAL, 
-			paBand16 REAL, 
-			paBand17 REAL, 
-			paBand18 REAL, 
-			paBand19 REAL, 
-			paBand20 REAL,
+	createEqualizerPresetsTable creates the equalzier presets table.
 */
 func createEqualizerPresetsTable() {
 	_, err := DB.Exec(`
@@ -188,7 +168,7 @@ func createEqualizerPresetsTable() {
 			band20 REAL,
 			PRIMARY KEY (speakerID, name)
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -196,6 +176,9 @@ func createEqualizerPresetsTable() {
 	}
 }
 
+/*
+	createMusicEqualizerPresetsTable creates the MusicEqualizerPresets table.
+*/
 func createMusicEqualizerPresetsTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE MusicEqualizerPresets (
@@ -225,7 +208,7 @@ func createMusicEqualizerPresetsTable() {
 			band20 REAL,
 			PRIMARY KEY (speakerID, name)
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -233,6 +216,9 @@ func createMusicEqualizerPresetsTable() {
 	}
 }
 
+/*
+	createPagingEqualizerPresetsTable creates the PagingEqualizerPresets table.
+*/
 func createPagingEqualizerPresetsTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE PagingEqualizerPresets (
@@ -262,7 +248,7 @@ func createPagingEqualizerPresetsTable() {
 			band20 REAL,
 			PRIMARY KEY (speakerID, name)
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -270,6 +256,9 @@ func createPagingEqualizerPresetsTable() {
 	}
 }
 
+/*
+	createTargetsTable creates the Targets table.
+*/
 func createTargetsTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE Targets (
@@ -299,7 +288,7 @@ func createTargetsTable() {
 			band20 REAL,
 			PRIMARY KEY (speakerID, name)
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -307,6 +296,9 @@ func createTargetsTable() {
 	}
 }
 
+/*
+	createSchedulingTable creates the scheduling table.
+*/
 func createSchedulingTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE Scheduling (
@@ -340,20 +332,18 @@ func createSchedulingTable() {
 			hour22 INT,
 			hour23 INT
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
 		log.Println("Created scheduling table")
 	}
 }
-/*func GetAllStatus() {
 
-}*/
-
-// GetAllSpeakers gets all speakers from the database and returns them as a slice of ControllerStatus objects
+/*
+	GetAllSpeakers gets all speakers from the database and returns them as a slice of ControllerStatus objects.
+*/
 func GetAllSpeakers() []*ControllerStatus {		
-// not sure if we need to get all the bands and stuff, doesnt look like that are used
 	rows, err := DB.Query(`
 		SELECT speakerID, name, x, y,  
 			volumeLevel,
@@ -499,9 +489,7 @@ func GetAllSpeakers() []*ControllerStatus {
 		var status int
 		var equalizerMode int8
 		var schedulingMode int8
-		// var currentMode int
-		// var whichPreset int
-		var eBand0 float64			// why do we need to pull all of this stuff, this can be optimized!!
+		var eBand0 float64
 		var eBand1 float64
 		var eBand2 float64
 		var eBand3 float64
@@ -545,7 +533,7 @@ func GetAllSpeakers() []*ControllerStatus {
 		var mBand19 float64
 		var mBand20 float64
 
-		var pBand0 float64			// why do we need to pull all of this stuff, this can be optimized!!
+		var pBand0 float64
 		var pBand1 float64
 		var pBand2 float64
 		var pBand3 float64
@@ -589,8 +577,6 @@ func GetAllSpeakers() []*ControllerStatus {
 		var tBand19 float64
 		var tBand20 float64
 
-		// in here get the presets that go along with the speakers and use those variables 
-
 		if err := rows.Scan(
 			&speakerID, 
 			&name, 
@@ -614,9 +600,7 @@ func GetAllSpeakers() []*ControllerStatus {
 			&equalizerMode,	
 			&schedulingMode,		
 
-			// we may not even need to scan all this.....
-
-			// Current preset bands
+			// Current equalizer preset bands
 			&eBand0,
 			&eBand1,
 			&eBand2,
@@ -662,6 +646,7 @@ func GetAllSpeakers() []*ControllerStatus {
 			&mBand19,
 			&mBand20,
 
+			// Current paging preset bands
 			&pBand0,
 			&pBand1,
 			&pBand2,
@@ -734,13 +719,14 @@ func GetAllSpeakers() []*ControllerStatus {
 
 		speaker.PagingLevel[0] = int8(fadeTime)
 		speaker.PagingLevel[1] = int8(fadeLevel)
-		// might need an averaging setter here later
 		speakers = append(speakers, speaker)
 	}
 	return speakers
 }
 
-// GetSpeaker gets a speaker from the database
+/*
+	GetSpeaker retrieves all current speaker information for the specified speakerID and returns it as a pointer to a ControllerStatus object. 
+*/
 func GetSpeaker(speakerID int8) *ControllerStatus {
 	var speakerid int8
 
@@ -761,8 +747,8 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var x int
 	var y int
 	var name string
-	var presetName string		// might need to make a catch for this
-	var targetName string		// might need to make a catch for this
+	var presetName string
+	var targetName string
 	var whichPreset int
 	var status int
 	var equalizerMode int8
@@ -878,8 +864,6 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 	var tBand19 float64
 	var tBand20 float64
 
-
-//	var interval int
 	var day int
 	var interval int
 	var start int
@@ -1043,7 +1027,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&equalizerMode,
 			&schedulingMode,
 
-			// Current preset bands
+			// Current equalizer preset bands
 			&eBand0,
 			&eBand1,
 			&eBand2,
@@ -1089,7 +1073,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			&mBand19,
 			&mBand20,
 
-			// Current preset bands
+			// Current paging preset bands
 			&pBand0,
 			&pBand1,
 			&pBand2,
@@ -1247,7 +1231,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			
 			speaker.PresetNames = append(speaker.PresetNames, presetName)
 			speaker.Equalizer = append(speaker.Equalizer, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
-			log.Println(speaker.PresetNames, speaker.Equalizer)		// make sure that the two arrays are the same size
+			log.Println(speaker.PresetNames, speaker.Equalizer)
 	}
 
 	rows, err = DB.Query(`
@@ -1308,7 +1292,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			
 			speaker.MusicPresetNames = append(speaker.MusicPresetNames, presetName)
 			speaker.MusicEqualizer = append(speaker.MusicEqualizer, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
-			log.Println(speaker.MusicPresetNames, speaker.MusicEqualizer)		// make sure that the two arrays are the same size
+			log.Println(speaker.MusicPresetNames, speaker.MusicEqualizer)
 	}
 	err = rows.Err()
 	if err != nil {
@@ -1373,7 +1357,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 			
 			speaker.PagingPresetNames = append(speaker.PagingPresetNames, presetName)
 			speaker.PagingEqualizer = append(speaker.PagingEqualizer, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
-			log.Println(speaker.PagingPresetNames, speaker.PagingEqualizer)		// make sure that the two arrays are the same size
+			log.Println(speaker.PagingPresetNames, speaker.PagingEqualizer)
 	}
 	err = rows.Err()
 	if err != nil {
@@ -1439,20 +1423,7 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 
 		speaker.TargetNames = append(speaker.TargetNames, targetName)
 		speaker.Target = append(speaker.Target, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
-		log.Println(speaker.TargetNames, speaker.Target)		// make sure that the two arrays are the same size
-
-		//log.Println("current", current)
-
-		// make current the one that is stored in the speaker table
-		/*
-		if(current == 0) {
-			constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
-			speaker.Equalizer  = append(speaker.Equalizer, constants)
-		} else {
-			speaker.Current = [21]int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
-			log.Println("hi from current:", speaker.Current)
-		}
-		*/
+		log.Println(speaker.TargetNames, speaker.Target)
 	}
 	err = rows.Err()
 	if err != nil {
@@ -1468,7 +1439,6 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 
 	for rows.Next() {
 		err = rows.Scan(
-			//&interval,
 			&speakerid,
 			&day,
 			&interval,
@@ -1502,23 +1472,16 @@ func GetSpeaker(speakerID int8) *ControllerStatus {
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		//log.Println(day)
-		// interval needs to go in here as well
 		speaker.Schedule = append(speaker.Schedule, []int {day, interval, start, end, hour0, hour1, hour2, hour3, hour4, hour5, hour6, hour7, hour8, hour9, hour10, hour11, hour12, hour13, hour14, hour15, hour16, hour17, hour18, hour19, hour20, hour21, hour22, hour23})
-
 	}
-	//log.Println(speaker.Music)
 
-	// it is pulling from here but we need to figure out a way to distinguish which one should be loaded
-
-	//speaker.Equalizer = constant in Current
-	// might not need to append if we have the current in 
-	//log.Println(speaker.VolumeLevel
 	return speaker
 }
 
-
+/*
+	UpdateStatus updates the status of the speaker with the specified speakerID.
+	This is used to reflect whether or not the speaker has been determined to be alive or not.
+*/
 func UpdateStatus(ID int8, status int8) {
 	log.Println("Saving status")
 	_, err := DB.Exec(`
@@ -1534,7 +1497,9 @@ func UpdateStatus(ID int8, status int8) {
 	log.Println(ID, status)
 }
 
-
+/*
+	UpdateSchedule updates the speaker schedule for a the specified speakerID.
+*/
 func UpdateSchedule(speakerid int8, day int, interval int, start int, end int, times [24]int) {
 	log.Println("UpdateSchedule")
 	log.Println(speakerid, start, end, times, day)
@@ -1559,7 +1524,9 @@ func UpdateSchedule(speakerid int8, day int, interval int, start int, end int, t
 	}
 }
 
-
+/*
+	UpdateScheduleZone: This is the zone version of UpdateSchedule. As such, it updates the schedule of a zone instead of just a speaker.
+*/
 func UpdateScheduleZone(zoneid int8, day int, interval int, start int, end int, times [24]int) {
 	log.Println("UpdateScheduleZone")
 	log.Println(zoneid, start, end, times, day)
@@ -1584,159 +1551,131 @@ func UpdateScheduleZone(zoneid int8, day int, interval int, start int, end int, 
 	}
 }
 
-
+/*
+	SavePreset saves the preset of the specified speaker by inserting the speakerID along with the constants to save into the EqualizerPresets table.
+*/
 func SavePreset(speakerId int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SavePreset: I am firing")
 	var stringOfStatement string = "INSERT into EqualizerPresets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])
+	if errr != nil {
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
 
-
+/*
+	SaveMusicPreset saves the music preset of the specified speaker by inserting the speakerID along with the constants to save into the MusicEqualizerPresets table.
+*/
 func SaveMusicPreset(speakerId int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SaveMusicPreset: I am firing")
 	var stringOfStatement string = "INSERT into MusicEqualizerPresets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])
+	if errr != nil {
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
 
-
+/*
+	SavePagingPreset saves the paging preset of the specified speaker by inserting the speakerID along with the constants to save into the PagingEqualizerPresets table.
+*/
 func SavePagingPreset(speakerId int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SavePagingPreset: I am firing")
 	var stringOfStatement string = "INSERT into PagingEqualizerPresets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])
+	if errr != nil {		
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
 
-
-// wtf is this for, cant remember why I created this
+/*
+this function is deprecated but kept for integrity purposes
 func UpdateTarget(speakerId int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SaveTarget: I am firing")
 	var stringOfStatement string = "INSERT into Targets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])
+	if errr != nil {				
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
+*/
 
 
+/*
+	SaveTarget saves the Target of the specified speaker by inserting the speakerID along with the constants to save into the Targets table.
+*/
 func SaveTarget(speakerId int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SaveTarget: I am firing")
 	var stringOfStatement string = "INSERT into Targets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, speakerId, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])
+	if errr != nil {				
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
 
-
+/*
+	SavePresetZone: This is the zone version of the SavePreset function. As such, it saves the preset of the specified zone by inserting the speakerID and the constants to save into the EqualizerPresetsZone table.
+*/
 func SavePresetZone(zoneid int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SavePresetZone: I am firing")
 	var stringOfStatement string = "INSERT into EqualizerPresetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])
+	if errr != nil {				
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
 
+/*
+	SaveMusicPresetZone: This is the zone version of the SaveMusicPreset function. As such, it saves the music preset of the specified zone by inserting the speakerID and the constants to save into the MusicEqualizerPresetsZone table. 
+*/
 func SaveMusicPresetZone(zoneid int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SaveMusicPresetZone: I am firing")
 	var stringOfStatement string = "INSERT into MusicEqualizerPresetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])
+	if errr != nil {				
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
 
+/*
+	SavePagingPresetZone: This is the zone version of the SavePagingPreset function. As such, it saves the paging preset of the specified zone by inserting the speakerID and the constants to save into the PagingEqualizerPresetsZone table. 
+*/
 func SavePagingPresetZone(zoneid int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SavePagingPresetZone: I am firing")
 	var stringOfStatement string = "INSERT into PagingEqualizerPresetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])
+	if errr != nil {				
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
 
-
-// wtf is this for, cant remember why I created this
+/*
+this function is deprecated but is kept for integrity purposes
 func UpdateTargetZone(zoneid int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SaveTargetZone: I am firing")
 	var stringOfStatement string = "INSERT into TargetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	if errr != nil {			
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
+*/
 
-
+/*
+	SaveTargetZone: This is the zone version of the SaveTarget function. As such, it saves the targets of the specificed zone by inserting the speakerID and the constants to save into the TargetsZone table.
+*/
 func SaveTargetZone(zoneid int8, name string, constants []string) {
-
-	//var stringOfStatement string = "INSERT into EqualizerPresets VALUES (" + strconv.Itoa(int(speakerId)) + " " + name + "-1" + constants[0] + constants[1] + constants[2] + constants[3] + constants[4] + constants[5] + constants[6] + constants[7] + constants[8] + constants[9] + constants[10] + constants[11] + constants[12] + constants[13] + constants[14] + constants[15] + constants[16] + constants[17] + constants[18] + constants[19] + constants[20] + ")"
 	log.Println("SaveTargetZone: I am firing")
 	var stringOfStatement string = "INSERT into TargetsZone VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, zoneid, name, "-1", constants[0], constants[1], constants[2], constants[3], constants[4], constants[5], constants[6], constants[7], constants[8], constants[9], constants[10], constants[11], constants[12], constants[13], constants[14], constants[15], constants[16], constants[17], constants[18], constants[19], constants[20])
+	if errr != nil {				
 		log.Fatal(errr)			
 	}
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
 }
 
 
-// SaveSpeaker saves the speaker provided to the database
-// reduce the generality if performance wanes and we need it
+/*
+	SaveVolume saves the volume for the specified speakerID to the database by updating the four volume values into the database in the speaker table for the respective speaker.
+*/
 func SaveVolume(speaker *ControllerStatus) {
 	log.Println("SaveVolume: I am firing")
 	_, err := DB.Exec(`
@@ -1747,13 +1686,16 @@ func SaveVolume(speaker *ControllerStatus) {
 			pagingLevel = ?,
 			soundMaskingLevel = ?
 		WHERE speakerID = ?
-	`, speaker.VolumeLevel[0], speaker.VolumeLevel[1], speaker.VolumeLevel[2], speaker.VolumeLevel[3], speaker.ID)	// the volumeLevel needs to change
+	`, speaker.VolumeLevel[0], speaker.VolumeLevel[1], speaker.VolumeLevel[2], speaker.VolumeLevel[3], speaker.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println(speaker)
 }
 
+/*
+	SaveVolumeZone: This is the zone version of the SaveVolume function. As such, it saves the volume for the specified zoneID to the database by updating the four volume values into the database in the zone table for the respective zone.
+*/
 func SaveVolumeZone(zone *Zone) {
 	log.Println("SaveVolumeZone: I am firing")
 	_, err := DB.Exec(`
@@ -1764,14 +1706,16 @@ func SaveVolumeZone(zone *Zone) {
 			pagingLevel = ?,
 			soundMaskingLevel = ?
 		WHERE zoneID = ?
-	`, zone.VolumeLevel[0], zone.VolumeLevel[1], zone.VolumeLevel[2], zone.VolumeLevel[3], zone.ZoneID)	// the volumeLevel needs to change
+	`, zone.VolumeLevel[0], zone.VolumeLevel[1], zone.VolumeLevel[2], zone.VolumeLevel[3], zone.ZoneID)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println(zone)
 }
 
-
+/*
+	UpdateThreshold updates the threshold for the volume value in the database by updating the values in the speaker table for the respective speaker.
+*/
 func UpdateThreshold(speaker int8, musicMin int8, musicMax int8, pagingMin int8, pagingMax int8, maskingMin int8, maskingMax int8) {
 	log.Println("UpdateThreshold: I am firing", speaker)
 	_, err := DB.Exec(`
@@ -1790,7 +1734,9 @@ func UpdateThreshold(speaker int8, musicMin int8, musicMax int8, pagingMin int8,
 	}
 }
 
-
+/*
+	UpdateThresholdZone: This is the zone version of the UpdateThreshold function. As such, it saves the threshold values to the database by updating the threshold values into the databse in the zone table for the respective zone.
+*/
 func UpdateThresholdZone(zone int8, musicMin int8, musicMax int8, pagingMin int8, pagingMax int8, maskingMin int8, maskingMax int8) {
 	log.Println("UpdateThreshold: I am firing", zone)
 	_, err := DB.Exec(`
@@ -1809,7 +1755,9 @@ func UpdateThresholdZone(zone int8, musicMin int8, musicMax int8, pagingMin int8
 	}
 }
 
-
+/*
+	SaveFade saves the fade time and fade level to the database by updating the two fade values in the database for the respective speaker.
+*/
 func SaveFade(speaker *ControllerStatus) {
 	log.Println("SaveFade: I am firing")
 	_, err := DB.Exec(`
@@ -1818,13 +1766,15 @@ func SaveFade(speaker *ControllerStatus) {
 			fadeTime = ?,
 			fadeLevel = ?
 		WHERE speakerID = ?
-	`, speaker.PagingLevel[0], speaker.PagingLevel[1], speaker.ID)	// the volumeLevel needs to change
+	`, speaker.PagingLevel[0], speaker.PagingLevel[1], speaker.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-
+/*
+	SaveFadeZone: This is the zone version of the SaveFade function. As such, is saves the fade values to the database by updating the two fade values in the database for the respective zone.
+*/
 func SaveFadeZone(zone *Zone) {
 	log.Println("SaveFade: I am firing")
 	_, err := DB.Exec(`
@@ -1833,13 +1783,15 @@ func SaveFadeZone(zone *Zone) {
 			fadeTime = ?,
 			fadeLevel = ?
 		WHERE zoneID = ?
-	`, zone.PagingLevel[0], zone.PagingLevel[1], zone.ZoneID)	// the volumeLevel needs to change
+	`, zone.PagingLevel[0], zone.PagingLevel[1], zone.ZoneID)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-
+/*
+	SaveAveraging saves the effectiveness and pleasantness values to the databae by updating the effectiveness and pleasantness values in the database for the respective speaker.
+*/
 func SaveAveraging(speaker *ControllerStatus) {
 	log.Println("SaveAveraging: I am firing")
 	_, err := DB.Exec(`
@@ -1854,7 +1806,9 @@ func SaveAveraging(speaker *ControllerStatus) {
 	}
 }
 
-
+/*
+	SaveAveragingZone: This is the zone version of the SaveAveraging function. As such, it updates the effectiveness and pleasantness values for the respective zone in the zone table of the database.
+*/
 func SaveAveragingZone(zone *Zone) {
 	log.Println("SaveAveragingZone: I am firing")
 	_, err := DB.Exec(`
@@ -1869,8 +1823,10 @@ func SaveAveragingZone(zone *Zone) {
 	}
 }
 
-
-func SaveBand(speaker *ControllerStatus, band int, level float64, typeOfPreset int) { // this should return an error here if something is wrong
+/*
+	
+*/
+func SaveBand(speaker *ControllerStatus, band int, level float64, typeOfPreset int) {
 	var stringOfStatement string
 
 	switch typeOfPreset {
@@ -1885,20 +1841,15 @@ func SaveBand(speaker *ControllerStatus, band int, level float64, typeOfPreset i
 		default:
 			log.Println("SAVEBAND WAS PASSED AN INVALID PRESET OR TARGET VALUE")
 	}
-	//stmt, err := DB.Prepare()			// this might need to be prepared afterwards
 	log.Println("SaveBand: I am firing")
 
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
-	// need to check whether or not this is null or w/e before sending it off
-	_, errr := DB.Exec(stringOfStatement, level, speaker.ID)		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, level, speaker.ID)
+	if errr != nil {	
 		log.Fatal(errr)			
 	}
 }
 
-func SaveBandZone(zone *Zone, band int, level float64, typeOfPreset int) { // this should return an error here if something is wrong
+func SaveBandZone(zone *Zone, band int, level float64, typeOfPreset int) { 
 	var stringOfStatement string
 
 	switch typeOfPreset {
@@ -1916,19 +1867,14 @@ func SaveBandZone(zone *Zone, band int, level float64, typeOfPreset int) { // th
 
 	log.Println("SaveBandZone: I am firing")
 
-	//log.Println(stringOfStatement)
-
-	//statement, err := DB.Prepare(stringOfStatement)
-	// need to check whether or not this is null or w/e before sending it off
-	_, errr := DB.Exec(stringOfStatement, level, zone.ZoneID)		// may not even need the speaker object to be passed in, idk why this shit is uneccessarily abstracted
-	if errr != nil {				// also remember that the level that we are passing in is not offset, it is the true level, as it should be
+	_, errr := DB.Exec(stringOfStatement, level, zone.ZoneID)	
+	if errr != nil {		
 		log.Fatal(errr)			
 	}
 }
 
 // addSpeaker adds a speaker to the database at the specified location
 func addSpeaker(loc speakerLocation) int8 {
-	// add to speaker table
 	result, err := insertSpeakerStmt.Exec(loc.X, loc.Y)
 	if err != nil {
 		log.Fatal(err)
@@ -1937,8 +1883,6 @@ func addSpeaker(loc speakerLocation) int8 {
 		if err != nil {
 			log.Fatal(err)
 		}
-		// add to default zone
-		//addSpeakerToAllZones(int8(id), zoneStmt2)
 		log.Printf("Created speaker %d at (%d, %d)\n", id, loc.X, loc.Y)
 		return int8(id)
 	}
@@ -1988,8 +1932,6 @@ func ChangeSchedulingModeZone(zone int8, mode int) error {
 func CreatePagingZone(speakers []int8, name string) error {
 	log.Println(name, speakers)
 
-	//stmt, err := DB.Prepare(`INSERT INTO zone (name) VALUES (?)`, name)
-
 	_, ziError := DB.Exec(`INSERT INTO pagingZone (name) VALUES (?)`, name)
 
 	_, zsError := DB.Exec(`SELECT zoneID FROM pagingZone where name=?`, name)
@@ -2000,8 +1942,6 @@ func CreatePagingZone(speakers []int8, name string) error {
 	err := DB.QueryRow(`SELECT zoneID FROM pagingZone where name=?`, name).Scan(&zoneID)
 	log.Println(zoneID, err)
 
-
-	// this may need to be transacted instead of single
 	for i := 0; i < len(speakers); i++ {
 		_, ztsError := DB.Exec(`INSERT INTO pagingZoneToSpeaker (zoneID, speakerID) VALUES (?, ?)`, zoneID, speakers[i])
 		log.Println("I am le running: ", speakers[i], ztsError)
@@ -2011,8 +1951,6 @@ func CreatePagingZone(speakers []int8, name string) error {
 
 func CreateZone(speakers []int8, name string) error {
 	log.Println(name, speakers)
-
-	//stmt, err := DB.Prepare(`INSERT INTO zone (name) VALUES (?)`, name)
 
 	_, ziError := DB.Exec(`INSERT INTO zone (name) VALUES (?)`, name)
 
@@ -2024,8 +1962,6 @@ func CreateZone(speakers []int8, name string) error {
 	err := DB.QueryRow(`SELECT zoneID FROM zone where name=?`, name).Scan(&zoneID)
 	log.Println(zoneID, err)
 
-
-	// this may need to be transacted instead of single
 	for i := 0; i < len(speakers); i++ {
 		_, ztsError := DB.Exec(`INSERT INTO zoneToSpeaker (zoneID, speakerID) VALUES (?, ?)`, zoneID, speakers[i])
 		log.Println("I am le running: ", speakers[i], ztsError)
@@ -2154,19 +2090,18 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 	return stmt, nil
 }
 
-// populateSpeaker table populates the speaker table with the locations from the speaker locations file
 func populateSpeakerTable() {
 	tx, err := DB.Begin()
 	if err != nil {
 		log.Fatal(err)
 	}
-	// reset the statements back to their original values
+
 	defer func(speakerStmt, zoneStmt *sql.Stmt, pagingZoneStmt *sql.Stmt) {
 		insertSpeakerStmt = speakerStmt
 		addSpeakerToZonesStmt = zoneStmt
 		addSpeakerToPagingZonesStmt = pagingZoneStmt
 	}(insertSpeakerStmt, addSpeakerToZonesStmt, addSpeakerToPagingZonesStmt)
-	// change the statements to use this transaction
+
 	insertSpeakerStmt = tx.Stmt(insertSpeakerStmt)
 	addSpeakerToZonesStmt = tx.Stmt(addSpeakerToZonesStmt)
 	addSpeakerToPagingZonesStmt = tx.Stmt(addSpeakerToPagingZonesStmt)

@@ -41,10 +41,12 @@ func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 				The request is coming from the server. Let it through by default.
 			*/
 		case sessionCookie == nil || !database.IsSessionHashValid(sessionCookie.Value):
+			log.Println("this is the hash thing", database.IsSessionHashValid(sessionCookie.Value))
 			redirectToLoginHandler(w, req)
 			log.Println("Redirected to login")
 			return
 	}
+	log.Println("this is the hash thing", database.IsSessionHashValid(sessionCookie.Value))
 
 	/*
 		Generic stuff goes here

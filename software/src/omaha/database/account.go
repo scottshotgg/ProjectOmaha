@@ -1,3 +1,9 @@
+/*
+	
+	Account.go focuses on the account aspects of the software system; verifying logins, who can access which speakers and zones, account access levels, as well as creating accounts. 
+	It also contains the authentication routines used. Currently there is not way to delete an account of change an account after making one.
+
+*/
 package database
 
 import (
@@ -9,6 +15,7 @@ import (
 	"log"
 	"math/big"
 )
+
 /*
 	LoginAccount checks the given information against what is in the account table.
 	If the information is correct, a new session hash is returned.
@@ -52,6 +59,10 @@ func LoginAccount(username, password string) (string, error) {
 	return sessionHash, nil
 }
 
+/*
+	GetLevelOfAccount retrieves the level of an account based on the username of an account and returns the level of the account in the form of an integer
+	Return values: 0, 1, 2 
+*/
 func GetLevelOfAccount(username string) int {
 	var level = 0
 	err := DB.QueryRow(`SELECT level FROM account WHERE username=?`, username).Scan(&level)
@@ -63,6 +74,9 @@ func GetLevelOfAccount(username string) int {
 	return level
 }
 
+/*
+	GetSpeakerForAccount checks which speaker it has access to and returns the speaker ID that it has access to.
+*/
 func GetSpeakerForAccount(username string) int {
 	var speakerID = -1
 	err := DB.QueryRow(`
@@ -81,6 +95,9 @@ func GetSpeakerForAccount(username string) int {
 	return speakerID
 }
 
+/*
+	GetZoneForAccount checks which zones the account has access to and return the zone ID that it has access to.
+*/
 func GetZoneForAccount(username string) int {
 	var zoneID = -1
 	err := DB.QueryRow(`
@@ -100,15 +117,16 @@ func GetZoneForAccount(username string) int {
 	return zoneID
 }
 
-// CreateAccount inserts a row in the account table with the given configuration.
-// later on make the email a net/mail type and use the AddressParser to verify
+/*
+	CreateAccount inserts a row in the account table with the given configuration.
+*/
 func CreateAccount(level int, username string, password string, name string, email string, phone string, speakerID int, zoneID int) error {
 	hashByte, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hash := string(hashByte)
 	_, err := DB.Exec(`INSERT INTO account 
 		(level, username, name, email, phone, hash)
 		VALUES (?, ?, ?, ?, ?, ?)
-		`, level, username, name, email, phone, hash)
+		`, level, username, name, email, phone, hash)			// later on make the email a net/mail type and use the AddressParser to verify
 	if err == nil {
 		log.Printf("Created account %s\n", username)
 
@@ -158,6 +176,9 @@ func CreateAccount(level int, username string, password string, name string, ema
 	return nil
 }
 
+/*
+	getCreateAccountStmt is a private function used to create the account insertion statement.
+*/
 func getCreateAccountStmt() (*sql.Stmt, error) {
 	return DB.Prepare(`INSERT INTO account 
 		(username, name, hash)
@@ -165,6 +186,9 @@ func getCreateAccountStmt() (*sql.Stmt, error) {
 		`)
 }
 
+/*
+	createAccountTable is a private function used to create the account table.
+*/
 func createAccountTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE account (
@@ -192,7 +216,10 @@ func createAccountTable() {
 	
 	CreateAccount(2, "super", "super", "superuser", "", "", -1, -1)
 }
- 
+
+/*
+	createAccountToSpeakersTable creates the AccountToSpeakers table that is used to link the accounts to the speakers that they can control.
+*/ 
 func createAccountToSpeakersTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE  AccountToSpeakers (
@@ -208,6 +235,9 @@ func createAccountToSpeakersTable() {
 	}
 }
 
+/*
+	createAccountToMaskingZonesTable creates the AccountToMaskingZones table that is used to link the accounts to the making zones that they can control. 
+*/
 func createAccountToMaskingZonesTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE  AccountToMaskingZones (
@@ -223,6 +253,9 @@ func createAccountToMaskingZonesTable() {
 	}
 }
 
+/*
+	creatAccountToPagingZonesTable creates the AccountToPagingZones table that is used to link the accounts to the paging zones that they can control.
+*/
 func createAccountToPagingZonesTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE  AccountToPagingZones (
@@ -238,7 +271,10 @@ func createAccountToPagingZonesTable() {
 	}
 }
 
-// IsSessionHashValid checks if the given hash is present in the database
+/* 
+	IsSessionHashValid checks if the given hash is present in the database. 
+	The return value is true if count is equal to 1, and false otherwise.
+*/
 func IsSessionHashValid(hash string) bool {
 	var count int
 	err := DB.QueryRow(`
@@ -250,6 +286,10 @@ func IsSessionHashValid(hash string) bool {
 	return count == 1
 }
 
+/*
+	AuthenticatePermissionFromHash takes a session hash string uses a nested select statment to retrieve the account access level based on the submitted hash by
+	using the accountSession table to acquire a userID from the hash and then using that userID to then retrieve the access level from the account table.
+*/
 func AuthenticatePermissionFromHash(hash string) int {
 	var permission = 0
 	log.Println(hash)
@@ -268,6 +308,10 @@ func AuthenticatePermissionFromHash(hash string) int {
 	return permission
 }
 
+/*
+	AuthenticateSpeakerFromHash takes a session hash string and uses a nested select statment to retrieve the account access level based on the submitted hash by
+	using the accountSeession table to acquire a userID from the hash and then using that userID to retrieve the speaker from the AccountToSpeaker table.
+*/
 func AuthenticateSpeakerFromHash(hash string) int {
 	var speaker = 0
 	err := DB.QueryRow(`
@@ -287,6 +331,10 @@ func AuthenticateSpeakerFromHash(hash string) int {
 	return speaker
 }
 
+/*
+	AuthenticateZonesFromHash taks a session hash string and uses a nested select statment to retrieve the account access level based on the submitted hash by
+	using the accountSession table to acquire a userID from the hash and then using then using the userID to retrieve the zone from the AccountsToZone table.
+*/
 func AuthenticateZoneFromHash(hash string) int {
 	var zone = 0
 	err := DB.QueryRow(`
@@ -306,6 +354,10 @@ func AuthenticateZoneFromHash(hash string) int {
 	return zone
 }
 
+/*
+	generateSessionHash is a private function that takes a string of the English alphabet capital and non-capital along with the first ten digits and creates a
+	unique hash from based on the random function.
+*/
 func generateSessionHash() string {
 	var chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	charsSize := big.NewInt(int64(len(chars)))
