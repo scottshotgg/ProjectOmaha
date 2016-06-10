@@ -22,22 +22,18 @@ func KeepAlive(ID int8) (error int8) {
 	log.Println("KeepAlive: ", data)
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
 		if status.IsDebug() {
-			//log.Println("KeepAlive Simlulation: ", data)
 			return nil
 		}
 		return nil
 	}}
 	MessageChan <- req
 
-	if(!status.IsDebug()){				// this is supposed to be !status
+	if(!status.IsDebug()){
 		b := []byte{0x00}			
 		status.ReadData(b)
 
-		//console.log(Zones);
-
 		log.Println("Return packet: ", b[0])
 
-		// if we get lower case k back then just return 0, else return whatever it returned back - here is where we can add diagnostics
 		if(int8(b[0]) == int8('A')) {
 			log.Println(int8('A'))
 			error = 0
@@ -124,7 +120,6 @@ func SetVolume(this *database.ControllerStatus) error {
 	log.Println("Packet contents: ", data)
 	
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		//this.VolumeLevel[0] = volumeLevel		this did not make sense at the time and was not useful
 		if status.IsDebug() {
 			log.Printf("Set volume to %d\n", this.VolumeLevel[0])
 		}
@@ -144,8 +139,6 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 	data[1] = Commands.GetVolume
 	data[2] = 0x00
 
-	// status.SendData(filter) commented out until filter is created
-
 	return 0, nil
 }
 
@@ -157,7 +150,6 @@ func SetMusicVolume(this *database.ControllerStatus) error {
 	log.Println("Packet contents: ", data)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		//this.VolumeLevel[1] = musicVolumeLevel
 		if status.IsDebug() {
 			log.Printf("Set music volume to %d\n", this.VolumeLevel[1])
 		}
@@ -168,23 +160,17 @@ func SetMusicVolume(this *database.ControllerStatus) error {
 	return nil
 }
 
-// put a getter here
-
 func SetPaging(this *database.ControllerStatus, pagingData int8) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetPaging
-
-	// we could either check here, but i dont think this is the appropriate place for that
-	// make the check where this is called 
 	data[2] = byte(pagingData)
 
 	log.Println("Packet contents: ", data)
 
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		//this.VolumeLevel[2] = pagingVolumeLevel	
 
 		if status.IsDebug() {
-			log.Printf("Set paging data to %d\n", pagingData)		// here is what I modified
+			log.Printf("Set paging data to %d\n", pagingData)
 		}
 		return nil
 	}}
@@ -201,7 +187,6 @@ func SetSoundMaskingVolume(this *database.ControllerStatus) error {
 	log.Println("Packet contents: ", data)
 	
 	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		//this.VolumeLevel[1] = musicVolumeLevel
 		if status.IsDebug() {
 			log.Printf("Set sound masking volume to %d\n", this.VolumeLevel[3])
 		}
@@ -211,49 +196,6 @@ func SetSoundMaskingVolume(this *database.ControllerStatus) error {
 
 	return nil
 }
-
-/*
-
-func SetFadeTime(this *database.ControllerStatus) error {
-	data := getMessageHeader(this.ID, 3)
-	data[1] = Commands.SetFadeTime
-
-	// we could either check here, but i dont think this is the appropriate place for that
-	// make the check where this is called 
-	data[2] = byte(this.PagingLevel[0])
-
-	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		//this.PagingLevel[0] = pagingFadeTime
-		if status.IsDebug() {
-			log.Printf("Set paging fade time to %d\n", this.PagingLevel[0])
-		}
-		return nil
-	}}
-	MessageChan <- req
-
-	return nil
-}
-
-func SetFadeLevel(this *database.ControllerStatus) error {
-	data := getMessageHeader(this.ID, 3)
-	data[1] = Commands.SetFadeLevel
-
-	// we could either check here, but i dont think this is the appropriate place for that
-	// make the check where this is called 
-	data[2] = byte(this.PagingLevel[1])
-
-	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		//this.PagingLevel[1] = pagingFadeLevel
-		if status.IsDebug() {
-			log.Printf("Set paging fade level to %d\n", this.PagingLevel[1])
-		}
-		return nil
-	}}
-	MessageChan <- req
-
-	return nil
-}
-*/
 
 func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 	data := getMessageHeader(this.ID, 3)
@@ -273,16 +215,10 @@ func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 	return nil
 }
 
-func (status *SystemStatus) ResetFIFO() (int, error) { // This function resets the FIFO on the micrcontrollers if one ever gets stuck
-	if status.debug {		// may not be implemented
+func (status *SystemStatus) ResetFIFO() (int, error) { 
+	if status.debug {
 		return 0, nil
 	}
-
-	//data := make([]byte, 8)
-
-	// for i := 0; i < 8; i++ {
-	// 	status.SendData(0x00) // Send all zeros, this will reset their FIFO, [0][0][command][data] could also mean that everyone listens
-	// }
 
 	return 0, nil
 }
@@ -316,27 +252,17 @@ func GetAveragingMode(this *database.ControllerStatus) (int, error) {
 
 }
 
-// Deprecated
-func (status *SystemStatus) SendCoefficientInformation(equalizedGain int8, decibal int8) (int8, error) { // Equalized gain or just raw gain and equalization can be done in here
+func (status *SystemStatus) SendCoefficientInformation(equalizedGain int8, decibal int8) (int8, error) {
 	if status.debug {
 		return 0, nil
 	}
-
-	// status.SendData(byte(decibal))
-	// status.SendData(byte(equalizedGain))
 
 	return 0, nil
 }
 
 func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8, decimal bool) (int, error) {
-
-	/*if status.debug {
-		return 0, nil
-	}*/
-
-	data := getMessageHeader(this.ID, 3)	// zone, id
-	data[1] = byte(band)		// Cannot use a command to do this
-	//data[2] = byte(level * 2 + 80)
+	data := getMessageHeader(this.ID, 3)
+	data[1] = byte(band)
 	if(decimal) {
 		data[2] = byte(level)
 	} else {
@@ -377,57 +303,25 @@ func SendPagingRequest(ID int8) (error) {
 	}
 
 	data := getMessageHeader(ID, 3)
-	data[1] = Commands.SetPaging		// Cannot use a command to do this
-	data[2] = 0		// Need to see what this needs to be, either 0 or 1, mcu cna check for the toggle
-
-	return nil
-}
-
-/*
-func (status *SystemStatus) SetPaging(this *database.ControllerStatus, pagingLevel int8) error {
-	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetPaging
-	data[2] = byte(pagingLevel)
-
-	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		this.PagingLevel = pagingLevel
-		if status.IsDebug() {
-			log.Printf("Set volume to %d\n", pagingLevel)
-		}
-		return nil
-	}}
-	MessageChan <- req
+	data[2] = 0
 
 	return nil
 }
-*/
 
-func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) { // Equalized gain or just raw gain and equalization can be done in here
+func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) {
 	if status.debug {
 		return m
 	}
 
 	m = make(map[int]string)
 
-	for i := 1; i <= len(n); i++ { // This should have something passed to it that tells it what IDs are still
-		// available, maybe the map itself and we can get the length of the map
-
-		// status.SendMessageHeader() // i would go here
-		// status.SendData(Commands.TestAlive)
-		// status.SendData(0x00)
-
+	for i := 1; i <= len(n); i++ {
 		b := []byte{0x00}
 		alive := status.ReadData(b)
 
 		if alive != true || b[0] != 0x72 {
-			//m[i] = strconv.Itoa(Btoi(alive)) + strconv.Itoa(int(b[0])) // This should map the string consisting of 0l where 0 is the bool representing alive and
-			// l is the variable recieved by the master controller if we need to send
-			// maybe we should print thing to make sure its working
-			// In here if it isn't r then we also need to check if it is 'v', 'm', other crap
-		} /*else if alive == true{
-
-		}*/
-		// Return the map with the microcontrollers that failed in it and maybe why they failed
+		}
 	}
 
 	return m

@@ -22,8 +22,6 @@ func DiagnosticsHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
 	}
-	//controller := status.GetController(0x6B)
-	//err = controller.SetAveragingMode(averagingRequest.FilterType)
-	//	controller.Set
+	
 	w.Write(getGenericSuccessResponse())
 }

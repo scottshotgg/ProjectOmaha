@@ -26,21 +26,16 @@ func StartUpProcess(wg *sync.WaitGroup) {
   go func() {
       var x int8 = 0
       chain := 0
-      //var strikes = 0
       for {
           second := time.After(1 * time.Second)
           select {
               case <- second:
                   found := KeepAlive(x)
 
-                  // this is just for debug purposes, remove later
-                  // *****************
                   if(x == 5) {
                       wg.Done()
                       done <- true
                   }
-                  // *****************
-                  // this is just for debug purposes, remove later
 
                   if(found != 0) {
                       chains = append(chains, x - 1)
@@ -82,7 +77,6 @@ func resolveChain(id int8) {
 			break
 		default:
 			log.Println("SPEAKER WITH ID:", id, " COULD NOT BE RESOLVED")
-			// panic or something here or tell the website to display something on the interface that an error occured
 	}
 
 	SwitchTransceiver(transceiver)
@@ -114,11 +108,8 @@ func HandleControllerMessages() {
 }
 
 func getMessageHeader(id, size int8) []byte {
-	/*header := make([]byte, size)
-	header[0] = byte(zone) // zone ID
-	header[1] = byte(id)   // speaker ID*/
 	header := make([]byte, size)
-	header[0] = byte(id) // zone ID
+	header[0] = byte(id)
 
 	return header
 }
@@ -131,17 +122,6 @@ func (status *SystemStatus) SendData(data byte) {
 		panic("Failed on write")
 	}
 }
-
-/*func (status *SystemStatus) SendMoreData(data []byte, amount int) {
-	for int i := 0; i < amount; i++ {
-		log.Printf("port.Write: %v\n", data)
-		_, err := status.Port.Write(data)
-		if err != nil {
-			log.Fatalf("port.Write: %v", err)
-			panic("Failed on write")
-		}
-	}
-}*/
 
 func (status *SystemStatus) ReadData(buffer []byte) bool {
 
@@ -159,14 +139,6 @@ func (status *SystemStatus) ReadData(buffer []byte) bool {
 }
 
 func (status *SystemStatus) InitializePort() {
-	/*	options := serial.OpenOptions{
-		PortName:        "/dev/ttyUSB0",
-		BaudRate:        9600,
-		DataBits:        8,
-		StopBits:        1,
-		MinimumReadSize: 1,
-	}*/
-
 	// osx: /dev/cu.uart-34FF466E37414555
 	portMap = append(portMap, &serial.Config{Name: "/dev/ttyUSB0", Baud: 9600, ReadTimeout: time.Second})
 	portMap = append(portMap, &serial.Config{Name: "/dev/ttyUSB1", Baud: 9600, ReadTimeout: time.Second})
@@ -176,7 +148,6 @@ func (status *SystemStatus) InitializePort() {
 	SwitchTransceiver(0)
 }
 
-// this might need a more appropriate name
 func SwitchTransceiver(id int) {
 	status := GetSystemStatus()
 

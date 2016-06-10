@@ -5,7 +5,6 @@ import (
 	"log"
 )
 
-// createZoneTable creates the zone table in the database
 func createZoneTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE zone (
@@ -159,7 +158,7 @@ func createEqualizerPresetsTableZone() {
 			band20 REAL,
 			PRIMARY KEY (zoneID, name)
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -196,7 +195,7 @@ func createMusicEqualizerPresetsTableZone() {
 			band20 REAL,
 			PRIMARY KEY (zoneID, name)
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -233,7 +232,7 @@ func createPagingEqualizerPresetsTableZone() {
 			band20 REAL,
 			PRIMARY KEY (zoneID, name)
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -270,7 +269,7 @@ func createTargetsTableZone() {
 			band20 REAL,
 			PRIMARY KEY (zoneID, name)
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -311,7 +310,7 @@ func createSchedulingTableZone() {
 			hour22 INT,
 			hour23 INT
 		)
-	`) // needs to be an equalizer thing in here
+	`)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -711,32 +710,6 @@ func getZonesSpeakers(zoneID int8) []*ControllerStatus {
 	return speakers
 }
 
-/*
-func getZonesSpeakers(zoneID int8) []*ControllerStatus {
-	rows, err := DB.Query(`
-		SELECT s.speakerID
-		FROM speaker s
-		INNER JOIN zoneToSpeaker z
-		ON s.speakerID = z.speakerId
-		WHERE zoneID = ?
-	`, zoneID)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-	speakers := []*ControllerStatus{}
-	for rows.Next() {
-		var speakerID int8
-		rows.Scan(&speakerID)
-
-		speaker := GetSpeaker(speakerID) //&ControllerStatus{}
-
-		speakers = append(speakers, speaker)
-	}
-	return speakers
-}
-*/
-
 // getZonesSpeakers gets the speakers that belong to the specified zone
 func getPagingZonesSpeakers(zoneID int8) []*ControllerStatus {
 	rows, err := DB.Query(`
@@ -789,8 +762,8 @@ func GetZone(zoneID int8) *Zone {
 	var fadeLevel int8
 	var effectiveness int8
 	var pleasantness int8
-	var presetName string		// might need to make a catch for this
-	var targetName string		// might need to make a catch for this
+	var presetName string
+	var targetName string
 	var whichPreset int
 	var status int
 	var equalizerMode int8
@@ -907,7 +880,6 @@ func GetZone(zoneID int8) *Zone {
 	var tBand20 float64
 
 
-//	var interval int
 	var day int
 	var interval int
 	var start int
@@ -1070,7 +1042,7 @@ func GetZone(zoneID int8) *Zone {
 			&equalizerMode,
 			&schedulingMode,
 
-			// Current preset bands
+			// Current equalizer bands
 			&eBand0,
 			&eBand1,
 			&eBand2,
@@ -1116,7 +1088,7 @@ func GetZone(zoneID int8) *Zone {
 			&mBand19,
 			&mBand20,
 
-			// Current preset bands
+			// Current paging bands
 			&pBand0,
 			&pBand1,
 			&pBand2,
@@ -1465,20 +1437,7 @@ func GetZone(zoneID int8) *Zone {
 
 		zone.TargetNames = append(zone.TargetNames, targetName)
 		zone.Target = append(zone.Target, []float64 {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20})
-		log.Println(zone.TargetNames, zone.Target)		// make sure that the two arrays are the same size
-
-		//log.Println("current", current)
-
-		// make current the one that is stored in the speaker table
-		/*
-		if(current == 0) {
-			constants := []int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
-			speaker.Equalizer  = append(speaker.Equalizer, constants)
-		} else {
-			speaker.Current = [21]int {band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, band10, band11, band12, band13, band14, band15, band16, band17, band18, band19, band20}
-			log.Println("hi from current:", speaker.Current)
-		}
-		*/
+		log.Println(zone.TargetNames, zone.Target)
 	}
 	err = rows.Err()
 	if err != nil {
@@ -1494,7 +1453,6 @@ func GetZone(zoneID int8) *Zone {
 
 	for rows.Next() {
 		err = rows.Scan(
-			//&interval,
 			&zoneID,
 			&day,
 			&interval,
@@ -1529,27 +1487,15 @@ func GetZone(zoneID int8) *Zone {
 			log.Fatal(err)
 		}
 
-		//log.Println(day)
-		// interval needs to go in here as well
 		zone.Schedule = append(zone.Schedule, []int {day, interval, start, end, hour0, hour1, hour2, hour3, hour4, hour5, hour6, hour7, hour8, hour9, hour10, hour11, hour12, hour13, hour14, hour15, hour16, hour17, hour18, hour19, hour20, hour21, hour22, hour23})
-
 	}
-	//log.Println(speaker.Music)
 
-	// it is pulling from here but we need to figure out a way to distinguish which one should be loaded
-
-	//speaker.Equalizer = constant in Current
-	// might not need to append if we have the current in 
-	//log.Println(speaker.VolumeLevel
 	return zone
-
 }
 
 // GetZone gets the Zone with the specified ID from the database
 func GetPagingZone(zoneID int8) *Zone {
-	// get speakers
 	speakers := getPagingZonesSpeakers(zoneID)
-	// get name
 	var name string
 	DB.QueryRow(`
 		SELECT name 
@@ -1558,5 +1504,6 @@ func GetPagingZone(zoneID int8) *Zone {
 		`, zoneID).Scan(&name)
 
 	zone := &Zone{ZoneID: zoneID, Name: name, Speakers: speakers}
+	
 	return zone
 }

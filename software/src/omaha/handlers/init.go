@@ -22,15 +22,11 @@ func InitializeHandlers() {
 	http.Handle("/system/backtofront/", GenericHandler{POST: SpeakerGetHandler})
 	http.Handle("/system/addPreset/", GenericHandler{PUT: AddPresetHandler})
 	http.Handle("/system/changeEQMode/", GenericHandler{PUT: ChangeEQMode})
-	//http.Handle("/system/updatePreset/", GenericHandler{PUT: UpdatePresetHandler})
 	http.Handle("/system/addTarget/", GenericHandler{PUT: AddTargetHandler})
 	http.Handle("/system/pagingRequest/", GenericHandler{POST: PagingRequestHandler})
 	http.Handle("/system/createZone/", GenericHandler{PUT: CreateZoneHandler})
 	http.Handle("/system/createPagingZone/", GenericHandler{PUT: CreatePagingZoneHandler})
 	http.Handle("/system/scheduleTime/", GenericHandler{PUT: ScheduleTime})
-
-
-	// Zone handlers
 
 	http.Handle("/system/zone/updateVolumesZone/", GenericHandler{PUT: UpdateVolumesZone})
 	http.Handle("/system/zone/threshold/", GenericHandler{PUT: ThresholdHandlerZone})
@@ -43,11 +39,8 @@ func InitializeHandlers() {
 	http.Handle("/system/zone/addTarget/", GenericHandler{PUT: AddTargetHandlerZone})
 	http.Handle("/system/zone/changeEQModeZone/", GenericHandler{PUT: ChangeEQModeZone})
 
-	// I'll consolidate these later, easier to forge my own path for now
 	http.Handle("/system/zone/", GenericHandler{POST: ZonePostHandler})
 
-
-	// file handlers
 	http.Handle("/css/", CssHandler)
 	http.Handle("/bower_components/", BowerHandler)
 	http.Handle("/components/", ComponentsHandler)

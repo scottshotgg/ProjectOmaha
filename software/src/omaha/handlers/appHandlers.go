@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"html/template"
 	"log"
-	//"net"
 	"net/http"
 	"omaha/database"
 	"omaha/util"
@@ -32,7 +31,6 @@ type accountCreationRequest struct {
 	Phone 		string	`json:"phone"`
 	SpeakerID int			`json:"speakerid"`
 	ZoneID		int			`json:"zoneid"`
-	//Cookie		string	`json:"cookie"`
 }
 
 func AppHandler(w http.ResponseWriter, r *http.Request) {
@@ -64,12 +62,6 @@ func redirectToLoginHandler(w http.ResponseWriter, r *http.Request) {
 func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("LOGIN")
 
-	// uncomment this stuff later 
-	//host, _, _ := net.SplitHostPort(r.RemoteAddr)
-	/*if host == "::1" {
-		w.Write(getGenericSuccessResponse())
-		return
-	}*/
 	loginRequest := &loginPostRequest{}
 	err := json.NewDecoder(r.Body).Decode(loginRequest)
 	log.Println(*loginRequest)
@@ -81,7 +73,6 @@ func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 		var level = database.GetLevelOfAccount(loginRequest.Username)
 		var speakerID = database.GetSpeakerForAccount(loginRequest.Username)
 		var zoneID = database.GetZoneForAccount(loginRequest.Username)
-		//var allZone = database.GetAllZone(loginRequest.Username)
 
 		log.Println("This is ths level that you are looking for ", level)
 		if err != nil {
@@ -91,15 +82,13 @@ func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 
 		println("this is the hash that you are looking for", hash)
 
-		//if(database.AuthenticateHash()) {
-			response := &loginPostResponse{hash, level, speakerID, zoneID}
-			var responseObj []byte
-			responseObj, err = json.Marshal(response)
-			if err != nil {
-				log.Fatal(err)
-			}
-			w.Write(responseObj)
-		//}
+		response := &loginPostResponse{hash, level, speakerID, zoneID}
+		var responseObj []byte
+		responseObj, err = json.Marshal(response)
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Write(responseObj)
 	}
 }
 
@@ -125,7 +114,6 @@ func AccountCreationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Change this data based on something later
 	session, _ := r.Cookie("session")
 	log.Println(session.Value)
 

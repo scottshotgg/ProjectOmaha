@@ -14,11 +14,8 @@ type SystemStatus struct {
 	Port 				io.ReadWriteCloser	`json:"-"`
 	ID 					int8								`json:"id"`
 	BrokenLink	int8								`json:"brokenLink"`
-	// damaged controllers in an array here
 }
 
-// Do we want to store this stuff in a database since that way it will be written to disk?
-// It may also be easier to access (programmatically, at least) that way
 func (status *SystemStatus) IsDebug() bool {
 	return status.debug
 }
@@ -31,7 +28,7 @@ func (status *SystemStatus) SetFinding(finding bool) {
 	status.finding = finding
 }
 
-func InitializeSystemStatus(isDebug bool) (*SystemStatus, int, []*database.ControllerStatus) {		// this might need to change to controllers and return the entire object/pointer 
+func InitializeSystemStatus(isDebug bool) (*SystemStatus, int, []*database.ControllerStatus) {
 	status.debug = isDebug
 	controllers := database.GetAllSpeakers()
 	length := len(controllers)
@@ -39,26 +36,6 @@ func InitializeSystemStatus(isDebug bool) (*SystemStatus, int, []*database.Contr
 	if !isDebug {
 		status.InitializePort()
 	}
-
-	/*for _, controller := range controllers {
-		var err error
-
-		controller.LEDOn, err = GetLEDStatusFromController(controller)
-		if err != nil {
-			log.Println(err)
-		}
-
-	//	controller.VolumeLevel, err = GetVolumeFromController(controller)		fix this at some later time but not now
-		if err != nil {
-			log.Println(err)
-		}
-
-		//	controller.AveragingMode, err = controller.GetAveragingMode()		// Something needs to be fixed
-		if err != nil {
-			log.Println(err)
-		}
-		//database.SaveVolume(controller)
-	}*/
 
 	log.Println("length", length)
 

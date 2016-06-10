@@ -2,14 +2,12 @@ package database
 
 import (
 	"database/sql"
-	// import the sqlite implementation
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"omaha/util"
 	"os"
 )
 
-// DB is the object used to access the database
 var (
 	DB                    			*sql.DB
 	insertSpeakerStmt     			*sql.Stmt
@@ -19,53 +17,49 @@ var (
 	addZoneToSchedulingStmt			*sql.Stmt
 )
 
-// InitDB creates the DB variable. If the database hasn't been created yet, it will be created.
 func InitDB() {
 	var err error
 	DB, err = sql.Open("sqlite3", util.GetOmahaPath()+"/omaha.db")
 	if err != nil {
 		log.Fatal(err)
 	}
-	// check if user table exists
+
 	var name string
 	err = DB.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='account';").Scan(&name)
 	switch {
-	// user table doesn't exist
-	case err == sql.ErrNoRows:
-		// create all tables
+		case err == sql.ErrNoRows:
 
-		// this was changed around on 4/19, change back if needed
-		createAccountToSpeakersTable()
-		createAccountToMaskingZonesTable()
-		createAccountToPagingZonesTable()
-		createAccountTable()
-		createSpeakerTable()
-		
-		createZoneTable()
-		createPagingZoneTable()
+			createAccountToSpeakersTable()
+			createAccountToMaskingZonesTable()
+			createAccountToPagingZonesTable()
+			createAccountTable()
+			createSpeakerTable()
+			
+			createZoneTable()
+			createPagingZoneTable()
 
-		createTargetsTable()
-		createZoneToSpeakerTable()
-		createPagingZoneToSpeakerTable()
-		
-		createEqualizerPresetsTable()
-		createMusicEqualizerPresetsTable()
-		createPagingEqualizerPresetsTable()
+			createTargetsTable()
+			createZoneToSpeakerTable()
+			createPagingZoneToSpeakerTable()
+			
+			createEqualizerPresetsTable()
+			createMusicEqualizerPresetsTable()
+			createPagingEqualizerPresetsTable()
 
 
-		createTargetsTableZone()
-		createEqualizerPresetsTableZone()
-		createMusicEqualizerPresetsTableZone()
-		createPagingEqualizerPresetsTableZone()
+			createTargetsTableZone()
+			createEqualizerPresetsTableZone()
+			createMusicEqualizerPresetsTableZone()
+			createPagingEqualizerPresetsTableZone()
 
-		createSchedulingTable()
-		createSchedulingTableZone()
+			createSchedulingTable()
+			createSchedulingTableZone()
 
-		prepareStatements()
-		populateZoneTable()
-		populateSpeakerTable()
-	case err != nil:
-		log.Fatal(err)
+			prepareStatements()
+			populateZoneTable()
+			populateSpeakerTable()
+		case err != nil:
+			log.Fatal(err)
 	}
 }
 

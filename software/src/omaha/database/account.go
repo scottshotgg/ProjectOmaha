@@ -9,9 +9,10 @@ import (
 	"log"
 	"math/big"
 )
-
-// LoginAccount checks the given information against what is in the account table.
-// If the information is correct, a new session hash is returned.
+/*
+	LoginAccount checks the given information against what is in the account table.
+	If the information is correct, a new session hash is returned.
+*/
 func LoginAccount(username, password string) (string, error) {
 	var accountHash string
 	err := DB.QueryRow(`
@@ -38,8 +39,6 @@ func LoginAccount(username, password string) (string, error) {
 	
 	log.Println(userID)
 
-	// might need to check whether or not there is a session already and then act
-	// upon that
 	_, err = DB.Exec(`
 		INSERT INTO accountSession
 		(sessionKey, userID)
@@ -98,14 +97,11 @@ func GetZoneForAccount(username string) int {
 
 	log.Println("this is the zone", zoneID)
 
-	//var zoneArray = GetZone(int8(zoneID))
-
 	return zoneID
 }
 
-// CreateAccount inserts a row in the account table with the given configuration
-
-// later on make the email a net/mail type and use the AddressParser to do some shit
+// CreateAccount inserts a row in the account table with the given configuration.
+// later on make the email a net/mail type and use the AddressParser to verify
 func CreateAccount(level int, username string, password string, name string, email string, phone string, speakerID int, zoneID int) error {
 	hashByte, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hash := string(hashByte)
@@ -159,19 +155,6 @@ func CreateAccount(level int, username string, password string, name string, ema
 		return nil
 	}
 
-	// insert the speakers or zones that they control
-
-	/*_, err := DB.Exec(`
-		INSERT INTO AccountToSpeakers 
-		VALUES (?, ?)
-		`, )
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Printf("Created paging zone %s\n", name)
-	}*/
-
-
 	return nil
 }
 
@@ -206,16 +189,7 @@ func createAccountTable() {
 	} else {
 		log.Println("Created table account")
 	}
-
-	/*
-	CreateAccount(2, "admin", "password", "admin", "", "", 1, -1)
-	CreateAccount(2, "andy", "andy", "andy", "", "", 62, -1)
-	CreateAccount(2, "danny", "danny", "danny", "", "", 1, -1)
-	CreateAccount(2,  "bruce", "bruce", "bruce", "", "", 1, -1)
-	CreateAccount(2, "scott", "scott", "scott", "", "", 62, 1)
-	CreateAccount(1, "max", "max", "max", "", "", 62, -1)
-	CreateAccount(0, "eric", "eric", "eric", "", "", 62, -1)
-	*/
+	
 	CreateAccount(2, "super", "super", "superuser", "", "", -1, -1)
 }
  

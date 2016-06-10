@@ -12,7 +12,6 @@ type zonePostRequest struct {
 	Name string `json:"name"`
 }
 
-// ZonePostHandler handles an http request to create a new zone
 func ZonePostHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	zoneRequest := &zonePostRequest{}

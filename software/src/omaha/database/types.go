@@ -35,22 +35,13 @@ type ControllerStatus struct {
 	PagingPresetNames[]			string		`json:["pagingPresetNames"]`
 	CurrentPagingPreset[21]	float64		`json:"currentPagingPreset"`
 
-	WhichPreset							int				`json:"whichPreset"`			// really need to delete this or w/e
+	WhichPreset							int				`json:"whichPreset"`
 	Status 									int				`json:"status"`
 	EqualizerMode						int8			`json:"equalizerMode"`
 	SchedulingMode					int8			`json:"schedulingMode"`
 
 	Schedule[][]						int				`json:["schedule"]`
 }
-
-/*
-type Zone struct {
-	VolumeLevel int8                	`json:"-"`		// what is this ???
-	ID          int8                	`json:"zoneID"`
-	Name        string              	`json:"name"`
-	Speakers    []*ControllerStatus 	`json:"speakers"`
-}
-*/
 
 type Zone struct {
 	Name										string		`json:"name"`
@@ -80,7 +71,7 @@ type Zone struct {
 	PagingPresetNames[]			string		`json:["pagingPresetNames"]`
 	CurrentPagingPreset[21]	float64		`json:"currentPagingPreset"`
 
-	WhichPreset							int				`json:"whichPreset"`			// really need to delete this or w/e
+	WhichPreset							int				`json:"whichPreset"`
 	Status 									int				`json:"status"`
 	EqualizerMode						int8			`json:"equalizerMode"`
 	SchedulingMode					int8			`json:"schedulingMode"`
