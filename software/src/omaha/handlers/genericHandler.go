@@ -19,16 +19,25 @@ type genericResponse struct {
 	Err     string `json:"err"`
 }
 
+/*
+	getGenericSuccessResponse is a private function that returns a JSON object that contains a success boolean.
+*/
 func getGenericSuccessResponse() []byte {
 	response, _ := json.Marshal(genericResponse{Success: true})
 	return response
 }
 
+/*
+	getGenericErrorResponse is a private function that returns a JSON object that contains an error message.
+*/
 func getGenericErrorResponse(err string) []byte {
 	response, _ := json.Marshal(genericResponse{Err: err})
 	return response
 }
 
+/*
+	ServeHTTP is the function that starts the server.
+*/
 func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	sessionCookie, _ := req.Cookie("session")
 	host, _, _ := net.SplitHostPort(req.RemoteAddr)

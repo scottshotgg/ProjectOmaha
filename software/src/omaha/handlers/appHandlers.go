@@ -33,6 +33,9 @@ type accountCreationRequest struct {
 	ZoneID		int			`json:"zoneid"`
 }
 
+/*
+	AppHandler servers as the handler for the app.html page which sets everything up and is considered the starting page of the website.
+*/
 func AppHandler(w http.ResponseWriter, r *http.Request) {
 	omahaDir := util.GetOmahaPath()
 	templatePath := fmt.Sprintf("%s/templates/app.html", omahaDir)
@@ -46,6 +49,9 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
+/*
+	redirectToLoginHandler is a private function that is used to redirect users that have an expired cookie or have tried to go to the app without logging in back to the login page.
+*/
 func redirectToLoginHandler(w http.ResponseWriter, r *http.Request) {
 	omahaDir := util.GetOmahaPath()
 	templatePath := fmt.Sprintf("%s/templates/loginFromRedirect.html", omahaDir)
@@ -59,6 +65,9 @@ func redirectToLoginHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
+/*
+	LoginPostHandler is a handler that takes care of the logging in. It takes the username and password and determine whether that account exists first and then if it does it determins the access level and the speaker and zone IDs. 
+*/
 func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("LOGIN")
 
@@ -92,6 +101,9 @@ func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/*
+	LoginPageHandler handles the login page that you see when you go to the app.
+*/
 func LoginPageHandler(w http.ResponseWriter, r *http.Request) {
 	omahaDir := util.GetOmahaPath()
 	templatePath := fmt.Sprintf("%s/templates/login.html", omahaDir)
@@ -105,6 +117,9 @@ func LoginPageHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
+/*
+	AccountCreationHandler is used to create an account.
+*/
 func AccountCreationHandler(w http.ResponseWriter, r *http.Request) {
 	accountRequest := &accountCreationRequest{}
 	err := json.NewDecoder(r.Body).Decode(accountRequest)

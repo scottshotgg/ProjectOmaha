@@ -11,6 +11,9 @@ type diagnosticsRequest struct {
 	FilterType int8 `json:"filterType"`
 }
 
+/*
+	DiagnosticsHandler is a reserved function for when diagnostics starts to be implemented.
+*/
 func DiagnosticsHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	diagnosticsRequest := &diagnosticsRequest{}

@@ -4,6 +4,9 @@ import (
 	"net/http"
 )
 
+/*
+	InitializeHandlers is used to initialize the large amount of handlers that the server uses to server all of the different pages in the application.
+*/
 func InitializeHandlers() {
 	http.HandleFunc("/login/", LoginPostHandler)
 	http.HandleFunc("/", LoginPageHandler)

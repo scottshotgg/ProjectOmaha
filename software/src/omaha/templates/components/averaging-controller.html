@@ -79,17 +79,17 @@
 
           <h4>Effectiveness</h4>
           <div id="ec_div" class="layout horizontal">
-            <paper-icon-button icon="remove" on-click="decrementE"></paper-icon-button>
+            <paper-icon-button icon="remove" on-click="decrementEffectiveness"></paper-icon-button>
             <paper-slider id="effectiveness" pin min="0" max="10" step="1" value="{{effectiveness}}"></paper-slider>
-            <paper-icon-button icon="add" on-click="incrementE"></paper-icon-button>
+            <paper-icon-button icon="add" on-click="incrementEffectiveness"></paper-icon-button>
           </div>
 
 
           <h4>Pleasantness</h4>
           <div id="ec_div" class="layout horizontal">
-            <paper-icon-button icon="remove" on-click="decrementC"></paper-icon-button>
+            <paper-icon-button icon="remove" on-click="decrementPleasantnesss"></paper-icon-button>
             <paper-slider id="pleasantness" pin min="0" max="10" step="1" value="{{pleasantness}}"></paper-slider> 
-            <paper-icon-button icon="add" on-click="incrementC"></paper-icon-button>
+            <paper-icon-button icon="add" on-click="incrementPleasanteness"></paper-icon-button>
           </div>
         </div>
 
@@ -137,8 +137,11 @@
         }
       },
       
+      /**
+       * This function is fired when the 'set ratio' button is clicked by the user to set the effectiveness and pleasantness. 
+       */
       _selectionChanged: function(event) {
-        console.log(this.speakerId);
+        //console.log(this.speakerId);
 
         var menu = document.getElementById('menu');
 
@@ -157,7 +160,7 @@
             "speaker": speaker.id
           };
 
-          console.log(this.$.selectModeAjax.body);
+          //console.log(this.$.selectModeAjax.body);
           this.$.selectModeAjax.generateRequest();
         } else {
           this.$.selectModeAjaxZone.body = {                      
@@ -166,22 +169,25 @@
             "pleasantness": this.$.pleasantness.value
           };
 
-          console.log(this.$.selectModeAjaxZone.body);
+          //console.log(this.$.selectModeAjaxZone.body);
           this.$.selectModeAjaxZone.generateRequest();
-          console.log(zones);
+          //console.log(zones);
         }
-        console.log("this is the speaker", speaker);
+        //console.log("this is the speaker", speaker);
         var selectModeAjax = document.getElementById("selectModeAjax");
-        console.log(selectModeAjax);
+        //console.log(selectModeAjax);
         this.$.toast.text = "Effectiveness set to " + this.$.effectiveness.value + ". Pleasantness set to " + this.$.pleasantness.value + "."; 
         this.$.toast.show();
       },
 
       _logResponse: function(event, data) {
-        console.log(data.response);
+        //console.log(data.response);
       },
 
-      decrementE: function() {
+      /**
+       * This function is used to decrement the effectiveness.
+       */
+      decrementEffectiveness: function() {
         this.$.effectiveness.decrement();
         this.$.effectiveness._expandKnob();
         if(this.prevTimeout != 0) {
@@ -194,7 +200,10 @@
         }, 500);
       },
       
-      incrementE: function() {
+      /**
+       * This function is used to increment the effectiveness.
+       */
+      incrementEffectiveness: function() {
         this.$.effectiveness.increment();
         this.$.effectiveness._expandKnob();
         if(this.prevTimeout != 0) {
@@ -207,7 +216,10 @@
         }, 500);
       },
 
-      decrementC: function() {
+      /**
+       * This function is used to decrement the pleasantness.
+       */
+      decrementPleasantnesss: function() {
         this.$.pleasantness.decrement();
         this.$.pleasantness._expandKnob();
         if(this.prevTimeout != 0) {
@@ -219,8 +231,11 @@
           func(elem);
         }, 500);
       },
-      
-      incrementC: function() {
+
+      /**
+       * This function is used to increment the pleasantness.
+       */
+      incrementPleasantnesss: function() {
         this.$.pleasantness.increment();
         this.$.pleasantness._expandKnob();
         if(this.prevTimeout != 0) {
@@ -233,6 +248,9 @@
         }, 500);
       },
 
+      /**
+       * Resetting the knob resets the knob to remove the pin that is hoisted up when the knob is moved.
+       */
       resetKnob: function(elem) {
         elem.prevTimeout = 0;
         elem.$.effectiveness._resetKnob();

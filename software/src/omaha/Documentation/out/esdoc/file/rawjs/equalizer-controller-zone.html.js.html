@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">rawjs/equalizer-controller-zone.html.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">rawjs/equalizer-controller-zone.html.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+  var slidersZone;
+  var handlesZone;
+  var backgroundZone;
+
+  var equalizerToastZone = 0;
+  var equalizerModeZone;
+  var typeFoundZone = 0;
+
+
+  function getValuesZone() {
+    switch (equalizerModeZone.selected) {
+      case &quot;masking&quot;: 
+        typeFoundZone = 0;
+        //console.log(equalizerModeZone.selected);
+        break;
+      case &quot;music&quot;:
+        typeFoundZone = 1;
+        //console.log(equalizerModeZone.selected);
+        break;
+      case &quot;paging&quot;:
+        typeFoundZone = 2;
+        //console.log(equalizerModeZone.selected);
+        break;
+
+      default:
+        //console.log(&quot;something is messed up with the equalizerModeZone = this.$.equalizerSelectorZone.selected;&quot;);
+      }
+
+      return typeFoundZone;
+  }
+
+
+  $(document).ready(function() {
+    //console.log(&quot;equalizer zoneFlag&quot;, zoneFlag);
+    slidersZone = document.getElementsByClassName(&quot;ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min&quot;);
+    handlesZone = document.getElementsByClassName(&quot;ui-slider-handle ui-state-default ui-corner-all&quot;);
+    backgroundZone = document.getElementsByClassName(&quot;custom_slider_zone style-scope equalizer-controller-zone ui-slider ui-slider-vertical ui-widget ui-widget-content ui-corner-all&quot;);
+    //console.log(slidersZone, &quot;\n&quot;, handlesZone, &quot;\n&quot;, background);
+  });
+  
+  var lastSelectedZone = 0;
+  var isThereAnErrorZone = false;
+
+  var lastEQModeZone = &quot;masking&quot;;
+  var iirConstantsZone = [];
+
+  for(loopVar = 0; loopVar &lt; 63; loopVar++) {
+    iirConstantsZone[loopVar] = 0;
+  }
+  //console.log(iirConstantsZone);
+
+  function showEqualizerSwitchDialogZone(mode) {
+    //console.log(mode);
+    switch(mode) {
+      case &quot;masking&quot;: {
+        document.getElementById(&quot;eqmodeZone&quot;).innerHTML = &quot;You are switching the speaker to masking mode&lt;br&gt;In this mode, the speaker will produce equalized white noise and unequalized music.&quot;;
+        break;
+      }
+      case &quot;music&quot;: {
+        document.getElementById(&quot;eqmodeZone&quot;).innerHTML = &quot;You are switching the speaker to music mode&lt;br&gt;In this mode the speaker will produce equalized music only.&quot;;
+        break;
+      }
+      case &quot;paging&quot;: {
+        document.getElementById(&quot;eqmodeZone&quot;).innerHTML = &quot;You are switching the speaker to paging mode;&lt;br&gt;Something needs to go here, ask Matt&quot;
+        break;
+      }
+    }
+    document.querySelector(&quot;#switchingEQModeDialogZone&quot;).toggle(); 
+    //console.log(&quot;i got here zone&quot;);
+  }
+
+  function modeChangedZone(mode) {
+
+    switch(mode) {
+      case &quot;masking&quot;:
+        musicMenuZone.style.visibility = &quot;hidden&quot;;
+        equalizerMenuZone.style.visibility = &quot;visible&quot;;
+        pagingMenuZone.style.visibility = &quot;hidden&quot;;
+        showEqualizerSwitchDialogZone(&quot;masking&quot;);
+        break;
+
+      case &quot;music&quot;:
+        equalizerMenuZone.style.visibility = &quot;hidden&quot;;
+        musicMenuZone.style.visibility = &quot;visible&quot;;
+        pagingMenuZone.style.visibility = &quot;hidden&quot;;
+        showEqualizerSwitchDialogZone(&quot;music&quot;);
+        break;
+      
+      case &quot;paging&quot;:
+        musicMenuZone.style.visibility = &quot;hidden&quot;;
+        equalizerMenuZone.style.visibility = &quot;hidden&quot;;
+        pagingMenuZone.style.visibility = &quot;visible&quot;;
+        showEqualizerSwitchDialogZone(&quot;paging&quot;);
+        break;
+
+      default: 
+        //console.log(&quot;SOMETHING WAS WRONG WITH WHAT WAS PASSED TO modeChangedZone()&quot;);
+    }
+  }
+
+
+    Polymer({
+      is: &apos;equalizer-controller-zone&apos;,
+      
+      properties: {
+        internalEqualizer: String,
+
+        mode: {
+        type:  String,
+        value: &quot;masking&quot;
+        },
+
+        speakerId: {
+          type: Number
+        },
+
+        speaker: {
+          type: Object
+        },
+
+        equalizer: {
+          type: String,
+          notify: true,
+          observer: &apos;_setInternalEqualizerZone&apos;
+        }
+      },
+
+
+      _setInternalEqualizerZone: function(iirConstantsStringZone) {
+        this.internalEqualizer = iirConstantsStringZone;
+        //console.log(&quot;_setInternalEqualizerZone &quot; + iirConstantsStringZone);
+      },
+      
+      _setEqualizerClickedZone: function() {
+
+        //console.log(&quot;equalizer clicked zoneFlag&quot;, zoneFlag);
+
+        var checkIntZone = 0;
+        var checkBandsZone = [];
+        var equalizerTextZone = &quot;Invalid input at &quot;;
+
+        $(document.getElementsByClassName(&quot;levelZone&quot;)).each(function(i) {
+          typeof this.value;
+          if(isNaN(this.value) || this.value == &quot;&quot; || this.value &lt; -40 || this.value &gt; 10) {
+            //console.log(this.name);
+            checkIntZone++;
+            checkBandsZone.push(this.name);
+          }
+        });
+
+        if(checkIntZone &gt; 0) {
+          if(checkBandsZone.length == 1) {
+            equalizerTextZone += checkBandsZone[0] + &quot;Hz&quot;;
+          } else {
+            for (var i = 0; i &lt; checkBandsZone.length - 1; i++) {
+              equalizerTextZone += checkBandsZone[i] + &quot;Hz, &quot;
+            }
+            equalizerTextZone += &quot;and &quot; + checkBandsZone[checkBandsZone.length - 1] + &quot;Hz&quot;;
+          }
+          this.$.equalizerToastZone.duration = 2000 + (500 * checkBandsZone.length);
+          this.$.equalizerToastZone.text = equalizerTextZone;
+          this.$.equalizerToastZone.show();
+        } else {
+          //console.log(this.equalizer);
+          this.iirConstantsStringZone = iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(&quot;, &quot;);
+
+
+          this.$.equalizerToastZone.text = &quot;Equalizer set to &quot; + this.iirConstantsStringZone;
+          this.$.equalizerToastZone.show();
+          //console.log(&quot;_setEqualizerClickedZone&quot;); 
+          //console.log(this.iirConstantsStringZone);
+          
+          // make this zone wide
+          for (var i = 0; i &lt; speaker.CurrentPreset.length; i++) { 
+            //speaker.CurrentPreset[i] = iirConstantsZone[i];
+          }
+
+          //console.log(iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).length);
+
+          this.$.updateEqualizerZone.body = {
+            &quot;zone&quot;: speaker.zone.zoneID,
+            &quot;constants&quot;: iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(&quot; &quot;),
+            &quot;mode&quot;: getValuesZone()
+          };
+          this.$.updateEqualizerZone.generateRequest();
+        }
+      },
+
+      _logResponse: function(event, data) {
+        //console.log(&quot;shuddup&quot;);
+        //console.log(event, data);
+      },
+
+      _acceptPressedZone: function(event) {
+        var name = this.$.popupInputZone.value.valueOf().replace(&quot;\n&quot;, &quot;&quot;).replace(&quot;\t&quot;, &quot;&quot;);
+        var ifvar = 0;
+        if(speaker.zone.PresetNames.length &gt; 0) {
+          for(var i = 0; i &lt; speaker.zone.PresetNames.length; i++) {
+            if(name.toLowerCase() == speaker.zone.PresetNames[i].valueOf().toLowerCase()) {
+              //console.log(&quot;same name dude&quot;);
+              ifvar++;    // make more checks dummy
+            }
+          }
+        }
+
+        if(ifvar &gt; 0) {
+          //console.log(&quot;we are in here right now&quot;);
+          this.err = &quot;Invalid name: Name already taken&quot;;
+          this.$.toastyZone.text = this.err;
+          this.$.toastyZone.show();
+        } else {
+          this.$.addPresetAjaxZone.body = {
+            &quot;zone&quot;: speaker.zone.zoneID,
+            &quot;name&quot;: name,
+            &quot;type&quot;: getValuesZone(),
+            &quot;constants&quot;: iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(&quot; &quot;),
+          };
+
+          //console.log(iirConstantsZone.join(&quot; &quot;));
+
+          //console.log(&quot;addPresetAjaxZone:&quot;, addPresetAjaxZone.body);
+          this.$.addPresetAjaxZone.generateRequest();
+
+          this.$.dialogZone.toggle();
+
+          this.$.toastyZone.text = &quot;Added preset: &quot; + name + &quot; &quot; + iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(&quot; &quot;);
+          //console.log(this.$.toastyZone.text);
+
+          this.$.toastyZone.show();
+
+          temp = document.createElement(&quot;paper-item&quot;);
+          temp.setAttribute(&quot;value&quot;, name);
+          temp.setAttribute(&quot;id&quot;, name);
+          temp.innerHTML = name;
+          Polymer.dom(this.$.equalizerListboxZone).appendChild(temp);
+
+          var length = speaker.zone.Equalizer.length;
+          //console.log(length);
+
+          //console.log(iirConstantsZone);
+
+          var iirConstantsCopy = iirConstantsZone.slice();
+
+          //console.log(&quot;iirConstantsCopy: &quot;, iirConstantsCopy);
+          speaker.zone.Equalizer.push(iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)));
+          //}
+
+          speaker.zone.PresetNames[speaker.zone.PresetNames.length] = name;
+
+          //console.log(speaker.zone.Equalizer);
+
+          this.$.equalizerListboxZone.selected = name;
+          this.$.popupInputZone.value = &quot;&quot;;
+        }
+      },
+
+      _cancelPressedZone: function(event) {
+        this.$.equalizerListboxZone.selected = -1;
+        //console.log(lastSelectedZone);
+      },
+
+      _switchPressedZone: function(event) {
+        this.$.changeEQModeAjaxZone.body = {
+          &quot;zone&quot;:  speaker.zone.zoneID,
+          &quot;mode&quot;:  getValuesZone()
+        };
+
+        this.$.changeEQModeAjaxZone.generateRequest();
+
+        this.$.switchingEQModeDialogZone.toggle();
+        lastEQModeZone = this.$.equalizerSelectorZone.selected;
+        //console.log(lastEQModeZone);
+      },
+
+      _cancelSwitchPressedZone: function(event) {
+        switch(lastEQModeZone) {
+          case &quot;masking&quot;:
+            musicMenuZone.style.visibility = &quot;hidden&quot;;
+            pagingMenuZone.style.visibility = &quot;hidden&quot;;
+            equalizerMenuZone.style.visibility = &quot;visible&quot;;
+            break;
+
+          case &quot;music&quot;:
+            musicMenuZone.style.visibility = &quot;visible&quot;;
+            equalizerMenuZone.style.visibility = &quot;hidden&quot;;
+            pagingMenuZone.style.visibility = &quot;hidden&quot;;
+            break;
+
+          case &quot;paging&quot;:
+            pagingMenuZone.style.visibility = &quot;visible&quot;;
+            equalizerMenuZone.style.visibility = &quot;hidden&quot;;
+            musicMenuZone.style.visibility = &quot;hidden&quot;;
+
+
+          default:
+        }
+        this.$.equalizerSelectorZone.selected = lastEQModeZone;
+      },
+
+      listeners: {
+        &apos;equalizerListboxZone.iron-select&apos;: &apos;_presetSelectionChangedZone&apos;
+      },
+      
+      _presetSelectionChangedZone: function(event) {
+        //console.log(this.speakerId);
+        //console.log(this.speaker);
+
+        var selected = this.$.equalizerListboxZone.selected.valueOf().toLowerCase().replace(&quot;\n&quot;, &quot;&quot;);
+
+        if(selected == &quot;currently applied&quot;) {
+          this.$.toastyZone.text = &quot;Currently applied constants loaded! &quot; + iirConstantsZone.join(&quot;, &quot;);
+          this.$.toastyZone.show();
+
+          lastSelectedZone = this.$.equalizerListboxZone.selected;
+
+          for (var i = 0; i &lt; speaker.zone.currentPreset.length; i++) { 
+            slidersZone[i].style.height = (speaker.zone.currentPreset[i] + 40) * 2 + &quot;%&quot;;
+            //console.log(this);
+            handlesZone[i].style.bottom = (speaker.zone.currentPreset[i] + 40) * 2 + &quot;%&quot;;
+            $(&quot;#text&quot; + (parseInt(i) + 1)).val(speaker.zone.currentPreset[i]);
+            iirConstantsZone[i] = speaker.zone.currentPreset[i];       
+          }
+        } else if(selected == &quot;add new preset&quot;) {
+            var addPresetAjaxZone = document.getElementById(&quot;addPresetAjaxZone&quot;);
+            //console.log(addPresetAjaxZone);
+            this.$.dialogZone.toggle();
+        } else if(speaker.zone.PresetNames.length &gt; 0) {
+            lastSelectedZone = this.$.equalizerListboxZone.selected;
+            var associationLink = -1;
+            for (k in speaker.zone.PresetNames) {
+              if(selected == speaker.zone.PresetNames[k].valueOf().toLowerCase()) {
+                this.$.toastyZone.text = this.$.equalizerListboxZone.selected + &quot; preset loaded! &quot; + iirConstantsZone.slice(0 + (21 * typeFoundZone), 21 + (21 * typeFoundZone)).join(&quot;, &quot;);
+                this.$.toastyZone.show();
+                //console.log(&quot;Zone &quot; + speaker.zone.zoneID + &quot; selected preset: &quot; + selected);
+                associationLink = k;
+                //console.log(&quot;associationLink&quot;, associationLink);
+                break;
+              }
+            }
+            if(associationLink != -1) {
+              //console.log(speaker.zone.Equalizer.length);
+              for (var j = 0; j &lt; speaker.zone.Equalizer[0].length; j++) {
+                slidersZone[j + 63].style.height = (speaker.zone.Equalizer[associationLink][j] + 40) * 2 + &quot;%&quot;;
+                handlesZone[j + 63].style.bottom = (speaker.zone.Equalizer[associationLink][j] + 40) * 2 + &quot;%&quot;;
+                $(&quot;#text&quot; + (parseInt(j) + 1)).val(speaker.zone.Equalizer[associationLink][j]);
+                iirConstantsZone[j] = speaker.zone.Equalizer[associationLink][j];
+              }
+            }
+          }
+      },
+      
+      resetKnob: function(elem) {
+        elem.prevTimeout = 0;
+        elem.$.volume2._resetKnob();
+      },
+
+      showToast: function() {
+        //console.log(&quot;gi&quot;);
+      },
+
+      ready: function() {
+        //console.log(&quot;this.$&quot;, this.$);
+        this.internalEqualizer = this.iirConstantsStringZone;
+        equalizerToastZone = this.$.equalizerToastZone;
+        equalizerModeZone = this.$.equalizerSelectorZone;
+      }
+    });
+
+    function showToast() {
+      //console.log(&quot;gi&quot;);
+    }
+
+    function inputChangedZone() {
+        var error = false;
+      $(document.getElementsByClassName(&quot;levelZone&quot;)).each(function(i) {
+        //console.log(this.value);
+        if(isNaN(this.value) || this.value == &quot;&quot; || this.value &lt; -40 || this.value &gt; 10) {
+          error = true;
+          slidersZone[i].style.background = &quot;#F33F31&quot;;
+          handlesZone[i].style.background = &quot;#F33F31&quot;;
+          backgroundZone[i].style.background = &quot;rgba(243, 63, 49, .2)&quot;;
+          
+        } else {        
+          iirConstantsZone[i] = parseInt(this.value);
+          slidersZone[i].style.background = &quot;#3f51b5&quot;;
+          handlesZone[i].style.background = &quot;#3f51b5&quot;;
+          backgroundZone[i].style.background = &quot;rgba(63, 81, 181, .2)&quot;;
+
+          slidersZone[i].style.height = (iirConstantsZone[i] + 40) * 2 + &quot;%&quot;;
+          handlesZone[i].style.bottom = (iirConstantsZone[i] + 40) * 2 + &quot;%&quot;;
+        }
+      });
+        //console.log(error);
+
+        if(error == false) {
+          isThereAnErrorZone = false;
+        } else {
+          isThereAnErrorZone = true;
+        }
+
+        //console.log(isThereAnErrorZone);
+    }
+
+  var MIN_WIDTH_SUPPORTED = 0;
+  var MIN_HEIGHT_SUPPORTED = 0;
+
+  if($(window).width() &gt; MIN_WIDTH_SUPPORTED || $(window).height() &gt; MIN_HEIGHT_SUPPORTED) {
+    $(function() {
+      $(&quot;.custom_slider_zone&quot;).each(function(i) {
+        j = i - 63;
+        //console.log(&quot;this is me, the eq: &quot;, i);
+        var texts = $(&quot;#text&quot; + (i + 1) +&quot;:nth-child(1)&quot;);
+        $(this).slider({
+          orientation: &quot;vertical&quot;,
+          range: &quot;min&quot;,
+          step: .01,
+          min: -40,
+          max: 10,
+          value: 0,
+          slide: function( event, ui) {
+            isThereAnErrorZone = false;
+            slidersZone[i].style.background = &quot;#3f51b5&quot;;
+            handlesZone[i].style.background = &quot;#3f51b5&quot;;
+            //console.log(i);
+            //console.log(texts);
+            backgroundZone[i].style.background = &quot;rgba(63, 81, 181, .2)&quot;;
+            $(texts[1]).val(ui.value);
+
+            iirConstantsZone[i] = ui.value;
+          }
+        });
+        $(texts[1]).val($(&quot;.custom &gt; .custom_slider_zone&quot;).slider(&quot;value&quot;));
+        //console.log(texts);
+      });
+    });
+  } else {
+      //console.log(&quot;there is not enough space to display the equalizer&quot;);    
+    }
+  $(window).resize(function() {
+    if($(window).width() &lt; MIN_WIDTH_SUPPORTED || $(window).height() &lt; MIN_HEIGHT_SUPPORTED) {
+      //console.log($(window).width());
+
+      //console.log(document.getElementById(&quot;eighty&quot;).offsetWidth);
+    } else {
+      var custom_container = document.getElementById(&quot;custom_container&quot;);
+    }
+  });
+
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

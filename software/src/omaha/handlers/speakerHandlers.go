@@ -13,6 +13,9 @@ import (
 	//"time"
 )
 
+/*
+	All of these structs are used in AJAX handling.
+*/
 type speakerPutRequest struct {
 	UpdatedAttributes []string          `json:"updatedAttributes"`
 	AttributeValues   speakerAttributes `json:"attributeValues"`
@@ -195,7 +198,6 @@ var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.Contro
 	"volume":			updateSpeakerVolume,
 	//"music":		updateSpeakerMusic,
 	"averaging":	updateSpeakerAveragingMode,
-	"led":       	updateSpeakerLED,
 	"equalizer": 	updateSpeakerEqualizer,
 	//"fadelevel":	updateSpeakerFadeLevel,
 	//"fadetime":	updateSpeakerFadeTime,
@@ -204,6 +206,9 @@ var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.Contro
 	"target":			updateSpeakerTarget,
 }
 
+/*
+	UpdateVolumesZone: This is the zone version of the UpdateVolumes function. As such, this function updates the volumes for the specified zones.
+*/
 func UpdateVolumesZone(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
@@ -255,6 +260,9 @@ func UpdateVolumesZone(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/*
+	ThresholdHandlerZone: This is the zone version of the ThresholdHandler function. As such, this sets the volume thresholds for an entire zone.
+*/
 func ThresholdHandlerZone(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
 	status := system.GetSystemStatus()
 	log.Println(status)
@@ -277,7 +285,7 @@ func ThresholdHandlerZone(w http.ResponseWriter, r *http.Request) {		// could me
 
 	if(int(thresholdZoneData.Zone) == database.AuthenticateZoneFromHash(session.Value) || database.AuthenticatePermissionFromHash(session.Value) > 0) {
 		zone := database.GetZone(thresholdZoneData.Zone)
-		log.Println("authenticated in this shit")
+		log.Println("authenticated")
 		for x := range zone.Speakers {
 			database.UpdateThreshold(zone.Speakers[x].ID, thresholdZoneData.LowerMusicThreshold, thresholdZoneData.UpperMusicThreshold, thresholdZoneData.LowerPagingThreshold,	thresholdZoneData.UpperPagingThreshold,	thresholdZoneData.LowerMaskingThreshold, thresholdZoneData.UpperMaskingThreshold)
 		} 
@@ -286,9 +294,12 @@ func ThresholdHandlerZone(w http.ResponseWriter, r *http.Request) {		// could me
 	// else don't write anything to let anyone trying to intrude whether they are failing or not
 
 	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
+/*
+	UpdateAveragingZone: This is the zone version of the UpdateAveraging function. As such, it updates the averaging, which consists of the effectiveness and pleseantness of the speaker.
+*/
 func UpdateAveragingZone(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
@@ -320,6 +331,9 @@ func UpdateAveragingZone(w http.ResponseWriter, r *http.Request) {
 	w.Write(getGenericSuccessResponse())
 }
 
+/*
+	UpdateSpeakerTargetZone: This is the zone version of the UpdateSpeakerTarget function. As such, this function updates the speaker target for all speaker within the specified zone.
+*/
 func UpdateSpeakerTargetZone(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
 	status := system.GetSystemStatus()
 	targetZoneRequest := &targetZoneData{}
@@ -374,10 +388,12 @@ func UpdateSpeakerTargetZone(w http.ResponseWriter, r *http.Request) {		// could
 
 		//log.Println("constantsInts: ", constantsInts)
 	}
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
-
+/*
+	UpdateSpeakerEqualizerZone: This is the zone version of the UpdateSpeakerEqualizer function. As such, it updates the speaker equalizer of all speakers within the specified zone.
+*/
 func UpdateSpeakerEqualizerZone(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	/*if(!database.AuthenticatePermissionFromHash(session.Value) > 1) {
@@ -510,7 +526,9 @@ func UpdateSpeakerEqualizerZone(w http.ResponseWriter, r *http.Request) {
 	w.Write(getGenericSuccessResponse())
 }
 
-
+/*
+	AddPresetHandlerZone: This is the zone version of the AddPresteHandler. As such, it updates the speaker target for all targets within the specified zone.
+*/
 func AddPresetHandlerZone(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
@@ -551,10 +569,12 @@ func AddPresetHandlerZone(w http.ResponseWriter, r *http.Request) {
 			log.Println("AddPresetHandler MESSED UP SOMEHOW")
 	}
 
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
-
+/*
+	UpdatePagingValuesZone: This is the zone version of the UpdatePagingValues table. As such, it updates the paging values for the entire specified entire zone.
+*/
 func UpdatePagingValuesZone(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	/*if(!database.AuthenticatePermissionFromHash(session.Value) > 1) {
@@ -603,7 +623,9 @@ func UpdatePagingValuesZone(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-
+/*
+	AddTargetHandlerZone: This is the zone version of the AddTargetHandler function. As such, this function adds a target in the database for an entire zone.
+*/
 func AddTargetHandlerZone(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
 	status := system.GetSystemStatus()
 
@@ -623,10 +645,12 @@ func AddTargetHandlerZone(w http.ResponseWriter, r *http.Request) {		// could me
 	}
 	database.SaveTargetZone(addPresetRequestZone.Zone, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
 
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
-
+/*
+	ScheduleTimeZone: This is the zone version of the function ScheduleTime. As such, it saves the schedule for the specified zone.
+*/
 func ScheduleTimeZone(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
@@ -707,7 +731,9 @@ func ScheduleTimeZone(w http.ResponseWriter, r *http.Request) {
      w.Write(getGenericSuccessResponse())
 }
 
-
+/*
+	ChangeEQModeZone: This is the zone version of the function ChangeEQMode. As such, this function changes the EQ mode for each speaker within the specified zone.
+*/
 func ChangeEQModeZone(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
 	status := system.GetSystemStatus()
 
@@ -737,10 +763,12 @@ func ChangeEQModeZone(w http.ResponseWriter, r *http.Request) {		// could merge 
 	log.Println("I got you packet dude, sendin one back", changeEQModeZoneRequest)
 	//log.Println(addPresetRequest)
 	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
-
+/*
+	updateSpeakerVolume is a private function that is used by the SpeakerUpdateHandlers map when it comes across volume.
+*/
 func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 
 	volumes := strings.Fields(attr.Volume)
@@ -799,18 +827,10 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 
 	return nil
 }
-/*
-func updateSpeakerMusic(attr *speakerAttributes, speaker *database.ControllerStatus) error {
-	if attr.Music >= 0 && attr.Music <= 100 {
-		log.Printf("Telling speaker %d to set music to %d\n", speaker.ID, attr.Music)
-		//system.SetMusicVolume(speaker, attr.Music) 
-	} else {
-		return errors.New("Invalid music volume")
-	}
-	return nil
-}
-*/
 
+/*
+	updateSpeakerAveragingMode is a private function that is used by the SpeakerUpdateHandlers map when it comes across averaging.
+*/
 func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	if attr.Effectiveness > 0 && attr.Effectiveness < 11 && attr.Pleasantness > 0 && attr.Pleasantness < 11 {
 		log.Printf("Telling speaker %d to set effectiveness to %d and pleasantness to %d\n", speaker.ID, attr.Effectiveness, attr.Pleasantness)
@@ -824,6 +844,9 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.Contr
 	return nil
 }
 
+/*
+	updateSpeakerEqualizer is a private function that is used by the SpeakerUpdateHandler map when it comes across equalizer.
+*/
 func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	/*if(!database.AuthenticatePermissionFromHash(session.Value) > 1) {
 		return
@@ -976,55 +999,9 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 	return nil
 }
 
-func updateSpeakerMusicEqualizer(attr *speakerAttributes, speaker *database.ControllerStatus) error {
-	/*if(!database.AuthenticatePermissionFromHash(session.Value) > 1) {
-		return
-	}*/
-	log.Println(attr, speaker)
-
-	constants := strings.Fields(attr.MusicEqualizer)		// do not publish this function without checking for type/value errors
-	//log.Println(constants)
-
-	for i := range speaker.MusicEqualizer {
-		log.Println(speaker.MusicEqualizer[i])
-	}
-
-	if(len(constants) < 21) {
-		return errors.New("Invalid amount of constants")
-	}
-
-	var k = 0
-	for _, i := range constants {
-		floatParse, err := strconv.ParseFloat(i, 64)
-		if err != nil {
-			panic(err)		// test if this returns
-		}
-		//constantsInts = append(constantsInts, int8(floatParse))
-
-		if(floatParse != speaker.CurrentMusicPreset[k]) {			// change this to pull from the db, it might already do that
-			whole := math.Floor(floatParse)
-
-			decimal := math.Abs(whole - floatParse) * 100
-
-			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-			system.SetEqualizerConstant(speaker, int8(whole), int8(k), false)			// add an offset to the BAND
-			log.Println("Whole value:", int8(whole))
-			system.SetEqualizerConstant(speaker, int8(decimal), 21, true)				// add an offset to the BAND
-			log.Println("Decimal value:", int8(decimal))
-			speaker.CurrentMusicPreset[k] = floatParse	// this needs checking
-			//log.Printf("You changed band %d to level %d", k, floatParse)
-		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, floatParse, 1)
-		}
-			k++
-		//log.Println("constantsInts: ", constantsInts)
-	}
-
-	log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
-
-	return nil
-}
-
+/*
+	updateSpeakerTarget is a function that is used by the SpeakerUpdateHandlers map when it comes across target.
+*/
 func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	//session, _ := r.Cookie("session")
 	//log.Println(session.Value)
@@ -1078,31 +1055,8 @@ func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerSt
 }
 
 /*
-func updateSpeakerFadeLevel(attr *speakerAttributes, speaker *database.ControllerStatus) error {
-	if attr.Paging >= 0 && attr.Paging <= 100 {
-		log.Printf("Telling speaker %d to set paging to %d\n", speaker.ID, attr.Paging)
-	//	system.SetPaging(speaker, attr.Paging) 
-		//speaker.PagingLevel = attr.Paging
-		//database.SaveVolume(speaker)
-	} else {
-		return errors.New("Invalid paging")
-	}
-	return nil
-}
-
-func updateSpeakerFadeTime(attr *speakerAttributes, speaker *database.ControllerStatus) error {
-	if attr.Paging >= 0 && attr.Paging <= 100 {
-		log.Printf("Telling speaker %d to set paging to %d\n", speaker.ID, attr.Paging)
-	//	system.SetPaging(speaker, attr.Paging) 
-		//speaker.PagingLevel = attr.Paging
-		//database.SaveVolume(speaker)
-	} else {
-		return errors.New("Invalid paging")
-	}
-	return nil
-}
+	updateSpeakerPaging is a private function that is used when the SpeakerUpdateHandlers map comes across paging.
 */
-
 func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 
 	pagings := strings.Fields(attr.Paging)
@@ -1161,24 +1115,16 @@ func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerSt
 	return nil
 }
 
-func updateSpeakerLED(attr *speakerAttributes, speaker *database.ControllerStatus) error {
-	if attr.LED {	// i think this may be wrong but idc
-		log.Printf("Telling speaker %d to turn on the LED\n", speaker.ID)
-		system.TurnLEDOn(speaker) // Volume variable here)
-	} else {
-		log.Printf("Telling speaker %d to turn off the LED\n", speaker.ID)
-		system.TurnLEDOff(speaker)
-	}
-	return nil
-}
-
+/*
+	updateSpeakerZoneID is a private function that is used when reassigning a speaker to another zone.
+*/
 func updateSpeakerZoneID(attr *speakerAttributes, speaker *database.ControllerStatus) error {
 	database.SetSpeakerToZoneByID(speaker, attr.ZoneID)
 	return nil
 }
 
 /*
-	SpeakerPutHandler updates speaker attribtues according to the request
+	SpeakerPutHandler is used when the server recieves a PUT request and then updates speaker attribtues according to the request and how the SpeakerUpdateHandlers map is defined.
 */
 func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
@@ -1228,6 +1174,9 @@ func SpeakerPutHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(getGenericSuccessResponse())
 }
 
+/*
+	SpeakerGetHandler is used when the server recieves a GET request, which is mostly for the processing the speaker requests. This is done so by filling the response JSON struct.
+*/
 func SpeakerGetHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
@@ -1255,6 +1204,9 @@ func SpeakerGetHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
+/*
+	fillSpeakerResponse is a private function used for filling the response struct for the SpeakerGetHandler
+*/
 func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse {
 
 	speakerResponse := speakerResponse {
@@ -1318,7 +1270,9 @@ func fillSpeakerResponse(controller *database.ControllerStatus) speakerResponse 
 	return speakerResponse
 }
 
-
+/*
+	AddPresetHandler is used to add a preset to the database for the specified speaker.
+*/
 func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
@@ -1347,9 +1301,12 @@ func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println("AddPresetHandler MESSED UP SOMEHOW")
 	}
 
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
+/*
+	AddTargetHandler adds a target for the specified speaker.
+*/
 func AddTargetHandler(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
 	status := system.GetSystemStatus()
 
@@ -1366,9 +1323,12 @@ func AddTargetHandler(w http.ResponseWriter, r *http.Request) {		// could merge 
 
 	log.Println(addPresetRequest)
 	database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
+/*
+	PagingRequestHandler is not used currently, but is reserved for connecting the paging system and making calls.
+*/
 func PagingRequestHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
@@ -1397,6 +1357,9 @@ func PagingRequestHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(getGenericSuccessResponse())
 }
 
+/*
+	ControllerUpdateHandler is used for handling the KeepAlive requests that the webpage sends out. 
+*/
 func ControllerUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 	log.Println(status)
@@ -1439,6 +1402,9 @@ func ControllerUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	//w.Write(getGenericSuccessResponse())
 }
 
+/*
+	CreateZoneHandler is used for handling zone creation.
+*/
 func CreateZoneHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
@@ -1465,11 +1431,13 @@ func CreateZoneHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(getGenericSuccessResponse())
 }
 
+/*
+	CreatePagingZoneHandler is the paging version of the CreateZoneHandler and is used for paging zone creation. 
+*/
 func CreatePagingZoneHandler(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
-	//  this is not the same thing as a zone but it uses the same data type
-	createZone := &zoneData{}
+	createZone := &zoneData{}		//  this is not the same thing as a zone but it uses the same data type
 	err := json.NewDecoder(r.Body).Decode(createZone)
 
 	log.Println("Creating a paging zone", createZone)
@@ -1492,10 +1460,12 @@ func CreatePagingZoneHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(getGenericSuccessResponse())
 }
 
-func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+/*
+	ChangeEQMode is used for changing the EQ mode of the specified speaker
+*/
+func ChangeEQMode(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
-	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
 	changeEQModeRequest := &changeEQModeData{}
 	err := json.NewDecoder(r.Body).Decode(changeEQModeRequest)
 
@@ -1510,45 +1480,13 @@ func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this
 	err = database.ChangeEQMode(changeEQModeRequest.Speaker, changeEQModeRequest.Mode)
 	_, err = system.SetEQMode(changeEQModeRequest.Speaker, changeEQModeRequest.Mode)
 
-	// this should tell the controller to send out the packets for the music constants
-	// should also call to change the status in the database to music mode
-
-
 	log.Println("I got you packet dude, sendin one back", changeEQModeRequest)
-	//log.Println(addPresetRequest)
-	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse())
 }
 
-// need to take into account daylight savings
-
-/*func changeSchedulingMode(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
-	status := system.GetSystemStatus()
-
-	//addPresetRequest := &addPresetData{}		// this is not a preset, but it is the same data
-	changeEQModeRequest := &changeEQModeData{}
-	err := json.NewDecoder(r.Body).Decode(changeEQModeRequest)
-
-	if err != nil {
-		if status.IsDebug() {
-			log.Printf("ChangeEQMode json decoding error: %s\n", err)
-		}
-		w.Write(getGenericErrorResponse(err.Error()))
-		return
-	}
-
-	err = database.ChangeSchedulingMode(changeEQModeRequest.Speaker, changeEQModeRequest.Mode)
-
-	// this should tell the controller to send out the packets for the music constants
-	// should also call to change the status in the database to music mode
-
-
-	log.Println("I got you packet dude, sendin one back", changeEQModeRequest)
-	//log.Println(addPresetRequest)
-	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
-}*/
-
+/*
+	ScheduleTime is used for updating the schedule for the specified speaker.
+*/
 func ScheduleTime(w http.ResponseWriter, r *http.Request) {
 	status := system.GetSystemStatus()
 
@@ -1567,64 +1505,15 @@ func ScheduleTime(w http.ResponseWriter, r *http.Request) {
 
 	database.UpdateSchedule(timeGiven.Speaker, timeGiven.Day, timeGiven.Interval, timeGiven.Start, timeGiven.End, timeGiven.Times)
 	err = database.ChangeSchedulingMode(timeGiven.Speaker, timeGiven.Mode)
-    //w.Write(getGenericSuccessResponse())
-
-
-	//log.Println("\n\n\n\n\n------------- STARTING --------------\n\n\n\n\n")
 
 	log.Println("THIS IS THE TIME GIVEN", timeGiven)
-	//currentTime := time.Now()
 
-    //userGiven := time.Date(2016, 5, 4, 16, 15, 0, 0, currentTime.Location())
-    //current := time.Now()
-
-    //log.Println(current)
-	//userGiven2 := time.Date(current.Year(), current.Month(), current.Day(), current.Hour(), current.Minute(), current.Second() + 15, 0, currentTime.Location())
-      //userGiven2 := time.Date(timeGiven.Year, time.Month(timeGiven.Month + 1), timeGiven.Day, timeGiven.Hour, timeGiven.Minute, timeGiven.Second, 0, currentTime.Location())
-    //log.Println(userGiven2)
-
-    /*yearDifference := userGiven2.Year() - current.Year()
-    monthDifference := int(userGiven2.Month()) - int(current.Month())
-    dayDifference := userGiven2.Day() - current.Day()
-    hourDifference := userGiven2.Hour() - current.Hour()
-    minuteDifference := userGiven2.Minute() - current.Minute()
-    secondDifference := userGiven2.Second() - current.Second()
-*/
-    //log.Println("Timer will go off in", yearDifference, "years", monthDifference, "month/s", dayDifference, "day/s", minuteDifference, "minute/s", secondDifference, "second/s")
-    //amountInSeconds := (yearDifference * 366 * 24 * 60 * 60) + (monthDifference * 30 * 24 * 60 * 60) + (dayDifference * 24 * 60 * 60 ) + (hourDifference * 60 * 60) + (minuteDifference * 60) + secondDifference
-    //log.Println(amountInSeconds)
-
-
-	/*log.Println("\n\n\n\n\n------------- ENDING --------------\n\n\n\n\n")
-    //log.Println(userGiven.AddDate(userGiven2.Year(), -int(userGiven2.Month()), -userGiven2.Day()))
-
-
-    ticker := time.NewTicker(1 * time.Second)
-    quit := make(chan bool)
-    go func() {
-    	// write to database
-        for {
-           select {
-            case <- ticker.C:
-                log.Println("I'm about to do something")
-            case <- quit:
-                ticker.Stop()
-                log.Println("I quit!")
-                return
-            }
-        }
-     }()
-
-     //time.Sleep(time.Duration(amountInSeconds + 1)  * time.Second)
-
-     log.Println("times up!");
-
-     quit <- true			// now it quits
-
-     // write the success afterwards, might not need this */
-     w.Write(getGenericSuccessResponse())
+  w.Write(getGenericSuccessResponse())
 }
 
+/*
+	ThresholdHandler is used for updating the volume thresholds for the specified speaker.
+*/
 func ThresholdHandler(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
 	status := system.GetSystemStatus()
 	log.Println(status)
@@ -1649,37 +1538,8 @@ func ThresholdHandler(w http.ResponseWriter, r *http.Request) {		// could merge 
 		database.UpdateThreshold(thresholdData.Speaker, thresholdData.LowerMusicThreshold, thresholdData.UpperMusicThreshold, thresholdData.LowerPagingThreshold,	thresholdData.UpperPagingThreshold,	thresholdData.LowerMaskingThreshold, thresholdData.UpperMaskingThreshold)
 	}
 
-
-
-
-	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
-
-
-	// make a split string fucntion when you fee like it
-
-	//constants := strings.Fields(addPresetRequest.Constants)		// do not publish this function without checking for type/value errors
-	//log.Println(constants)
-	/*var constantsInts [21] int8
-
-	if(len(constants) < 21) {
-		return //errors.New("Invalid amount of constants")
-	}
-
-	var k = 0
-	for _, i := range constants {
-		intParse, err := strconv.Atoi(i)
-		if err != nil {
-			panic(err)		// test if this returns
-		}
-
-			constantsInts[k] = int8(intParse)	// this needs checking
-		}
-			k++*/
-
-		//log.Println("constantsInts: ", constantsInts)
-
 
 // Example handler
 /*
@@ -1699,49 +1559,6 @@ func ChangeEQMode(w http.ResponseWriter, r *http.Request) {		// could merge this
 	log.Println("I got you packet dude, sendin one back")
 	//log.Println(addPresetRequest)
 	//database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
-	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error form the database shit
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
-
-	constants := strings.Fields(attr.Target)		// do not publish this function without checking for type/value errors
-	//log.Println(constants)
-
-	for i := range speaker.Target {
-		log.Println(speaker.Target[i])
-	}
-
-	if(len(constants) < 21) {
-		return errors.New("Invalid amount of constants")
-	}
-
-	var k = 0
-	for _, i := range constants {
-		floatParse, err := strconv.ParseFloat(i, 64)
-		if err != nil {
-			panic(err)		// test if this returns
-		}
-		//constantsInts = append(constantsInts, int8(floatParse))
-
-		if(floatParse != speaker.CurrentTarget[k]) {			// change this to pull from the db, it might already do that
-			whole := math.Floor(floatParse)
-
-			decimal := math.Abs(whole - floatParse) * 100
-
-			//log.Println(speaker.Equalizer[k], speaker.VolumeLevel)
-			//system.SetEqualizerConstant(speaker, int8(whole), int8(k))
-			log.Println("\n\n", whole, "\n\n")
-			//system.SetEqualizerConstant(speaker, int8(decimal), int8(k))
-			log.Println("\n\n", decimal, "\n\n")
-			speaker.CurrentTarget[k] = floatParse	// this needs checking
-			//log.Printf("You changed band %d to level %d", k, floatParse)
-		//	log.Println(speaker.Equalizer[k])		// see if this works, if it does then we know that it can be accessed as an array
-			database.SaveBand(speaker, k, floatParse, 2)
-		}
-			k++
-
-		//log.Println("constantsInts: ", constantsInts)
-	}
-
-	log.Printf("Telling speaker %d to change equalizer to %s", speaker.ID, constants)
-
-	return nil
-}*/
+*/

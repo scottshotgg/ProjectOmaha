@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">rawjs/target-selector.html.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">rawjs/target-selector.html.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">    window.addEventListener(&apos;WebComponentsReady&apos;, function(e) {
+      //console.log(&quot;WebComponentsReady&quot;);
+      //console.log();
+    });
+
+    var dataArray = [];
+    //console.log(dataArray);
+
+    var labels = [&quot;80&quot;, &quot;100&quot;, &quot;125&quot;, &quot;160&quot;, &quot;200&quot;, &quot;250&quot;, &quot;315&quot;, &quot;400&quot;, &quot;500&quot;, &quot;630&quot;, &quot;800&quot;, &quot;1k&quot;, &quot;1.25k&quot;, &quot;1.6k&quot;, &quot;2k&quot;, &quot;2.5k&quot;, &quot;3.15k&quot;, &quot;4k&quot;, &quot;5k&quot;, &quot;6.3k&quot;, &quot;8k&quot;];
+
+
+    var data = {
+      labels: labels,
+      datasets: [{
+        fillColor: &quot;rgba(63, 81, 181, 0.25)&quot;,
+        strokeColor: &quot;#3f51b5&quot;,
+        pointColor: &quot;#fff&quot;,
+        pointStrokeColor: &quot;#3f51b5&quot;,  
+        data: dataArray,
+      }]
+    };
+
+    var lineAttributes = {
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    var resizeLineAttributes = {
+      animation: false,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    var redrawLineAttributes = {
+      showTooltips: true,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    Polymer({
+      is: &apos;target-selector&apos;,
+      
+      properties: {
+        internalTarget: String,
+
+        target: {
+          type: String,
+          notify: true,
+          observer: &apos;_setInternalTarget&apos;
+        },
+
+        speaker: {
+          type: Object,
+        },
+        speakerId: {
+          type: Number
+        }
+      },
+
+      redrawOnInput: redrawOnInput,
+
+      _setInternalTarget: function(dataArrayString) {
+        this.internalTarget = dataArrayString;
+        //console.log(&quot;_setInternalTarget&quot; + dataArrayString);
+      },
+      
+      _setTargetClicked: function() {
+        //console.log(&quot;i got pressed _setTargetClicked&quot;);
+        var checkInt = 0;
+        var checkBands = [];
+        var targetText = &quot;Invalid input at &quot;;
+
+        $(document.getElementsByClassName(&quot;inputs&quot;)).each(function(i) {
+          if(isNaN(this.value) || this.value &lt; -20 || this.value &gt; 80) {
+            //console.log(typeof this.value, parseInt(this.value));
+            //console.log(this.name);
+            checkInt++;
+            checkBands.push(labels[i]); // may have to put new string here
+            //console.log(checkBands);
+          }
+        });
+
+        //console.log(checkBands);
+
+        if(checkInt &gt; 0) {
+          if(checkBands.length == 1) {
+            targetText += checkBands[0] + &quot;Hz&quot;;
+          } else {
+            for (var i = 0; i &lt; checkBands.length - 1; i++) {
+              targetText += checkBands[i] + &quot;Hz, &quot;
+            }
+            targetText += &quot;and &quot; + checkBands[checkBands.length - 1] + &quot;Hz&quot;;
+          }
+          this.$.toaster.duration = 2000 + (500 * checkBands.length);
+          this.$.toaster.text = targetText;
+          this.$.toaster.show();
+        } else {
+          //console.log(&quot;can you just fucking work&quot;, this.target, dataArray);
+          this.dataArrayString = dataArray.join(&quot;, &quot;);
+          //console.log(&quot;current target length&quot;, this.speaker.CurrentTarget.length);
+          for (var i = 0; i &lt; this.speaker.CurrentTarget.length; i++) { 
+            this.speaker.CurrentTarget[i] = dataArray[i];
+          }
+          //console.log(&quot;can you just fucking work&quot;, this.target, dataArray);
+          this.target = dataArray.join(&quot; &quot;);
+          //console.log(this.target, dataArray);
+          //console.log(dataArray);
+          this.$.toaster.text = &quot;Target set to: &quot; + dataArray.join(&quot;, &quot;) + &quot;, switch to the equalizer page for further adjustment&quot;;
+          this.$.toaster.show();
+          //console.log(&quot;_setTargetClicked&quot;);
+        }
+      },
+
+      _logResponse: function(event, data) {
+        //console.log(data.response);
+      },
+
+      _acceptPressed: function(event) {
+        //console.log(&quot;i got pressed _acceptPressed&quot;);
+        var name = this.$.popupInput.value.valueOf().replace(&quot;\n&quot;, &quot;&quot;).replace(&quot;\t&quot;, &quot;&quot;);
+        var ifvar = 0;
+        if(this.speaker.TargetNames.length &gt; 0) {
+          for(var i = 0; i &lt; this.speaker.TargetNames.length; i++) {
+            if(name.toLowerCase() == this.speaker.TargetNames[i].valueOf().toLowerCase()) {
+              //console.log(&quot;same name dude&quot;);
+              ifvar++;
+            }
+          }
+        }
+
+        if(ifvar &gt; 0) {
+          //console.log(&quot;we are in here right now&quot;);
+          this.err = &quot;Invalid name: Name already taken&quot;;
+          this.$.errorAdjustToast.text = this.err;
+          this.$.errorAdjustToast.show();
+        } else {
+          this.$.addTargetAjax.body = {
+            &quot;speaker&quot;: this.speakerId,
+            &quot;name&quot;: name,
+            &quot;update&quot;: false,
+            &quot;constants&quot;: dataArray.join(&quot; &quot;)
+          };
+
+          //console.log(&quot;addTargetAjax:&quot;, addTargetAjax.body);
+          this.$.addTargetAjax.generateRequest();
+
+          this.$.dialog.toggle();
+
+          this.$.errorAdjustToast.text = &quot;Added target: &quot; + name + &quot; &quot; + dataArray.join(&quot;, &quot;);
+          //console.log(this.$.errorAdjustToast.text);
+
+          this.$.errorAdjustToast.show();
+
+          temp = document.createElement(&quot;paper-item&quot;);
+          temp.setAttribute(&quot;value&quot;, name);
+          temp.setAttribute(&quot;id&quot;, name);
+          temp.innerHTML = name;
+          Polymer.dom(this.$.targetListbox).appendChild(temp);
+
+          var length = this.speaker.Target.length;
+
+          //console.log(&quot;dataArray length&quot;, dataArray);
+          this.speaker.Target.push(dataArray.slice());
+
+          this.speaker.TargetNames[this.speaker.TargetNames.length] = name;
+
+          //console.log(this.speaker.Target);
+
+          this.$.targetListbox.selected = name;
+          this.$.popupInput.value = &quot;&quot;;
+        }
+      },
+
+      _cancelPressed: function(event) {
+        this.$.targetListbox.selected = -1;
+        //console.log(lastSelected);
+      },
+
+      listeners: {
+        &apos;targetListbox.iron-select&apos;: &apos;_presetSelectionChanged&apos;
+      },
+      
+      _presetSelectionChanged: function(event) {
+        var selected = this.$.targetListbox.selected.valueOf().toLowerCase().replace(&quot;\n&quot;, &quot;&quot;);
+
+        if(selected == &quot;currently applied&quot;) {
+          this.$.errorAdjustToast.text = &quot;Currently applied constants loaded! &quot; + dataArray.join(&quot;, &quot;);
+          this.$.errorAdjustToast.show();
+
+          lastSelected = this.$.targetListbox.selected;
+
+          for (var i = 0; i &lt; this.speaker.CurrentTarget.length; i++) { 
+            dataArray[i] = this.speaker.CurrentTarget[i];
+          }
+
+          redraw(data, lineAttributes);
+
+          $(document.getElementsByClassName(&quot;inputs&quot;)).each(function(j) {
+            this.value = dataArray[j];
+          });
+        } else if(selected == &quot;add new target&quot;) {
+            var addTargetAjax = document.getElementById(&quot;addTargetAjax&quot;);
+            //console.log(addTargetAjax);
+            this.$.dialog.toggle();
+        } else if(this.speaker.TargetNames.length &gt; 0) {
+            lastSelected = this.$.targetListbox.selected;
+            var associationLink = -1;
+            for (k in this.speaker.TargetNames) {
+              if(selected == this.speaker.TargetNames[k].valueOf().toLowerCase()) {
+                associationLink = k;
+                //console.log(&quot;associationLink&quot;, associationLink);
+                break;
+              }
+            }
+            if(associationLink != -1) {
+              //console.log(this.speaker.Target.length);
+
+              for (var j = 0; j &lt; this.speaker.Target[0].length; j++) {
+               dataArray[j] = this.speaker.Target[associationLink][j]; 
+              }
+
+              $(document.getElementsByClassName(&quot;inputs&quot;)).each(function(k) {
+                this.value = dataArray[k];
+              });
+
+              redraw(data, lineAttributes);
+              this.$.errorAdjustToast.text = this.$.targetListbox.selected + &quot; target loaded! &quot; + dataArray.join(&quot;, &quot;);
+              this.$.errorAdjustToast.show();
+              //console.log(&quot;Speaker &quot; + this.speakerId + &quot; selected target: &quot; + selected);
+            }
+          }
+        },
+
+
+      ready: function() {
+        //console.log(&quot;target stuff&quot;, this.internalTarget, this.target);
+        this.internalTarget = this.target;
+        //console.log(&quot;I am ready &quot; + this.internalTarget);
+      }
+    });
+
+    var myChart;
+
+    var canvas = document.getElementById(&quot;targetChart&quot;);
+    var chart_width_scalar = .8;
+    var chart_height_scalar = .55;
+
+
+  $(document).ready(function() {
+    canvas = document.getElementById(&quot;targetChart&quot;);
+    canvas.width = $(window).width() * chart_width_scalar;
+    canvas.height = $(window).height() * chart_height_scalar;
+
+    $(document.getElementsByClassName(&quot;inputs&quot;)).each(function(i) {
+      this.value = dataArray[i];
+    });
+
+    //console.log(&quot;dater&quot;);
+    //console.log(data, lineAttributes);
+
+    myChart = new Chart(canvas.getContext(&quot;2d&quot;)).Line(data, lineAttributes);
+  });
+
+
+  $(window).resize(function() {
+    $($(canvas).parent()).prepend(&quot;&lt;canvas id=\&quot;targetChart\&quot; style=\&quot;margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\&quot; class=\&quot;chartClass\&quot;&gt;&lt;/canvas&gt;&quot;);
+    canvas.remove();
+
+    //console.log(canvas);
+
+    canvas = document.getElementById(&quot;targetChart&quot;);
+    canvas.width = $(window).width() * chart_width_scalar;
+    canvas.height = $(window).height() * chart_height_scalar;
+    myChart = new Chart(canvas.getContext(&quot;2d&quot;)).Line(data, resizeLineAttributes);
+  });
+
+  function redraw(drawingData, drawingLineAttributes) {
+    $($(canvas).parent()).prepend(&quot;&lt;canvas id=\&quot;targetChart\&quot; style=\&quot;margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\&quot; class=\&quot;chartClass\&quot;&gt;&lt;/canvas&gt;&quot;);
+    canvas.remove();
+
+    canvas = document.getElementById(&quot;targetChart&quot;);
+    canvas.width = $(window).width() * chart_width_scalar;
+    canvas.height = $(window).height() * chart_height_scalar;
+    myChart = new Chart(canvas.getContext(&quot;2d&quot;)).Line(drawingData, drawingLineAttributes);
+
+  }
+
+  function redrawOnInput() {
+    var errorAdjustToast = document.getElementById(&quot;errorAdjustToast&quot;);
+    var strokeColor = &quot;#3f51b5&quot;;
+    var pointStrokeColor = &quot;#3f51b5&quot;;
+    var fillColor = &quot;rgba(63, 81, 181, .25)&quot;;
+
+    //console.log(dataArray);
+
+    $(document.getElementsByClassName(&quot;inputs&quot;)).each(function(i) {
+      //console.log(&quot;this is the i thing that we printed&quot;, i);
+      //console.log(dataArray.length);
+      if(this.value &gt; -21 &amp;&amp; this.value &lt; 81 &amp;&amp; this.value !== &quot;&quot;) {
+        dataArray[i] = parseInt(this.value);
+      } else {
+        dataArray[i] = null;
+        
+        // Set the error colors
+        strokeColor = &quot;#F33F31&quot;;
+        pointStrokeColor = &quot;#F33F31&quot;;
+        fillColor = &quot;rgba(243, 63, 49, .25)&quot;;
+
+        if(isNaN(this.value)) {
+          errorAdjustToast.text = &quot;Invalid entry for &quot; + labels[i] + &quot;Hz: Only numerical values are accepted&quot;;
+          errorAdjustToast.show();
+        } else if (this.value === &quot;&quot;) {
+
+        } else {
+          errorAdjustToast.text = &quot;Invalid entry for &quot; + labels[i] + &quot;Hz: Accepted range of values is -20 to 80&quot;;
+          errorAdjustToast.show();
+        }
+      }
+    });
+
+    var redrawData = {
+      labels,
+      datasets: [{
+        fillColor: fillColor,
+        strokeColor: strokeColor,
+        pointColor: &quot;#fff&quot;,
+        pointStrokeColor: pointStrokeColor,  
+        data: dataArray,
+        }]
+    };
+
+    redraw(redrawData, redrawLineAttributes);
+  }
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

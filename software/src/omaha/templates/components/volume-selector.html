@@ -150,7 +150,7 @@
 
       _setInternalVolume: function(volume) {
         this.internalVolume = volume;
-        console.log("_setInternalVolume");
+        //console.log("_setInternalVolume");
       },
       
       _setVolumeClicked: function() {
@@ -182,7 +182,7 @@
 
           this.volume = this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume + " " + this.internalSoundMaskingVolume;
           this.$.toast.show();
-          console.log("_setVolumeClicked");
+          //console.log("_setVolumeClicked");
         } else {
           if(localLevelForVolumeSelector > 0) {
             this.$.thresholdValueZone.body = {
@@ -197,7 +197,7 @@
               "maskingMin": ((!isNaN(parseInt(this.$.maskingMin.value))) ? parseInt(this.$.maskingMin.value) : 0),
               "maskingMax": ((!isNaN(parseInt(this.$.maskingMax.value))) ? parseInt(this.$.maskingMax.value) : 100)
             };
-            console.log(this.$.thresholdValueZone.body);
+            //console.log(this.$.thresholdValueZone.body);
             this.$.thresholdValueZone.generateRequest();
           }
 
@@ -219,7 +219,7 @@
             this.$.updateVolumesZone.generateRequest();
           }
           this.$.toast.show();
-          console.log("_setVolumeClicked");
+          //console.log("_setVolumeClicked");
         }
       },
       
@@ -360,12 +360,12 @@
       },
 
       _logResponse: function(event, data) {
-        console.log(data.response);
+        //console.log(data.response);
       },
 
       ready: function() {
-        console.log(speakerid);
-        console.log(this, "\n", this.$, "\n", this.$.speakerId);
+        //console.log(speakerid);
+        //console.log(this, "\n", this.$, "\n", this.$.speakerId);
 
         switch(localLevelForVolumeSelector) {
           case 0:
@@ -383,7 +383,7 @@
         }
 
         this.internalVolume = this.volume;
-        console.log("I am ready " + this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume) + " " + this.internalSoundMaskingVolume;
+        //console.log("I am ready " + this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume) + " " + this.internalSoundMaskingVolume;
       }
     });
   </script>

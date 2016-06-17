@@ -104,7 +104,7 @@
   var UpperThreshold = [];
 
   $(document).ready(function() {
-    console.log($(document.getElementById("goodOrBadFont")).innerWidth(), $(document.getElementById("selectedSpeakers")).innerWidth());
+    //console.log($(document.getElementById("goodOrBadFont")).innerWidth(), $(document.getElementById("selectedSpeakers")).innerWidth());
   });
 
 
@@ -150,7 +150,7 @@
       _selectSpeaker: function() {
         this._hideOverlay();
 
-        console.log("i am fired");
+        //console.log("i am fired");
       },
       
       _selectZone: function() {
@@ -158,11 +158,11 @@
       },
       
       _hideOverlay: function() {
-        console.log(this.overlay);
+        //console.log(this.overlay);
       },
 
       _logResponse: function(event, data) {
-        console.log("this is the speaker response", data.response);
+        //console.log("this is the speaker response", data.response);
         var a = document.getElementById('speaker-tooltip');
   
         a.speaker.name = data.response.name;
@@ -208,7 +208,7 @@
           lastEQMode = "paging";
           getValues();
         }
-        console.log(schedulingSelector);
+        //console.log(schedulingSelector);
         speaker = a.speaker;
 
         if(a.speaker.SchedulingMode == 0) {
@@ -223,22 +223,22 @@
           drawAdvancedZone();
         }
 
-        console.log(document.querySelector("#scheduling-controller"));
+        //console.log(document.querySelector("#scheduling-controller"));
 
-        console.log("i have applied the selected value", schedulingSelector.selected, schedulingSelector);
+        //console.log("i have applied the selected value", schedulingSelector.selected, schedulingSelector);
 
-        console.log(this.$$);
+        //console.log(this.$$);
         if(a.speaker.name !== "") {
           var tooltipInformation = "<b id=\"name\">" + a.speaker.name + "</b><br><b id=\"speaker\">Speaker ID: " + a.speaker.id + "</b><br><b id=\"zone\">Zone ID: " + a.speaker.zoneID + "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
-          console.log("i am here");
+          //console.log("i am here");
         } else {
-          console.log("i am not here");
+          //console.log("i am not here");
           var tooltipInformation = "<b id=\"speaker\">Speaker ID: " + a.speaker.id + "</b><br><b id=\"zone\">Zone ID: " + a.speaker.zone.zoneID + "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
         }
         document.getElementById("tooltipInformation").innerHTML = tooltipInformation;
 
-        console.log("Response:", data.response);
-        console.log("Speaker:", a.speaker);
+        //console.log("Response:", data.response);
+        //console.log("Speaker:", a.speaker);
 
         a.speaker.TargetNames   = [];
         a.speaker.CurrentTarget = [];
@@ -259,42 +259,42 @@
 
         for (i in data.response.TargetNames) {
           a.speaker.TargetNames[i] = data.response.TargetNames[i].replace("\n", "");
-          console.log(i, data.response.TargetNames[i]);
+          //console.log(i, data.response.TargetNames[i]);
         }
 
         for (i in data.response.PresetNames) {
           a.speaker.PresetNames[i] = data.response.PresetNames[i].replace("\n", "");
-          console.log(i, data.response.PresetNames[i]);
+          //console.log(i, data.response.PresetNames[i]);
         }
 
         for (i in data.response.MusicPresetNames) {
           a.speaker.MusicPresetNames[i] = data.response.MusicPresetNames[i].replace("\n", "");
-          console.log(i, data.response.MusicPresetNames[i]);
+          //console.log(i, data.response.MusicPresetNames[i]);
         }
 
         for (i in data.response.PagingPresetNames) {
           a.speaker.PagingPresetNames[i] = data.response.PagingPresetNames[i].replace("\n", "");
-          console.log(i, data.response.PagingPresetNames[i]);
+          //console.log(i, data.response.PagingPresetNames[i]);
         }
 
         for (i in data.response.CurrentPreset) {
           a.speaker.CurrentPreset[i] = data.response.CurrentPreset[i];
-          console.log(i, data.response.CurrentPreset[i]);
+          //console.log(i, data.response.CurrentPreset[i]);
         }
 
         for (i in data.response.CurrentMusicPreset) {
           a.speaker.CurrentMusicPreset[i] = data.response.CurrentMusicPreset[i];
-          console.log(i, data.response.CurrentMusicPreset[i]);
+          //console.log(i, data.response.CurrentMusicPreset[i]);
         } 
 
         for (i in data.response.CurrentPagingPreset) {
           a.speaker.CurrentPagingPreset[i] = data.response.CurrentPagingPreset[i];
-          console.log(i, data.response.CurrentPagingPreset[i]);
+          //console.log(i, data.response.CurrentPagingPreset[i]);
         } 
 
         for (i in data.response.CurrentTarget) {
           a.speaker.CurrentTarget[i] = data.response.CurrentTarget[i];
-          console.log(i, data.response.CurrentTarget[i]);
+          //console.log(i, data.response.CurrentTarget[i]);
           //dataArray.push(data.response.CurrentTarget[i]);
           dataArray[i] = a.speaker.CurrentTarget[i];
         }
@@ -308,33 +308,33 @@
 
         for(i in data.response.Equalizer) {
           a.speaker.Equalizer[i] = data.response.Equalizer[i];
-          console.log(data.response.PresetNames[i], data.response.Equalizer[i]);
+          //console.log(data.response.PresetNames[i], data.response.Equalizer[i]);
         }
 
         for(i in data.response.MusicEqualizer) {
           a.speaker.MusicEqualizer[i] = data.response.MusicEqualizer[i];
-          console.log(data.response.MusicPresetNames[i], data.response.MusicEqualizer[i]);
+          //console.log(data.response.MusicPresetNames[i], data.response.MusicEqualizer[i]);
         }
 
         for(i in data.response.PagingEqualizer) {
           a.speaker.PagingEqualizer[i] = data.response.PagingEqualizer[i];
-          console.log(data.response.PagingPresetNames[i], data.response.PagingEqualizer[i]);
+          //console.log(data.response.PagingPresetNames[i], data.response.PagingEqualizer[i]);
         }
 
         for(i in data.response.Target) {
           a.speaker.Target[i] = data.response.Target[i];
-          console.log(data.response.TargetNames[i], data.response.Target[i]);
+          //console.log(data.response.TargetNames[i], data.response.Target[i]);
         }
 
         a.speaker.Response = "true";
 
-        console.log("Speaker", a.speaker);
+        //console.log("Speaker", a.speaker);
       },
     
       renderMap: function() {
         var mapController = this;
         var container = document.getElementById('popup');
-        var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+        var overlay = new ol.Overlay(({
           element: container,
           autoPan: true,
           autoPanAnimation: {
@@ -343,7 +343,7 @@
         }));
         
         var tt = document.getElementById('test');
-        var tooltip = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+        var tooltip = new ol.Overlay(({
           element: tt,
           autoPan: true,
           autoPanAnimation: {
@@ -389,7 +389,7 @@
         var vectorLayer = new ol.layer.Vector({
             source: vectorSource,
             style: function(feature, resolution) {
-              console.log(feature.getProperties().speaker);
+              //console.log(feature.getProperties().speaker);
               var zone = feature.getProperties().speaker.zone.name;
               if(!(zone in colorMap)) {
                 var color;
@@ -404,7 +404,7 @@
                 colorMap[zone] = color;
                 savedStyle[zone] = color;
                 savedStyle_i++;
-                console.log(savedStyle);
+                //console.log(savedStyle);
               }
               if(!(zone in style) || style[zone].resolution !== resolution) {
                 style[zone] = {};
@@ -434,7 +434,7 @@
               if(zone == "default") {
                 var speakers = feature.getProperties().speaker;
                   if(speakers.status !== 0) {
-                    console.log("updateMapForError", speakers.id);
+                    //console.log("updateMapForError", speakers.id);
 
                     feature.setStyle(errorStyle);
                   }
@@ -479,29 +479,29 @@
 
         select.on('select', function(e) {
             if(e.selected.length > 0) {
-              console.log("Selected");
+              //console.log("Selected");
               var speaker = e.selected[0].getProperties().speaker
-              console.log(e)
-              console.log(speaker);
+              //console.log(e)
+              //console.log(speaker);
 
               var frontendSpeakerUpdateAjax = document.getElementById("frontendSpeakerUpdateAjax");
-              console.log("If I do say myself sir, this is a pretty snazzy way to go about doing this!");
+              //console.log("If I do say myself sir, this is a pretty snazzy way to go about doing this!");
               frontendSpeakerUpdateAjax.body = {
                 "speaker": speaker.id
               };
-              console.log("frontendSpeakerUpdateAjax ", frontendSpeakerUpdateAjax.body);
+              //console.log("frontendSpeakerUpdateAjax ", frontendSpeakerUpdateAjax.body);
               frontendSpeakerUpdateAjax.generateRequest(); 
 
               mapController.selected = speaker;
               var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
 
-              console.log(coordinate)
+              //console.log(coordinate)
 
-              console.log(speaker);
+              //console.log(speaker);
 
               overlay.setPosition(coordinate);
 
-              console.log(colorMap);
+              //console.log(colorMap);
             } else {
               mapController._hideOverlay();
             }
@@ -515,9 +515,9 @@
         });
         hoverInteraction.on('select', function(e){
           if(e.selected.length > 0) {
-              console.log("Selected");
+              //console.log("Selected");
               var speaker = e.selected[0].getProperties().speaker;
-              console.log(speaker);
+              //console.log(speaker);
               var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
               tooltip.setPosition(coordinate);
             }
@@ -530,17 +530,17 @@
     var i = 0;
     for(i = 0; i < features.length; i++) {
       if(features[i].getProperties().speaker.id == id) {
-        console.log(features[i].getProperties().speaker);
+        //console.log(features[i].getProperties().speaker);
         break;
       }
     }
 
-    console.log("i: ", i);
-    console.log("features of i", features[i].getProperties().speaker);
+    //console.log("i: ", i);
+    //console.log("features of i", features[i].getProperties().speaker);
 
     var old_style = features[i].getStyle(style);
 
-    console.log(features);
+    //console.log(features);
     var style;
 
     if(change) {
@@ -549,7 +549,7 @@
           src: "/css/brokenlink.png"
         })
       });
-      console.log(statusCircle);
+      //console.log(statusCircle);
 
       // update the system status icon
       goodCircle.style.visibility = "hidden";

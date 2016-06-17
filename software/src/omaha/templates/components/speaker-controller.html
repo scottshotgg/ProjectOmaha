@@ -237,10 +237,6 @@
         adjustSize();
       },
 
-      _speakerSelected: function() {
-          console.log("this shit is working");
-      },
-
       _volumeUpdate: function() {
         if(this.isReady) {
           var updatedAttributes = ["volume"];
@@ -252,10 +248,10 @@
             "attributeValues": attributeValues,
             "speaker": this.speakerId
           };
-          console.log(this.$, this, "this is the stuff yo")
+          //console.log(this.$, this, "this is the stuff yo")
           this.$.speakerUpdateAjax.generateRequest();
         }
-        console.log("_volumeUpdate " + this.volumeLevel);
+        //console.log("_volumeUpdate " + this.volumeLevel);
       },
 
       _pagingUpdate: function() {
@@ -271,7 +267,7 @@
           };
           this.$.speakerUpdateAjax.generateRequest();
         }
-        console.log("_pagingUpdate " + this.pagingLevel);
+        //console.log("_pagingUpdate " + this.pagingLevel);
       },
 
       _equalizerUpdate: function() {
@@ -287,7 +283,7 @@
           };
           this.$.speakerUpdateAjax.generateRequest();
 
-          console.log(this.$.speakerUpdateAjax.body);
+          //console.log(this.$.speakerUpdateAjax.body);
 
         }
       },
@@ -305,7 +301,7 @@
           };
           this.$.speakerUpdateAjax.generateRequest();
 
-          console.log(this.$.speakerUpdateAjax.body);
+          //console.log(this.$.speakerUpdateAjax.body);
 
         }
       },
@@ -341,7 +337,7 @@
       },
 
       _logResponse: function(event, data) {
-        console.log(data.response);
+        //console.log(data.response);
       },
 
       _initializeStatus: function(speaker) {
@@ -358,11 +354,11 @@
       },
 
       ready: function() {
-        console.log(document.getElementById('target'));
+        //console.log(document.getElementById('target'));
         if(this.speaker !== undefined)
           this._initializeStatus(this.speaker);
         this.isReady = true;
-        console.log("this is the zone flag", zoneFlag);
+        //console.log("this is the zone flag", zoneFlag);
       }
     });
   

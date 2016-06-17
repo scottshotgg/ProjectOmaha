@@ -13,6 +13,9 @@ var Options serial.OpenOptions = serial.OpenOptions{
 	MinimumReadSize: 1,
 }
 
+/*
+	GetOmahaPath returns the root of the Omaha application.
+*/
 func GetOmahaPath() string {
 	return os.Getenv("SOFTWARE_DIR") + "/src/omaha"
 }

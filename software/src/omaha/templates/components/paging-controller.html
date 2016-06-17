@@ -118,14 +118,14 @@
 
       _setInternalPaging: function(paging) {
         this.internalFadeTime = paging;
-        console.log("_setInternalPaging");
+        //console.log("_setInternalPaging");
       },
       
       _setPagingClicked: function() {
         if(zoneFlag == 0) {
           this.paging = this.internalFadeTime + " " + this.internalFadeLevel + " " + this.internalPagingVolume;
           this.$.toast.show();
-          console.log("_setPagingClicked");
+          //console.log("_setPagingClicked");
         } else {
           this.$.updatePagingValuesZone.body = {
             "zone": speaker.zone.zoneID,
@@ -135,19 +135,19 @@
           };
 
           this.$.updatePagingValuesZone.generateRequest();
-          console.log(this.$.updatePagingValuesZone.body);
-          console.log("hi");
+          //console.log(this.$.updatePagingValuesZone.body);
+          //console.log("hi");
         }
       },
 
       _sendPageClicked: function() {
-        console.log(on);
+        //console.log(on);
         if(on == 1) {
-          console.log("on");
+          //console.log("on");
           on--;
           Polymer.dom(sendPageButton).innerHTML = "stop page";
         } else {
-          console.log("off");
+          //console.log("off");
           on++;
           Polymer.dom(sendPageButton).innerHTML = "send page";
         }
@@ -157,17 +157,17 @@
         };
         this.$.pagingRequest.generateRequest();
 
-        console.log("Making a paging request ", this.speakerId, this.$.pagingRequest.body);
+        //console.log("Making a paging request ", this.speakerId, this.$.pagingRequest.body);
         this.$.toasty.show();
       },
 
       _logResponse: function(event, data) {
-        console.log(data.response);
+        //console.log(data.response);
       },
 
       ready: function() {
         this.internalFadeTime = this.paging;
-        console.log("I am ready from paging " + this.internalFadeTime);
+        //console.log("I am ready from paging " + this.internalFadeTime);
       }
     });
   </script>

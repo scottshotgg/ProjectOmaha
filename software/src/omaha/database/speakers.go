@@ -9,6 +9,15 @@ import (
 	"strconv"
 )
 
+type speakerLocation struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+}
+
+type speakerLocationsJSON struct {
+	SpeakerLocations []speakerLocation `json:"circleLocations"`
+}
+
 /*
 	createSpeakerTable creates the Speaker table in the database.
 */
@@ -1824,7 +1833,7 @@ func SaveAveragingZone(zone *Zone) {
 }
 
 /*
-	
+	SaveBand saves the specified band by inserting the band into the database for the specified speaker.
 */
 func SaveBand(speaker *ControllerStatus, band int, level float64, typeOfPreset int) {
 	var stringOfStatement string
@@ -1849,6 +1858,9 @@ func SaveBand(speaker *ControllerStatus, band int, level float64, typeOfPreset i
 	}
 }
 
+/*
+	SaveBandZone: This is the zone version of the SaveBand function. As such, it saves the band for the entire zone.
+*/
 func SaveBandZone(zone *Zone, band int, level float64, typeOfPreset int) { 
 	var stringOfStatement string
 
@@ -1873,7 +1885,9 @@ func SaveBandZone(zone *Zone, band int, level float64, typeOfPreset int) {
 	}
 }
 
-// addSpeaker adds a speaker to the database at the specified location
+/*
+	addSpeaker is a private function that adds a speaker to the database at the specified location.
+*/
 func addSpeaker(loc speakerLocation) int8 {
 	result, err := insertSpeakerStmt.Exec(loc.X, loc.Y)
 	if err != nil {
@@ -1889,6 +1903,9 @@ func addSpeaker(loc speakerLocation) int8 {
 	return 0
 }
 
+/*
+	ChangeEQMode changes the EQ mode for the specified speaker.
+*/
 func ChangeEQMode(speaker int8, mode int8) error {
 	var statement = "UPDATE speaker SET equalizerMode = ? WHERE speakerID = ?"
 	_, err := DB.Exec(statement, mode, speaker)
@@ -1899,6 +1916,9 @@ func ChangeEQMode(speaker int8, mode int8) error {
 	return nil
 }
 
+/*
+	ChangeEQModeZone: This is the zone version of the ChangeEQMode function. As such, it changes the EQ Mode for the entire zone.
+*/
 func ChangeEQModeZone(zone int8, mode int8) error {
 	var statement = "UPDATE zone SET equalizerMode = ? WHERE zoneID = ?"
 	_, err := DB.Exec(statement, mode, zone)
@@ -1909,6 +1929,9 @@ func ChangeEQModeZone(zone int8, mode int8) error {
 	return nil
 }
 
+/*
+	ChangeSchedulingMode changes the scheduling mode of respective speaker.
+*/
 func ChangeSchedulingMode(speaker int8, mode int) error {
 	var statement = "UPDATE speaker SET schedulingMode = ? WHERE speakerID = ?"
 	_, err := DB.Exec(statement, mode, speaker)
@@ -1919,6 +1942,9 @@ func ChangeSchedulingMode(speaker int8, mode int) error {
 	return nil
 }
 
+/*
+	ChangeSchedulingModeZone: This is the zone version of the ChangeSchedulingMode function. As such, it changes the scheduling mode of the entire zone.
+*/
 func ChangeSchedulingModeZone(zone int8, mode int) error {
 	var statement = "UPDATE zone SET schedulingMode = ? WHERE zoneID = ?"
 	_, err := DB.Exec(statement, mode, zone)
@@ -1929,6 +1955,9 @@ func ChangeSchedulingModeZone(zone int8, mode int) error {
 	return nil
 }
 
+/*
+	CreatePagingZone creates a zone within the paging zone. This is not a masking zone. This is not a zone function.
+*/
 func CreatePagingZone(speakers []int8, name string) error {
 	log.Println(name, speakers)
 
@@ -1949,6 +1978,9 @@ func CreatePagingZone(speakers []int8, name string) error {
 	return nil
 }
 
+/*
+	CreateZone is used for creating a zone. This is not a zone function.
+*/
 func CreateZone(speakers []int8, name string) error {
 	log.Println(name, speakers)
 
@@ -1969,6 +2001,9 @@ func CreateZone(speakers []int8, name string) error {
 	return nil
 }
 
+/*
+	getInsertSpeakerStatement is a private function returns an SQL statment after constructing and preparing it. This is used in transactions when adding multiple speakers.
+*/
 func getInsertSpeakerStatement() (*sql.Stmt, error) {
 	stmt, err := DB.Prepare(`INSERT INTO speaker 
 		(name, x, y, 
@@ -2090,6 +2125,9 @@ func getInsertSpeakerStatement() (*sql.Stmt, error) {
 	return stmt, nil
 }
 
+/*
+	populateSpeakerTable is a private function that is used to begin the transaction and start the process of inserting the speakers into the database.
+*/
 func populateSpeakerTable() {
 	tx, err := DB.Begin()
 	if err != nil {
@@ -2116,20 +2154,16 @@ func populateSpeakerTable() {
 	tx.Commit()
 }
 
+/*
+	populateZoneTable is a private function that is used to create the first zone which is "all_masking" that is used to send all the speakers a message. This is the software version of the zone "ALLZONE" on the microcontroller.
+*/
 func populateZoneTable() {
 	AddZone("all_masking")
 }
 
-type speakerLocation struct {
-	X int `json:"x"`
-	Y int `json:"y"`
-}
-
-type speakerLocationsJSON struct {
-	SpeakerLocations []speakerLocation `json:"circleLocations"`
-}
-
-// getSpeakerLocations parses the speaker locations file and returns a list of speakerLocations
+/*
+	getSpeakerLocations is a private function that parses the speaker locations file and returns a list of speakerLocations
+*/
 func getSpeakerLocations() []speakerLocation {
 	rawJSON, _ := ioutil.ReadFile(util.GetOmahaPath() + "/templates/css/speakerLocations.txt")
 	speakerLocs := &speakerLocationsJSON{}

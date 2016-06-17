@@ -158,20 +158,20 @@
   }
 
   function findZoneIndex(zoneName) {
-    console.log(zoneName);
+    //console.log(zoneName);
     for(var i = 0; i < zones.length; i++) {
       if(zones[i].name === zoneName) {        
         for(var k = 0; k < zones[i].speakers.length; k++) {
           currentSpeakers[k] = zones[i].speakers[k].id;
         }
-        console.log("found a name");
+        //console.log("found a name");
         return i;
       }
     }
 
     for(var i = 0; i < pagingZones.length; i++) {
       if(pagingZones[i].name === zoneName) {
-        console.log(pagingZones[i]);
+        //console.log(pagingZones[i]);
         for(var k = 0; k < pagingZones[i].speakers.length; k++) {
           currentSpeakers[k] = pagingZones[i].speakers[k].id;
         }
@@ -190,19 +190,19 @@
   }
 
   function updateViewForSelectedSpeakers(elem) {
-    console.log(elem.id);
-    console.log(features);
-    console.log(map.a);
+    //console.log(elem.id);
+    //console.log(features);
+    //console.log(map.a);
     var overlays = mapController.map.getOverlays();
-    console.log(overlays);
+    //console.log(overlays);
 
-    console.log(elem);
+    //console.log(elem);
     var zoneIndex = findZoneIndex(elem.id);
-    console.log(typeof currentSpeakers);
-    console.log(currentSpeakers, currentSpeakers.length);
-    console.log(zoneIndex);
+    //console.log(typeof currentSpeakers);
+    //console.log(currentSpeakers, currentSpeakers.length);
+    //console.log(zoneIndex);
     var zoneOverlayArray = [];
-    console.log(elem.id);
+    //console.log(elem.id);
     if(displayedZones[elem.id] === undefined) {
       elem.style.background = "rgba(63, 81, 181, .25)";
 
@@ -220,29 +220,29 @@
       elem.style.background = "rgba(63, 81, 181, .1)";
 
       var overlays = mapController.map.getOverlays();
-      console.log(overlays);
-      console.log(overlays.a.length);
+      //console.log(overlays);
+      //console.log(overlays.a.length);
 
-      console.log(displayedZones[elem.id]);
+      //console.log(displayedZones[elem.id]);
       for(var j = displayedZones[elem.id].length - 1; j >= 0; j--) {
         var elementPos = overlays.a.map(function(x) { return x.id; }).indexOf(displayedZones[elem.id][j]);
 
         var objectFound = overlays.a[elementPos];
-        console.log(objectFound);
+        //console.log(objectFound);
         mapController.map.removeOverlay(objectFound);
       }
       mapController.map.updateSize();
       displayedZones[elem.id] = undefined;
       currentSpeakers = [];
     }
-    console.log(displayedZones);
+    //console.log(displayedZones);
 
-    console.log(displayedZones);
+    //console.log(displayedZones);
   }
 
   (function() {
     $(".pagingZoneStyle").each(function(i) {
-      console.log(i);
+      //console.log(i);
     });
   })();
 
@@ -275,7 +275,7 @@
       _acceptPressed: function(e) {
         this.$.zoneDialog.toggle();
         this.$.toast.show();
-        console.log("_acceptPressed", totalInfo);
+        //console.log("_acceptPressed", totalInfo);
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
 
         this.$.createPagingZoneAjax.body = {
@@ -286,7 +286,7 @@
         totalInfo = [];
         document.getElementById("pagingSpeakerHolder").innerHTML = "";
 
-        console.log("createPagingZoneAjax:", createPagingZoneAjax.body);
+        //console.log("createPagingZoneAjax:", createPagingZoneAjax.body);
         this.$.createPagingZoneAjax.generateRequest();
       },
 
@@ -432,35 +432,35 @@
           var info = [];
           var extent = dragBox.getGeometry().getExtent();
 
-          console.log(extent);
+          //console.log(extent);
 
           vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
-            console.log(feature);
+            //console.log(feature);
             selectedFeatures.push(feature);
 
             info.push(feature.B.speaker.id);
           });
-          console.log("selectedFeatures: ", selectedFeatures);
+          //console.log("selectedFeatures: ", selectedFeatures);
 
           if (info.length > 0) {
-            console.log("Selected speakers: ", info);
+            //console.log("Selected speakers: ", info);
 
             for (var i = 0; i < info.length; i++) {
               var areYouInThere = totalInfo.indexOf(info[i]);
               if(areYouInThere == -1) {
                 totalInfo.push(info[i]); 
-                console.log(totalInfo);
+                //console.log(totalInfo);
               } else {
-                console.log("Speaker", info[i], "is already in the list of selected speakers.");
+                //console.log("Speaker", info[i], "is already in the list of selected speakers.");
                 delete totalInfo[areYouInThere];
 
-                console.log(totalInfo);
+                //console.log(totalInfo);
               }
             }
 
-            console.log("Total selected speakers: ", totalInfo);
+            //console.log("Total selected speakers: ", totalInfo);
             
-            console.log("Starting sort: ");
+            //console.log("Starting sort: ");
             totalInfo = mergeSort(totalInfo);
 
             pagingSpeakerHolder = document.getElementById("pagingSpeakerHolder");
@@ -472,7 +472,7 @@
               }
             }
             pagingSpeakerHolder.innerHTML = innerHTML;
-            console.log(totalInfo);
+            //console.log(totalInfo);
           }
         });
 
@@ -481,7 +481,7 @@
         });
         map.on('click', function() {
 
-          console.log(selectedFeatures);
+          //console.log(selectedFeatures);
           selectedFeatures.clear();
         });
       }

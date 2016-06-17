@@ -28,6 +28,9 @@ var Commands struct {
 	SetEQMode							byte
 }
 
+/*
+	init is a private function that is used when assigning the values to the variables for the serial commands.
+*/
 func init() {
 	Commands.KeepAlive = 							byte('K')
 	Commands.SetVolume = 							byte('S')

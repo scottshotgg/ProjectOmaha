@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">rawjs/paging-controller-navbar.html.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">rawjs/paging-controller-navbar.html.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+  var map;
+  var features;
+  var mapController;
+  var idIterator = 0;
+  var currentSpeakers = [];
+
+
+  function pulsateCircle(id, coordinates) {
+    var elem = document.createElement(&apos;div&apos;);
+    elem.setAttribute(&apos;class&apos;, &apos;gps_ring&apos;);
+    return new ol.Overlay({
+      id: id,
+      element: elem,
+      position: coordinates,
+      positioning: &apos;center-center&apos;
+    });
+  }
+
+  function findZoneIndex(zoneName) {
+    //console.log(zoneName);
+    for(var i = 0; i &lt; zones.length; i++) {
+      if(zones[i].name === zoneName) {        
+        for(var k = 0; k &lt; zones[i].speakers.length; k++) {
+          currentSpeakers[k] = zones[i].speakers[k].id;
+        }
+        //console.log(&quot;found a name&quot;);
+        return i;
+      }
+    }
+
+    for(var i = 0; i &lt; pagingZones.length; i++) {
+      if(pagingZones[i].name === zoneName) {
+        //console.log(pagingZones[i]);
+        for(var k = 0; k &lt; pagingZones[i].speakers.length; k++) {
+          currentSpeakers[k] = pagingZones[i].speakers[k].id;
+        }
+        return i;
+      }
+    }
+    
+    var zoneNameInt = parseInt(zoneName);
+    for(var i = 0; i &lt; zones[0].speakers.length; i++) {
+      if(zones[0].speakers[i].id == zoneNameInt) {
+        currentSpeakers = [];
+        currentSpeakers[0] = zones[0].speakers[i].id;
+        return i;
+      }
+    }
+  }
+
+  function updateViewForSelectedSpeakers(elem) {
+    //console.log(elem.id);
+    //console.log(features);
+    //console.log(map.a);
+    var overlays = mapController.map.getOverlays();
+    //console.log(overlays);
+
+    //console.log(elem);
+    var zoneIndex = findZoneIndex(elem.id);
+    //console.log(typeof currentSpeakers);
+    //console.log(currentSpeakers, currentSpeakers.length);
+    //console.log(zoneIndex);
+    var zoneOverlayArray = [];
+    //console.log(elem.id);
+    if(displayedZones[elem.id] === undefined) {
+      elem.style.background = &quot;rgba(63, 81, 181, .25)&quot;;
+
+      for(var i = 0; i &lt; currentSpeakers.length; i++) {
+        var tempOverlay = pulsateCircle(i, features[currentSpeakers[i] - 1].getGeometry().getCoordinates());
+        tempOverlay.id = idIterator;
+        mapController.map.addOverlay(tempOverlay);
+        zoneOverlayArray.push(tempOverlay.id);
+        idIterator++;
+      }
+      displayedZones[elem.id] = zoneOverlayArray;
+      mapController.map.updateSize();
+    }
+    else {
+      elem.style.background = &quot;rgba(63, 81, 181, .1)&quot;;
+
+      var overlays = mapController.map.getOverlays();
+      //console.log(overlays);
+      //console.log(overlays.a.length);
+
+      //console.log(displayedZones[elem.id]);
+      for(var j = displayedZones[elem.id].length - 1; j &gt;= 0; j--) {
+        var elementPos = overlays.a.map(function(x) { return x.id; }).indexOf(displayedZones[elem.id][j]);
+
+        var objectFound = overlays.a[elementPos];
+        //console.log(objectFound);
+        mapController.map.removeOverlay(objectFound);
+      }
+      mapController.map.updateSize();
+      displayedZones[elem.id] = undefined;
+      currentSpeakers = [];
+    }
+    //console.log(displayedZones);
+
+    //console.log(displayedZones);
+  }
+
+  (function() {
+    $(&quot;.pagingZoneStyle&quot;).each(function(i) {
+      //console.log(i);
+    });
+  })();
+
+    var totalInfo = [];
+    
+    Polymer({
+      is: &apos;paging-controller-navbar&apos;,
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+        animationConfig: {
+          value: function() {
+            return {
+              &apos;entry&apos;: {
+                  name: &apos;fade-in-animation&apos;,
+                  node: this
+                },
+              &apos;exit&apos;: {
+                name: &apos;slide-left-animation&apos;,
+                node: this
+              }
+            }
+          }
+        }
+      },
+
+      _acceptPressed: function(e) {
+        this.$.zoneDialog.toggle();
+        this.$.toast.show();
+        //console.log(&quot;_acceptPressed&quot;, totalInfo);
+        var name = this.$.popupInput.value.valueOf().replace(&quot;\n&quot;, &quot;&quot;).replace(&quot;\t&quot;, &quot;&quot;);
+
+        this.$.createPagingZoneAjax.body = {
+          &quot;name&quot;:     name,
+          &quot;speakers&quot;: totalInfo
+        }
+
+        totalInfo = [];
+        document.getElementById(&quot;pagingSpeakerHolder&quot;).innerHTML = &quot;&quot;;
+
+        //console.log(&quot;createPagingZoneAjax:&quot;, createPagingZoneAjax.body);
+        this.$.createPagingZoneAjax.generateRequest();
+      },
+
+      _cancelPressed: function(e) {
+      },
+
+      _dial: function(e) {
+        this.$.zoneDialog.toggle();
+      },
+      
+      _refreshSpeaker: function(e) {
+        var speakerId = e.detail.speakerId;
+        this.featureMap[speakerId].changed();
+      },
+      
+      _assignZone: function() {
+        this._hideOverlay();
+        this.$.dialog.open();
+      },
+      
+      _hideOverlay: function() {
+        this.overlay.setPosition(undefined);
+      },
+
+      renderMap: function() {
+        mapController = this;
+        mapController.featureMap = {};
+        var container = mapController.$.popup;
+        var overlay = new ol.Overlay(({
+          element: container,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+      
+        mapController.overlay = overlay;
+
+        var extent = [0, 0, 2200, 1700];
+        var projection = new ol.proj.Projection({
+          code: &apos;pixel&apos;,
+          units: &apos;pixels&apos;,
+          extent: extent
+        });
+
+        var locations = this.controllers;
+        features = new Array(locations.length);
+        for(var i = 0; i &lt; features.length; i++) {
+            var coordinates = [locations[i].x, 1700-locations[i].y];
+            features[i] = new ol.Feature({
+              geometry: new ol.geom.Point(coordinates),
+              speaker: locations[i]
+            });
+            mapController.featureMap[locations[i].id] = features[i]
+        }
+
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var style = {}
+
+       var allColors = [
+          &apos;#f44336&apos;
+        ];
+        
+        var unusedColors = [
+          &apos;#f44336&apos;
+        ];
+        var colorMap = {};
+        
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: function(feature, resolution) {
+              var zone = feature.getProperties().speaker.zone.name;
+                if(!(zone in colorMap)) {
+                  var color;
+                  if(unusedColors.length &gt; 0) {
+                    var index = Math.floor(Math.random() * unusedColors.length)
+                    color = unusedColors[index]
+                    unusedColors.splice(index, 1);
+                  } else {
+                    color = colors[Math.floor(Math.random() * colors.length)]
+                  }
+
+                  colorMap[zone] = color;
+                }
+                if(!(zone in style) || style[zone].resolution !== resolution) {
+                  style[zone] = {};
+                  style[zone].style = 
+                  [new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 15/Math.max(resolution,1),
+                            stroke: new ol.style.Stroke({
+                                color: &apos;#000000&apos;
+                            }),
+                            fill: new ol.style.Fill({
+                                color: colorMap[zone]
+                            })
+                        })
+                    })];
+                    style[zone].resolution = resolution;
+                }
+                return style[zone].style;
+            }
+        });
+
+        map = new ol.Map({
+          layers: [
+            new ol.layer.Image({
+              source: new ol.source.ImageStatic({
+                url: &apos;/css/map.png&apos;,
+                projection: projection,
+                imageExtent: extent
+              })
+            }),
+              vectorLayer
+          ],
+          overlays: [overlay],
+          target: &apos;pagingMapContainer&apos;,
+          view: new ol.View({
+            projection: projection,
+            center: ol.extent.getCenter(extent),
+            zoom: 2
+          })
+        });
+        mapController.map = map;
+
+        var box = new ol.interaction.Select();
+
+        var selectedFeatures = box.getFeatures();
+
+        var dragBox = new ol.interaction.DragBox({
+          condition: ol.events.condition.shiftKeyOnly,
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: [63, 81, 181, 1]
+            })
+          })
+        });
+
+        dragBox.on(&apos;boxend&apos;, function(e) {
+          var info = [];
+          var extent = dragBox.getGeometry().getExtent();
+
+          //console.log(extent);
+
+          vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+            //console.log(feature);
+            selectedFeatures.push(feature);
+
+            info.push(feature.B.speaker.id);
+          });
+          //console.log(&quot;selectedFeatures: &quot;, selectedFeatures);
+
+          if (info.length &gt; 0) {
+            //console.log(&quot;Selected speakers: &quot;, info);
+
+            for (var i = 0; i &lt; info.length; i++) {
+              var areYouInThere = totalInfo.indexOf(info[i]);
+              if(areYouInThere == -1) {
+                totalInfo.push(info[i]); 
+                //console.log(totalInfo);
+              } else {
+                //console.log(&quot;Speaker&quot;, info[i], &quot;is already in the list of selected speakers.&quot;);
+                delete totalInfo[areYouInThere];
+
+                //console.log(totalInfo);
+              }
+            }
+
+            //console.log(&quot;Total selected speakers: &quot;, totalInfo);
+            
+            //console.log(&quot;Starting sort: &quot;);
+            totalInfo = mergeSort(totalInfo);
+
+            pagingSpeakerHolder = document.getElementById(&quot;pagingSpeakerHolder&quot;);
+            var innerHTML = &quot;&quot;;
+            pagingSpeakerHolder.innerHTML = &quot;&quot;;
+            for (var k = 0; k &lt; totalInfo.length; k++) {
+              if (totalInfo[k] !== undefined) {
+               innerHTML += &quot;&lt;paper-item center-justified flex style=\&quot;border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\&quot;&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot;;
+              }
+            }
+            pagingSpeakerHolder.innerHTML = innerHTML;
+            //console.log(totalInfo);
+          }
+        });
+
+        dragBox.on(&apos;boxstart&apos;, function(e) {
+
+        });
+        map.on(&apos;click&apos;, function() {
+
+          //console.log(selectedFeatures);
+          selectedFeatures.clear();
+        });
+      }
+    });
+
+    function mergeSort(arr) {
+        if (arr.length &lt; 2)
+            return arr;
+
+        var middle = parseInt(arr.length / 2);
+        var left   = arr.slice(0, middle);
+        var right  = arr.slice(middle, arr.length);
+
+        return merge(mergeSort(left), mergeSort(right));
+    }
+
+    function merge(left, right) {
+        var result = [];
+
+        while (left.length &amp;&amp; right.length) {
+            if (left[0] &lt;= right[0]) {
+                result.push(left.shift());
+            } else {
+                result.push(right.shift());
+            }
+        }
+
+        while (left.length)
+            result.push(left.shift());
+
+        while (right.length)
+            result.push(right.shift());
+
+        return result;
+    }
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

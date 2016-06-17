@@ -180,7 +180,7 @@
       _acceptPressed: function(e) {
         this.$.zoneDialog.toggle();
         this.$.toast.show();
-        console.log("_acceptPressed", totalInfo);
+        //console.log("_acceptPressed", totalInfo);
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
 
         // this is where we strip out the undefineds
@@ -195,7 +195,7 @@
         totalInfo = [];
         document.getElementById("informationSpeakerHolder").innerHTML = "";
 
-        console.log("createZoneAjax:", createZoneAjax.body);
+        //console.log("createZoneAjax:", createZoneAjax.body);
         this.$.createZoneAjax.generateRequest();
       },
 
@@ -221,11 +221,11 @@
       },
 
       renderMap: function() {
-        console.log("gi");
+        //console.log("gi");
         var mapController = this;
         mapController.featureMap = {};
         var container = mapController.$.popup;
-        var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+        var overlay = new ol.Overlay(({
           element: container,
           autoPan: true,
           autoPanAnimation: {
@@ -385,21 +385,21 @@
           var info = [];
           var extent = dragBox.getGeometry().getExtent();
 
-          console.log(extent);
+          //console.log(extent);
 
           vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
-            console.log(feature);
+            //console.log(feature);
             selectedFeatures.push(feature);
 
             // just make it grab every other one
             info.push(feature.B.speaker.id);
           });
-          console.log("selectedFeatures: ", selectedFeatures);
+          //console.log("selectedFeatures: ", selectedFeatures);
 
           // To make sure that we are no running this on times when nothing is selected
           if (info.length > 0) {
              //infoBox.innerHTML = info.join(', ');
-            console.log("Selected speakers: ", info);
+            //console.log("Selected speakers: ", info);
 
             // i have a feeling that this is not very optimized
 
@@ -408,19 +408,19 @@
               var areYouInThere = totalInfo.indexOf(info[i]);
               if(areYouInThere == -1) {
                 totalInfo.push(info[i]); 
-                console.log(totalInfo);
+                //console.log(totalInfo);
               } else {
-                console.log("Speaker", info[i], "is already in the list of selected speakers.");
+                //console.log("Speaker", info[i], "is already in the list of selected speakers.");
                 delete totalInfo[areYouInThere];    // make something for delete
 
-                console.log(totalInfo);
+                //console.log(totalInfo);
               }
             }
 
-            console.log("Total selected speakers: ", totalInfo);
+            //console.log("Total selected speakers: ", totalInfo);
             // make this a checkbox thing that will fire when checked, which means we need to keep track of two arrays?
             
-            console.log("Starting sort: ");
+            //console.log("Starting sort: ");
             // Sort the array so that when we display it, the items are sorted
             totalInfo = mergeSort(totalInfo);   // This mergeSort isn't any faster wtf
 
@@ -438,7 +438,7 @@
               }
             }
             informationSpeakerHolder.innerHTML = innerHTML;
-            console.log(totalInfo);
+            //console.log(totalInfo);
           }
         });
 
@@ -452,7 +452,7 @@
         });
         map.on('click', function() {
 
-          console.log(selectedFeatures);
+          //console.log(selectedFeatures);
           selectedFeatures.clear();
           //infoBox.innerHTML = '&nbsp;';
         });
@@ -483,7 +483,7 @@
       }
     });
 
-console.log("this is me");
+//console.log("this is me");
 
     function mergeSort(arr) {
         if (arr.length < 2)

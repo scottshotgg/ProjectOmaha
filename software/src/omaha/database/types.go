@@ -1,11 +1,17 @@
 package database
 
+/*
+	The account struct is used to represent an account and holds directly identifying material.
+*/
 type Account struct {
 	UID      int
 	UserName string
 	Hash     string
 }
 
+/*
+	ControllerStatus is a software abstraction of the speakers so the software can track what has been sent and what data the speaker should have.
+*/
 type ControllerStatus struct {
 	Name										string		`json:"name"`
 	LEDOn         					bool 			`json:"ledOn"`
@@ -43,6 +49,9 @@ type ControllerStatus struct {
 	Schedule[][]						int				`json:["schedule"]`
 }
 
+/*
+	Zone is the zone version of the ControllerStatus struct and as such it is used to track the zones and what they have been sent.
+*/
 type Zone struct {
 	Name										string		`json:"name"`
 	Speakers    						[]*ControllerStatus 	`json:"speakers"`

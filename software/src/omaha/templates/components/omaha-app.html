@@ -121,7 +121,7 @@
     var zones;
     var pagingZones;
     var displayedZones = {};
-
+    
     Polymer({
       is: 'omaha-app',
 
@@ -145,28 +145,34 @@
         // put a mapcontroller.logresponse thing here
       },
 
+      /**
+        * This function displays the map.
+      */
       _showMap: function() {
         this.selected = "map";
       },
 
       _presetSelectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
-        console.log("hi");    // This says the speakerId is undefined
+        //console.log("hi");    // This says the speakerId is undefined
         // dont think we need this
         },
 
+        /**
+          * This function is fired when the mapcontroller detects that a speaker was selected by the user; when the mapcontroller.speakerselected fires.
+        */
       _speakerSelected: function(e) {
-        console.log("this is where i am");
-        console.log(this.$);
+        //console.log("this is where i am");
+        //console.log(this.$);
         var speaker = e.detail.speaker;
-        console.log(e);
-        console.log(speaker);
-        console.log(localStorage.getItem("speakerid"));
+        //console.log(e);
+        //console.log(speaker);
+        //console.log(localStorage.getItem("speakerid"));
 
         if(speaker === undefined) {
           this.$.dialog.open();
         } else if(speaker.id == localSpeakerID || speaker.zone.zoneID == localZoneID || localZoneID == 1 || localLevel > 0) {
           this.$.controller.speaker = speaker;
-          console.log(this.$.speaker);
+          //console.log(this.$.speaker);
           this.$.nav.showBackArrow();
 
           this.selected = "speakerController";
@@ -187,7 +193,7 @@
           document.getElementById('maskingMin').value = this.$.controller.speaker.LowerThreshold[2];
           document.getElementById('maskingMax').value = this.$.controller.speaker.UpperThreshold[2];
 
-          console.log(document.getElementById('equalizerMenu'));
+          //console.log(document.getElementById('equalizerMenu'));
 
           // Set averaging mode
           document.getElementById('effectiveness').value = this.$.controller.speaker.Effectiveness;
@@ -209,14 +215,14 @@
             iirConstants[i] = controller.speaker.CurrentPreset[i];
           }
           for (var i = 0; i < controller.speaker.CurrentMusicPreset.length; i++) {   // this was "current" for some reason
-            console.log("I am here");
+            //console.log("I am here");
             sliders[i + 21].style.height = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + "%";
             handles[i + 21].style.bottom = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + "%";
             $("#text" + (parseInt(i + 21) + 1)).val(controller.speaker.CurrentMusicPreset[i]);
             iirConstants[i + 21] = controller.speaker.CurrentMusicPreset[i];
           }
           for (var i = 0; i < controller.speaker.CurrentPagingPreset.length; i++) {   // this was "current" for some reason
-            console.log("I am here");
+            //console.log("I am here");
             sliders[i + 42].style.height = (controller.speaker.CurrentPagingPreset[i] + 40) * 2 + "%";
             handles[i + 42].style.bottom = (controller.speaker.CurrentPagingPreset[i] + 40) * 2 + "%";
             $("#text" + (parseInt(i + 42) + 1)).val(controller.speaker.CurrentPagingPreset[i]);
@@ -230,7 +236,7 @@
           }
 
           var equalizerListbox = document.getElementById("equalizerListbox");
-          console.log(Polymer.dom(equalizerListbox).children);
+          //console.log(Polymer.dom(equalizerListbox).children);
 
           var motherPolymer = Polymer.dom(equalizerListbox).children; 
 
@@ -255,7 +261,7 @@
 
 
           var musicListbox = document.getElementById("musicListbox");
-          console.log(Polymer.dom(musicListbox).children);
+          //console.log(Polymer.dom(musicListbox).children);
           var motherPolymer = Polymer.dom(musicListbox).children; 
 
 
@@ -278,7 +284,7 @@
 
           
           var targetListbox = document.getElementById("targetListbox");
-          console.log(Polymer.dom(targetListbox).children);
+          //console.log(Polymer.dom(targetListbox).children);
           motherPolymer = Polymer.dom(targetListbox).children; 
 
           // Remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
@@ -310,7 +316,7 @@
 
           this.$.errorNoAccessToast.duration = 2000;
           this.$.errorNoAccessToast.show();
-          console.log("{username} does not have access to this speaker");
+          //console.log("{username} does not have access to this speaker");
 
         }
     var basic_container = document.getElementById("basic_container");
@@ -319,6 +325,9 @@
 
       },
       
+      /**
+       * This function is fired when a zone is selected. It will go through and inject all the information pertaining to the zone into the controller.
+       */
       _zoneSelected: function(e) {
         var zone = e.detail.zone;
         this.$.zoneController.zone = zone;
@@ -326,7 +335,7 @@
         this.$.nav.showBackArrow();
 
         var zoneVolumePage = document.getElementById("volumeZone"); 
-        console.log(volumeZone, this.volumeZone);
+        //console.log(volumeZone, this.volumeZone);
 
         // Set volume levels
         volumeZone.$.volume2.value = zone.VolumeLevel[0];
@@ -411,12 +420,15 @@
         }
         
 
-        console.log("its zonerino time", zone);
+        //console.log("its zonerino time", zone);
       },
 
+      /**
+       * This function sets the basic controller up, sets up the zone options in the scrollbox, as well as calling for the rendering of the maps.
+       */
       _initializeStatus: function(event, data) {
 
-        console.log("data", data.response);
+        //console.log("data", data.response);
 
 
         var speakers = [];
@@ -427,14 +439,14 @@
 
         var innerHTMLString = "";
         zones = data.response.zones;
-        console.log(zones);
+        //console.log(zones);
         for (var i = 0; i < zones.length; i++) {
           displayedZones[zones[i].name] = undefined;
         }
         var zoneListbox = document.querySelector("#zoneListbox");
         zoneListbox.innerHTML = "";
 
-        console.log("zones", zones);
+        //console.log("zones", zones);
 
         zones.forEach(function(zone){
           zone.speakers.forEach(function(speaker){
@@ -443,9 +455,9 @@
         })
 
         callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\"><font style=\"text-align: center; width: 100%; font-weight: bold;\">Masking Zones:</font></paper-item>";
-        console.log(data.response);
+        //console.log(data.response);
         for(var i = 0; i < zones.length; i++) {
-          //console.log(zones);
+          ////console.log(zones);
           innerHTMLString += "<paper-item center-justified flex ><font style=\"width: 100%; text-align: center;\">" + zones[i].name + "</font></paper-item>";
           callingInnerHTMLString += "<paper-item center-justified flex id=\"" + zones[i].name + "\" class=\"pagingZoneStyle\" onclick=\"updateViewForSelectedSpeakers(this)\"><font style=\"text-align: center; width: 100%;\">" + zones[i].name + "</font></paper-item>";
 
@@ -504,7 +516,7 @@
         callingInnerHTMLString += "<paper-item center-justified flex><font style=\"text-align: center; width: 100%;\"></font></paper-item>";
         callingInnerHTMLString += "<paper-item center-justified flex class=\"pagingZoneStyle\"><font style=\"text-align: center; width: 100%; font-weight: bold;\">Speakers:</font></paper-item>";
 
-        console.log(zones[0].speakers[0]);
+        //console.log(zones[0].speakers[0]);
 
         for(var k = 0; k < zones[0].speakers.length; k++) {
           displayedZones[zones[0].speakers[k].id] = undefined;
@@ -514,10 +526,10 @@
         var pagingSpeakerHolder = document.querySelector("#pagingSpeakerHolder");    
         pagingSpeakerHolder.innerHTML = callingInnerHTMLString;
 
-        console.log(this);
+        //console.log(this);
         this.controllers = speakers;
         this.zones = zones;
-        console.log(this.$);
+        //console.log(this.$);
         this.$.information.renderMap();
         this.$.pagingMap.renderMap();
         this.$.mapcontroller.renderMap();
@@ -530,14 +542,23 @@
         this.$.nav.showAccountCreation = false;
       },
 
+      /**
+       * This function toggles the drawer on the left side of the website.
+       */
       _toggleDrawer: function() {
         this.$.panel.togglePanel();
       },
       
+      /**
+       * This function closes the drawer on the left side.
+       */
       _closeDrawer: function() {
         this.$.panel.closeDrawer();
       },
       
+      /**
+       * This function will update the map size, as well as determine the selected map.
+       */
       refreshMap: function() {
         switch(this.$.pages.selected) {
           case "map":
@@ -545,25 +566,30 @@
           case "information":
           case "zoneMap":
             var map = this.$.pages.selectedItem.map;
-            console.log("THIS IS THE MAP THING THAT YOU ARE LOOKING FOR " + map);
+            //console.log("THIS IS THE MAP THING THAT YOU ARE LOOKING FOR " + map);
             if(map !== undefined)
               map.updateSize();
             break;
 
           default:
-            console.log("tell someone of higher authority if you see this, like me, lol");
+            //console.log("tell someone of higher authority if you see this, like me, lol");
         }
       },
 
+      /**
+       * The keep alive response is a callback for a function that schedules the speaker update querying to check whether they are still functioning or not.
+       */
       _keepAliveResponse: function(event, data) {
-        console.log(data.response);
+        //console.log(data.response);
         if(data.response.status !== this.controllers[data.response.id - 1].status) { 
           updateMapForError(data.response.id, (this.controllers[data.response.id - 1].status) === 0 ? true : false);
           this.controllers[data.response.id - 1].status = data.response.status;
-
         }
       },
 
+      /**
+       * This function loads after the webcomponents load and sets some variables up and scheduling a self-executing function that will continuously execute itself every second.
+       */
       ready: function() {       
         this.$.systemStatusAjax.generateRequest();
         this.$.nav.hideBackArrow();
@@ -580,7 +606,10 @@
       }
 
     });
-  
+
+  /**
+   * This function is used to set the UI based on the permission received when the user logs in.
+   */
   function setUI() {
     switch(localLevel) {
       case 0:
@@ -598,7 +627,7 @@
         break;
 
       default:
-        console.log("lel");
+        //console.log("lel");
     }
   }
   

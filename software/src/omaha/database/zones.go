@@ -5,6 +5,9 @@ import (
 	"log"
 )
 
+/*
+	createZoneTable creates the zone table in the database.
+*/
 func createZoneTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE zone (
@@ -128,7 +131,9 @@ func createZoneTable() {
 	}
 }
 
-
+/*
+	createEqualizerPresetsTableZone: This is the zone version of the createEqualizerPresetsTable function. This function creates the EqualizerPresets table for the zones.
+*/
 func createEqualizerPresetsTableZone() {
 	_, err := DB.Exec(`
 		CREATE TABLE EqualizerPresetsZone (
@@ -166,6 +171,9 @@ func createEqualizerPresetsTableZone() {
 	}
 }
 
+/*
+	createMusicEqualizerPresetsTableZone: This is the zone version of the createMusicEqualizerPresetsTable function. This function creates the MusicEqualizerPresets table for the zones.
+*/
 func createMusicEqualizerPresetsTableZone() {
 	_, err := DB.Exec(`
 		CREATE TABLE MusicEqualizerPresetsZone (
@@ -203,6 +211,9 @@ func createMusicEqualizerPresetsTableZone() {
 	}
 }
 
+/*
+	createPagingEqualizerPresetsTableZone: This is the zone version of the createPagingEqualizerPresetsTable function. This function creates the PagingEqualizerPresets table for the zones.
+*/
 func createPagingEqualizerPresetsTableZone() {
 	_, err := DB.Exec(`
 		CREATE TABLE PagingEqualizerPresetsZone (
@@ -240,6 +251,9 @@ func createPagingEqualizerPresetsTableZone() {
 	}
 }
 
+/*
+	createTargetsTableZone: This is the zone version of the createTargetsTable function. This function creates the Targets table for the zones.
+*/
 func createTargetsTableZone() {
 	_, err := DB.Exec(`
 		CREATE TABLE TargetsZone (
@@ -277,6 +291,9 @@ func createTargetsTableZone() {
 	}
 }
 
+/*
+	createSchedulingTableZone: This is the zone version of the createSchedulingTable function. This function creates the SchedulingTable table for the zones.
+*/
 func createSchedulingTableZone() {
 	_, err := DB.Exec(`
 		CREATE TABLE SchedulingZone (
@@ -320,7 +337,9 @@ func createSchedulingTableZone() {
 
 }
 
-// createZoneToSpeakerTable creates the zoneToSpeaker table in the database
+/*
+	createZoneToSpeakerTable is a private function that creates the zoneToSpeaker table in the database.
+*/
 func createZoneToSpeakerTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE zoneToSpeaker (
@@ -338,7 +357,9 @@ func createZoneToSpeakerTable() {
 	}
 }
 
-// createPagingZoneTable creates the zone table in the database
+/*
+	createPagingZoneTable is a private function that creates the PagingZone table in the database.
+*/
 func createPagingZoneTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE pagingZone (
@@ -354,7 +375,9 @@ func createPagingZoneTable() {
 	}
 }
 
-// createPagingZoneToSpeakerTable creates the zoneToSpeaker table in the database
+/*
+	createPagingZoneToSpeakerTable is a private function that creates the pagingZoneToSpeaker table in the databasel
+*/
 func createPagingZoneToSpeakerTable() {
 	_, err := DB.Exec(`
 		CREATE TABLE pagingZoneToSpeaker (
@@ -372,7 +395,9 @@ func createPagingZoneToSpeakerTable() {
 	}
 }
 
-// AddZone adds a zone to the database with the specified name
+/*
+	AddZone adds a zone to the database with the specified name.
+*/
 func AddZone(name string) {
 	result, err := DB.Exec(`INSERT INTO zone 
 			(name,
@@ -511,7 +536,9 @@ func AddZone(name string) {
 
 
 
-// AddPagingZone adds a paging zone to the database with the specified name
+/*
+	AddPagingZone adds a paging zone to the database with the specified name.
+*/
 func AddPagingZone(name string) {
 	_, err := DB.Exec(`INSERT INTO pagingZone 
 		(name)
@@ -524,7 +551,9 @@ func AddPagingZone(name string) {
 	}
 }
 
-// GetZoneID gets the ID of the zone with the given name
+/*
+	GetZoneID gets the ID of the zone with the given name.
+*/
 func getZoneID(zoneName string) (int8, error) {
 	var zoneID int8
 	DB.QueryRow(`
@@ -535,7 +564,9 @@ func getZoneID(zoneName string) (int8, error) {
 	return zoneID, nil
 }
 
-// getPagingZoneID gets the ID of the zone with the given name
+/*
+	getPagingZoneID is a private function that gets the ID of the zone with the given name.
+*/
 func getPagingZoneID(zoneName string) (int8, error) {
 	var zoneID int8
 	DB.QueryRow(`
@@ -546,6 +577,9 @@ func getPagingZoneID(zoneName string) (int8, error) {
 	return zoneID, nil
 }
 
+/*
+	getAddSpeakerToZonesStmt is private function that prepares an insert into the zoneToSpeaker table. This is mainly used when setting up the first zone when there will be no zone or speakers inserted (before the commit) yet but there will need to be speakers have to be linked to a zone.
+*/
 func getAddSpeakerToZonesStmt() (*sql.Stmt, error) {
 	stmt, err := DB.Prepare(`INSERT INTO zoneToSpeaker 
 		(zoneID, speakerID)
@@ -557,6 +591,9 @@ func getAddSpeakerToZonesStmt() (*sql.Stmt, error) {
 	return stmt, nil
 }
 
+/*
+	getAddSpeakerToPagingZonesStmt is private function that prepares an insert into the zoneToSpeaker table. This is mainly used when setting up the first paging zone when there will be no zone or speakers inserted (before the commit) yet but there will need to be speakers have to be linked to a paging zone.
+*/
 func getAddSpeakerToPagingZonesStmt() (*sql.Stmt, error) {
 	stmt, err := DB.Prepare(`INSERT INTO pagingZoneToSpeaker 
 		(zoneID, speakerID)
@@ -568,6 +605,9 @@ func getAddSpeakerToPagingZonesStmt() (*sql.Stmt, error) {
 	return stmt, nil
 }
 
+/*
+	getAddSpeakerToSchedulingStmt is a private function that is used to insert values into scheduling and is used for the same reason as the getAddSpeakerToZonesStmt.
+*/
 func getAddSpeakerToSchedulingStmt() (*sql.Stmt, error) {
 	stmt, err := DB.Prepare(`INSERT INTO Scheduling
 		VALUES (?, ?, -1, -1, -1, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
@@ -578,6 +618,9 @@ func getAddSpeakerToSchedulingStmt() (*sql.Stmt, error) {
 	return stmt, nil
 }
 
+/*
+	addSpeakerToAllZones is a private function that adds the speaker to the "all zones", which consists of all_masking and all_paging. This is because this is the default zone.
+*/
 func addSpeakerToAllZones(speakerID int8) {
 	zoneID, _ := getZoneID("all_masking")
 	_, err := addSpeakerToZonesStmt.Exec(zoneID, speakerID)
@@ -592,6 +635,9 @@ func addSpeakerToAllZones(speakerID int8) {
 	}
 }
 
+/*
+	addSpeakerSchedule is a private function that uses the getAddSpeakerToSchedulingStmt to add a scheduling statement to the transaction.
+*/
 func addSpeakerSchedule(speakerID int8) {
 	for day := 0; day < 7; day++ {
 		_, err := addSpeakerToSchedulingStmt.Exec(speakerID, day)
@@ -601,13 +647,17 @@ func addSpeakerSchedule(speakerID int8) {
 	}
 }
 
-// SetSpeakerToZoneByName moves the given speaker to the zone with the given name
+/*
+	SetSpeakerToZoneByName moves the given speaker to the zone with the given name.
+*/
 func SetSpeakerToZoneByName(speaker *ControllerStatus, zoneName string) {
 	zoneID, _ := getZoneID(zoneName)
 	SetSpeakerToZoneByID(speaker, zoneID)
 }
 
-// SetSpeakerToZoneByID moves the given speaker to the zone with the given name
+/*
+	SetSpeakerToZoneByID moves the given speaker to the zone with the given name.
+*/
 func SetSpeakerToZoneByID(speaker *ControllerStatus, zoneID int8) {
 	// update zoneToSpeaker table
 	_, err := DB.Exec(`UPDATE zoneToSpeaker 
@@ -619,7 +669,9 @@ func SetSpeakerToZoneByID(speaker *ControllerStatus, zoneID int8) {
 	}
 }
 
-// GetAllZones returns all zones in the database
+/*
+	GetAllZones returns every zone that is in the database.
+*/
 func GetAllZones() []*Zone {
 	zoneIDs := getAllZoneIDs()
 	zones := []*Zone{}
@@ -630,7 +682,9 @@ func GetAllZones() []*Zone {
 	return zones
 }
 
-
+/*
+	GetAllPagingZones is the paging version of the GetAllZones function. This function returns all of the paging zones from the database.
+*/
 func GetAllPagingZones() []*Zone {
 	zoneIDs := getAllPagingZoneIDs()
 	zones := []*Zone{}
@@ -641,7 +695,9 @@ func GetAllPagingZones() []*Zone {
 	return zones
 }
 
-// getAllZoneIDs gets all zone ID of every zone in the database
+/*
+	getAllZoneIDs is a private function that gets the zone IDs of every zone in the database.
+*/
 func getAllZoneIDs() []int8 {
 	rows, err := DB.Query(`
 		SELECT zoneID
@@ -660,6 +716,9 @@ func getAllZoneIDs() []int8 {
 	return zoneIDs
 }
 
+/*
+	getAllPagingZoneIDs is the paging version of getAllZoneIDs. This function returns all of the paging zone IDs from the database.
+*/
 func getAllPagingZoneIDs() []int8 {
 	rows, err := DB.Query(`
 		SELECT zoneID
@@ -679,7 +738,9 @@ func getAllPagingZoneIDs() []int8 {
 	return zoneIDs
 }
 
-// getZonesSpeakers gets the speakers that belong to the specified zone
+/*
+	getZonesSpeakers gets the speakers that belong to the specified zone.
+*/
 func getZonesSpeakers(zoneID int8) []*ControllerStatus {
 	rows, err := DB.Query(`
 		SELECT s.speakerID, x, y, status
@@ -710,7 +771,9 @@ func getZonesSpeakers(zoneID int8) []*ControllerStatus {
 	return speakers
 }
 
-// getZonesSpeakers gets the speakers that belong to the specified zone
+/*
+	getZonesSpeakers is a private function that gets the speakers that belong to the specified zone.
+*/
 func getPagingZonesSpeakers(zoneID int8) []*ControllerStatus {
 	rows, err := DB.Query(`
 		SELECT s.speakerID, x, y, status
@@ -741,7 +804,9 @@ func getPagingZonesSpeakers(zoneID int8) []*ControllerStatus {
 	return speakers
 }
 
-// GetZone gets the Zone with the specified ID from the database
+/*
+	GetZone gets the Zone with the specified ID and its current information from the database.
+*/
 func GetZone(zoneID int8) *Zone {
 	// get speakers
 	speakers := getZonesSpeakers(zoneID)
@@ -1493,7 +1558,9 @@ func GetZone(zoneID int8) *Zone {
 	return zone
 }
 
-// GetZone gets the Zone with the specified ID from the database
+/*
+	GetZone gets the Zone with the specified ID from the database.
+*/
 func GetPagingZone(zoneID int8) *Zone {
 	speakers := getPagingZonesSpeakers(zoneID)
 	var name string

@@ -7,6 +7,9 @@ import (
 
 const NULLZone int = 0
 
+/*
+	KeepAlive is a function that is used by the scheduler in main.go to send a KeepAlive command to the speakers.
+*/
 func KeepAlive(ID int8) (error int8) {
 	data := getMessageHeader(ID, 3)
 	data[1] = Commands.KeepAlive
@@ -45,73 +48,9 @@ func KeepAlive(ID int8) (error int8) {
 	return 
 }
 
-func IsLEDOn(this *database.ControllerStatus) bool {
-	return this.LEDOn
-}
-
-func TurnLEDOn(this *database.ControllerStatus) error {
-	data := getMessageHeader(this.ID, 3)
-	data[1] = Commands.TurnLEDOn
-	data[2] = 0x01
-
-	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		this.LEDOn = true
-		if status.IsDebug() {
-			log.Println("LED turned on")
-		}
-		return nil
-	}}
-	MessageChan <- req
-
-	return nil
-}
-
-func TurnLEDOff(this *database.ControllerStatus) error {
-	data := getMessageHeader(this.ID, 3)
-	data[1] = Commands.TurnLEDOff
-	data[2] = 0x00
-
-	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		this.LEDOn = false
-		if status.IsDebug() {
-			log.Println("LED turned off")
-		}
-		return nil
-	}}
-	MessageChan <- req
-
-	return nil
-}
-
-type LEDStatusResponse struct {
-	ledOn bool
-}
-
-func GetLEDStatusFromController(this *database.ControllerStatus) (bool, error) {
-	data := getMessageHeader(this.ID, 3)
-	data[1] = Commands.GetLEDStatus
-	data[2] = 0x00
-
-	ch := make(chan interface{})
-	req := &ControllerRequest{Data: data, OnWrite: func() interface{} {
-		response := &LEDStatusResponse{}
-		if status.IsDebug() {
-			log.Println("Got LED Status From Controller")
-			response.ledOn = true
-		} else {
-			b := make([]byte, 1)
-			status.ReadData(b)
-			response.ledOn = b[0] != 0x01
-		}
-		return response
-	}, ResultChan: ch}
-
-	MessageChan <- req
-	response := (<-ch).(*LEDStatusResponse)
-
-	return response.ledOn, nil
-}
-
+/*
+	SetVolume is used to send the set volume command to the specified speaker.
+*/
 func SetVolume(this *database.ControllerStatus) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetVolume
@@ -130,6 +69,9 @@ func SetVolume(this *database.ControllerStatus) error {
 	return nil
 }
 
+/*
+	GetVolumeFromController is used to query the controller for its current volume variable should the controller ever need it.
+*/
 func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 	if status.debug {
 		return 0, nil
@@ -142,6 +84,9 @@ func GetVolumeFromController(this *database.ControllerStatus) (int8, error) {
 	return 0, nil
 }
 
+/*
+	SetMusicVolume is used to set the music volume on the speaker.
+*/
 func SetMusicVolume(this *database.ControllerStatus) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetMusicVolume
@@ -160,6 +105,9 @@ func SetMusicVolume(this *database.ControllerStatus) error {
 	return nil
 }
 
+/*
+	SetPaging is used to send the paging constants to the speaker.
+*/
 func SetPaging(this *database.ControllerStatus, pagingData int8) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetPaging
@@ -179,6 +127,9 @@ func SetPaging(this *database.ControllerStatus, pagingData int8) error {
 	return nil
 }
 
+/*
+	SetSoundMaskingVolume sets how loud the speaker should be playing noise.
+*/
 func SetSoundMaskingVolume(this *database.ControllerStatus) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetSoundMaskingVolume
@@ -197,6 +148,9 @@ func SetSoundMaskingVolume(this *database.ControllerStatus) error {
 	return nil
 }
 
+/*
+	SetAveragingMode sets the averaging mode of the speaker, which consists of effectiveness and pleasantness.
+*/
 func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetAveragingFilter
@@ -215,6 +169,9 @@ func SetAveragingMode(this *database.ControllerStatus, mode int8) error {
 	return nil
 }
 
+/*
+	ResetFIFO is being reserved if need be, but will most likely not be used and isn't used right now.
+*/
 func (status *SystemStatus) ResetFIFO() (int, error) { 
 	if status.debug {
 		return 0, nil
@@ -223,6 +180,9 @@ func (status *SystemStatus) ResetFIFO() (int, error) {
 	return 0, nil
 }
 
+/*
+	ResetMicrocontroller is being reserved if we need it. This will most likely come to fruition when we get into doing more complicated diagnostics and on the fly automated debugging.
+*/
 func (status *SystemStatus) ResetMicrocontroller() (int, error) {
 	if status.debug {
 		return 0, nil
@@ -236,6 +196,9 @@ func (status *SystemStatus) ResetMicrocontroller() (int, error) {
 
 }
 
+/*
+	GetAveragingMode is used to query the specified speaker for its averaging mode.
+*/
 func GetAveragingMode(this *database.ControllerStatus) (int, error) {
 	if status.debug {
 		return 0, nil
@@ -252,14 +215,9 @@ func GetAveragingMode(this *database.ControllerStatus) (int, error) {
 
 }
 
-func (status *SystemStatus) SendCoefficientInformation(equalizedGain int8, decibal int8) (int8, error) {
-	if status.debug {
-		return 0, nil
-	}
-
-	return 0, nil
-}
-
+/*
+	SetEqualizerConstant is used to send one equalizer constant for the specified band to a speaker.
+*/
 func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8, decimal bool) (int, error) {
 	data := getMessageHeader(this.ID, 3)
 	data[1] = byte(band)
@@ -281,6 +239,9 @@ func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8
 	return 0, nil
 }
 
+/*
+	SetEQMode is used to change the EQ mode on the speaker to music, paging, or back to masking.
+*/
 func SetEQMode(ID int8, mode int8) (int, error) {
 	data := getMessageHeader(ID, 3)
 	data[1] = Commands.SetEQMode
@@ -297,6 +258,9 @@ func SetEQMode(ID int8, mode int8) (int, error) {
 	return 0, nil
 }
 
+/*
+	SendPagingRequest is a reserved / unimplemented function that will be used to tell the speaker that a paging signal is coming in and to prepare for that.
+*/
 func SendPagingRequest(ID int8) (error) {
 	if status.debug {
 		return nil
@@ -307,22 +271,4 @@ func SendPagingRequest(ID int8) (error) {
 	data[2] = 0
 
 	return nil
-}
-
-func (status *SystemStatus) AreYouAlive(n map[int]string) (m map[int]string) {
-	if status.debug {
-		return m
-	}
-
-	m = make(map[int]string)
-
-	for i := 1; i <= len(n); i++ {
-		b := []byte{0x00}
-		alive := status.ReadData(b)
-
-		if alive != true || b[0] != 0x72 {
-		}
-	}
-
-	return m
 }

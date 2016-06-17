@@ -12,6 +12,9 @@ type systemStatusResponse struct {
 	PagingZones []*database.Zone	`json:"pagingZones"`
 }
 
+/*
+	SystemStatusHandler is used when sending the entire system status to the website when a user logs on.
+*/
 func SystemStatusHandler(w http.ResponseWriter, r *http.Request) {
 	Zones 		:= database.GetAllZones()
 	PagingZones := database.GetAllPagingZones()
