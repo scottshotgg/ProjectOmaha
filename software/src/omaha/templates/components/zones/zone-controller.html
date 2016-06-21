@@ -224,103 +224,11 @@
         }
       },
 
-      _pagingUpdate: function() {
-        if(this.isReady) {
-          var updatedAttributes = ["paging"];
-          var attributeValues = {
-            "paging": this.pagingLevel,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
-        }
-        //console.log("_pagingUpdate " + this.pagingLevel);
-      },
-
-      _equalizerUpdate: function() {
-        if(this.isReady) {
-          var updatedAttributes = ["equalizer"];
-          var attributeValues = {
-            "equalizer": this.equalizerone,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
-
-          //console.log(this.$.speakerUpdateAjax.body);
-
-        }
-      },
-
-      _musicEqualizerUpdate: function() {
-        if(this.isReady) {
-          var updatedAttributes = ["music"];
-          var attributeValues = {
-            "music": this.musicone,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
-
-          //console.log(this.$.speakerUpdateAjax.body);
-
-        }
-      },
-
-      _targetUpdate: function() {
-        if(this.isReady) {
-          var updatedAttributes = ["target"];
-          var attributeValues = {
-            "target": this.target,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
-        }
-      },
-
-      _targetUpdateZone: function() {
-        if(this.isReady) {
-          var updatedAttributes = ["target"];
-          var attributeValues = {
-            "target": this.target,
-          };
-          this.$.speakerUpdateAjax.body = {
-            "updatedAttributes": updatedAttributes, 
-            "attributeValues": attributeValues,
-            "speaker": this.speakerId
-          };
-          this.$.speakerUpdateAjax.generateRequest();
-        }
-      },
-
-      _logResponse: function(event, data) {
-        //console.log(data.response);
-      },
-
       _initializeStatus: function(speaker) {
         this.speakerId = speaker.id;
         speakerid = speaker.id;
         this.volume = speaker.VolumeLevel[0];
         this.equalizer = speaker.equalizerone;
-      },
-
-      _speakerUpdated: function() {
-        this.isReady = false;
-        this._initializeStatus(this.speaker);
-        this.isReady = true;
       },
 
       ready: function() {

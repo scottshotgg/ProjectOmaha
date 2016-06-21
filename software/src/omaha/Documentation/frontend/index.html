@@ -1,0 +1,1932 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>  | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation'>
+  <div class='max-width-4 mx-auto'>
+    <div class='clearfix md-mxn2'>
+      <div class='fixed xs-hide fix-3 overflow-auto max-height-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'></h3>
+          <div class='mb1'><code></code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#_submit'
+                  class="">
+                  _submit
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_submit'
+                  class="">
+                  _submit
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_logResponse'
+                  class="">
+                  _logResponse
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_selectionChanged'
+                  class="">
+                  _selectionChanged
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#decrementEffectiveness'
+                  class="">
+                  decrementEffectiveness
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#incrementEffectiveness'
+                  class="">
+                  incrementEffectiveness
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#decrementPleasantnesss'
+                  class="">
+                  decrementPleasantnesss
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#incrementPleasantnesss'
+                  class="">
+                  incrementPleasantnesss
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#resetKnob'
+                  class="">
+                  resetKnob
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getValues'
+                  class="">
+                  getValues
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#showEqualizerSwitchDialog'
+                  class="">
+                  showEqualizerSwitchDialog
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#modeChanged'
+                  class="">
+                  modeChanged
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_setInternalEqualizer'
+                  class="">
+                  _setInternalEqualizer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_setEqualizerClicked'
+                  class="">
+                  _setEqualizerClicked
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_acceptPressed'
+                  class="">
+                  _acceptPressed
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_cancelPressed'
+                  class="">
+                  _cancelPressed
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_switchPressed'
+                  class="">
+                  _switchPressed
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_cancelSwitchPressed'
+                  class="">
+                  _cancelSwitchPressed
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_presetSelectionChanged'
+                  class="">
+                  _presetSelectionChanged
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#ready'
+                  class="">
+                  ready
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#ready'
+                  class="">
+                  ready
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#inputChanged'
+                  class="">
+                  inputChanged
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_handleLogin'
+                  class="">
+                  _handleLogin
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_showMap'
+                  class="">
+                  _showMap
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_speakerSelected'
+                  class="">
+                  _speakerSelected
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_zoneSelected'
+                  class="">
+                  _zoneSelected
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_initializeStatus'
+                  class="">
+                  _initializeStatus
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_toggleDrawer'
+                  class="">
+                  _toggleDrawer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_closeDrawer'
+                  class="">
+                  _closeDrawer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#refreshMap'
+                  class="">
+                  refreshMap
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#_keepAliveResponse'
+                  class="">
+                  _keepAliveResponse
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setUI'
+                  class="">
+                  setUI
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='http://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div class='fix-margin-3'>
+        <div class='px2'>
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_submit'>
+      _submit
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/account-creation-form.html.js#L8-L44'>
+      <span>software/src/omaha/Documentation/rawjs/account-creation-form.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Submit is an on-click that is fired when the user clicks the submit button. The submit function takes care of collecting the data from the form,
+packaging it up, and then sending it off. It also does some validation and fills in some dots, such as the level; this variable is inferred to be the [level of user making the account] - 1.</p>
+
+
+  <div class='pre p1 fill-light'>_submit()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_submit'>
+      _submit
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/login-form.html.js#L7-L16'>
+      <span>software/src/omaha/Documentation/rawjs/login-form.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Submit takes the text fields in the login screen and sends them off to the server for validation.</p>
+
+
+  <div class='pre p1 fill-light'>_submit()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_logResponse'>
+      _logResponse
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/account-creation-form.html.js#L49-L64'>
+      <span>software/src/omaha/Documentation/rawjs/account-creation-form.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This is the logResponse for the submit funtion, this changes some styles to reflect that an account was created.</p>
+
+
+  <div class='pre p1 fill-light'>_logResponse()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_selectionChanged'>
+      _selectionChanged
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/averaging-controller.html.js#L19-L57'>
+      <span>software/src/omaha/Documentation/rawjs/averaging-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is fired when the &#x27;set ratio&#x27; button is clicked by the user to set the effectiveness and pleasantness.</p>
+
+
+  <div class='pre p1 fill-light'>_selectionChanged()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='decrementEffectiveness'>
+      decrementEffectiveness
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/averaging-controller.html.js#L66-L77'>
+      <span>software/src/omaha/Documentation/rawjs/averaging-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used to decrement the effectiveness.</p>
+
+
+  <div class='pre p1 fill-light'>decrementEffectiveness()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='incrementEffectiveness'>
+      incrementEffectiveness
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/averaging-controller.html.js#L82-L93'>
+      <span>software/src/omaha/Documentation/rawjs/averaging-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used to increment the effectiveness.</p>
+
+
+  <div class='pre p1 fill-light'>incrementEffectiveness()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='decrementPleasantnesss'>
+      decrementPleasantnesss
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/averaging-controller.html.js#L98-L109'>
+      <span>software/src/omaha/Documentation/rawjs/averaging-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used to decrement the pleasantness.</p>
+
+
+  <div class='pre p1 fill-light'>decrementPleasantnesss()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='incrementPleasantnesss'>
+      incrementPleasantnesss
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/averaging-controller.html.js#L114-L125'>
+      <span>software/src/omaha/Documentation/rawjs/averaging-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used to increment the pleasantness.</p>
+
+
+  <div class='pre p1 fill-light'>incrementPleasantnesss()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='resetKnob'>
+      resetKnob
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/averaging-controller.html.js#L130-L134'>
+      <span>software/src/omaha/Documentation/rawjs/averaging-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Resetting the knob resets the knob to remove the pin that is hoisted up when the knob is moved.</p>
+
+
+  <div class='pre p1 fill-light'>resetKnob()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='getValues'>
+      getValues
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L14-L34'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>GetValues is used to get the type of equalizer that is currently selected.</p>
+
+
+  <div class='pre p1 fill-light'>getValues(): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>:
+        [typeFound is the type of equalizer that was found in interger enumerated form]
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='showEqualizerSwitchDialog'>
+      showEqualizerSwitchDialog
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L63-L81'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used to show the switching dialog that notifies the user of the implications of their changes when switching equalizers.</p>
+
+
+  <div class='pre p1 fill-light'>showEqualizerSwitchDialog(mode: )</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>mode</span> <code class='quiet'>()</code> 
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='modeChanged'>
+      modeChanged
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L86-L113'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used for changing the equalizer mode. It also takes care of some UI switching as well, such as hiding and showing the appropriate menus for the equalizers.</p>
+
+
+  <div class='pre p1 fill-light'>modeChanged(mode: )</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>mode</span> <code class='quiet'>()</code> 
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_setInternalEqualizer'>
+      _setInternalEqualizer
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L145-L148'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Setting the internal equalizer has internal effects so that the system can keep track of itself. It sets a variable that when set fires a function to update the server of its value.</p>
+
+
+  <div class='pre p1 fill-light'>_setInternalEqualizer()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_setEqualizerClicked'>
+      _setEqualizerClicked
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L153-L199'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function sets the equalizer value and is the function that is fired when the user presses the &#x27;set equalizer&#x27; button. This function validates the bands to make sure that correct values are being submitted.</p>
+
+
+  <div class='pre p1 fill-light'>_setEqualizerClicked()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_acceptPressed'>
+      _acceptPressed
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L209-L270'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used when the the user adds a preset and clicks the &#x27;add&#x27; button on the assisting dialog.</p>
+
+
+  <div class='pre p1 fill-light'>_acceptPressed()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_cancelPressed'>
+      _cancelPressed
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L275-L278'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function dismisses the dialog and resets the selected preset.</p>
+
+
+  <div class='pre p1 fill-light'>_cancelPressed()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_switchPressed'>
+      _switchPressed
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L283-L294'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used when the the user accepts the implications of their selection using the &#x27;switch&#x27; button on the dialog.</p>
+
+
+  <div class='pre p1 fill-light'>_switchPressed()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_cancelSwitchPressed'>
+      _cancelSwitchPressed
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L299-L315'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used when the user decided against switching equalizers and clicks the cancel button on the switch dialog.</p>
+
+
+  <div class='pre p1 fill-light'>_cancelSwitchPressed()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_presetSelectionChanged'>
+      _presetSelectionChanged
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L324-L370'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>PresetSelectionChanged is fired when the user selects a new preset that is then used to set the equalizer to the corresponding values.</p>
+
+
+  <div class='pre p1 fill-light'>_presetSelectionChanged()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='ready'>
+      ready
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L384-L389'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>On ready, the function takes the equalizer constants and sets the internal equalizer and assigns the toasts to global values so that they are accessible outside the selectors scope.</p>
+
+
+  <div class='pre p1 fill-light'>ready()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='ready'>
+      ready
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L484-L497'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function loads after the webcomponents load and sets some variables up and scheduling a self-executing function that will continuously execute itself every second.</p>
+
+
+  <div class='pre p1 fill-light'>ready()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='inputChanged'>
+      inputChanged
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/equalizer-controller.html.js#L399-L428'>
+      <span>software/src/omaha/Documentation/rawjs/equalizer-controller.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>InputChanged is used when the user types a value into the text box for the slider. This function will validate that the value entered is completely numeric (ie, integer or float) and is between 10 and -40.</p>
+
+
+  <div class='pre p1 fill-light'>inputChanged()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_handleLogin'>
+      _handleLogin
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/login-form.html.js#L21-L37'>
+      <span>software/src/omaha/Documentation/rawjs/login-form.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>The handlelogin function is a callback for the submit function that is fired on response. The function stores the level, speakerid, and zoneid in localStorage so that it can be retrieved by other classes. The function recieves as session hash and assigns it as a session cookie.</p>
+
+
+  <div class='pre p1 fill-light'>_handleLogin()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_showMap'>
+      _showMap
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L42-L44'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function displays the map.</p>
+
+
+  <div class='pre p1 fill-light'>_showMap()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_speakerSelected'>
+      _speakerSelected
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L54-L217'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is fired when the mapcontroller detects that a speaker was selected by the user; when the mapcontroller.speakerselected fires.</p>
+
+
+  <div class='pre p1 fill-light'>_speakerSelected()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_zoneSelected'>
+      _zoneSelected
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L222-L315'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is fired when a zone is selected. It will go through and inject all the information pertaining to the zone into the controller.</p>
+
+
+  <div class='pre p1 fill-light'>_zoneSelected()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_initializeStatus'>
+      _initializeStatus
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L320-L429'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function sets the basic controller up, sets up the zone options in the scrollbox, as well as calling for the rendering of the maps.</p>
+
+
+  <div class='pre p1 fill-light'>_initializeStatus()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_toggleDrawer'>
+      _toggleDrawer
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L439-L441'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function toggles the drawer on the left side of the website.</p>
+
+
+  <div class='pre p1 fill-light'>_toggleDrawer()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_closeDrawer'>
+      _closeDrawer
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L446-L448'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function closes the drawer on the left side.</p>
+
+
+  <div class='pre p1 fill-light'>_closeDrawer()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='refreshMap'>
+      refreshMap
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L453-L468'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function will update the map size, as well as determine the selected map.</p>
+
+
+  <div class='pre p1 fill-light'>refreshMap()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='_keepAliveResponse'>
+      _keepAliveResponse
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L473-L479'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>The keep alive response is a callback for a function that schedules the speaker update querying to check whether they are still functioning or not.</p>
+
+
+  <div class='pre p1 fill-light'>_keepAliveResponse()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+            
+              <section class='py2 clearfix'>
+
+  
+  <div class='clearfix'>
+    <h2 class='fl' id='setUI'>
+      setUI
+    </h2>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://www.github.com/scottshotgg/ProjectOmaha/blob/28aef03658e106f0d21861b87a18895bcca8afff/software/src/omaha/Documentation/rawjs/omaha-app.html.js#L504-L523'>
+      <span>software/src/omaha/Documentation/rawjs/omaha-app.html.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function is used to set the UI based on the permission received when the user logs in.</p>
+
+
+  <div class='pre p1 fill-light'>setUI()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>

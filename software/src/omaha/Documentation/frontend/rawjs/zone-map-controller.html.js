@@ -1,0 +1,512 @@
+
+  var pagingMap;
+  var map;
+
+  var selectedFeatures;
+  var info = [];
+  var totalInfo = [];
+
+  /**
+   * This function controls the escape key that is used to clear the selection.
+   */
+  document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+      alert("You are about to clear you selection.\nAre you sure you want to do this?");
+      document.getElementById("speakerHolder").innerHTML = "";
+      selectedFeatures.clear();
+      info = [];
+      totalInfo = [];
+    }
+  };
+
+  /**
+   * The showPaging function changes the zone container to paging zones instead of masking zones.
+   */
+  function showPaging() {
+    document.querySelector("#pagingZoneMenu").style.visibility = "visible";
+    document.querySelector("#pagingZoneContainer").style.visibility = "visible";
+
+    document.querySelector("#zoneMenu").style.visibility = "hidden";
+    document.querySelector("#zoneContainer").style.visibility = "hidden";
+
+    pagingMap.updateSize();
+  }
+
+  /**
+   * The showMasking function changes the zone container to masking zones instead of paging zones.
+   */
+  function showMasking() {
+    document.querySelector("#pagingZoneMenu").style.visibility = "hidden";
+    document.querySelector("#pagingZoneContainer").style.visibility = "hidden";
+
+    document.querySelector("#zoneMenu").style.visibility = "visible";
+    document.querySelector("#zoneContainer").style.visibility = "visible";
+
+    map.updateSize();
+
+  }
+
+    Polymer({
+      is: 'zone-map-controller',
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+        animationConfig: {
+          value: function() {
+            return {
+              'entry': {
+                  name: 'fade-in-animation',
+                  node: this
+                },
+              'exit': {
+                name: 'slide-left-animation',
+                node: this
+              }
+            }
+          }
+        }
+      },
+
+      /**
+       * This function is tied to the 'create' button in the dialog box.
+       */
+      _acceptPressed: function(e) {
+        this.$.zoneDialog.toggle();
+        this.$.toast.show();
+        //console.log("_acceptPressed", totalInfo);
+        var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
+
+        this.$.createZoneAjax.body = {
+          "name":     name,
+          "speakers": totalInfo
+        }
+
+        totalInfo = [];
+        document.getElementById("speakerHolder").innerHTML = "";
+
+        //console.log("createZoneAjax:", createZoneAjax.body);
+        this.$.createZoneAjax.generateRequest();
+      },
+
+      _cancelPressed: function(e) {
+      },
+
+      _createZone: function(e) {
+        this.$.zoneDialog.toggle();
+      },
+      
+      _refreshSpeaker: function(e) {
+        var speakerId = e.detail.speakerId;
+        this.featureMap[speakerId].changed();
+      },
+      
+      _assignZone: function() {
+        this._hideOverlay();
+        this.$.dialog.open();
+      },
+      
+      _hideOverlay: function() {
+        this.overlay.setPosition(undefined);
+      },
+
+      /**
+       * RenderMap takes the mapcontroller and adds overlays, sets up the colors, places the icons, sets the event functions, and the general UI of the map.
+       */
+      renderMap: function() {
+        //console.log(this);
+        var mapController = this;
+        mapController.featureMap = {};
+        var container = mapController.$.popup;
+        var overlay = new ol.Overlay(({
+          element: container,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+      
+        mapController.overlay = overlay;
+        var extent = [0, 0, 2200, 1700];
+        var projection = new ol.proj.Projection({
+          code: 'pixel',
+          units: 'pixels',
+          extent: extent
+        });
+
+        var locations = this.controllers;
+        var features = new Array(locations.length);
+        for(var i = 0; i < features.length; i++) {
+            var coordinates = [locations[i].x, 1700-locations[i].y];
+            features[i] = new ol.Feature({
+              geometry: new ol.geom.Point(coordinates),
+              speaker: locations[i]
+            });
+            mapController.featureMap[locations[i].id] = features[i]
+        }
+
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var style = {}
+
+       var allColors = [
+          '#f44336'
+        ];
+        
+        var unusedColors = [
+          '#f44336'
+        ];
+        var colorMap = {};
+        
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: function(feature, resolution) {
+              var zone = feature.getProperties().speaker.zone.name;
+                if(!(zone in colorMap)) {
+                  var color;
+                  if(unusedColors.length > 0) {
+                    var index = Math.floor(Math.random() * unusedColors.length)
+                    color = unusedColors[index]
+                    unusedColors.splice(index, 1);
+                  } else {
+                    color = colors[Math.floor(Math.random() * colors.length)]
+                  }
+
+                  colorMap[zone] = color;
+                }
+                if(!(zone in style) || style[zone].resolution !== resolution) {
+                  style[zone] = {};
+                  style[zone].style = [new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 15/Math.max(resolution,1),
+                            stroke: new ol.style.Stroke({
+                                color: '#000000'
+                            }),
+                            fill: new ol.style.Fill({
+                                color: colorMap[zone]
+                            })
+                        })
+                    })];
+                    style[zone].resolution = resolution;
+                }
+                return style[zone].style;
+            }
+        });
+
+        map = new ol.Map({
+          layers: [
+            new ol.layer.Image({
+              source: new ol.source.ImageStatic({
+                url: '/css/map.png',
+                projection: projection,
+                imageExtent: extent
+              })
+            }),
+              vectorLayer
+          ],
+          overlays: [overlay],
+          target: 'zoneContainer',
+          view: new ol.View({
+            projection: projection,
+            center: ol.extent.getCenter(extent),
+            zoom: 6,
+            zoomFactor: 1.35
+          })
+        });
+        
+        mapController.map = map;
+        var box = new ol.interaction.Select();
+        map.addInteraction(box);
+
+        selectedFeatures = box.getFeatures();
+
+        //console.log("selectedFeatures: ", selectedFeatures);
+
+        var dragBox = new ol.interaction.DragBox({
+          condition: ol.events.condition.shiftKeyOnly,
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: [63, 81, 181, 1]
+            })
+          })
+        }); 
+
+        var source = new ol.source.Vector();
+
+        map.addInteraction(dragBox);
+
+        dragBox.on('boxend', function(e) {
+          var extent = dragBox.getGeometry().getExtent();
+
+          //console.log(extent);
+
+          vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+          //console.log(feature);
+
+          //console.log(typeof selectedFeatures.a);
+
+              var areYouInThere = selectedFeatures.a.indexOf(feature);
+              //console.log(areYouInThere);
+              if(areYouInThere == -1) {
+                selectedFeatures.push(feature);
+                totalInfo.push(feature.B.speaker.id); 
+                //console.log(totalInfo);
+              } else {
+                //console.log("Speaker", feature.B.speaker.id, "is already in the list of selected speakers.");
+                //console.log(selectedFeatures);
+                //console.log(totalInfo);
+              }
+            info.push(feature.B.speaker.id);
+          });
+          //console.log("selectedFeatures: ", selectedFeatures);
+
+          if (info.length > 0) {
+            //console.log("Selected speakers: ", info);
+
+            //console.log("Total selected speakers: ", totalInfo);
+            //console.log("Starting sort: ");
+            totalInfo = mergeSort(totalInfo);
+
+            speakerHolder = document.getElementById("speakerHolder");
+            var innerHTML = "";
+            speakerHolder.innerHTML = "";
+            for (var k = 0; k < totalInfo.length; k++) {
+              if (totalInfo[k] !== undefined) {
+               innerHTML += "<paper-item center-justified flex style=\"background: rgba(63, 81, 181, .1);  border-style: solid; border-radius: 0px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"><font style=\"width: 100%; text-align: center;\"> Speaker " + totalInfo[k] + "</font></paper-item>";
+              }
+            }
+            speakerHolder.innerHTML = innerHTML;
+            //console.log(totalInfo);
+          }
+        });
+
+        dragBox.on('boxstart', function(e) {
+
+        });
+        map.on('click', function() {
+
+        //console.log(selectedFeatures);
+        selectedFeatures.clear();
+        });
+      },
+
+      /**
+       * RenderPagingMap is the paging version of Rendermap. It takes the mapcontroller and adds overlays, sets up the colors, places the icons, sets the event functions, and the general UI of the map.
+       */
+      renderPagingMap: function() {
+        //console.log(this);
+        var mapController = this;
+        mapController.featureMap = {};
+        var container = mapController.$.popup;
+        var overlay = new ol.Overlay(({
+          element: container,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+      
+        mapController.overlay = overlay;
+        var extent = [0, 0, 2200, 1700];
+        var projection = new ol.proj.Projection({
+          code: 'pixel',
+          units: 'pixels',
+          extent: extent
+        });
+
+        var locations = this.controllers;
+        var features = new Array(locations.length);
+        for(var i = 0; i < features.length; i++) {
+            var coordinates = [locations[i].x, 1700-locations[i].y];
+            features[i] = new ol.Feature({
+              geometry: new ol.geom.Point(coordinates),
+              speaker: locations[i]
+            });
+            mapController.featureMap[locations[i].id] = features[i]
+        }
+
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var style = {}
+
+       var allColors = [
+          '#f44336'
+        ];
+        
+        var unusedColors = [
+          '#f44336'
+        ];
+        var colorMap = {};
+        
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: function(feature, resolution) {
+              var zone = feature.getProperties().speaker.zone.name;
+                if(!(zone in colorMap)) {
+                  var color;
+                  if(unusedColors.length > 0) {
+                    var index = Math.floor(Math.random() * unusedColors.length)
+                    color = unusedColors[index]
+                    unusedColors.splice(index, 1);
+                  } else {
+                    color = colors[Math.floor(Math.random() * colors.length)]
+                  }
+
+                  colorMap[zone] = color;
+                }
+                if(!(zone in style) || style[zone].resolution !== resolution) {
+                  style[zone] = {};
+                  style[zone].style = [new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 15 / Math.max(resolution, 1),
+                            stroke: new ol.style.Stroke({
+                                color: '#000000'
+                            }),
+                            fill: new ol.style.Fill({
+                                color: colorMap[zone]
+                            })
+                        })
+                    })];
+                    style[zone].resolution = resolution;
+                }
+                return style[zone].style;
+            }
+        });
+
+        pagingMap = new ol.Map({
+          layers: [
+            new ol.layer.Image({
+              source: new ol.source.ImageStatic({
+                url: '/css/map.png',
+                projection: projection,
+                imageExtent: extent
+              })
+            }),
+              vectorLayer
+          ],
+          overlays: [overlay],
+          target: 'pagingZoneContainer',
+          view: new ol.View({
+            projection: projection,
+            center: ol.extent.getCenter(extent),
+            zoom: 2
+          })
+        });
+        
+        mapController.map = map;
+        var box = new ol.interaction.Select();
+        map.addInteraction(box);
+
+        selectedFeatures = box.getFeatures();
+
+        //console.log("selectedFeatures: ", selectedFeatures);
+
+        var dragBox = new ol.interaction.DragBox({
+          condition: ol.events.condition.shiftKeyOnly,
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: [63, 81, 181, 1]
+            })
+          })
+        }); 
+
+        var source = new ol.source.Vector();
+
+        map.addInteraction(dragBox);
+
+        dragBox.on('boxend', function(e) {
+          var extent = dragBox.getGeometry().getExtent();
+
+          //console.log(extent);
+
+          vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+          //console.log(feature);
+
+          //console.log(typeof selectedFeatures.a);
+            var areYouInThere = selectedFeatures.a.indexOf(feature);
+            //console.log(areYouInThere);
+            if(areYouInThere == -1) {
+              selectedFeatures.push(feature);
+              totalInfo.push(feature.B.speaker.id); 
+              //console.log(totalInfo);
+            } else {
+              //console.log("Speaker", feature.B.speaker.id, "is already in the list of selected speakers.");
+              //console.log(selectedFeatures);
+              //console.log(totalInfo);
+            }
+            info.push(feature.B.speaker.id);
+          });
+          //console.log("selectedFeatures: ", selectedFeatures);
+
+          if (info.length > 0) {
+            //console.log("Selected speakers: ", info);
+
+            //console.log("Total selected speakers: ", totalInfo);
+            
+            //console.log("Starting sort: ");
+            totalInfo = mergeSort(totalInfo);
+
+            speakerHolder = document.getElementById("speakerHolder");
+            var innerHTML = "";
+            speakerHolder.innerHTML = "";
+            for (var k = 0; k < totalInfo.length; k++) {
+              if (totalInfo[k] !== undefined) {
+               innerHTML += "<paper-item center-justified flex style=\"background: rgba(63, 81, 181, .1);  border-style: solid; border-radius: 0px; border-width: 1px; border-color: #3f51b5; margin: 5px;\"><font style=\"width: 100%; text-align: center;\"> Speaker " + totalInfo[k] + "</font></paper-item>";
+              }
+            }
+            speakerHolder.innerHTML = innerHTML;
+            //console.log(totalInfo);
+          }
+        });
+        dragBox.on('boxstart', function(e) {
+          // why is there nothing here??
+        });
+        map.on('click', function() {
+
+        //console.log(selectedFeatures);
+        selectedFeatures.clear();
+        });
+      },
+
+      _logResponse: function(event, data) {
+        //console.log("this is the zone response", data.response);
+      }
+    });
+
+    function mergeSort(arr) {
+        if (arr.length < 2)
+            return arr;
+
+        var middle = parseInt(arr.length / 2);
+        var left   = arr.slice(0, middle);
+        var right  = arr.slice(middle, arr.length);
+
+        return merge(mergeSort(left), mergeSort(right));
+    }
+
+    function merge(left, right) {
+        var result = [];
+
+        while (left.length && right.length) {
+            if (left[0] <= right[0]) {
+                result.push(left.shift());
+            } else {
+                result.push(right.shift());
+            }
+        }
+
+        while (left.length)
+            result.push(left.shift());
+
+        while (right.length)
+            result.push(right.shift());
+
+        return result;
+    }

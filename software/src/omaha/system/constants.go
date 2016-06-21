@@ -1,5 +1,6 @@
 package system
 
+// these are abstracted so that the code is more readable. i.e, contoller.SetVolume(speakerID) vs controller.write(0x06, speakerID)
 var Commands struct {
 	KeepAlive							byte
 	SetVolume          		byte

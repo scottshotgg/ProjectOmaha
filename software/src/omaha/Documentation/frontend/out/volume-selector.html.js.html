@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: volume-selector.html.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: volume-selector.html.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+    var localLevelForVolumeSelector = parseInt(localStorage.getItem("level"));
+
+    Polymer({
+      is: 'volume-selector',
+      
+      properties: {
+        internalVolume: String,
+
+        volume: {
+          type: String,
+          notify: true,
+          observer: '_setInternalVolume'
+        },
+
+        speakerId: {
+          type: Number
+        }
+      },
+
+      /**
+       * This function is used to update the internal value.
+       */
+      _setInternalVolume: function(volume) {
+        this.internalVolume = volume;
+        //console.log("_setInternalVolume");
+      },
+      
+      /**
+       * This function updates the speaker thresholds and volume information by sending off the threshold information after validating it. After that it updates the internal volume level. 
+       */
+      _setVolumeClicked: function() {
+        if(zoneFlag == 0) {
+          if(localLevelForVolumeSelector > 0) {
+            this.$.thresholdValue.body = {
+              "speaker": speakerid, 
+
+              "musicMin":   ((!isNaN(parseInt(this.$.musicMin.value)))   ? parseInt(this.$.musicMin.value)   : 0),
+              "musicMax":   ((!isNaN(parseInt(this.$.musicMax.value)))   ? parseInt(this.$.musicMax.value)   : 100),
+
+              "pagingMin":  ((!isNaN(parseInt(this.$.pagingMin.value)))  ? parseInt(this.$.pagingMin.value)  : 0),
+              "pagingMax":  ((!isNaN(parseInt(this.$.pagingMax.value)))  ? parseInt(this.$.pagingMax.value)  : 100),
+
+              "maskingMin": ((!isNaN(parseInt(this.$.maskingMin.value))) ? parseInt(this.$.maskingMin.value) : 0),
+              "maskingMax": ((!isNaN(parseInt(this.$.maskingMax.value))) ? parseInt(this.$.maskingMax.value) : 100)
+            };
+            this.$.thresholdValue.generateRequest();
+          }
+
+          if(localLevelForVolumeSelector &lt; 1 &amp;&amp; 
+            (this.$.volume3.value &lt; this.$.musicMin.value || this.$.volume3.value > this.$.musicMax.value || 
+            this.$.volume4.value &lt; this.$.pagingMin.value || this.$.volume4.value > this.$.pagingMax.value || 
+            this.$.volume5.value &lt; this.$.maskingMin.value || this.$.volume5.value > this.$.maskingMax.value)) {
+
+            this.$.invalidVolumeToast.show();
+            return;
+          }
+
+          this.volume = this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume + " " + this.internalSoundMaskingVolume;
+          this.$.toast.show();
+          //console.log("_setVolumeClicked");
+        } else {
+          if(localLevelForVolumeSelector > 0) {
+            this.$.thresholdValueZone.body = {
+              "zone": speaker.zone.zoneID, 
+
+              "musicMin":   ((!isNaN(parseInt(this.$.musicMin.value)))   ? parseInt(this.$.musicMin.value)   : 0),
+              "musicMax":   ((!isNaN(parseInt(this.$.musicMax.value)))   ? parseInt(this.$.musicMax.value)   : 100),
+
+              "pagingMin":  ((!isNaN(parseInt(this.$.pagingMin.value)))  ? parseInt(this.$.pagingMin.value)  : 0),
+              "pagingMax":  ((!isNaN(parseInt(this.$.pagingMax.value)))  ? parseInt(this.$.pagingMax.value)  : 100),
+
+              "maskingMin": ((!isNaN(parseInt(this.$.maskingMin.value))) ? parseInt(this.$.maskingMin.value) : 0),
+              "maskingMax": ((!isNaN(parseInt(this.$.maskingMax.value))) ? parseInt(this.$.maskingMax.value) : 100)
+            };
+            //console.log(this.$.thresholdValueZone.body);
+            this.$.thresholdValueZone.generateRequest();
+          }
+
+          if(localLevelForVolumeSelector &lt; 1 &amp;&amp; 
+            (this.$.volume3.value &lt; this.$.musicMin.value || this.$.volume3.value > this.$.musicMax.value || 
+            this.$.volume4.value &lt; this.$.pagingMin.value || this.$.volume4.value > this.$.pagingMax.value || 
+            this.$.volume5.value &lt; this.$.maskingMin.value || this.$.volume5.value > this.$.maskingMax.value)) {
+
+            this.$.invalidVolumeToast.show();
+            return;
+          } else {
+            this.$.updateVolumesZone.body = {
+              "zone": speaker.zone.zoneID,
+              "volume": this.$.volume2.value,
+              "music": this.$.volume3.value,
+              "paging": this.$.volume4.value,
+              "masking": this.$.volume5.value
+            };
+            this.$.updateVolumesZone.generateRequest();
+          }
+          this.$.toast.show();
+          //console.log("_setVolumeClicked");
+        }
+      },
+      
+      /**
+       * This function decrements the overall volume.
+       */
+      decrementVolume: function() {
+        if(localLevelForVolumeSelector &lt; 1) {
+          return;
+        }
+        this.$.volume2.decrement();
+        this.$.volume2._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      /**
+       * This function increments the overall volume.
+       */
+      incrementVolume: function() {
+        if(localLevelForVolumeSelector &lt; 1) {
+          return;
+        }
+        this.$.volume2.increment();
+        this.$.volume2._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      /**
+       * This function decrements the music volume.
+       */
+      decrementMusicVolume: function() {
+        if(this.internalMusicVolume - 1 &lt; LowerThreshold[0] &amp;&amp; localLevelForVolumeSelector &lt; 1) {
+          return;
+        }
+        this.$.volume3.decrement();
+        this.$.volume3._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      /**
+       * This function increments the music volume.
+       */
+      incrementMusicVolume: function() {
+        if(this.internalMusicVolume + 1 > UpperThreshold[0] &amp;&amp; localLevelForVolumeSelector &lt; 1) {
+          return;
+        }
+        this.$.volume3.increment();
+        this.$.volume3._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      /**
+       * This function decrements the paging volume.
+       */
+      decrementPagingVolume: function() {
+        if(this.internalPagingVolume - 1 &lt; LowerThreshold[1] &amp;&amp; localLevelForVolumeSelector &lt; 1) {
+          return;
+        }
+        this.$.volume4.decrement();
+        this.$.volume4._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      /**
+       * This function increments the paging volume.
+       */
+      incrementPagingVolume: function() {
+        if(this.internalPagingVolume + 1 > UpperThreshold[1] &amp;&amp; localLevelForVolumeSelector &lt; 1) {
+          return;
+        }
+        this.$.volume4.increment();
+        this.$.volume4._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      /**
+       * This function decrements the masking volume.
+       */
+      decrementMaskingVolume: function() {
+        if(this.internalMaskingVolume - 1 &lt; LowerThreshold[2] &amp;&amp; localLevelForVolumeSelector &lt; 1) {
+          return;
+        }
+        this.$.volume5.decrement();
+        this.$.volume5._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      /**
+       * This function increments the masking volume.
+       */
+      incrementMaskingVolume: function() {
+        if(this.internalMaskingVolume + 1 > UpperThreshold[2] &amp;&amp; localLevelForVolumeSelector &lt; 1) {
+          return;
+        }
+        this.$.volume5.increment();
+        this.$.volume5._expandKnob();
+        if(this.prevTimeout != 0) {
+          window.clearTimeout(this.prevTimeout)
+        }
+        var elem = this;
+        var func = this.resetKnob;
+        this.prevTimeout = window.setTimeout(function(){
+          func(elem);
+        }, 500);
+      },
+      
+      /**
+       * This function resets all the knobs.
+       */
+      resetKnob: function(elem) {
+        elem.prevTimeout = 0;
+        elem.$.volume2._resetKnob();
+        elem.$.volume3._resetKnob();
+        elem.$.volume4._resetKnob();
+        elem.$.volume5._resetKnob();
+      },
+
+      _logResponse: function(event, data) {
+        //console.log(data.response);
+      },
+
+      /**
+       * On ready this function will determine if the thresholds should be disabled of not due to the permisison level.
+       */
+      ready: function() {
+        //console.log(speakerid);
+        //console.log(this, "\n", this.$, "\n", this.$.speakerId);
+
+        switch(localLevelForVolumeSelector) {
+          case 0:
+            this.$.musicMin.disabled = true;
+            this.$.musicMax.disabled = true;
+
+            this.$.pagingMin.disabled = true;
+            this.$.pagingMax.disabled = true;
+            
+            this.$.maskingMin.disabled = true;
+            this.$.maskingMax.disabled = true;
+
+            this.$.volume2.disabled = true;
+            break;
+        }
+
+        this.internalVolume = this.volume;
+        //console.log("I am ready " + this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume) + " " + this.internalSoundMaskingVolume;
+      }
+    });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#_acceptPressed">_acceptPressed</a></li><li><a href="global.html#_acceptPressedZone">_acceptPressedZone</a></li><li><a href="global.html#_cancelPressed">_cancelPressed</a></li><li><a href="global.html#_cancelPressedZone">_cancelPressedZone</a></li><li><a href="global.html#_cancelSwitchPressed">_cancelSwitchPressed</a></li><li><a href="global.html#_cancelSwitchPressedZone">_cancelSwitchPressedZone</a></li><li><a href="global.html#_closeDrawer">_closeDrawer</a></li><li><a href="global.html#_equalizerUpdate">_equalizerUpdate</a></li><li><a href="global.html#_handleLogin">_handleLogin</a></li><li><a href="global.html#_initializeStatus">_initializeStatus</a></li><li><a href="global.html#_keepAliveResponse">_keepAliveResponse</a></li><li><a href="global.html#_logResponse">_logResponse</a></li><li><a href="global.html#_pagingUpdate">_pagingUpdate</a></li><li><a href="global.html#_presetSelectionChanged">_presetSelectionChanged</a></li><li><a href="global.html#_presetSelectionChangedZone">_presetSelectionChangedZone</a></li><li><a href="global.html#_selectionChanged">_selectionChanged</a></li><li><a href="global.html#_selectSpeaker">_selectSpeaker</a></li><li><a href="global.html#_selectZone">_selectZone</a></li><li><a href="global.html#_setEqualizerClicked">_setEqualizerClicked</a></li><li><a href="global.html#_setEqualizerClickedZone">_setEqualizerClickedZone</a></li><li><a href="global.html#_setInternalEqualizer">_setInternalEqualizer</a></li><li><a href="global.html#_setInternalPaging">_setInternalPaging</a></li><li><a href="global.html#_setInternalTarget">_setInternalTarget</a></li><li><a href="global.html#_setInternalVolume">_setInternalVolume</a></li><li><a href="global.html#_setPagingClicked">_setPagingClicked</a></li><li><a href="global.html#_setTargetClicked">_setTargetClicked</a></li><li><a href="global.html#_setTargetClickedZone">_setTargetClickedZone</a></li><li><a href="global.html#_setVolumeClicked">_setVolumeClicked</a></li><li><a href="global.html#_showMap">_showMap</a></li><li><a href="global.html#_speakerSelected">_speakerSelected</a></li><li><a href="global.html#_submit">_submit</a></li><li><a href="global.html#_switchPressed">_switchPressed</a></li><li><a href="global.html#_switchPressedZone">_switchPressedZone</a></li><li><a href="global.html#_targetUpdate">_targetUpdate</a></li><li><a href="global.html#_toggleDrawer">_toggleDrawer</a></li><li><a href="global.html#_volumeUpdate">_volumeUpdate</a></li><li><a href="global.html#_zoneSelected">_zoneSelected</a></li><li><a href="global.html#adjustSize">adjustSize</a></li><li><a href="global.html#decrementEffectiveness">decrementEffectiveness</a></li><li><a href="global.html#decrementMaskingVolume">decrementMaskingVolume</a></li><li><a href="global.html#decrementMusicVolume">decrementMusicVolume</a></li><li><a href="global.html#decrementPagingVolume">decrementPagingVolume</a></li><li><a href="global.html#decrementPleasantnesss">decrementPleasantnesss</a></li><li><a href="global.html#decrementVolume">decrementVolume</a></li><li><a href="global.html#drawAdvanced">drawAdvanced</a></li><li><a href="global.html#drawAdvancedZone">drawAdvancedZone</a></li><li><a href="global.html#drawBasic">drawBasic</a></li><li><a href="global.html#drawBasicZone">drawBasicZone</a></li><li><a href="global.html#findZoneIndex">findZoneIndex</a></li><li><a href="global.html#getValues">getValues</a></li><li><a href="global.html#getValuesZone">getValuesZone</a></li><li><a href="global.html#incrementEffectiveness">incrementEffectiveness</a></li><li><a href="global.html#incrementMaskingVolume">incrementMaskingVolume</a></li><li><a href="global.html#incrementMusicVolume">incrementMusicVolume</a></li><li><a href="global.html#incrementPagingVolume">incrementPagingVolume</a></li><li><a href="global.html#incrementPleasantnesss">incrementPleasantnesss</a></li><li><a href="global.html#incrementVolume">incrementVolume</a></li><li><a href="global.html#inputChanged">inputChanged</a></li><li><a href="global.html#inputChangedZone">inputChangedZone</a></li><li><a href="global.html#loadDayOutside">loadDayOutside</a></li><li><a href="global.html#loadDayOutsideZone">loadDayOutsideZone</a></li><li><a href="global.html#merge">merge</a></li><li><a href="global.html#mergeSort">mergeSort</a></li><li><a href="global.html#modeChanged">modeChanged</a></li><li><a href="global.html#modeChangedZone">modeChangedZone</a></li><li><a href="global.html#pulsateCircle">pulsateCircle</a></li><li><a href="global.html#ready">ready</a></li><li><a href="global.html#redraw">redraw</a></li><li><a href="global.html#redrawOnInput">redrawOnInput</a></li><li><a href="global.html#redrawOnInputZone">redrawOnInputZone</a></li><li><a href="global.html#redrawTiming">redrawTiming</a></li><li><a href="global.html#redrawTimingOnInput">redrawTimingOnInput</a></li><li><a href="global.html#redrawTimingOnInputZone">redrawTimingOnInputZone</a></li><li><a href="global.html#redrawTimingZone">redrawTimingZone</a></li><li><a href="global.html#redrawZone">redrawZone</a></li><li><a href="global.html#refreshMap">refreshMap</a></li><li><a href="global.html#renderMap">renderMap</a></li><li><a href="global.html#renderPagingMap">renderPagingMap</a></li><li><a href="global.html#resetKnob">resetKnob</a></li><li><a href="global.html#saveDefault">saveDefault</a></li><li><a href="global.html#scheduleTime">scheduleTime</a></li><li><a href="global.html#scheduleTimeZone">scheduleTimeZone</a></li><li><a href="global.html#setUI">setUI</a></li><li><a href="global.html#showEqualizerSwitchDialog">showEqualizerSwitchDialog</a></li><li><a href="global.html#showEqualizerSwitchDialogZone">showEqualizerSwitchDialogZone</a></li><li><a href="global.html#showMasking">showMasking</a></li><li><a href="global.html#showPaging">showPaging</a></li><li><a href="global.html#updateMapForError">updateMapForError</a></li><li><a href="global.html#updateViewForSelectedSpeakers">updateViewForSelectedSpeakers</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Jun 17 2016 17:12:26 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

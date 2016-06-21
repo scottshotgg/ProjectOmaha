@@ -29,12 +29,13 @@ func InitDB() {
 	switch {
 		case err == sql.ErrNoRows:
 
+			// Create DB tables
 			createAccountToSpeakersTable()
 			createAccountToMaskingZonesTable()
 			createAccountToPagingZonesTable()
 			createAccountTable()
 			createSpeakerTable()
-			
+		
 			createZoneTable()
 			createPagingZoneTable()
 

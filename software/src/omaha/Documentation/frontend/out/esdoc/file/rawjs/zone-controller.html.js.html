@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">rawjs/zone-controller.html.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">rawjs/zone-controller.html.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">    Polymer({
+      is: &apos;zone-controller&apos;,
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+        zone: {
+          type: Object,
+          observer: &quot;_zoneUpdated&quot;
+        },
+
+        isReady: {
+          type: Boolean,
+          value: false
+        },
+
+        mode: {
+          type: String,
+          value: &quot;volume&quot;
+        },
+
+        speakerId: {
+          type: Number,
+          value: 0
+        },
+
+        volumeLevel: {
+          type: String,
+          value: &quot;0&quot;,
+          observer: &apos;_volumeUpdate&apos;
+        },
+        
+        musicLevel: {
+          type: Number,
+          value: 0
+        },
+
+        pagingLevel: {
+          type: String,
+          value: &quot;0&quot;,
+          observer: &apos;_pagingUpdate&apos;
+        },
+
+        equalizerone: {
+          type: String,
+          value: &quot;0&quot;,
+          observer: &apos;_equalizerUpdate&apos;
+        },
+
+        musicone: {
+          type: String,
+          value: &quot;0&quot;,
+          observer: &apos;_equalizerUpdate&apos;
+        },
+
+        animationConfig: {
+          value: function() {
+            return {
+              &apos;entry&apos;: {
+                  name: &apos;fade-in-animation&apos;,
+                  node: this
+                },
+              &apos;exit&apos;: {
+                name: &apos;slide-left-animation&apos;,
+                node: this
+              }
+            }
+          }
+        }
+      },
+
+      _pagingUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = [&quot;paging&quot;];
+          var attributeValues = {
+            &quot;paging&quot;: this.pagingLevel,
+          };
+          this.$.speakerUpdateAjax.body = {
+            &quot;updatedAttributes&quot;: updatedAttributes, 
+            &quot;attributeValues&quot;: attributeValues,
+            &quot;speaker&quot;: this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+        //console.log(&quot;_pagingUpdate &quot; + this.pagingLevel);
+      },
+
+      _equalizerUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = [&quot;equalizer&quot;];
+          var attributeValues = {
+            &quot;equalizer&quot;: this.equalizerone,
+          };
+          this.$.speakerUpdateAjax.body = {
+            &quot;updatedAttributes&quot;: updatedAttributes, 
+            &quot;attributeValues&quot;: attributeValues,
+            &quot;speaker&quot;: this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+
+          //console.log(this.$.speakerUpdateAjax.body);
+
+        }
+      },
+
+      _musicEqualizerUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = [&quot;music&quot;];
+          var attributeValues = {
+            &quot;music&quot;: this.musicone,
+          };
+          this.$.speakerUpdateAjax.body = {
+            &quot;updatedAttributes&quot;: updatedAttributes, 
+            &quot;attributeValues&quot;: attributeValues,
+            &quot;speaker&quot;: this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+
+          //console.log(this.$.speakerUpdateAjax.body);
+
+        }
+      },
+
+      _targetUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = [&quot;target&quot;];
+          var attributeValues = {
+            &quot;target&quot;: this.target,
+          };
+          this.$.speakerUpdateAjax.body = {
+            &quot;updatedAttributes&quot;: updatedAttributes, 
+            &quot;attributeValues&quot;: attributeValues,
+            &quot;speaker&quot;: this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+
+      _targetUpdateZone: function() {
+        if(this.isReady) {
+          var updatedAttributes = [&quot;target&quot;];
+          var attributeValues = {
+            &quot;target&quot;: this.target,
+          };
+          this.$.speakerUpdateAjax.body = {
+            &quot;updatedAttributes&quot;: updatedAttributes, 
+            &quot;attributeValues&quot;: attributeValues,
+            &quot;speaker&quot;: this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+
+      _logResponse: function(event, data) {
+        //console.log(data.response);
+      },
+
+      _initializeStatus: function(speaker) {
+        this.speakerId = speaker.id;
+        speakerid = speaker.id;
+        this.volume = speaker.VolumeLevel[0];
+        this.equalizer = speaker.equalizerone;
+      },
+
+      _speakerUpdated: function() {
+        this.isReady = false;
+        this._initializeStatus(this.speaker);
+        this.isReady = true;
+      },
+
+      ready: function() {
+        //console.log(document.getElementById(&apos;target&apos;));
+          this._initializeStatus(this.speaker);
+        this.isReady = true;
+        //console.log(&quot;this is the zone flag&quot;, zoneFlag);
+      },
+
+      _initializeStatus: function(speaker) {
+        this.volume = 0;
+      },
+
+      _zoneUpdated: function() {
+        this.isReady = false;
+        this._initializeStatus();
+        this.isReady = true;
+      }
+    });
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

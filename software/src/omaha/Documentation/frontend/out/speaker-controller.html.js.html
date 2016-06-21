@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: speaker-controller.html.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: speaker-controller.html.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+    var speakerid = 0;
+
+    Polymer({
+      is: 'speaker-controller',
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+        speaker: {
+          type: Object,
+          observer: "_speakerUpdated"
+        },
+
+        isReady: {
+          type: Boolean,
+          value: false
+        },
+
+        mode: {
+          type: String,
+          value: "volume"
+        },
+
+        speakerId: {
+          type: Number,
+          value: 0
+        },
+
+        volumeLevel: {    // this shit and all the other shitters were volumeone for some reason ??? changed to volumeLevel
+          type: String,
+          value: "0",
+          observer: '_volumeUpdate'
+        },
+        
+        musicLevel: {
+          type: Number,
+          value: 0
+        },
+
+        pagingLevel: {
+          type: String,
+          value: "0",
+          observer: '_pagingUpdate'
+        },
+
+        equalizerone: {
+          type: String,
+          value: "0",
+          observer: '_equalizerUpdate'
+        },
+
+        musicone: {
+          type: String,
+          value: "0",
+          observer: '_equalizerUpdate'
+        },
+
+        target: {
+          type: String,
+          value: "0",
+          observer: '_targetUpdate'
+        },
+
+        animationConfig: {
+          value: function() {
+            return {
+              'entry': {
+                  name: 'fade-in-animation',
+                  node: this
+                },
+              'exit': {
+                name: 'slide-left-animation',
+                node: this
+              }
+            }
+          }
+        }
+      },
+
+      adjustSize: function() {
+        adjustSize();
+      },
+
+      /**
+       * This function is used when the internal volume is updated. This function packs up the 'updated attribute' (the volume) and sends it off to the server.
+       */
+      _volumeUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["volume"];
+          var attributeValues = {
+            "volume": this.volumeLevel,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          //console.log(this.$, this, "this is the stuff yo")
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+        //console.log("_volumeUpdate " + this.volumeLevel);
+      },
+
+      /**
+       * This function is used when the internal paging is updated. This function packs up the 'updated attribute' (the paging values) and sends it off to the server.
+       */
+      _pagingUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["paging"];
+          var attributeValues = {
+            "paging": this.pagingLevel,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+        //console.log("_pagingUpdate " + this.pagingLevel);
+      },
+ 
+      /**
+       * This function is used when the internal equalizer is updated. This function packs up the 'updated attribute' (the equalizer coefficients) and sends it off to the server.
+       */
+      _equalizerUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["equalizer"];
+          var attributeValues = {
+            "equalizer": this.equalizerone,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+
+          //console.log(this.$.speakerUpdateAjax.body);
+
+        }
+      },
+
+      _musicEqualizerUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["music"];
+          var attributeValues = {
+            "music": this.musicone,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+
+          //console.log(this.$.speakerUpdateAjax.body);
+
+        }
+      },
+
+      /**
+       * This function is used when the internal target is updated. This function packs up the 'updated attribute' (the target constants) and sends it off to the server.
+       */
+      _targetUpdate: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["target"];
+          var attributeValues = {
+            "target": this.target,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+
+      _targetUpdateZone: function() {
+        if(this.isReady) {
+          var updatedAttributes = ["target"];
+          var attributeValues = {
+            "target": this.target,
+          };
+          this.$.speakerUpdateAjax.body = {
+            "updatedAttributes": updatedAttributes, 
+            "attributeValues": attributeValues,
+            "speaker": this.speakerId
+          };
+          this.$.speakerUpdateAjax.generateRequest();
+        }
+      },
+
+      _logResponse: function(event, data) {
+        //console.log(data.response);
+      },
+
+      _initializeStatus: function(speaker) {
+        this.speakerId = speaker.id;
+        speakerid = speaker.id;
+        this.volume = speaker.VolumeLevel[0];
+        this.equalizer = speaker.equalizerone;
+      },
+
+      _speakerUpdated: function() {
+        this.isReady = false;
+        this._initializeStatus(this.speaker);
+        this.isReady = true;
+      },
+
+      ready: function() {
+        //console.log(document.getElementById('target'));
+        if(this.speaker !== undefined)
+          this._initializeStatus(this.speaker);
+        this.isReady = true;
+        //console.log("this is the zone flag", zoneFlag);
+      }
+    });
+  
+  (function hideSomething() {
+    
+  })();
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#_acceptPressed">_acceptPressed</a></li><li><a href="global.html#_acceptPressedZone">_acceptPressedZone</a></li><li><a href="global.html#_cancelPressed">_cancelPressed</a></li><li><a href="global.html#_cancelPressedZone">_cancelPressedZone</a></li><li><a href="global.html#_cancelSwitchPressed">_cancelSwitchPressed</a></li><li><a href="global.html#_cancelSwitchPressedZone">_cancelSwitchPressedZone</a></li><li><a href="global.html#_closeDrawer">_closeDrawer</a></li><li><a href="global.html#_equalizerUpdate">_equalizerUpdate</a></li><li><a href="global.html#_handleLogin">_handleLogin</a></li><li><a href="global.html#_initializeStatus">_initializeStatus</a></li><li><a href="global.html#_keepAliveResponse">_keepAliveResponse</a></li><li><a href="global.html#_logResponse">_logResponse</a></li><li><a href="global.html#_pagingUpdate">_pagingUpdate</a></li><li><a href="global.html#_presetSelectionChanged">_presetSelectionChanged</a></li><li><a href="global.html#_presetSelectionChangedZone">_presetSelectionChangedZone</a></li><li><a href="global.html#_selectionChanged">_selectionChanged</a></li><li><a href="global.html#_selectSpeaker">_selectSpeaker</a></li><li><a href="global.html#_selectZone">_selectZone</a></li><li><a href="global.html#_setEqualizerClicked">_setEqualizerClicked</a></li><li><a href="global.html#_setEqualizerClickedZone">_setEqualizerClickedZone</a></li><li><a href="global.html#_setInternalEqualizer">_setInternalEqualizer</a></li><li><a href="global.html#_setInternalPaging">_setInternalPaging</a></li><li><a href="global.html#_setInternalTarget">_setInternalTarget</a></li><li><a href="global.html#_setInternalVolume">_setInternalVolume</a></li><li><a href="global.html#_setPagingClicked">_setPagingClicked</a></li><li><a href="global.html#_setTargetClicked">_setTargetClicked</a></li><li><a href="global.html#_setTargetClickedZone">_setTargetClickedZone</a></li><li><a href="global.html#_setVolumeClicked">_setVolumeClicked</a></li><li><a href="global.html#_showMap">_showMap</a></li><li><a href="global.html#_speakerSelected">_speakerSelected</a></li><li><a href="global.html#_submit">_submit</a></li><li><a href="global.html#_switchPressed">_switchPressed</a></li><li><a href="global.html#_switchPressedZone">_switchPressedZone</a></li><li><a href="global.html#_targetUpdate">_targetUpdate</a></li><li><a href="global.html#_toggleDrawer">_toggleDrawer</a></li><li><a href="global.html#_volumeUpdate">_volumeUpdate</a></li><li><a href="global.html#_zoneSelected">_zoneSelected</a></li><li><a href="global.html#adjustSize">adjustSize</a></li><li><a href="global.html#decrementEffectiveness">decrementEffectiveness</a></li><li><a href="global.html#decrementMaskingVolume">decrementMaskingVolume</a></li><li><a href="global.html#decrementMusicVolume">decrementMusicVolume</a></li><li><a href="global.html#decrementPagingVolume">decrementPagingVolume</a></li><li><a href="global.html#decrementPleasantnesss">decrementPleasantnesss</a></li><li><a href="global.html#decrementVolume">decrementVolume</a></li><li><a href="global.html#drawAdvanced">drawAdvanced</a></li><li><a href="global.html#drawAdvancedZone">drawAdvancedZone</a></li><li><a href="global.html#drawBasic">drawBasic</a></li><li><a href="global.html#drawBasicZone">drawBasicZone</a></li><li><a href="global.html#findZoneIndex">findZoneIndex</a></li><li><a href="global.html#getValues">getValues</a></li><li><a href="global.html#getValuesZone">getValuesZone</a></li><li><a href="global.html#incrementEffectiveness">incrementEffectiveness</a></li><li><a href="global.html#incrementMaskingVolume">incrementMaskingVolume</a></li><li><a href="global.html#incrementMusicVolume">incrementMusicVolume</a></li><li><a href="global.html#incrementPagingVolume">incrementPagingVolume</a></li><li><a href="global.html#incrementPleasantnesss">incrementPleasantnesss</a></li><li><a href="global.html#incrementVolume">incrementVolume</a></li><li><a href="global.html#inputChanged">inputChanged</a></li><li><a href="global.html#inputChangedZone">inputChangedZone</a></li><li><a href="global.html#loadDayOutside">loadDayOutside</a></li><li><a href="global.html#loadDayOutsideZone">loadDayOutsideZone</a></li><li><a href="global.html#merge">merge</a></li><li><a href="global.html#mergeSort">mergeSort</a></li><li><a href="global.html#modeChanged">modeChanged</a></li><li><a href="global.html#modeChangedZone">modeChangedZone</a></li><li><a href="global.html#pulsateCircle">pulsateCircle</a></li><li><a href="global.html#ready">ready</a></li><li><a href="global.html#redraw">redraw</a></li><li><a href="global.html#redrawOnInput">redrawOnInput</a></li><li><a href="global.html#redrawOnInputZone">redrawOnInputZone</a></li><li><a href="global.html#redrawTiming">redrawTiming</a></li><li><a href="global.html#redrawTimingOnInput">redrawTimingOnInput</a></li><li><a href="global.html#redrawTimingOnInputZone">redrawTimingOnInputZone</a></li><li><a href="global.html#redrawTimingZone">redrawTimingZone</a></li><li><a href="global.html#redrawZone">redrawZone</a></li><li><a href="global.html#refreshMap">refreshMap</a></li><li><a href="global.html#renderMap">renderMap</a></li><li><a href="global.html#renderPagingMap">renderPagingMap</a></li><li><a href="global.html#resetKnob">resetKnob</a></li><li><a href="global.html#saveDefault">saveDefault</a></li><li><a href="global.html#scheduleTime">scheduleTime</a></li><li><a href="global.html#scheduleTimeZone">scheduleTimeZone</a></li><li><a href="global.html#setUI">setUI</a></li><li><a href="global.html#showEqualizerSwitchDialog">showEqualizerSwitchDialog</a></li><li><a href="global.html#showEqualizerSwitchDialogZone">showEqualizerSwitchDialogZone</a></li><li><a href="global.html#showMasking">showMasking</a></li><li><a href="global.html#showPaging">showPaging</a></li><li><a href="global.html#updateMapForError">updateMapForError</a></li><li><a href="global.html#updateViewForSelectedSpeakers">updateViewForSelectedSpeakers</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Jun 17 2016 17:12:26 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -326,7 +326,9 @@ var defaultHeight = 0;
   var chart_width_scalar_timing = .8;
   var chart_height_scalar_timing = .52;
  	
-
+  /**
+   * saveDefault is used to save the initially rendered size of the card.
+   */
  	function saveDefault() {
  		if(defaultWidth == 0) {
  			defaultWidth = document.getElementById("card-content").offsetWidth;
@@ -336,6 +338,9 @@ var defaultHeight = 0;
  		}
  	}
 
+ 	/**
+ 	 * This function is used to draw the basic scheduling card.
+ 	 */
   function drawBasic() {
   	ss.schedulingSelector.selected = "basic";
 
@@ -349,6 +354,9 @@ var defaultHeight = 0;
     loadDayOutside();
 	}
 
+	/**
+	 * This function is used to draw the advanced scheduling card.
+	 */
   function drawAdvanced() {
   	ss.schedulingSelector.selected = "advanced";
 
@@ -392,6 +400,9 @@ var defaultHeight = 0;
 
   });
 
+  /**
+   * This function is used the adjust the size of the card when being resized.
+   */
   function adjustSize() {	
   	var localWidth = $(window).width() * .2;
   	var localHeight = $(window).height() * .5;
@@ -482,6 +493,9 @@ var defaultHeight = 0;
 
       loadDay: loadDayOutside,
 
+      /**
+       * ScheduleTime is used to apply a new timing schedule to a speaker. 
+       */
       scheduleTime: function() {
 
       	//console.log(this.$.intervalListbox.selected);
@@ -572,6 +586,9 @@ var defaultHeight = 0;
 
     });
 
+ 	/**
+ 	 * This function is used to load the selectors with the correct values for that day.
+ 	 */
 	function loadDayOutside() {
 		//console.log(ss);
 
@@ -610,7 +627,9 @@ var defaultHeight = 0;
 		}
 	}
 
-
+	/**
+	 * This function is used to redraw the graph.
+	 */
   function redrawTiming(drawingData, drawingLineAttributes) {
   	//console.log("I got here");
 		$($(canvas_timing).parent()).prepend("<canvas id=\"timingChart\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
@@ -638,6 +657,9 @@ var defaultHeight = 0;
     //console.log("and now im here...");
   }
 
+  /**
+   * This function is fired on input into the text box. It validates the data that is input and changes the graph to red if something is detected as invalid.
+   */
   function redrawTimingOnInput() {
     var errorAdjustToast = document.getElementById("errorAdjustToast");
     var strokeColor = "#3f51b5";

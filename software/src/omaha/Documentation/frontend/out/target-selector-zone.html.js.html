@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: target-selector-zone.html.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: target-selector-zone.html.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>    window.addEventListener('WebComponentsReady', function(e) {
+      //console.log("WebComponentsReady");
+      //console.log();
+    });
+
+    //console.log(document.getElementById("targetZone"));
+
+    var dataArrayZone = [];
+    //console.log(dataArrayZone);
+
+    var labelsZone = ["80", "100", "125", "160", "200", "250", "315", "400", "500", "630", "800", "1k", "1.25k", "1.6k", "2k", "2.5k", "3.15k", "4k", "5k", "6.3k", "8k"];
+
+
+    var dataZone = {
+      labels: labelsZone,
+      datasets: [{
+        fillColor: "rgba(63, 81, 181, 0.25)",
+        strokeColor: "#3f51b5",
+        pointColor: "#fff",
+        pointStrokeColor: "#3f51b5",  
+        data: dataArrayZone,
+      }]
+    };
+
+    var lineAttributesZone = {
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    var resizeLineAttributesZone = {
+      animation: false,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    var redrawLineAttributesZone = {
+      showTooltips: true,
+      scaleOverride: true,
+      scaleSteps: 10,
+      scaleStartValue: -20,
+      scaleStepWidth: 10,
+      scaleShowLabels: true,
+      scaleFontSize: 12,
+    };
+
+    Polymer({
+      is: 'target-selector-zone',
+      
+      properties: {
+        internalTargetZone: String,
+
+        targetZone: {
+          type: String,
+          notify: true,
+          observer: '_setInternalTargetZone'
+        },
+
+        speaker: {
+          type: Object,
+        },
+
+        speakerId: {
+          type: Number
+        }
+      },
+
+    redrawOnInputZone: redrawOnInputZone,
+
+    properties: {
+      internalVolume2: Number,
+
+       musicVolume: {
+        type: Number,
+        notify: true,
+        observer: '_setInternalMusicVolume'
+      },
+
+      speakerId: {
+        type: Number
+      }
+    },
+      
+      _setInternalTargetZone: function(dataArrayZoneString) {
+        this.internalTargetZone = dataArrayZoneString;
+        //console.log("_setInternalTargetZone" + dataArrayZoneString);
+      },
+      
+      /**
+       * This function is fired when the 'apply target' button is clicked. It checks the inputs by validating the values. 
+       */
+      _setTargetClickedZone: function() {
+        //console.log("i was just clicked");
+        var checkIntZone = 0;
+        var checkBandsZone = [];
+        var targetTextZone = "Invalid input at ";
+
+
+
+        $(document.getElementsByClassName("inputs-zone")).each(function(i) {
+          if(isNaN(this.value) || this.value &lt; -20 || this.value > 80) {
+            //console.log(typeof this.value, parseInt(this.value));
+            //console.log(this.name);
+            checkIntZone++;
+            //console.log(checkBandsZone);
+          }
+        });
+
+        //console.log(checkBandsZone);
+
+        if(checkIntZone > 0) {
+          if(checkBandsZone.length == 1) {
+            targetTextZone += checkBandsZone[0] + "Hz";
+          } else {
+            for (var i = 0; i &lt; checkBandsZone.length - 1; i++) {
+              targetTextZone += checkBandsZone[i] + "Hz, "
+            }
+            targetTextZone += "and " + checkBandsZone[checkBandsZone.length - 1] + "Hz";
+          }
+          this.$.toaster.duration = 2000 + (500 * checkBandsZone.length);
+          this.$.toaster.text = targetTextZone;
+          this.$.toaster.show();
+        } else {
+          var inputsZoneArray = document.getElementsByClassName("inputs-zone");
+          //console.log(inputsZoneArray);
+          for(var x = 0; x &lt; inputsZoneArray.length; x++) {
+            dataArrayZone[x] = inputsZoneArray[x].value;
+          }
+
+          this.dataArrayZoneString = dataArrayZone.join(", ");
+          for (var i = 0; i &lt; speaker.CurrentTarget.length; i++) { 
+            speaker.CurrentTarget[i] = dataArrayZone[i];
+          }
+          this.target = dataArrayZone.join(" ");
+          //console.log(dataArrayZone);
+          this.$.toaster.text = "Target set to: " + dataArrayZone.join(", ") + ", switch to the equalizer page for further adjustment";
+          this.$.toaster.show();
+          //console.log("_setTargetClicked");
+
+
+          this.$.updateTargetAjaxZone.body = {
+            "zone": speaker.zone.zoneID,
+            "constants": this.target,
+          };
+
+          this.$.updateTargetAjaxZone.generateRequest();
+        }
+      },
+
+      _logResponse: function(event, data) {
+        //console.log(data.response);
+      },
+
+      /**
+       * This function is pressed when the user clicks accept on the dialog box.
+       */
+      _acceptPressed: function(event) {
+        var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
+        var ifvar = 0;
+        if(speaker.zone.TargetNames.length > 0) {
+          for(var i = 0; i &lt; speaker.zone.TargetNames.length; i++) {
+            if(name.toLowerCase() == speaker.zone.TargetNames[i].valueOf().toLowerCase()) {
+              //console.log("same name dude");
+              ifvar++;
+            }
+          }
+        }
+
+        if(ifvar > 0) {
+          //console.log("we are in here right now");
+          this.err = "Invalid name: Name already taken";
+          this.$.errorAdjustToast.text = this.err;
+          this.$.errorAdjustToast.show();
+        } else {
+          this.$.addTargetAjaxZone.body = {
+            "zone": speaker.zone.zoneID,
+            "name": name,
+            "update": false,
+            "constants": dataArrayZone.join(" ")
+          };
+
+          //console.log("addTargetAjax:", addTargetAjaxZone.body);
+          this.$.addTargetAjaxZone.generateRequest();
+          //console.log(this.$.addTargetAjaxZone.body);
+          this.$.dialog.toggle();
+
+          this.$.errorAdjustToast.text = "Added target: " + name + " " + dataArrayZone.join(", ");
+          //console.log(this.$.errorAdjustToast.text);
+
+          this.$.errorAdjustToast.show();
+
+          temp = document.createElement("paper-item");
+          temp.setAttribute("value", name);
+          temp.setAttribute("id", name);
+          temp.innerHTML = name;
+          Polymer.dom(this.$.targetListbox).appendChild(temp);
+
+          var length = speaker.zone.Target.length;
+
+          //console.log(dataArrayZone);
+
+          var dataArrayZoneCopy = dataArrayZone.slice();
+
+          //console.log("dataArrayZoneCopy: ", dataArrayZoneCopy);
+
+          speaker.zone.TargetNames[speaker.zone.TargetNames.length] = name;
+
+          //console.log(speaker.zone.Target);
+
+          this.$.targetListbox.selected = name;
+          this.$.popupInput.value = "";
+        }
+      },
+
+      /**
+       * This function dismisses the dialog box and resets the selected target.
+       */
+      _cancelPressed: function(event) {
+        this.$.targetListbox.selected = -1;
+        //console.log(lastSelected);
+      },
+
+      listeners: {
+        'targetListbox.iron-select': '_presetSelectionChanged'
+      },
+      
+      /**
+       * When the user selects a preset, this function updates the target graph.
+       */
+      _presetSelectionChanged: function(event) {
+        var selected = this.$.targetListbox.selected.valueOf().toLowerCase().replace("\n", "");
+
+        if(selected == "currently applied") {
+          this.$.errorAdjustToast.text = "Currently applied constants loaded! " + dataArrayZone.join(", ");
+          this.$.errorAdjustToast.show();
+
+          lastSelected = this.$.targetListbox.selected;
+
+          for (var i = 0; i &lt; speaker.zone.CurrentTarget.length; i++) { 
+            dataArrayZone[i] = speaker.zone.CurrentTarget[i];
+          }
+
+          redrawZone(dataZone, lineAttributesZone);
+
+          $(document.getElementsByClassName("inputs-zone")).each(function(j) {
+            this.value = dataArrayZone[j];
+          });
+        } else if(selected == "add new target") {
+            var addTargetAjaxZone = document.getElementById("addTargetAjaxZone");
+            //console.log(addTargetAjaxZone);
+            this.$.dialog.toggle();
+        } else if(speaker.zone.TargetNames.length > 0) {
+            lastSelected = this.$.targetListbox.selected;
+            var associationLink = -1;
+            for (k in speaker.zone.TargetNames) {
+              if(selected == speaker.zone.TargetNames[k].valueOf().toLowerCase()) {
+                associationLink = k;
+                //console.log("associationLink", associationLink);
+                break;
+              }
+            }
+            if(associationLink != -1) {
+              //console.log(speaker.zone.Target.length);
+
+              for (var j = 0; j &lt; speaker.zone.Target[0].length; j++) {
+                dataArrayZone[j] = speaker.zone.Target[associationLink - 1][j]; 
+              }
+
+              $(document.getElementsByClassName("inputs-zone")).each(function(k) {
+                this.value = dataArrayZone[k];
+              });
+
+              redrawOnInputZone(dataZone, lineAttributesZone);
+              this.$.errorAdjustToast.text = this.$.targetListbox.selected + " target loaded! " + dataArrayZone.join(", ");
+              this.$.errorAdjustToast.show();
+              //console.log("Speaker " + speaker.zone.zoneID + " selected target: " + selected);
+            }
+          }
+        },
+
+      ready: function() {
+        //console.log("target stuff zone", this.internalTarget, this.target);
+        this.internalTarget = this.target;
+        //console.log("I am ready " + this.internalTarget);
+        //console.log("ready shit", this.$.targetChartZone);
+        
+      }
+    });
+
+    var myChartZone;
+
+    var canvasZone = document.getElementById("targetChartZone");
+    var chart_width_scalar = .8;
+    var chart_height_scalar = .55;
+
+
+  $(document).ready(function() {
+    canvasZone = document.getElementById("targetChartZone");
+    canvasZone.width = $(window).width() * chart_width_scalar;
+    canvasZone.height = $(window).height() * chart_height_scalar;
+
+    $(document.getElementsByClassName("inputs-zone")).each(function(i) {
+      this.value = dataArrayZone[i];
+    });
+
+    //console.log("dater zone");
+    //console.log(dataZone, lineAttributesZone);
+
+    myChartZone = new Chart(canvasZone.getContext("2d")).Line(dataZone, lineAttributesZone);
+  });
+
+
+  $(window).resize(function() {
+    $($(canvasZone).parent()).prepend("&lt;canvas id=\"targetChartZone\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\">&lt;/canvas>");
+    canvasZone.remove();
+
+    //console.log(canvasZone);
+
+    canvasZone = document.getElementById("targetChartZone");
+    canvasZone.width = $(window).width() * chart_width_scalar;
+    canvasZone.height = $(window).height() * chart_height_scalar;
+    myChartZone = new Chart(canvasZone.getContext("2d")).Line(dataZone, resizeLineAttributesZone);
+  });
+
+  /**
+   * This function is used to redraw the target for the zone.
+   */
+  function redrawZone(drawingData, drawingLineAttributes) {
+    $($(canvasZone).parent()).prepend("&lt;canvas id=\"targetChartZone\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\">&lt;/canvas>");
+    canvasZone.remove();
+
+    canvasZone = document.getElementById("targetChartZone");
+    //console.log("this is the canvasZone", canvasZone);
+    canvasZone.width = $(window).width() * chart_width_scalar;
+    canvasZone.height = $(window).height() * chart_height_scalar;
+    myChartZone = new Chart(canvasZone.getContext("2d")).Line(drawingData, drawingLineAttributes);
+
+  }
+
+  /**
+   * This function is used to redraw the target when the user types a value into the textbox.
+   */
+  function redrawOnInputZone() {
+    //console.log("I am being called: redrawOnInputZone");
+    var errorAdjustToast = document.getElementById("errorAdjustToast");
+    var strokeColor = "#3f51b5";
+    var pointStrokeColor = "#3f51b5";
+    var fillColor = "rgba(63, 81, 181, .25)";
+
+    //console.log(dataArrayZone);
+
+    $(document.getElementsByClassName("inputs-zone")).each(function(i) {
+      //console.log(dataArrayZone.length);
+      if(this.value > -21 &amp;&amp; this.value &lt; 81 &amp;&amp; this.value !== "") {
+        dataArrayZone[i] = parseInt(this.value);
+      } else {
+        dataArrayZone[i] = null;
+        
+        // Set the error colors
+        strokeColor = "#F33F31";
+        pointStrokeColor = "#F33F31";
+        fillColor = "rgba(243, 63, 49, .25)";
+
+        if(isNaN(this.value)) {
+          errorAdjustToast.text = "Invalid entry for " + labelsZone[i] + "Hz: Only numerical values are accepted";
+          errorAdjustToast.show();
+        } else if (this.value === "") {
+
+        } else {
+          errorAdjustToast.text = "Invalid entry for " + labelsZone[i] + "Hz: Accepted range of values is -20 to 80";
+          errorAdjustToast.show();
+        }
+      }
+    });
+
+    var redrawDataZone = {
+      labels: labelsZone,
+      datasets: [{
+        fillColor: fillColor,
+        strokeColor: strokeColor,
+        pointColor: "#fff",
+        pointStrokeColor: pointStrokeColor,  
+        data: dataArrayZone,
+        }]
+    };
+
+    redrawZone(redrawDataZone, redrawLineAttributesZone);
+  }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#_acceptPressed">_acceptPressed</a></li><li><a href="global.html#_acceptPressedZone">_acceptPressedZone</a></li><li><a href="global.html#_cancelPressed">_cancelPressed</a></li><li><a href="global.html#_cancelPressedZone">_cancelPressedZone</a></li><li><a href="global.html#_cancelSwitchPressed">_cancelSwitchPressed</a></li><li><a href="global.html#_cancelSwitchPressedZone">_cancelSwitchPressedZone</a></li><li><a href="global.html#_closeDrawer">_closeDrawer</a></li><li><a href="global.html#_equalizerUpdate">_equalizerUpdate</a></li><li><a href="global.html#_handleLogin">_handleLogin</a></li><li><a href="global.html#_initializeStatus">_initializeStatus</a></li><li><a href="global.html#_keepAliveResponse">_keepAliveResponse</a></li><li><a href="global.html#_logResponse">_logResponse</a></li><li><a href="global.html#_pagingUpdate">_pagingUpdate</a></li><li><a href="global.html#_presetSelectionChanged">_presetSelectionChanged</a></li><li><a href="global.html#_presetSelectionChangedZone">_presetSelectionChangedZone</a></li><li><a href="global.html#_selectionChanged">_selectionChanged</a></li><li><a href="global.html#_selectSpeaker">_selectSpeaker</a></li><li><a href="global.html#_selectZone">_selectZone</a></li><li><a href="global.html#_setEqualizerClicked">_setEqualizerClicked</a></li><li><a href="global.html#_setEqualizerClickedZone">_setEqualizerClickedZone</a></li><li><a href="global.html#_setInternalEqualizer">_setInternalEqualizer</a></li><li><a href="global.html#_setInternalPaging">_setInternalPaging</a></li><li><a href="global.html#_setInternalTarget">_setInternalTarget</a></li><li><a href="global.html#_setInternalVolume">_setInternalVolume</a></li><li><a href="global.html#_setPagingClicked">_setPagingClicked</a></li><li><a href="global.html#_setTargetClicked">_setTargetClicked</a></li><li><a href="global.html#_setTargetClickedZone">_setTargetClickedZone</a></li><li><a href="global.html#_setVolumeClicked">_setVolumeClicked</a></li><li><a href="global.html#_showMap">_showMap</a></li><li><a href="global.html#_speakerSelected">_speakerSelected</a></li><li><a href="global.html#_submit">_submit</a></li><li><a href="global.html#_switchPressed">_switchPressed</a></li><li><a href="global.html#_switchPressedZone">_switchPressedZone</a></li><li><a href="global.html#_targetUpdate">_targetUpdate</a></li><li><a href="global.html#_toggleDrawer">_toggleDrawer</a></li><li><a href="global.html#_volumeUpdate">_volumeUpdate</a></li><li><a href="global.html#_zoneSelected">_zoneSelected</a></li><li><a href="global.html#adjustSize">adjustSize</a></li><li><a href="global.html#decrementEffectiveness">decrementEffectiveness</a></li><li><a href="global.html#decrementMaskingVolume">decrementMaskingVolume</a></li><li><a href="global.html#decrementMusicVolume">decrementMusicVolume</a></li><li><a href="global.html#decrementPagingVolume">decrementPagingVolume</a></li><li><a href="global.html#decrementPleasantnesss">decrementPleasantnesss</a></li><li><a href="global.html#decrementVolume">decrementVolume</a></li><li><a href="global.html#drawAdvanced">drawAdvanced</a></li><li><a href="global.html#drawAdvancedZone">drawAdvancedZone</a></li><li><a href="global.html#drawBasic">drawBasic</a></li><li><a href="global.html#drawBasicZone">drawBasicZone</a></li><li><a href="global.html#findZoneIndex">findZoneIndex</a></li><li><a href="global.html#getValues">getValues</a></li><li><a href="global.html#getValuesZone">getValuesZone</a></li><li><a href="global.html#incrementEffectiveness">incrementEffectiveness</a></li><li><a href="global.html#incrementMaskingVolume">incrementMaskingVolume</a></li><li><a href="global.html#incrementMusicVolume">incrementMusicVolume</a></li><li><a href="global.html#incrementPagingVolume">incrementPagingVolume</a></li><li><a href="global.html#incrementPleasantnesss">incrementPleasantnesss</a></li><li><a href="global.html#incrementVolume">incrementVolume</a></li><li><a href="global.html#inputChanged">inputChanged</a></li><li><a href="global.html#inputChangedZone">inputChangedZone</a></li><li><a href="global.html#loadDayOutside">loadDayOutside</a></li><li><a href="global.html#loadDayOutsideZone">loadDayOutsideZone</a></li><li><a href="global.html#merge">merge</a></li><li><a href="global.html#mergeSort">mergeSort</a></li><li><a href="global.html#modeChanged">modeChanged</a></li><li><a href="global.html#modeChangedZone">modeChangedZone</a></li><li><a href="global.html#pulsateCircle">pulsateCircle</a></li><li><a href="global.html#ready">ready</a></li><li><a href="global.html#redraw">redraw</a></li><li><a href="global.html#redrawOnInput">redrawOnInput</a></li><li><a href="global.html#redrawOnInputZone">redrawOnInputZone</a></li><li><a href="global.html#redrawTiming">redrawTiming</a></li><li><a href="global.html#redrawTimingOnInput">redrawTimingOnInput</a></li><li><a href="global.html#redrawTimingOnInputZone">redrawTimingOnInputZone</a></li><li><a href="global.html#redrawTimingZone">redrawTimingZone</a></li><li><a href="global.html#redrawZone">redrawZone</a></li><li><a href="global.html#refreshMap">refreshMap</a></li><li><a href="global.html#renderMap">renderMap</a></li><li><a href="global.html#renderPagingMap">renderPagingMap</a></li><li><a href="global.html#resetKnob">resetKnob</a></li><li><a href="global.html#saveDefault">saveDefault</a></li><li><a href="global.html#scheduleTime">scheduleTime</a></li><li><a href="global.html#scheduleTimeZone">scheduleTimeZone</a></li><li><a href="global.html#setUI">setUI</a></li><li><a href="global.html#showEqualizerSwitchDialog">showEqualizerSwitchDialog</a></li><li><a href="global.html#showEqualizerSwitchDialogZone">showEqualizerSwitchDialogZone</a></li><li><a href="global.html#showMasking">showMasking</a></li><li><a href="global.html#showPaging">showPaging</a></li><li><a href="global.html#updateMapForError">updateMapForError</a></li><li><a href="global.html#updateViewForSelectedSpeakers">updateViewForSelectedSpeakers</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Jun 17 2016 17:12:26 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

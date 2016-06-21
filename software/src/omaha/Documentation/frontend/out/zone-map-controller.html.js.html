@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: zone-map-controller.html.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: zone-map-controller.html.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+  var pagingMap;
+  var map;
+
+  var selectedFeatures;
+  var info = [];
+  var totalInfo = [];
+
+  /**
+   * This function controls the escape key that is used to clear the selection.
+   */
+  document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+      alert("You are about to clear you selection.\nAre you sure you want to do this?");
+      document.getElementById("speakerHolder").innerHTML = "";
+      selectedFeatures.clear();
+      info = [];
+      totalInfo = [];
+    }
+  };
+
+  /**
+   * The showPaging function changes the zone container to paging zones instead of masking zones.
+   */
+  function showPaging() {
+    document.querySelector("#pagingZoneMenu").style.visibility = "visible";
+    document.querySelector("#pagingZoneContainer").style.visibility = "visible";
+
+    document.querySelector("#zoneMenu").style.visibility = "hidden";
+    document.querySelector("#zoneContainer").style.visibility = "hidden";
+
+    pagingMap.updateSize();
+  }
+
+  /**
+   * The showMasking function changes the zone container to masking zones instead of paging zones.
+   */
+  function showMasking() {
+    document.querySelector("#pagingZoneMenu").style.visibility = "hidden";
+    document.querySelector("#pagingZoneContainer").style.visibility = "hidden";
+
+    document.querySelector("#zoneMenu").style.visibility = "visible";
+    document.querySelector("#zoneContainer").style.visibility = "visible";
+
+    map.updateSize();
+
+  }
+
+    Polymer({
+      is: 'zone-map-controller',
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+        animationConfig: {
+          value: function() {
+            return {
+              'entry': {
+                  name: 'fade-in-animation',
+                  node: this
+                },
+              'exit': {
+                name: 'slide-left-animation',
+                node: this
+              }
+            }
+          }
+        }
+      },
+
+      /**
+       * This function is tied to the 'create' button in the dialog box.
+       */
+      _acceptPressed: function(e) {
+        this.$.zoneDialog.toggle();
+        this.$.toast.show();
+        //console.log("_acceptPressed", totalInfo);
+        var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
+
+        this.$.createZoneAjax.body = {
+          "name":     name,
+          "speakers": totalInfo
+        }
+
+        totalInfo = [];
+        document.getElementById("speakerHolder").innerHTML = "";
+
+        //console.log("createZoneAjax:", createZoneAjax.body);
+        this.$.createZoneAjax.generateRequest();
+      },
+
+      _cancelPressed: function(e) {
+      },
+
+      _createZone: function(e) {
+        this.$.zoneDialog.toggle();
+      },
+      
+      _refreshSpeaker: function(e) {
+        var speakerId = e.detail.speakerId;
+        this.featureMap[speakerId].changed();
+      },
+      
+      _assignZone: function() {
+        this._hideOverlay();
+        this.$.dialog.open();
+      },
+      
+      _hideOverlay: function() {
+        this.overlay.setPosition(undefined);
+      },
+
+      /**
+       * RenderMap takes the mapcontroller and adds overlays, sets up the colors, places the icons, sets the event functions, and the general UI of the map.
+       */
+      renderMap: function() {
+        //console.log(this);
+        var mapController = this;
+        mapController.featureMap = {};
+        var container = mapController.$.popup;
+        var overlay = new ol.Overlay(({
+          element: container,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+      
+        mapController.overlay = overlay;
+        var extent = [0, 0, 2200, 1700];
+        var projection = new ol.proj.Projection({
+          code: 'pixel',
+          units: 'pixels',
+          extent: extent
+        });
+
+        var locations = this.controllers;
+        var features = new Array(locations.length);
+        for(var i = 0; i &lt; features.length; i++) {
+            var coordinates = [locations[i].x, 1700-locations[i].y];
+            features[i] = new ol.Feature({
+              geometry: new ol.geom.Point(coordinates),
+              speaker: locations[i]
+            });
+            mapController.featureMap[locations[i].id] = features[i]
+        }
+
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var style = {}
+
+       var allColors = [
+          '#f44336'
+        ];
+        
+        var unusedColors = [
+          '#f44336'
+        ];
+        var colorMap = {};
+        
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: function(feature, resolution) {
+              var zone = feature.getProperties().speaker.zone.name;
+                if(!(zone in colorMap)) {
+                  var color;
+                  if(unusedColors.length > 0) {
+                    var index = Math.floor(Math.random() * unusedColors.length)
+                    color = unusedColors[index]
+                    unusedColors.splice(index, 1);
+                  } else {
+                    color = colors[Math.floor(Math.random() * colors.length)]
+                  }
+
+                  colorMap[zone] = color;
+                }
+                if(!(zone in style) || style[zone].resolution !== resolution) {
+                  style[zone] = {};
+                  style[zone].style = [new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 15/Math.max(resolution,1),
+                            stroke: new ol.style.Stroke({
+                                color: '#000000'
+                            }),
+                            fill: new ol.style.Fill({
+                                color: colorMap[zone]
+                            })
+                        })
+                    })];
+                    style[zone].resolution = resolution;
+                }
+                return style[zone].style;
+            }
+        });
+
+        map = new ol.Map({
+          layers: [
+            new ol.layer.Image({
+              source: new ol.source.ImageStatic({
+                url: '/css/map.png',
+                projection: projection,
+                imageExtent: extent
+              })
+            }),
+              vectorLayer
+          ],
+          overlays: [overlay],
+          target: 'zoneContainer',
+          view: new ol.View({
+            projection: projection,
+            center: ol.extent.getCenter(extent),
+            zoom: 6,
+            zoomFactor: 1.35
+          })
+        });
+        
+        mapController.map = map;
+        var box = new ol.interaction.Select();
+        map.addInteraction(box);
+
+        selectedFeatures = box.getFeatures();
+
+        //console.log("selectedFeatures: ", selectedFeatures);
+
+        var dragBox = new ol.interaction.DragBox({
+          condition: ol.events.condition.shiftKeyOnly,
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: [63, 81, 181, 1]
+            })
+          })
+        }); 
+
+        var source = new ol.source.Vector();
+
+        map.addInteraction(dragBox);
+
+        dragBox.on('boxend', function(e) {
+          var extent = dragBox.getGeometry().getExtent();
+
+          //console.log(extent);
+
+          vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+          //console.log(feature);
+
+          //console.log(typeof selectedFeatures.a);
+
+              var areYouInThere = selectedFeatures.a.indexOf(feature);
+              //console.log(areYouInThere);
+              if(areYouInThere == -1) {
+                selectedFeatures.push(feature);
+                totalInfo.push(feature.B.speaker.id); 
+                //console.log(totalInfo);
+              } else {
+                //console.log("Speaker", feature.B.speaker.id, "is already in the list of selected speakers.");
+                //console.log(selectedFeatures);
+                //console.log(totalInfo);
+              }
+            info.push(feature.B.speaker.id);
+          });
+          //console.log("selectedFeatures: ", selectedFeatures);
+
+          if (info.length > 0) {
+            //console.log("Selected speakers: ", info);
+
+            //console.log("Total selected speakers: ", totalInfo);
+            //console.log("Starting sort: ");
+            totalInfo = mergeSort(totalInfo);
+
+            speakerHolder = document.getElementById("speakerHolder");
+            var innerHTML = "";
+            speakerHolder.innerHTML = "";
+            for (var k = 0; k &lt; totalInfo.length; k++) {
+              if (totalInfo[k] !== undefined) {
+               innerHTML += "&lt;paper-item center-justified flex style=\"background: rgba(63, 81, 181, .1);  border-style: solid; border-radius: 0px; border-width: 1px; border-color: #3f51b5; margin: 5px;\">&lt;font style=\"width: 100%; text-align: center;\"> Speaker " + totalInfo[k] + "&lt;/font>&lt;/paper-item>";
+              }
+            }
+            speakerHolder.innerHTML = innerHTML;
+            //console.log(totalInfo);
+          }
+        });
+
+        dragBox.on('boxstart', function(e) {
+
+        });
+        map.on('click', function() {
+
+        //console.log(selectedFeatures);
+        selectedFeatures.clear();
+        });
+      },
+
+      /**
+       * RenderPagingMap is the paging version of Rendermap. It takes the mapcontroller and adds overlays, sets up the colors, places the icons, sets the event functions, and the general UI of the map.
+       */
+      renderPagingMap: function() {
+        //console.log(this);
+        var mapController = this;
+        mapController.featureMap = {};
+        var container = mapController.$.popup;
+        var overlay = new ol.Overlay(({
+          element: container,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+      
+        mapController.overlay = overlay;
+        var extent = [0, 0, 2200, 1700];
+        var projection = new ol.proj.Projection({
+          code: 'pixel',
+          units: 'pixels',
+          extent: extent
+        });
+
+        var locations = this.controllers;
+        var features = new Array(locations.length);
+        for(var i = 0; i &lt; features.length; i++) {
+            var coordinates = [locations[i].x, 1700-locations[i].y];
+            features[i] = new ol.Feature({
+              geometry: new ol.geom.Point(coordinates),
+              speaker: locations[i]
+            });
+            mapController.featureMap[locations[i].id] = features[i]
+        }
+
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var style = {}
+
+       var allColors = [
+          '#f44336'
+        ];
+        
+        var unusedColors = [
+          '#f44336'
+        ];
+        var colorMap = {};
+        
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: function(feature, resolution) {
+              var zone = feature.getProperties().speaker.zone.name;
+                if(!(zone in colorMap)) {
+                  var color;
+                  if(unusedColors.length > 0) {
+                    var index = Math.floor(Math.random() * unusedColors.length)
+                    color = unusedColors[index]
+                    unusedColors.splice(index, 1);
+                  } else {
+                    color = colors[Math.floor(Math.random() * colors.length)]
+                  }
+
+                  colorMap[zone] = color;
+                }
+                if(!(zone in style) || style[zone].resolution !== resolution) {
+                  style[zone] = {};
+                  style[zone].style = [new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 15 / Math.max(resolution, 1),
+                            stroke: new ol.style.Stroke({
+                                color: '#000000'
+                            }),
+                            fill: new ol.style.Fill({
+                                color: colorMap[zone]
+                            })
+                        })
+                    })];
+                    style[zone].resolution = resolution;
+                }
+                return style[zone].style;
+            }
+        });
+
+        pagingMap = new ol.Map({
+          layers: [
+            new ol.layer.Image({
+              source: new ol.source.ImageStatic({
+                url: '/css/map.png',
+                projection: projection,
+                imageExtent: extent
+              })
+            }),
+              vectorLayer
+          ],
+          overlays: [overlay],
+          target: 'pagingZoneContainer',
+          view: new ol.View({
+            projection: projection,
+            center: ol.extent.getCenter(extent),
+            zoom: 2
+          })
+        });
+        
+        mapController.map = map;
+        var box = new ol.interaction.Select();
+        map.addInteraction(box);
+
+        selectedFeatures = box.getFeatures();
+
+        //console.log("selectedFeatures: ", selectedFeatures);
+
+        var dragBox = new ol.interaction.DragBox({
+          condition: ol.events.condition.shiftKeyOnly,
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: [63, 81, 181, 1]
+            })
+          })
+        }); 
+
+        var source = new ol.source.Vector();
+
+        map.addInteraction(dragBox);
+
+        dragBox.on('boxend', function(e) {
+          var extent = dragBox.getGeometry().getExtent();
+
+          //console.log(extent);
+
+          vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+          //console.log(feature);
+
+          //console.log(typeof selectedFeatures.a);
+            var areYouInThere = selectedFeatures.a.indexOf(feature);
+            //console.log(areYouInThere);
+            if(areYouInThere == -1) {
+              selectedFeatures.push(feature);
+              totalInfo.push(feature.B.speaker.id); 
+              //console.log(totalInfo);
+            } else {
+              //console.log("Speaker", feature.B.speaker.id, "is already in the list of selected speakers.");
+              //console.log(selectedFeatures);
+              //console.log(totalInfo);
+            }
+            info.push(feature.B.speaker.id);
+          });
+          //console.log("selectedFeatures: ", selectedFeatures);
+
+          if (info.length > 0) {
+            //console.log("Selected speakers: ", info);
+
+            //console.log("Total selected speakers: ", totalInfo);
+            
+            //console.log("Starting sort: ");
+            totalInfo = mergeSort(totalInfo);
+
+            speakerHolder = document.getElementById("speakerHolder");
+            var innerHTML = "";
+            speakerHolder.innerHTML = "";
+            for (var k = 0; k &lt; totalInfo.length; k++) {
+              if (totalInfo[k] !== undefined) {
+               innerHTML += "&lt;paper-item center-justified flex style=\"background: rgba(63, 81, 181, .1);  border-style: solid; border-radius: 0px; border-width: 1px; border-color: #3f51b5; margin: 5px;\">&lt;font style=\"width: 100%; text-align: center;\"> Speaker " + totalInfo[k] + "&lt;/font>&lt;/paper-item>";
+              }
+            }
+            speakerHolder.innerHTML = innerHTML;
+            //console.log(totalInfo);
+          }
+        });
+        dragBox.on('boxstart', function(e) {
+          // why is there nothing here??
+        });
+        map.on('click', function() {
+
+        //console.log(selectedFeatures);
+        selectedFeatures.clear();
+        });
+      },
+
+      _logResponse: function(event, data) {
+        //console.log("this is the zone response", data.response);
+      }
+    });
+
+    function mergeSort(arr) {
+        if (arr.length &lt; 2)
+            return arr;
+
+        var middle = parseInt(arr.length / 2);
+        var left   = arr.slice(0, middle);
+        var right  = arr.slice(middle, arr.length);
+
+        return merge(mergeSort(left), mergeSort(right));
+    }
+
+    function merge(left, right) {
+        var result = [];
+
+        while (left.length &amp;&amp; right.length) {
+            if (left[0] &lt;= right[0]) {
+                result.push(left.shift());
+            } else {
+                result.push(right.shift());
+            }
+        }
+
+        while (left.length)
+            result.push(left.shift());
+
+        while (right.length)
+            result.push(right.shift());
+
+        return result;
+    }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#_acceptPressed">_acceptPressed</a></li><li><a href="global.html#_acceptPressedZone">_acceptPressedZone</a></li><li><a href="global.html#_cancelPressed">_cancelPressed</a></li><li><a href="global.html#_cancelPressedZone">_cancelPressedZone</a></li><li><a href="global.html#_cancelSwitchPressed">_cancelSwitchPressed</a></li><li><a href="global.html#_cancelSwitchPressedZone">_cancelSwitchPressedZone</a></li><li><a href="global.html#_closeDrawer">_closeDrawer</a></li><li><a href="global.html#_equalizerUpdate">_equalizerUpdate</a></li><li><a href="global.html#_handleLogin">_handleLogin</a></li><li><a href="global.html#_initializeStatus">_initializeStatus</a></li><li><a href="global.html#_keepAliveResponse">_keepAliveResponse</a></li><li><a href="global.html#_logResponse">_logResponse</a></li><li><a href="global.html#_pagingUpdate">_pagingUpdate</a></li><li><a href="global.html#_presetSelectionChanged">_presetSelectionChanged</a></li><li><a href="global.html#_presetSelectionChangedZone">_presetSelectionChangedZone</a></li><li><a href="global.html#_selectionChanged">_selectionChanged</a></li><li><a href="global.html#_selectSpeaker">_selectSpeaker</a></li><li><a href="global.html#_selectZone">_selectZone</a></li><li><a href="global.html#_setEqualizerClicked">_setEqualizerClicked</a></li><li><a href="global.html#_setEqualizerClickedZone">_setEqualizerClickedZone</a></li><li><a href="global.html#_setInternalEqualizer">_setInternalEqualizer</a></li><li><a href="global.html#_setInternalPaging">_setInternalPaging</a></li><li><a href="global.html#_setInternalTarget">_setInternalTarget</a></li><li><a href="global.html#_setInternalVolume">_setInternalVolume</a></li><li><a href="global.html#_setPagingClicked">_setPagingClicked</a></li><li><a href="global.html#_setTargetClicked">_setTargetClicked</a></li><li><a href="global.html#_setTargetClickedZone">_setTargetClickedZone</a></li><li><a href="global.html#_setVolumeClicked">_setVolumeClicked</a></li><li><a href="global.html#_showMap">_showMap</a></li><li><a href="global.html#_speakerSelected">_speakerSelected</a></li><li><a href="global.html#_submit">_submit</a></li><li><a href="global.html#_switchPressed">_switchPressed</a></li><li><a href="global.html#_switchPressedZone">_switchPressedZone</a></li><li><a href="global.html#_targetUpdate">_targetUpdate</a></li><li><a href="global.html#_toggleDrawer">_toggleDrawer</a></li><li><a href="global.html#_volumeUpdate">_volumeUpdate</a></li><li><a href="global.html#_zoneSelected">_zoneSelected</a></li><li><a href="global.html#adjustSize">adjustSize</a></li><li><a href="global.html#decrementEffectiveness">decrementEffectiveness</a></li><li><a href="global.html#decrementMaskingVolume">decrementMaskingVolume</a></li><li><a href="global.html#decrementMusicVolume">decrementMusicVolume</a></li><li><a href="global.html#decrementPagingVolume">decrementPagingVolume</a></li><li><a href="global.html#decrementPleasantnesss">decrementPleasantnesss</a></li><li><a href="global.html#decrementVolume">decrementVolume</a></li><li><a href="global.html#drawAdvanced">drawAdvanced</a></li><li><a href="global.html#drawAdvancedZone">drawAdvancedZone</a></li><li><a href="global.html#drawBasic">drawBasic</a></li><li><a href="global.html#drawBasicZone">drawBasicZone</a></li><li><a href="global.html#findZoneIndex">findZoneIndex</a></li><li><a href="global.html#getValues">getValues</a></li><li><a href="global.html#getValuesZone">getValuesZone</a></li><li><a href="global.html#incrementEffectiveness">incrementEffectiveness</a></li><li><a href="global.html#incrementMaskingVolume">incrementMaskingVolume</a></li><li><a href="global.html#incrementMusicVolume">incrementMusicVolume</a></li><li><a href="global.html#incrementPagingVolume">incrementPagingVolume</a></li><li><a href="global.html#incrementPleasantnesss">incrementPleasantnesss</a></li><li><a href="global.html#incrementVolume">incrementVolume</a></li><li><a href="global.html#inputChanged">inputChanged</a></li><li><a href="global.html#inputChangedZone">inputChangedZone</a></li><li><a href="global.html#loadDayOutside">loadDayOutside</a></li><li><a href="global.html#loadDayOutsideZone">loadDayOutsideZone</a></li><li><a href="global.html#merge">merge</a></li><li><a href="global.html#mergeSort">mergeSort</a></li><li><a href="global.html#modeChanged">modeChanged</a></li><li><a href="global.html#modeChangedZone">modeChangedZone</a></li><li><a href="global.html#pulsateCircle">pulsateCircle</a></li><li><a href="global.html#ready">ready</a></li><li><a href="global.html#redraw">redraw</a></li><li><a href="global.html#redrawOnInput">redrawOnInput</a></li><li><a href="global.html#redrawOnInputZone">redrawOnInputZone</a></li><li><a href="global.html#redrawTiming">redrawTiming</a></li><li><a href="global.html#redrawTimingOnInput">redrawTimingOnInput</a></li><li><a href="global.html#redrawTimingOnInputZone">redrawTimingOnInputZone</a></li><li><a href="global.html#redrawTimingZone">redrawTimingZone</a></li><li><a href="global.html#redrawZone">redrawZone</a></li><li><a href="global.html#refreshMap">refreshMap</a></li><li><a href="global.html#renderMap">renderMap</a></li><li><a href="global.html#renderPagingMap">renderPagingMap</a></li><li><a href="global.html#resetKnob">resetKnob</a></li><li><a href="global.html#saveDefault">saveDefault</a></li><li><a href="global.html#scheduleTime">scheduleTime</a></li><li><a href="global.html#scheduleTimeZone">scheduleTimeZone</a></li><li><a href="global.html#setUI">setUI</a></li><li><a href="global.html#showEqualizerSwitchDialog">showEqualizerSwitchDialog</a></li><li><a href="global.html#showEqualizerSwitchDialogZone">showEqualizerSwitchDialogZone</a></li><li><a href="global.html#showMasking">showMasking</a></li><li><a href="global.html#showPaging">showPaging</a></li><li><a href="global.html#updateMapForError">updateMapForError</a></li><li><a href="global.html#updateViewForSelectedSpeakers">updateViewForSelectedSpeakers</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Jun 17 2016 17:12:26 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -178,11 +178,17 @@
 
       redrawOnInput: redrawOnInput,
 
+      /**
+       * Used for setting the internal target value that will trigger updates.
+       */
       _setInternalTarget: function(dataArrayString) {
         this.internalTarget = dataArrayString;
         //console.log("_setInternalTarget" + dataArrayString);
       },
       
+      /**
+       * Used when the 'apply target' button is clicked. It validates the entered values and sets the internal value.
+       */
       _setTargetClicked: function() {
         //console.log("i got pressed _setTargetClicked");
         var checkInt = 0;
@@ -234,6 +240,9 @@
         //console.log(data.response);
       },
 
+      /**
+       * This is used when the user presses the 'add' button on the dialog for adding a preset.
+       */
       _acceptPressed: function(event) {
         //console.log("i got pressed _acceptPressed");
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
@@ -290,6 +299,9 @@
         }
       },
 
+      /**
+       * This is used to dismiss the dialog and reset the selected target.
+       */
       _cancelPressed: function(event) {
         this.$.targetListbox.selected = -1;
         //console.log(lastSelected);
@@ -299,6 +311,9 @@
         'targetListbox.iron-select': '_presetSelectionChanged'
       },
       
+      /**
+       * This function is used to when the user selected a different preset from the dropdown box. It loads the preset into the graph and then fires the redraw function to redraw the graph.
+       */
       _presetSelectionChanged: function(event) {
         var selected = this.$.targetListbox.selected.valueOf().toLowerCase().replace("\n", "");
 
@@ -393,6 +408,9 @@
     myChart = new Chart(canvas.getContext("2d")).Line(data, resizeLineAttributes);
   });
 
+  /**
+   * This function removes the graph, draws a new one and then puts the graph in the same position the old one was in to update it.
+   */
   function redraw(drawingData, drawingLineAttributes) {
     $($(canvas).parent()).prepend("<canvas id=\"targetChart\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
     canvas.remove();
@@ -404,6 +422,9 @@
 
   }
 
+  /**
+   * This function fires when the user inputs their coefficients into the text boxes.
+   */
   function redrawOnInput() {
     var errorAdjustToast = document.getElementById("errorAdjustToast");
     var strokeColor = "#3f51b5";

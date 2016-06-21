@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">rawjs/open-map-controller.html.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">rawjs/open-map-controller.html.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+  var LowerThreshold = [];
+  var UpperThreshold = [];
+
+  $(document).ready(function() {
+    //console.log($(document.getElementById(&quot;goodOrBadFont&quot;)).innerWidth(), $(document.getElementById(&quot;selectedSpeakers&quot;)).innerWidth());
+  });
+
+
+  $(window).resize(function() {
+  });
+
+  var savedResolution;
+  var savedStyle = [];
+  var savedStyle_i = 1;
+
+  var controllers = []; 
+  var renderMapCopy;
+  var vectorLayerCopy;
+  var goodCircle = document.getElementById(&quot;goodCircle&quot;);
+  var goodFont = document.getElementById(&quot;goodFont&quot;); 
+  var badCircle = document.getElementById(&quot;badCircle&quot;);
+  var badFont = document.getElementById(&quot;badFont&quot;); 
+
+    Polymer({
+      is: &apos;open-map-controller&apos;,
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+        animationConfig: {
+          value: function() {
+            return {
+              &apos;entry&apos;: {
+                  name: &apos;fade-in-animation&apos;,
+                  node: this
+                },
+              &apos;exit&apos;: {
+                name: &apos;slide-left-animation&apos;,
+                node: this
+              }
+            }
+          }
+        }
+      },
+      
+      _selectSpeaker: function() {
+        this._hideOverlay();
+
+        //console.log(&quot;i am fired&quot;);
+      },
+      
+      _selectZone: function() {
+        this._hideOverlay();
+      },
+      
+      _hideOverlay: function() {
+        //console.log(this.overlay);
+      },
+
+      _logResponse: function(event, data) {
+        //console.log(&quot;this is the speaker response&quot;, data.response);
+        var a = document.getElementById(&apos;speaker-tooltip&apos;);
+  
+        a.speaker.name = data.response.name;
+        a.speaker.VolumeLevel[0] = data.response.volume;
+        a.speaker.VolumeLevel[1] = data.response.music;
+        a.speaker.VolumeLevel[2] = data.response.paging;
+        a.speaker.VolumeLevel[3] = data.response.masking;
+
+        a.speaker.LowerThreshold = [];
+        a.speaker.UpperThreshold = [];
+
+        a.speaker.LowerThreshold[0] = data.response.lowerMusicThreshold
+        a.speaker.UpperThreshold[0] = data.response.upperMusicThreshold
+        a.speaker.LowerThreshold[1] = data.response.lowerPagingThreshold
+        a.speaker.UpperThreshold[1] = data.response.upperPagingThreshold
+        a.speaker.LowerThreshold[2] = data.response.lowerMaskingThreshold
+        a.speaker.UpperThreshold[2] = data.response.upperMaskingThreshold
+
+        LowerThreshold[0] = data.response.lowerMusicThreshold
+        UpperThreshold[0] = data.response.upperMusicThreshold
+        LowerThreshold[1] = data.response.lowerPagingThreshold
+        UpperThreshold[1] = data.response.upperPagingThreshold
+        LowerThreshold[2] = data.response.lowerMaskingThreshold
+        UpperThreshold[2] = data.response.upperMaskingThreshold
+
+        a.speaker.Effectiveness = data.response.effectiveness;
+        a.speaker.Pleasantness = data.response.pleasantness;
+        a.speaker.FadeTime = data.response.fadetime;
+        a.speaker.FadeLevel = data.response.fadelevel;
+        a.speaker.EqualizerMode = data.response.equalizerMode;
+        a.speaker.SchedulingMode = data.response.schedulingMode;
+
+        a.speaker.Schedule = data.response.schedule;
+
+        if(a.speaker.EqualizerMode == 1) {
+          equalizerSelector.selected = &quot;music&quot;;
+          lastEQMode = &quot;music&quot;;
+          getValues();
+          musicMenu.style.visibility = &quot;visible&quot;;
+          equalizerMenu.style.visibility = &quot;hidden&quot;;
+        } else if(a.speaker.EqualizerMode == 2) {
+          equalizerSelector.selected = &quot;paging&quot;; 
+          lastEQMode = &quot;paging&quot;;
+          getValues();
+        }
+        //console.log(schedulingSelector);
+        speaker = a.speaker;
+
+        if(a.speaker.SchedulingMode == 0) {
+          schedulingSelector.selected = &quot;basic&quot;;
+          schedulingSelectorZone.selected = &quot;basic&quot;;
+          drawBasic();
+          drawBasicZone();
+        } else {
+          schedulingSelector.selected = &quot;advanced&quot;;
+          schedulingSelectorZone.selected = &quot;advanced&quot;;
+          drawAdvanced();
+          drawAdvancedZone();
+        }
+
+        //console.log(document.querySelector(&quot;#scheduling-controller&quot;));
+
+        //console.log(&quot;i have applied the selected value&quot;, schedulingSelector.selected, schedulingSelector);
+
+        //console.log(this.$$);
+        if(a.speaker.name !== &quot;&quot;) {
+          var tooltipInformation = &quot;&lt;b id=\&quot;name\&quot;&gt;&quot; + a.speaker.name + &quot;&lt;/b&gt;&lt;br&gt;&lt;b id=\&quot;speaker\&quot;&gt;Speaker ID: &quot; + a.speaker.id + &quot;&lt;/b&gt;&lt;br&gt;&lt;b id=\&quot;zone\&quot;&gt;Zone ID: &quot; + a.speaker.zoneID + &quot;&lt;/b&gt;&lt;br&gt;&lt;b id=\&quot;volume\&quot;&gt;Volume: &quot; + a.speaker.VolumeLevel[0] + &quot;&lt;/b&gt;&quot;;
+          //console.log(&quot;i am here&quot;);
+        } else {
+          //console.log(&quot;i am not here&quot;);
+          var tooltipInformation = &quot;&lt;b id=\&quot;speaker\&quot;&gt;Speaker ID: &quot; + a.speaker.id + &quot;&lt;/b&gt;&lt;br&gt;&lt;b id=\&quot;zone\&quot;&gt;Zone ID: &quot; + a.speaker.zone.zoneID + &quot;&lt;/b&gt;&lt;br&gt;&lt;b id=\&quot;volume\&quot;&gt;Volume: &quot; + a.speaker.VolumeLevel[0] + &quot;&lt;/b&gt;&quot;;
+        }
+        document.getElementById(&quot;tooltipInformation&quot;).innerHTML = tooltipInformation;
+
+        //console.log(&quot;Response:&quot;, data.response);
+        //console.log(&quot;Speaker:&quot;, a.speaker);
+
+        a.speaker.TargetNames   = [];
+        a.speaker.CurrentTarget = [];
+
+        a.speaker.PresetNames   = [];
+        a.speaker.CurrentPreset = [];
+
+        a.speaker.MusicPresetNames   = [];
+        a.speaker.CurrentMusicPreset = [];
+
+        a.speaker.PagingPresetNames   = [];
+        a.speaker.CurrentPagingPreset = [];
+
+        a.speaker.Target        = [];
+        a.speaker.Equalizer     = [];
+
+        a.speaker.Music         = [];
+
+        for (i in data.response.TargetNames) {
+          a.speaker.TargetNames[i] = data.response.TargetNames[i].replace(&quot;\n&quot;, &quot;&quot;);
+          //console.log(i, data.response.TargetNames[i]);
+        }
+
+        for (i in data.response.PresetNames) {
+          a.speaker.PresetNames[i] = data.response.PresetNames[i].replace(&quot;\n&quot;, &quot;&quot;);
+          //console.log(i, data.response.PresetNames[i]);
+        }
+
+        for (i in data.response.MusicPresetNames) {
+          a.speaker.MusicPresetNames[i] = data.response.MusicPresetNames[i].replace(&quot;\n&quot;, &quot;&quot;);
+          //console.log(i, data.response.MusicPresetNames[i]);
+        }
+
+        for (i in data.response.PagingPresetNames) {
+          a.speaker.PagingPresetNames[i] = data.response.PagingPresetNames[i].replace(&quot;\n&quot;, &quot;&quot;);
+          //console.log(i, data.response.PagingPresetNames[i]);
+        }
+
+        for (i in data.response.CurrentPreset) {
+          a.speaker.CurrentPreset[i] = data.response.CurrentPreset[i];
+          //console.log(i, data.response.CurrentPreset[i]);
+        }
+
+        for (i in data.response.CurrentMusicPreset) {
+          a.speaker.CurrentMusicPreset[i] = data.response.CurrentMusicPreset[i];
+          //console.log(i, data.response.CurrentMusicPreset[i]);
+        } 
+
+        for (i in data.response.CurrentPagingPreset) {
+          a.speaker.CurrentPagingPreset[i] = data.response.CurrentPagingPreset[i];
+          //console.log(i, data.response.CurrentPagingPreset[i]);
+        } 
+
+        for (i in data.response.CurrentTarget) {
+          a.speaker.CurrentTarget[i] = data.response.CurrentTarget[i];
+          //console.log(i, data.response.CurrentTarget[i]);
+          //dataArray.push(data.response.CurrentTarget[i]);
+          dataArray[i] = a.speaker.CurrentTarget[i];
+        }
+
+        $(document.getElementsByClassName(&quot;inputs&quot;)).each(function(j) {
+          this.value = dataArray[j];
+        });
+        redrawOnInput();
+
+        dataArray = [];
+
+        for(i in data.response.Equalizer) {
+          a.speaker.Equalizer[i] = data.response.Equalizer[i];
+          //console.log(data.response.PresetNames[i], data.response.Equalizer[i]);
+        }
+
+        for(i in data.response.MusicEqualizer) {
+          a.speaker.MusicEqualizer[i] = data.response.MusicEqualizer[i];
+          //console.log(data.response.MusicPresetNames[i], data.response.MusicEqualizer[i]);
+        }
+
+        for(i in data.response.PagingEqualizer) {
+          a.speaker.PagingEqualizer[i] = data.response.PagingEqualizer[i];
+          //console.log(data.response.PagingPresetNames[i], data.response.PagingEqualizer[i]);
+        }
+
+        for(i in data.response.Target) {
+          a.speaker.Target[i] = data.response.Target[i];
+          //console.log(data.response.TargetNames[i], data.response.Target[i]);
+        }
+
+        a.speaker.Response = &quot;true&quot;;
+
+        //console.log(&quot;Speaker&quot;, a.speaker);
+      },
+    
+      renderMap: function() {
+        var mapController = this;
+        var container = document.getElementById(&apos;popup&apos;);
+        var overlay = new ol.Overlay(({
+          element: container,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+        
+        var tt = document.getElementById(&apos;test&apos;);
+        var tooltip = new ol.Overlay(({
+          element: tt,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+        
+        mapController.overlay = overlay;
+
+        var extent = [0, 0, 2200, 1700];
+        var projection = new ol.proj.Projection({
+          code: &apos;pixel&apos;,
+          units: &apos;pixels&apos;,
+          extent: extent
+        });
+
+        var locations = this.controllers;
+        controllers = this.controllers;
+
+        var features = new Array(locations.length);
+        for(var i = 0; i &lt; features.length; i++) {
+            var coordinates = [locations[i].x, 1700-locations[i].y];
+            var point = new ol.geom.Point(coordinates);
+            features[i] = new ol.Feature({
+              geometry: point,
+              speaker: locations[i]
+            });
+        }
+        
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var style = {}
+        var allColors = [
+          &apos;#3f51b5&apos;
+        ];
+        
+        var unusedColors = [
+          &apos;#3f51b5&apos;
+        ];
+        var colorMap = {};
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: function(feature, resolution) {
+              //console.log(feature.getProperties().speaker);
+              var zone = feature.getProperties().speaker.zone.name;
+              if(!(zone in colorMap)) {
+                var color;
+                if(unusedColors.length &gt; 0) {
+                  var index = Math.floor(Math.random() * unusedColors.length)
+                  color = unusedColors[index]
+                  unusedColors.splice(index, 1);
+                } else {
+                  color = colors[Math.floor(Math.random() * colors.length)]
+                }
+
+                colorMap[zone] = color;
+                savedStyle[zone] = color;
+                savedStyle_i++;
+                //console.log(savedStyle);
+              }
+              if(!(zone in style) || style[zone].resolution !== resolution) {
+                style[zone] = {};
+                style[zone].style = [new ol.style.Style({
+                    image: new ol.style.Circle({
+                      radius: 15 / Math.max(resolution, 1),
+                      stroke: new ol.style.Stroke({
+                          color: &apos;#000000&apos;
+                      }),
+                      fill: new ol.style.Fill({
+                          color: colorMap[zone]
+                      })
+                    })
+                })];
+                style[zone].resolution = resolution;
+              }
+
+              savedResolution = resolution;
+              savedFeature = feature;
+
+              var errorStyle = new ol.style.Style({
+                image: new ol.style.Icon({
+                  src: &quot;/css/brokenlink.png&quot;
+                })
+              });
+
+              if(zone == &quot;default&quot;) {
+                var speakers = feature.getProperties().speaker;
+                  if(speakers.status !== 0) {
+                    //console.log(&quot;updateMapForError&quot;, speakers.id);
+
+                    feature.setStyle(errorStyle);
+                  }
+              }
+              return style[zone].style;
+            }
+        });
+
+        vectorLayerCopy = vectorLayer;
+
+        var map = new ol.Map({
+          layers: [
+            new ol.layer.Image({
+              source: new ol.source.ImageStatic({
+                url: &apos;/css/map.png&apos;,
+                projection: projection,
+                imageExtent: extent
+              })
+            }),
+              vectorLayer
+          ],
+          overlays: [overlay, tooltip],
+          target: &apos;map&apos;,
+          view: new ol.View({
+            projection: projection,
+            center: ol.extent.getCenter(extent),
+            zoom: 6,
+            zoomFactor: 1.35
+          })
+        });
+        mapController.map = map;
+
+        var select = new ol.interaction.Select({
+          style: function(feature, resolution) {
+                var zone = feature.getProperties().speaker.zone.name;
+                return style[zone].style;
+            }
+        });
+
+
+        map.addInteraction(select);
+
+        select.on(&apos;select&apos;, function(e) {
+            if(e.selected.length &gt; 0) {
+              //console.log(&quot;Selected&quot;);
+              var speaker = e.selected[0].getProperties().speaker
+              //console.log(e)
+              //console.log(speaker);
+
+              var frontendSpeakerUpdateAjax = document.getElementById(&quot;frontendSpeakerUpdateAjax&quot;);
+              //console.log(&quot;If I do say myself sir, this is a pretty snazzy way to go about doing this!&quot;);
+              frontendSpeakerUpdateAjax.body = {
+                &quot;speaker&quot;: speaker.id
+              };
+              //console.log(&quot;frontendSpeakerUpdateAjax &quot;, frontendSpeakerUpdateAjax.body);
+              frontendSpeakerUpdateAjax.generateRequest(); 
+
+              mapController.selected = speaker;
+              var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
+
+              //console.log(coordinate)
+
+              //console.log(speaker);
+
+              overlay.setPosition(coordinate);
+
+              //console.log(colorMap);
+            } else {
+              mapController._hideOverlay();
+            }
+        });
+        
+        var hoverInteraction = new ol.interaction.Select({
+            condition: ol.events.condition.pointerMove,
+            style: function(feature, resolution) {
+                return style.style;
+            }
+        });
+        hoverInteraction.on(&apos;select&apos;, function(e){
+          if(e.selected.length &gt; 0) {
+              //console.log(&quot;Selected&quot;);
+              var speaker = e.selected[0].getProperties().speaker;
+              //console.log(speaker);
+              var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
+              tooltip.setPosition(coordinate);
+            }
+        })
+      }
+    });
+
+  function updateMapForError(id, change) {
+    var features = vectorLayerCopy.getSource().getFeatures();
+    var i = 0;
+    for(i = 0; i &lt; features.length; i++) {
+      if(features[i].getProperties().speaker.id == id) {
+        //console.log(features[i].getProperties().speaker);
+        break;
+      }
+    }
+
+    //console.log(&quot;i: &quot;, i);
+    //console.log(&quot;features of i&quot;, features[i].getProperties().speaker);
+
+    var old_style = features[i].getStyle(style);
+
+    //console.log(features);
+    var style;
+
+    if(change) {
+      style = new ol.style.Style({
+        image: new ol.style.Icon({
+          src: &quot;/css/brokenlink.png&quot;
+        })
+      });
+      //console.log(statusCircle);
+
+      // update the system status icon
+      goodCircle.style.visibility = &quot;hidden&quot;;
+      badCircle.style.visibility = &quot;visible&quot;;
+      goodFont.style.visibility = &quot;hidden&quot;;
+      badFont.style.visibility = &quot;visible&quot;;
+
+      var badCircleText = document.getElementById(&quot;badCircleText&quot;);
+      var badFontText = document.getElementById(&quot;badFontText&quot;);
+
+      if(badCircleText.innerHTML.length != 0) {
+        badCircleText.innerHTML = &quot;There was an error trying to retrieve the status for speaker &quot; + features[i].getProperties().speaker.id;
+      } else {
+        badCircleText.innerHTML += &quot;, speaker &quot; + features[i].getProperties().speaker.id; 
+      }
+      if(badFontText.innerHTML.length != 0) {
+        badFontText.innerHTML = &quot;There was an error trying to retrieve the status for speaker &quot; + features[i].getProperties().speaker.id;
+
+      } else {
+        badFontText.innerHTML += &quot;, speaker &quot; + features[i].getProperties().speaker.id; 
+      }
+    } else {
+       style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                      radius: 15 / Math.max(savedResolution, 1),
+                      stroke: new ol.style.Stroke({
+                          color: &apos;#000000&apos;
+                      }),
+                      fill: new ol.style.Fill({
+                          color: savedStyle[features[i].getProperties().speaker.zone.name]
+                      })
+                    })
+                });
+
+      var badCircleText = document.getElementById(&quot;badCircleText&quot;);
+      var badFontText = document.getElementById(&quot;badFontText&quot;);
+      badCircleText.innerHTML = &quot;&quot;;
+      badFontText.innerHTML = &quot;&quot;;
+       
+      goodCircle.style.visibility = &quot;visible&quot;;
+      badCircle.style.visibility = &quot;hidden&quot;;
+      goodFont.style.visibility = &quot;visible&quot;;
+      badFont.style.visibility = &quot;hidden&quot;;
+    }
+
+    features[i].setStyle(style);
+    vectorLayerCopy.changed();
+  }
+
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

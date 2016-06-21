@@ -20,6 +20,8 @@ func InitializeHandlers() {
 
 	http.Handle("/system/", GenericHandler{GET: SystemStatusHandler})
 	http.Handle("/system/controllerUpdate/", GenericHandler{GET: ControllerUpdateHandler})
+
+	// Speaker handlers
 	http.Handle("/system/speaker/", GenericHandler{PUT: SpeakerPutHandler})
 	http.Handle("/system/threshold/", GenericHandler{PUT: ThresholdHandler})
 	http.Handle("/system/backtofront/", GenericHandler{POST: SpeakerGetHandler})
@@ -31,6 +33,7 @@ func InitializeHandlers() {
 	http.Handle("/system/createPagingZone/", GenericHandler{PUT: CreatePagingZoneHandler})
 	http.Handle("/system/scheduleTime/", GenericHandler{PUT: ScheduleTime})
 
+	// Zone handlers
 	http.Handle("/system/zone/updateVolumesZone/", GenericHandler{PUT: UpdateVolumesZone})
 	http.Handle("/system/zone/threshold/", GenericHandler{PUT: ThresholdHandlerZone})
 	http.Handle("/system/zone/updateAveragingZone/", GenericHandler{PUT: UpdateAveragingZone})

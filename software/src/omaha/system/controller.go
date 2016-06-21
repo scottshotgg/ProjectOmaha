@@ -1,3 +1,9 @@
+/*
+	The protocol works by sending three bytes to communicate with the controllers/speakers.
+	[0]:	address, 0-254
+	[1]:	command, this is taken from the constants.go file
+	[2]: 	data, this is where you would fill in the volume to set it to, or the amount to raise the band
+*/
 package system
 
 import (
@@ -11,6 +17,8 @@ const NULLZone int = 0
 	KeepAlive is a function that is used by the scheduler in main.go to send a KeepAlive command to the speakers.
 */
 func KeepAlive(ID int8) (error int8) {
+	// apply the message header and then fill in the data and commands
+	// KeepAlive sends a 1 and expects to get a capital 'A' back. 
 	data := getMessageHeader(ID, 3)
 	data[1] = Commands.KeepAlive
 	data[2] = 0x01
@@ -52,6 +60,7 @@ func KeepAlive(ID int8) (error int8) {
 	SetVolume is used to send the set volume command to the specified speaker.
 */
 func SetVolume(this *database.ControllerStatus) error {
+	// fill in the header and then set the command and fill in the volume level that you would like to set it to
 	data := getMessageHeader(this.ID, 3)
 	data[1] = Commands.SetVolume
 	data[2] = byte(this.VolumeLevel[0])

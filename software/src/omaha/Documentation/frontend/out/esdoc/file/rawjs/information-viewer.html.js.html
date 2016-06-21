@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">rawjs/information-viewer.html.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">rawjs/information-viewer.html.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+  // the name needs to be limited to 50 characters
+
+    var totalInfo = [];
+    
+    Polymer({
+      is: &apos;information-viewer&apos;,
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+        animationConfig: {
+          value: function() {
+            return {
+              &apos;entry&apos;: {
+                  name: &apos;fade-in-animation&apos;,
+                  node: this
+                },
+              &apos;exit&apos;: {
+                // provided by neon-animation-animations/fade-out-animation.html
+                name: &apos;slide-left-animation&apos;,
+                node: this
+              }
+            }
+          }
+        }
+      },
+
+      _acceptPressed: function(e) {
+        this.$.zoneDialog.toggle();
+        this.$.toast.show();
+        //console.log(&quot;_acceptPressed&quot;, totalInfo);
+        var name = this.$.popupInput.value.valueOf().replace(&quot;\n&quot;, &quot;&quot;).replace(&quot;\t&quot;, &quot;&quot;);
+
+        // this is where we strip out the undefineds
+
+        this.$.createZoneAjax.body = {
+          // make sure that this isn&apos;t empty, do the disable button thing
+          // send the name with this too dummy
+          &quot;name&quot;:     name,
+          &quot;speakers&quot;: totalInfo   // stripem out, maybe we can just takem out when we show them in list
+        }
+
+        totalInfo = [];
+        document.getElementById(&quot;informationSpeakerHolder&quot;).innerHTML = &quot;&quot;;
+
+        //console.log(&quot;createZoneAjax:&quot;, createZoneAjax.body);
+        this.$.createZoneAjax.generateRequest();
+      },
+
+      _cancelPressed: function(e) {
+      },
+
+      _createZone: function(e) {
+        this.$.zoneDialog.toggle();
+      },
+      
+      _refreshSpeaker: function(e) {
+        var speakerId = e.detail.speakerId;
+        this.featureMap[speakerId].changed();
+      },
+      
+      _assignZone: function() {
+        this._hideOverlay();
+        this.$.dialog.open();
+      },
+      
+      _hideOverlay: function() {
+        this.overlay.setPosition(undefined);
+      },
+
+      renderMap: function() {
+        //console.log(&quot;gi&quot;);
+        var mapController = this;
+        mapController.featureMap = {};
+        var container = mapController.$.popup;
+        var overlay = new ol.Overlay(({
+          element: container,
+          autoPan: true,
+          autoPanAnimation: {
+            duration: 250
+          }
+        }));
+      
+        mapController.overlay = overlay;
+        
+        // Map views always need a projection.  Here we just want to map image
+        // coordinates directly to map coordinates, so we create a projection that uses
+        // the image 4 in pixels.
+        var extent = [0, 0, 2200, 1700];
+        var projection = new ol.proj.Projection({
+          code: &apos;pixel&apos;,
+          units: &apos;pixels&apos;,
+          extent: extent
+        });
+
+        var locations = this.controllers;
+        var features = new Array(locations.length);
+        for(var i = 0; i &lt; features.length; i++) {
+            var coordinates = [locations[i].x, 1700-locations[i].y];
+            features[i] = new ol.Feature({
+              geometry: new ol.geom.Point(coordinates),
+              speaker: locations[i]
+            });
+            mapController.featureMap[locations[i].id] = features[i]
+        }
+
+        var vectorSource = new ol.source.Vector({
+            features: features
+        });
+
+        var style = {}
+
+       var allColors = [
+          /*&apos;#795548&apos;,
+          &apos;#ff5722&apos;,
+          &apos;#ff9800&apos;,
+          &apos;#ffc107&apos;,
+          //&apos;--paper-yellow-500&apos;, this is kinda hard to see
+          &apos;#cddc39&apos;,
+          &apos;#8bc34a&apos;,
+          &apos;#009688&apos;,
+          &apos;#00bcd4&apos;,
+          &apos;#03a9f4&apos;,
+          &apos;#2196f3&apos;,
+          &apos;#3f51b5&apos;,
+          &apos;#673ab7&apos;,
+          &apos;#9c27b0&apos;,
+          &apos;#e91e63&apos;,*/
+          &apos;#f44336&apos;
+        ];
+        
+        var unusedColors = [
+          &apos;#795548&apos;,
+          &apos;#ff5722&apos;,
+          &apos;#ff9800&apos;,
+          &apos;#ffc107&apos;,
+          //&apos;--paper-yellow-500&apos;, this is kinda hard to see
+          &apos;#cddc39&apos;,
+          &apos;#8bc34a&apos;,
+          &apos;#009688&apos;,
+          &apos;#00bcd4&apos;,
+          &apos;#03a9f4&apos;,
+          &apos;#2196f3&apos;,
+          &apos;#3f51b5&apos;,
+          &apos;#673ab7&apos;,
+          &apos;#9c27b0&apos;,
+          &apos;#e91e63&apos;,
+          &apos;#f44336&apos;
+        ];
+        var colorMap = {};
+        
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: function(feature, resolution) {
+              var zone = feature.getProperties().speaker.zone.name;
+                if(!(zone in colorMap)) {
+                  var color;
+                  if(unusedColors.length &gt; 0) {
+                    var index = Math.floor(Math.random() * unusedColors.length)
+                    color = unusedColors[index]
+                    unusedColors.splice(index, 1);
+                  } else {
+                    color = colors[Math.floor(Math.random() * colors.length)]
+                  }
+
+                  colorMap[zone] = color;
+                }
+                if(!(zone in style) || style[zone].resolution !== resolution) {
+                  style[zone] = {};
+                  style[zone].style = [new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 15/Math.max(resolution,1),
+                            stroke: new ol.style.Stroke({
+                                color: &apos;#000000&apos;
+                            }),
+                            fill: new ol.style.Fill({
+                                color: colorMap[zone]
+                            })
+                        })
+                    })];
+                    style[zone].resolution = resolution;
+                }
+                return style[zone].style;
+            }
+        });
+
+        var map = new ol.Map({
+          layers: [
+            new ol.layer.Image({
+              source: new ol.source.ImageStatic({
+                url: &apos;/css/map.png&apos;,
+                projection: projection,
+                imageExtent: extent
+              })
+            }),
+              vectorLayer
+          ],
+          overlays: [overlay],
+          target: &apos;informationContainer&apos;,
+          view: new ol.View({
+            projection: projection,
+            center: ol.extent.getCenter(extent),
+            zoom: 2
+          })
+        });
+        
+        mapController.map = map;
+
+        // this is the selection handler for the box dragging
+
+        // we need to add a button if it is a touch screen
+        var box = new ol.interaction.Select();
+        map.addInteraction(box);
+
+        var selectedFeatures = box.getFeatures();
+
+        // a DragBox interaction used to select features by drawing boxes
+        var dragBox = new ol.interaction.DragBox({
+          condition: ol.events.condition.shiftKeyOnly,
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: [63, 81, 181, 1]
+            })
+          })
+        });
+
+        map.addInteraction(dragBox);
+
+        dragBox.on(&apos;boxend&apos;, function(e) {
+          // features that intersect the box are added to the collection of
+          // selected features, and their names are displayed in the &quot;info&quot;
+          // div
+          var info = [];
+          var extent = dragBox.getGeometry().getExtent();
+
+          //console.log(extent);
+
+          vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+            //console.log(feature);
+            selectedFeatures.push(feature);
+
+            // just make it grab every other one
+            info.push(feature.B.speaker.id);
+          });
+          //console.log(&quot;selectedFeatures: &quot;, selectedFeatures);
+
+          // To make sure that we are no running this on times when nothing is selected
+          if (info.length &gt; 0) {
+             //infoBox.innerHTML = info.join(&apos;, &apos;);
+            //console.log(&quot;Selected speakers: &quot;, info);
+
+            // i have a feeling that this is not very optimized
+
+            // Here we figure out what is not already in the total selected and add the ones that aren&apos;t and delete it if they are
+            for (var i = 0; i &lt; info.length; i++) {
+              var areYouInThere = totalInfo.indexOf(info[i]);
+              if(areYouInThere == -1) {
+                totalInfo.push(info[i]); 
+                //console.log(totalInfo);
+              } else {
+                //console.log(&quot;Speaker&quot;, info[i], &quot;is already in the list of selected speakers.&quot;);
+                delete totalInfo[areYouInThere];    // make something for delete
+
+                //console.log(totalInfo);
+              }
+            }
+
+            //console.log(&quot;Total selected speakers: &quot;, totalInfo);
+            // make this a checkbox thing that will fire when checked, which means we need to keep track of two arrays?
+            
+            //console.log(&quot;Starting sort: &quot;);
+            // Sort the array so that when we display it, the items are sorted
+            totalInfo = mergeSort(totalInfo);   // This mergeSort isn&apos;t any faster wtf
+
+            // Clear the speaker holder element and then reset the entities to everything that has been selected, updating the view if you will
+            informationSpeakerHolder = document.getElementById(&quot;informationSpeakerHolder&quot;);
+            var innerHTML = &quot;&quot;;
+            informationSpeakerHolder.innerHTML = &quot;&quot;;
+            for (var k = 0; k &lt; totalInfo.length; k++) {
+              // The selections in the total selection array take a value of &apos;undefined&apos; when deleted, and we don&apos;t want those in our view, so we parse them out
+              if (totalInfo[k] !== undefined) {
+               innerHTML += &quot;&lt;paper-item center-justified flex style=\&quot;border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\&quot;&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot;;
+                //Polymer.dom(speakerHolder).innerHTML = Polymer.dom(speakerHolder).innerHTML + &quot;&lt;paper-item center-justified flex style=\&quot;border-style: solid; border-radius: 5px; border-width: 1px; border-color: #3f51b5; margin: 5px;\&quot;&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot;;/* + document.getElementById(&quot;speakerHolder&quot;).innerHTML + &quot;&lt;paper-item&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot; +document.getElementById(&quot;speakerHolder&quot;).innerHTML + &quot;&lt;paper-item&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot; +document.getElementById(&quot;speakerHolder&quot;).innerHTML + &quot;&lt;paper-item&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot; +document.getElementById(&quot;speakerHolder&quot;).innerHTML + &quot;&lt;paper-item&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot; +document.getElementById(&quot;speakerHolder&quot;).innerHTML + &quot;&lt;paper-item&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot; +document.getElementById(&quot;speakerHolder&quot;).innerHTML + &quot;&lt;paper-item&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot; +document.getElementById(&quot;speakerHolder&quot;).innerHTML + &quot;&lt;paper-item&gt; Speaker &quot; + totalInfo[k] + &quot;&lt;/paper-item&gt;&quot; +document.getElementById(&quot;speakerHolder&quot;).innerHTML + &quot;&lt;paper-item&gt; Speaker &quot; + totalInfo[k];*/
+
+                // when we send it off make a new array and splice out the undefineds 
+              }
+            }
+            informationSpeakerHolder.innerHTML = innerHTML;
+            //console.log(totalInfo);
+          }
+        });
+
+        // clear selection when drawing a new box and when clicking on the map
+        dragBox.on(&apos;boxstart&apos;, function(e) {
+
+          // make something that removes them from the animation here when you feel like it
+
+          //selectedFeatures.clear();
+          //infoBox.innerHTML = &apos;&amp;nbsp;&apos;;
+        });
+        map.on(&apos;click&apos;, function() {
+
+          //console.log(selectedFeatures);
+          selectedFeatures.clear();
+          //infoBox.innerHTML = &apos;&amp;nbsp;&apos;;
+        });
+
+        // this is the selection for the tooltip shit
+
+       /* var select = new ol.interaction.Select({
+          style: function(feature, resolution) {
+                var zone = feature.getProperties().speaker.zone.name;
+                return style[zone].style;
+            }
+        });
+        map.addInteraction(select);
+        select.on(&apos;select&apos;, function(e) {
+            if(e.selected.length &gt; 0) {
+              var speaker = e.selected[0].getProperties().speaker
+
+              mapController.selected = speaker;
+              // get the point&apos;s coordinate
+              var coordinate = e.selected[0].getProperties().geometry.getCoordinates();
+              overlay.setPosition(coordinate);
+            } else {
+              // make sure the overlay is hidden
+              mapController._hideOverlay();
+            }
+            
+        }); */
+      }
+    });
+
+//console.log(&quot;this is me&quot;);
+
+    function mergeSort(arr) {
+        if (arr.length &lt; 2)
+            return arr;
+
+        var middle = parseInt(arr.length / 2);
+        var left   = arr.slice(0, middle);
+        var right  = arr.slice(middle, arr.length);
+
+        return merge(mergeSort(left), mergeSort(right));
+    }
+
+    function merge(left, right) {
+        var result = [];
+
+        while (left.length &amp;&amp; right.length) {
+            if (left[0] &lt;= right[0]) {
+                result.push(left.shift());
+            } else {
+                result.push(right.shift());
+            }
+        }
+
+        while (left.length)
+            result.push(left.shift());
+
+        while (right.length)
+            result.push(right.shift());
+
+        return result;
+    }
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

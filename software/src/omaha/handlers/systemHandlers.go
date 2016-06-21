@@ -18,7 +18,7 @@ type systemStatusResponse struct {
 func SystemStatusHandler(w http.ResponseWriter, r *http.Request) {
 	Zones 		:= database.GetAllZones()
 	PagingZones := database.GetAllPagingZones()
-
+	// send all the zones and pagingzones to the controller
 	response := &systemStatusResponse{Zones: Zones, PagingZones: PagingZones}
 	responseData, err := json.Marshal(response)
 	if err != nil {

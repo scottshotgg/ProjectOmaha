@@ -237,6 +237,9 @@
         adjustSize();
       },
 
+      /**
+       * This function is used when the internal volume is updated. This function packs up the 'updated attribute' (the volume) and sends it off to the server.
+       */
       _volumeUpdate: function() {
         if(this.isReady) {
           var updatedAttributes = ["volume"];
@@ -254,6 +257,9 @@
         //console.log("_volumeUpdate " + this.volumeLevel);
       },
 
+      /**
+       * This function is used when the internal paging is updated. This function packs up the 'updated attribute' (the paging values) and sends it off to the server.
+       */
       _pagingUpdate: function() {
         if(this.isReady) {
           var updatedAttributes = ["paging"];
@@ -269,7 +275,10 @@
         }
         //console.log("_pagingUpdate " + this.pagingLevel);
       },
-
+ 
+      /**
+       * This function is used when the internal equalizer is updated. This function packs up the 'updated attribute' (the equalizer coefficients) and sends it off to the server.
+       */
       _equalizerUpdate: function() {
         if(this.isReady) {
           var updatedAttributes = ["equalizer"];
@@ -306,6 +315,9 @@
         }
       },
 
+      /**
+       * This function is used when the internal target is updated. This function packs up the 'updated attribute' (the target constants) and sends it off to the server.
+       */
       _targetUpdate: function() {
         if(this.isReady) {
           var updatedAttributes = ["target"];

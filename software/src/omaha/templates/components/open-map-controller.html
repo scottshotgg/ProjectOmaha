@@ -147,12 +147,16 @@
         }
       },
       
+      /**
+       * This function is fired when the speaker button is pressed on the popup.
+       */
       _selectSpeaker: function() {
         this._hideOverlay();
-
-        //console.log("i am fired");
       },
       
+      /**
+       * This function is fired when the zone button is pressed on the popup.
+       */
       _selectZone: function() {
         this._hideOverlay();
       },
@@ -161,6 +165,10 @@
         //console.log(this.overlay);
       },
 
+      /**
+       * This function is a callback for the select click event tied to the speaker icons on the map. 
+       * It takes care of setting the UI for that speaker, injecting all the data for the speaker including the volume and equalizer settings, as well as the speaker information on the tooltip.
+       */
       _logResponse: function(event, data) {
         //console.log("this is the speaker response", data.response);
         var a = document.getElementById('speaker-tooltip');
@@ -331,6 +339,9 @@
         //console.log("Speaker", a.speaker);
       },
     
+      /**
+       * RenderMap takes the mapcontroller and adds overlays, sets up the colors, places the icons, sets the event functions, and the general UI of the map.
+       */
       renderMap: function() {
         var mapController = this;
         var container = document.getElementById('popup');
@@ -525,6 +536,9 @@
       }
     });
 
+  /**
+   * This function is used when the keep alive response returns with a speaker that has went down. It's main usage is changing the style of the speaker while preserving the previous style that the speaker already had.
+   */
   function updateMapForError(id, change) {
     var features = vectorLayerCopy.getSource().getFeatures();
     var i = 0;

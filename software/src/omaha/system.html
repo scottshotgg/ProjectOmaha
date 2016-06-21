@@ -1,0 +1,560 @@
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "./system"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="#GetAveragingMode">func GetAveragingMode(this *database.ControllerStatus) (int, error)</a></dd>
+			
+				
+				<dd><a href="#GetVolumeFromController">func GetVolumeFromController(this *database.ControllerStatus) (int8, error)</a></dd>
+			
+				
+				<dd><a href="#HandleControllerMessages">func HandleControllerMessages()</a></dd>
+			
+				
+				<dd><a href="#KeepAlive">func KeepAlive(ID int8) (error int8)</a></dd>
+			
+				
+				<dd><a href="#SendPagingRequest">func SendPagingRequest(ID int8) error</a></dd>
+			
+				
+				<dd><a href="#SetAveragingMode">func SetAveragingMode(this *database.ControllerStatus, mode int8) error</a></dd>
+			
+				
+				<dd><a href="#SetEQMode">func SetEQMode(ID int8, mode int8) (int, error)</a></dd>
+			
+				
+				<dd><a href="#SetEqualizerConstant">func SetEqualizerConstant(this *database.ControllerStatus, level int8, band int8, decimal bool) (int, error)</a></dd>
+			
+				
+				<dd><a href="#SetMusicVolume">func SetMusicVolume(this *database.ControllerStatus) error</a></dd>
+			
+				
+				<dd><a href="#SetPaging">func SetPaging(this *database.ControllerStatus, pagingData int8) error</a></dd>
+			
+				
+				<dd><a href="#SetSoundMaskingVolume">func SetSoundMaskingVolume(this *database.ControllerStatus) error</a></dd>
+			
+				
+				<dd><a href="#SetVolume">func SetVolume(this *database.ControllerStatus) error</a></dd>
+			
+				
+				<dd><a href="#StartUpProcess">func StartUpProcess(wg *sync.WaitGroup)</a></dd>
+			
+				
+				<dd><a href="#SwitchTransceiver">func SwitchTransceiver(id int)</a></dd>
+			
+			
+				
+				<dd><a href="#ControllerRequest">type ControllerRequest</a></dd>
+				
+				
+			
+				
+				<dd><a href="#SystemStatus">type SystemStatus</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GetSystemStatus">func GetSystemStatus() *SystemStatus</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#InitializeSystemStatus">func InitializeSystemStatus(isDebug bool) (*SystemStatus, int, []*database.ControllerStatus)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#SystemStatus.InitializePort">func (status *SystemStatus) InitializePort()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#SystemStatus.IsDebug">func (status *SystemStatus) IsDebug() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#SystemStatus.IsFinding">func (status *SystemStatus) IsFinding() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#SystemStatus.ReadData">func (status *SystemStatus) ReadData(buffer []byte) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#SystemStatus.ResetFIFO">func (status *SystemStatus) ResetFIFO() (int, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#SystemStatus.ResetMicrocontroller">func (status *SystemStatus) ResetMicrocontroller() (int, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#SystemStatus.SendData">func (status *SystemStatus) SendData(data byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#SystemStatus.SetFinding">func (status *SystemStatus) SetFinding(finding bool)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/target/constants.go">constants.go</a>
+			
+				<a href="/src/target/controller.go">controller.go</a>
+			
+				<a href="/src/target/serial.go">serial.go</a>
+			
+				<a href="/src/target/system.go">system.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="NULLZone">NULLZone</span> <a href="/pkg/builtin/#int">int</a> = 0</pre>
+				
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="Commands">Commands</span> struct {
+    KeepAlive             <a href="/pkg/builtin/#byte">byte</a>
+    SetVolume             <a href="/pkg/builtin/#byte">byte</a>
+    GetVolume             <a href="/pkg/builtin/#byte">byte</a>
+    SetSoundMaskingVolume <a href="/pkg/builtin/#byte">byte</a>
+    GetSoundMaskingVolume <a href="/pkg/builtin/#byte">byte</a>
+    SetMusicVolume        <a href="/pkg/builtin/#byte">byte</a>
+    SetPaging             <a href="/pkg/builtin/#byte">byte</a>
+    SetFadeTime           <a href="/pkg/builtin/#byte">byte</a>
+    SetFadeLevel          <a href="/pkg/builtin/#byte">byte</a>
+    AreYouAlive           <a href="/pkg/builtin/#byte">byte</a>
+    ResetSpeaker          <a href="/pkg/builtin/#byte">byte</a>
+    ResetFIFO             <a href="/pkg/builtin/#byte">byte</a>
+    GetLEDStatus          <a href="/pkg/builtin/#byte">byte</a>
+    TurnLEDOn             <a href="/pkg/builtin/#byte">byte</a>
+    TurnLEDOff            <a href="/pkg/builtin/#byte">byte</a>
+    GetSPL                <a href="/pkg/builtin/#byte">byte</a>
+    SetFilter             <a href="/pkg/builtin/#byte">byte</a>
+    GetFilter             <a href="/pkg/builtin/#byte">byte</a>
+    SetAveragingFilter    <a href="/pkg/builtin/#byte">byte</a>
+    GetSpeakerVoltage     <a href="/pkg/builtin/#byte">byte</a>
+    GetMCUVoltage         <a href="/pkg/builtin/#byte">byte</a>
+    InitializeFilter      <a href="/pkg/builtin/#byte">byte</a>
+    SetID                 <a href="/pkg/builtin/#byte">byte</a>
+    GetID                 <a href="/pkg/builtin/#byte">byte</a>
+    SetEQMode             <a href="/pkg/builtin/#byte">byte</a>
+}</pre>
+				
+			
+				<pre>var <span id="MessageChan">MessageChan</span> chan *<a href="#ControllerRequest">ControllerRequest</a> = <a href="/pkg/builtin/#make">make</a>(chan *<a href="#ControllerRequest">ControllerRequest</a>, 100)</pre>
+				
+			
+		
+		
+			
+			
+			<h2 id="GetAveragingMode">func <a href="/src/target/controller.go?s=4465:4532#L192">GetAveragingMode</a></h2>
+			<pre>func GetAveragingMode(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+GetAveragingMode is used to query the specified speaker for its averaging mode.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="GetVolumeFromController">func <a href="/src/target/controller.go?s=1522:1597#L65">GetVolumeFromController</a></h2>
+			<pre>func GetVolumeFromController(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) (<a href="/pkg/builtin/#int8">int8</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+GetVolumeFromController is used to query the controller for its current volume variable should the controller ever need it.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="HandleControllerMessages">func <a href="/src/target/serial.go?s=1769:1800#L76">HandleControllerMessages</a></h2>
+			<pre>func HandleControllerMessages()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="KeepAlive">func <a href="/src/target/controller.go?s=194:230#L3">KeepAlive</a></h2>
+			<pre>func KeepAlive(ID <a href="/pkg/builtin/#int8">int8</a>) (error <a href="/pkg/builtin/#int8">int8</a>)</pre>
+			<p>
+KeepAlive is a function that is used by the scheduler in main.go to send a KeepAlive command to the speakers.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SendPagingRequest">func <a href="/src/target/controller.go?s=5940:5979#L254">SendPagingRequest</a></h2>
+			<pre>func SendPagingRequest(ID <a href="/pkg/builtin/#int8">int8</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+SendPagingRequest is a reserved / unimplemented function that will be used to tell the speaker that a paging signal is coming in and to prepare for that.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetAveragingMode">func <a href="/src/target/controller.go?s=3366:3437#L144">SetAveragingMode</a></h2>
+			<pre>func SetAveragingMode(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>, mode <a href="/pkg/builtin/#int8">int8</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+SetAveragingMode sets the averaging mode of the speaker, which consists of effectiveness and pleasantness.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetEQMode">func <a href="/src/target/controller.go?s=5448:5495#L235">SetEQMode</a></h2>
+			<pre>func SetEQMode(ID <a href="/pkg/builtin/#int8">int8</a>, mode <a href="/pkg/builtin/#int8">int8</a>) (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+SetEQMode is used to change the EQ mode on the speaker to music, paging, or back to masking.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetEqualizerConstant">func <a href="/src/target/controller.go?s=4802:4910#L211">SetEqualizerConstant</a></h2>
+			<pre>func SetEqualizerConstant(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>, level <a href="/pkg/builtin/#int8">int8</a>, band <a href="/pkg/builtin/#int8">int8</a>, decimal <a href="/pkg/builtin/#bool">bool</a>) (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+SetEqualizerConstant is used to send one equalizer constant for the specified band to a speaker.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetMusicVolume">func <a href="/src/target/controller.go?s=1812:1870#L80">SetMusicVolume</a></h2>
+			<pre>func SetMusicVolume(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+SetMusicVolume is used to set the music volume on the speaker.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetPaging">func <a href="/src/target/controller.go?s=2308:2378#L101">SetPaging</a></h2>
+			<pre>func SetPaging(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>, pagingData <a href="/pkg/builtin/#int8">int8</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+SetPaging is used to send the paging constants to the speaker.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetSoundMaskingVolume">func <a href="/src/target/controller.go?s=2803:2868#L123">SetSoundMaskingVolume</a></h2>
+			<pre>func SetSoundMaskingVolume(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+SetSoundMaskingVolume sets how loud the speaker should be playing noise.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetVolume">func <a href="/src/target/controller.go?s=980:1033#L44">SetVolume</a></h2>
+			<pre>func SetVolume(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+SetVolume is used to send the set volume command to the specified speaker.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StartUpProcess">func <a href="/src/target/serial.go?s=325:364#L12">StartUpProcess</a></h2>
+			<pre>func StartUpProcess(wg *<a href="/pkg/sync/">sync</a>.<a href="/pkg/sync/#WaitGroup">WaitGroup</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SwitchTransceiver">func <a href="/src/target/serial.go?s=3316:3346#L141">SwitchTransceiver</a></h2>
+			<pre>func SwitchTransceiver(id <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ControllerRequest">type <a href="/src/target/serial.go?s=210:322#L5">ControllerRequest</a></h2>
+			<pre>type ControllerRequest struct {
+    Data       []<a href="/pkg/builtin/#byte">byte</a>
+    OnWrite    func() interface{}
+    ResultChan chan interface{}
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="SystemStatus">type <a href="/src/target/system.go?s=84:296#L1">SystemStatus</a></h2>
+			<pre>type SystemStatus struct {
+    Port       <a href="/pkg/io/">io</a>.<a href="/pkg/io/#ReadWriteCloser">ReadWriteCloser</a> `json:&#34;-&#34;`
+    ID         <a href="/pkg/builtin/#int8">int8</a>               `json:&#34;id&#34;`
+    BrokenLink <a href="/pkg/builtin/#int8">int8</a>               `json:&#34;brokenLink&#34;`
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="GetSystemStatus">func <a href="/src/target/system.go?s=1503:1539#L50">GetSystemStatus</a></h3>
+				<pre>func GetSystemStatus() *<a href="#SystemStatus">SystemStatus</a></pre>
+				<p>
+GetSystemStatus is used to access the status of the system from outside the system package.
+</p>
+
+				
+				
+			
+				
+				<h3 id="InitializeSystemStatus">func <a href="/src/target/system.go?s=1097:1189#L33">InitializeSystemStatus</a></h3>
+				<pre>func InitializeSystemStatus(isDebug <a href="/pkg/builtin/#bool">bool</a>) (*<a href="#SystemStatus">SystemStatus</a>, <a href="/pkg/builtin/#int">int</a>, []*<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>)</pre>
+				<p>
+InitializeSystemStatus is used when initializing the systemm to the default status and processing extra command line arguments to determine whether it is debug mode.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="SystemStatus.InitializePort">func (*SystemStatus) <a href="/src/target/serial.go?s=2792:2836#L131">InitializePort</a></h3>
+				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) InitializePort()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SystemStatus.IsDebug">func (*SystemStatus) <a href="/src/target/system.go?s=452:494#L12">IsDebug</a></h3>
+				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) IsDebug() <a href="/pkg/builtin/#bool">bool</a></pre>
+				<p>
+IsDebug returns whether the system is acting in debug mode or not. The implications of this are in what kind of states the system can enter in to.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SystemStatus.IsFinding">func (*SystemStatus) <a href="/src/target/system.go?s=613:657#L19">IsFinding</a></h3>
+				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) IsFinding() <a href="/pkg/builtin/#bool">bool</a></pre>
+				<p>
+IsFinding is used to mark whether the system is in the initial finding stage or not.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SystemStatus.ReadData">func (*SystemStatus) <a href="/src/target/serial.go?s=2508:2564#L116">ReadData</a></h3>
+				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) ReadData(buffer []<a href="/pkg/builtin/#byte">byte</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SystemStatus.ResetFIFO">func (*SystemStatus) <a href="/src/target/controller.go?s=3888:3940#L165">ResetFIFO</a></h3>
+				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) ResetFIFO() (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+ResetFIFO is being reserved if need be, but will most likely not be used and isn&#39;t used right now.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SystemStatus.ResetMicrocontroller">func (*SystemStatus) <a href="/src/target/controller.go?s=4189:4252#L176">ResetMicrocontroller</a></h3>
+				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) ResetMicrocontroller() (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+ResetMicrocontroller is being reserved if we need it. This will most likely come to fruition when we get into doing more complicated diagnostics and on the fly automated debugging.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SystemStatus.SendData">func (*SystemStatus) <a href="/src/target/serial.go?s=2291:2338#L107">SendData</a></h3>
+				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) SendData(data <a href="/pkg/builtin/#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SystemStatus.SetFinding">func (*SystemStatus) <a href="/src/target/system.go?s=840:892#L26">SetFinding</a></h3>
+				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) SetFinding(finding <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+SetFinding sets the finding variable when finding start and when it stops. This is used in main.go when starting the process to find the speakers.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+

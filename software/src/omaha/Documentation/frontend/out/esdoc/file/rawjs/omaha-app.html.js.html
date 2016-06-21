@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">rawjs/omaha-app.html.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">rawjs/omaha-app.html.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+    var zoneFlag = 0;
+    var globalZone = 0;
+
+    var localLevel = parseInt(localStorage.getItem(&quot;level&quot;));
+
+    var localSpeakerID = parseInt(localStorage.getItem(&quot;speakerid&quot;));
+    var localZoneID = parseInt(localStorage.getItem(&quot;zoneid&quot;));
+
+
+    var lastSelected = 0;
+    var zones;
+    var pagingZones;
+    var displayedZones = {};
+    
+    Polymer({
+      is: &apos;omaha-app&apos;,
+
+      properties: {        
+        selected: {
+          type: String,
+          value: &quot;map&quot;
+        },
+        zones: Object,
+        controllers: Object
+      },
+
+      listeners: {
+        &apos;nav.backpressed&apos;: &apos;_showMap&apos;,
+        &apos;drawer.showmap&apos;: &apos;_showMap&apos;,
+        &apos;drawer.iron-select&apos;: &apos;_closeDrawer&apos;,
+        &apos;nav.toggledrawer&apos;: &apos;_toggleDrawer&apos;,
+        &apos;mapcontroller.speakerselected&apos;: &apos;_speakerSelected&apos;,
+        &apos;mapcontroller.zoneselected&apos;: &apos;_zoneSelected&apos;,
+        &apos;controller.equalizer.equalizerMenu.iron-select&apos;: &apos;_presetSelectionChanged&apos;
+        // put a mapcontroller.logresponse thing here
+      },
+
+      /**
+        * This function displays the map.
+      */
+      _showMap: function() {
+        this.selected = &quot;map&quot;;
+      },
+
+      _presetSelectionChanged: function(event) {    // Why does this have event in the thing? It is not like that in volume selector
+        //console.log(&quot;hi&quot;);    // This says the speakerId is undefined
+        // dont think we need this
+        },
+
+        /**
+          * This function is fired when the mapcontroller detects that a speaker was selected by the user; when the mapcontroller.speakerselected fires.
+        */
+      _speakerSelected: function(e) {
+        //console.log(&quot;this is where i am&quot;);
+        //console.log(this.$);
+        var speaker = e.detail.speaker;
+        //console.log(e);
+        //console.log(speaker);
+        //console.log(localStorage.getItem(&quot;speakerid&quot;));
+
+        if(speaker === undefined) {
+          this.$.dialog.open();
+        } else if(speaker.id == localSpeakerID || speaker.zone.zoneID == localZoneID || localZoneID == 1 || localLevel &gt; 0) {
+          this.$.controller.speaker = speaker;
+          //console.log(this.$.speaker);
+          this.$.nav.showBackArrow();
+
+          this.selected = &quot;speakerController&quot;;
+
+          // Get controller object
+          var controller = document.getElementById(&apos;controller&apos;);
+
+          // Set volume levels
+          document.getElementById(&apos;volume2&apos;).value = this.$.controller.speaker.VolumeLevel[0];
+          document.getElementById(&apos;volume3&apos;).value = this.$.controller.speaker.VolumeLevel[1];
+          document.getElementById(&apos;volume4&apos;).value = this.$.controller.speaker.VolumeLevel[2];
+          document.getElementById(&apos;volume5&apos;).value = this.$.controller.speaker.VolumeLevel[3];
+
+          document.getElementById(&apos;musicMin&apos;).value = this.$.controller.speaker.LowerThreshold[0];
+          document.getElementById(&apos;musicMax&apos;).value = this.$.controller.speaker.UpperThreshold[0];
+          document.getElementById(&apos;pagingMin&apos;).value = this.$.controller.speaker.LowerThreshold[1];
+          document.getElementById(&apos;pagingMax&apos;).value = this.$.controller.speaker.UpperThreshold[1];
+          document.getElementById(&apos;maskingMin&apos;).value = this.$.controller.speaker.LowerThreshold[2];
+          document.getElementById(&apos;maskingMax&apos;).value = this.$.controller.speaker.UpperThreshold[2];
+
+          //console.log(document.getElementById(&apos;equalizerMenu&apos;));
+
+          // Set averaging mode
+          document.getElementById(&apos;effectiveness&apos;).value = this.$.controller.speaker.Effectiveness;
+          document.getElementById(&apos;pleasantness&apos;).value = this.$.controller.speaker.Pleasantness;
+
+          // Set paging levels
+          document.getElementById(&apos;pagingvolume&apos;).value = this.$.controller.speaker.VolumeLevel[2];
+          document.getElementById(&quot;fadetime&quot;).value = this.$.controller.speaker.FadeTime;
+          document.getElementById(&quot;fadelevel&quot;).value = this.$.controller.speaker.FadeLevel;
+
+          // Set equalizer bands
+          var sliders = document.getElementsByClassName(&quot;ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min&quot;);
+          var handles = document.getElementsByClassName(&quot;ui-slider-handle ui-state-default ui-corner-all&quot;);
+
+          for (i in controller.speaker.CurrentPreset) {   // this was &quot;current&quot; for some reason
+            sliders[i].style.height = (controller.speaker.CurrentPreset[i] + 40) * 2 + &quot;%&quot;;    // why does this have to be lower case
+            handles[i].style.bottom = (controller.speaker.CurrentPreset[i] + 40) * 2 + &quot;%&quot;;
+            $(&quot;#text&quot; + (parseInt(i) + 1)).val(controller.speaker.CurrentPreset[i]);
+            iirConstants[i] = controller.speaker.CurrentPreset[i];
+          }
+          for (var i = 0; i &lt; controller.speaker.CurrentMusicPreset.length; i++) {   // this was &quot;current&quot; for some reason
+            //console.log(&quot;I am here&quot;);
+            sliders[i + 21].style.height = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + &quot;%&quot;;
+            handles[i + 21].style.bottom = (controller.speaker.CurrentMusicPreset[i] + 40) * 2 + &quot;%&quot;;
+            $(&quot;#text&quot; + (parseInt(i + 21) + 1)).val(controller.speaker.CurrentMusicPreset[i]);
+            iirConstants[i + 21] = controller.speaker.CurrentMusicPreset[i];
+          }
+          for (var i = 0; i &lt; controller.speaker.CurrentPagingPreset.length; i++) {   // this was &quot;current&quot; for some reason
+            //console.log(&quot;I am here&quot;);
+            sliders[i + 42].style.height = (controller.speaker.CurrentPagingPreset[i] + 40) * 2 + &quot;%&quot;;
+            handles[i + 42].style.bottom = (controller.speaker.CurrentPagingPreset[i] + 40) * 2 + &quot;%&quot;;
+            $(&quot;#text&quot; + (parseInt(i + 42) + 1)).val(controller.speaker.CurrentPagingPreset[i]);
+            iirConstants[i + 42] = controller.speaker.CurrentPagingPreset[i];
+          }
+
+          for (var i = 0; i &lt; this.$.controller.speaker.CurrentTarget.length; i++) {
+            dataArray[i] = this.$.controller.speaker.CurrentTarget[i];
+
+            dataArrayZone[i] = 0;
+          }
+
+          var equalizerListbox = document.getElementById(&quot;equalizerListbox&quot;);
+          //console.log(Polymer.dom(equalizerListbox).children);
+
+          var motherPolymer = Polymer.dom(equalizerListbox).children; 
+
+          // Remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
+          if(motherPolymer.length &gt; 1) {
+            for (var i = motherPolymer.length - 1; i &gt; 1; i--)
+              Polymer.dom(equalizerListbox).removeChild(motherPolymer[i]);
+          }
+
+          // Injecting the paper-items for the presets
+
+          if(controller.speaker.PresetNames.length &gt; 0) {
+            for (i in controller.speaker.PresetNames) {
+              temp = document.createElement(&quot;paper-item&quot;);
+              temp.setAttribute(&quot;value&quot;, controller.speaker.PresetNames[i].valueOf().replace(&quot;\n&quot;, &quot;&quot;));
+              temp.setAttribute(&quot;id&quot;, controller.speaker.PresetNames[i].valueOf().replace(&quot;\n&quot;, &quot;&quot;));
+              // temp.setAttribute(&quot;speakerId&quot;, controller.speaker.speakerId); try doing some optimization stuff with the speakerId
+              temp.innerHTML = controller.speaker.PresetNames[i].valueOf().replace(&quot;\n&quot;, &quot;&quot;);
+              Polymer.dom(equalizerListbox).appendChild(temp);
+            }
+          }
+
+
+          var musicListbox = document.getElementById(&quot;musicListbox&quot;);
+          //console.log(Polymer.dom(musicListbox).children);
+          var motherPolymer = Polymer.dom(musicListbox).children; 
+
+
+          // Remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
+          if(motherPolymer.length &gt; 1) {
+            for (var i = motherPolymer.length - 1; i &gt; 1; i--)
+              Polymer.dom(musicListbox).removeChild(motherPolymer[i]);
+          }
+
+          if(controller.speaker.MusicPresetNames.length &gt; 0) {
+            for (i in controller.speaker.MusicPresetNames) {
+              temp = document.createElement(&quot;paper-item&quot;);
+              temp.setAttribute(&quot;value&quot;, controller.speaker.MusicPresetNames[i].valueOf().replace(&quot;\n&quot;, &quot;&quot;));
+              temp.setAttribute(&quot;id&quot;, controller.speaker.MusicPresetNames[i].valueOf().replace(&quot;\n&quot;, &quot;&quot;));
+              temp.innerHTML = controller.speaker.MusicPresetNames[i].valueOf().replace(&quot;\n&quot;, &quot;&quot;);
+              Polymer.dom(musicListbox).appendChild(temp);
+            }
+          }
+
+
+          
+          var targetListbox = document.getElementById(&quot;targetListbox&quot;);
+          //console.log(Polymer.dom(targetListbox).children);
+          motherPolymer = Polymer.dom(targetListbox).children; 
+
+          // Remove the paper-items from the last time and the other speakers, basically throwing away the stuff that we dont need
+          if(motherPolymer.length &gt; 1) {
+            for (var i = motherPolymer.length - 1; i &gt; 1; i--)
+              Polymer.dom(targetListbox).removeChild(motherPolymer[i]);
+          }
+
+          if(controller.speaker.TargetNames.length &gt; 0) {
+            for (i in controller.speaker.TargetNames) {
+              temp = document.createElement(&quot;paper-item&quot;);
+              temp.setAttribute(&quot;value&quot;, controller.speaker.TargetNames[i].valueOf().replace(&quot;\n&quot;, &quot;&quot;));
+              temp.setAttribute(&quot;id&quot;, controller.speaker.TargetNames[i].valueOf().replace(&quot;\n&quot;, &quot;&quot;));
+              temp.innerHTML = controller.speaker.TargetNames[i].valueOf().replace(&quot;\n&quot;, &quot;&quot;);
+              Polymer.dom(targetListbox).appendChild(temp);
+            }
+          }
+        } else {
+          this.$.errorNoAccessToast.innerHTML = &quot;You only have access to&quot;;
+          if(localSpeakerID &gt; 0) {
+            this.$.errorNoAccessToast.innerHTML += &quot; speaker &quot; + localSpeakerID;
+            if(localZoneID &gt; 0)
+              this.$.errorNoAccessToast.innerHTML += &quot; and zone &quot; + localZoneID;
+          }
+          else if(localZoneID &gt; 0)
+            this.$.errorNoAccessToast.innerHTML += &quot; zone &quot; + localZoneID;
+          else
+            this.$.errorNoAccessToast.innerHTML = &quot;You don&apos;t have access to anything!&quot;;
+
+          this.$.errorNoAccessToast.duration = 2000;
+          this.$.errorNoAccessToast.show();
+          //console.log(&quot;{username} does not have access to this speaker&quot;);
+
+        }
+    var basic_container = document.getElementById(&quot;basic_container&quot;);
+    var card = document.getElementById(&quot;card&quot;);
+    basic_container.style.marginLeft = (Math.abs(card.offsetWidth - basic_container.offsetWidth) / 2) - 28 + &quot;px&quot;;
+
+      },
+      
+      /**
+       * This function is fired when a zone is selected. It will go through and inject all the information pertaining to the zone into the controller.
+       */
+      _zoneSelected: function(e) {
+        var zone = e.detail.zone;
+        this.$.zoneController.zone = zone;
+        this.selected = &quot;zoneController&quot;
+        this.$.nav.showBackArrow();
+
+        var zoneVolumePage = document.getElementById(&quot;volumeZone&quot;); 
+        //console.log(volumeZone, this.volumeZone);
+
+        // Set volume levels
+        volumeZone.$.volume2.value = zone.VolumeLevel[0];
+        volumeZone.$.volume3.value = zone.VolumeLevel[1];
+        volumeZone.$.volume4.value = zone.VolumeLevel[2];
+        volumeZone.$.volume5.value = zone.VolumeLevel[3];
+
+        volumeZone.$.musicMin.value = zone.LowerThreshold[0];
+        volumeZone.$.pagingMin.value = zone.LowerThreshold[1];
+        volumeZone.$.maskingMin.value = zone.LowerThreshold[2];
+        volumeZone.$.musicMax.value = zone.UpperThreshold[0];
+        volumeZone.$.pagingMax.value = zone.UpperThreshold[1];
+        volumeZone.$.maskingMax.value = zone.UpperThreshold[2];
+
+        averagingZone.$.effectiveness.value = zone.effectiveness;
+        averagingZone.$.pleasantness.value = zone.pleasantness;
+
+        var targetZoneChildren = targetZone.$.adjustment.children;
+        
+        for(var i = 0; i &lt; targetZoneChildren.length; i++) {
+          targetZoneChildren[i].value = zone.currentTarget[i];
+        }
+        redrawOnInputZone();
+
+        var levelZones = document.getElementsByClassName(&quot;levelZone&quot;);
+        var i = 0;
+
+        for(; i &lt; levelZones.length / 3; i++) {
+          levelZones[i].value = zone.currentPreset[i];
+          sliders[i + 63].style.height = (zone.currentPreset[i] + 40) * 2 + &quot;%&quot;;
+          handles[i + 63].style.bottom = (zone.currentPreset[i] + 40) * 2 + &quot;%&quot;;
+        }
+
+        for(; i &lt; levelZones.length / 3; i++) {
+          levelZones[i].value = zone.currentMusicPreset[i];
+          sliders[i + 84].style.height = (zone.currentPreset[i] + 40) * 2 + &quot;%&quot;;
+          handles[i + 84].style.bottom = (zone.currentPreset[i] + 40) * 2 + &quot;%&quot;;
+        }
+
+        for(; i &lt; levelZones.length / 3; i++) {
+          levelZones[i].value = zone.currentPagingPreset[i];
+          sliders[i + 105].style.height = (zone.currentPreset[i] + 40) * 2 + &quot;%&quot;;
+          handles[i + 105].style.bottom = (zone.currentPreset[i] + 40) * 2 + &quot;%&quot;;
+        }
+
+        pagingZone.$.fadetime.value = zone.PagingLevel[0];
+        pagingZone.$.fadelevel.value = zone.PagingLevel[1];
+        pagingZone.$.pagingvolume.value = zone.VolumeLevel[2];
+
+
+        // Test for null / undefined values and set them to a value
+        if(zone.Equalizer == undefined) {
+          zone.Equalizer = [];
+        }
+
+        if(zone.MusicEqualizer == undefined) {
+          zone.MusicEqualizer = [];
+        }
+
+        if(zone.MusicPresetNames == undefined) {
+          zone.MusicPresetNames = [];
+        }
+
+        if(zone.PagingEqualizer == undefined) {
+          zone.PagingEqualizer = [];
+        }
+
+        if(zone.PagingPresetNames == undefined) {
+          zone.PagingPresetNames = [];
+        }
+
+        if(zone.PresetNames == undefined) {
+          zone.PresetNames = [];
+        }
+
+        if(zone.Target == undefined) {
+          zone.Target = [];
+        }
+
+        if(zone.TargetNames == undefined) {
+          zone.TargetNames = [];
+        }
+        
+
+        //console.log(&quot;its zonerino time&quot;, zone);
+      },
+
+      /**
+       * This function sets the basic controller up, sets up the zone options in the scrollbox, as well as calling for the rendering of the maps.
+       */
+      _initializeStatus: function(event, data) {
+
+        //console.log(&quot;data&quot;, data.response);
+
+
+        var speakers = [];
+        var speakersJustID = [];
+
+        var callingInnerHTMLString = &quot;&quot;;
+        var innerHTMLSpeakersString = &quot;&quot;;
+
+        var innerHTMLString = &quot;&quot;;
+        zones = data.response.zones;
+        //console.log(zones);
+        for (var i = 0; i &lt; zones.length; i++) {
+          displayedZones[zones[i].name] = undefined;
+        }
+        var zoneListbox = document.querySelector(&quot;#zoneListbox&quot;);
+        zoneListbox.innerHTML = &quot;&quot;;
+
+        //console.log(&quot;zones&quot;, zones);
+
+        zones.forEach(function(zone){
+          zone.speakers.forEach(function(speaker){
+            speaker.zone = zone;
+          });
+        })
+
+        callingInnerHTMLString += &quot;&lt;paper-item center-justified flex class=\&quot;pagingZoneStyle\&quot;&gt;&lt;font style=\&quot;text-align: center; width: 100%; font-weight: bold;\&quot;&gt;Masking Zones:&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+        //console.log(data.response);
+        for(var i = 0; i &lt; zones.length; i++) {
+          ////console.log(zones);
+          innerHTMLString += &quot;&lt;paper-item center-justified flex &gt;&lt;font style=\&quot;width: 100%; text-align: center;\&quot;&gt;&quot; + zones[i].name + &quot;&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+          callingInnerHTMLString += &quot;&lt;paper-item center-justified flex id=\&quot;&quot; + zones[i].name + &quot;\&quot; class=\&quot;pagingZoneStyle\&quot; onclick=\&quot;updateViewForSelectedSpeakers(this)\&quot;&gt;&lt;font style=\&quot;text-align: center; width: 100%;\&quot;&gt;&quot; + zones[i].name + &quot;&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+
+          for (var k = 0; k &lt; zones[i].speakers.length; k++) {
+            var isItInYetThatsWhatSheSaid = speakersJustID.indexOf(zones[i].speakers[k].id);
+            if(isItInYetThatsWhatSheSaid == -1) {
+              speakers.push(zones[i].speakers[k]);
+              speakersJustID.push(zones[i].speakers[k].id);
+            } else {
+              speakers[isItInYetThatsWhatSheSaid].zone = zones[i].speakers[k].zone;
+            }
+          }
+        }
+        zoneListbox.innerHTML = innerHTMLString;
+
+
+        innerHTMLString = &quot;&quot;;
+        pagingZones = data.response.pagingZones;
+        pagingZoneListbox.innerHTML = &quot;&quot;;
+
+        pagingZones.forEach(function(pagingZone){
+          pagingZone.speakers.forEach(function(speaker){
+            speaker.pagingZone = pagingZone;
+          });
+        })
+
+        callingInnerHTMLString += &quot;&lt;paper-item center-justified flex&gt;&lt;font style=\&quot;text-align: center; width: 100%;\&quot;&gt;&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+        callingInnerHTMLString += &quot;&lt;paper-item center-justified flex class=\&quot;pagingZoneStyle\&quot;&gt;&lt;font style=\&quot;text-align: center; width: 100%; font-weight: bold;\&quot;&gt;Paging Zones:&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+        
+        for(var i = 0; i &lt; pagingZones.length; i++) {
+          displayedZones[pagingZones[i].name] = undefined;
+          innerHTMLString += &quot;&lt;paper-item id=\&quot;&quot; + pagingZones[i].name + &quot;\&quot; value=\&quot;&quot; + pagingZones[i].name + &quot;\&quot;center-justified flex &gt;&lt;font style=\&quot;width: 100%; text-align: center;\&quot;&gt;&quot; + pagingZones[i].name + &quot;&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+
+          callingInnerHTMLString += &quot;&lt;paper-item id=\&quot;&quot; + pagingZones[i].name + &quot;\&quot; value=\&quot;&quot; + pagingZones[i].name + &quot;\&quot; center-justified flex class=\&quot;pagingZoneStyle\&quot; onclick=\&quot;updateViewForSelectedSpeakers(this)\&quot;&gt;&lt;font style=\&quot;text-align: center; width: 100%;\&quot;&gt;&quot; + pagingZones[i].name + &quot;&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+
+          for (var k = 0; k &lt; pagingZones[i].speakers.length; k++) {
+            var isItInYetThatsWhatSheSaid = speakersJustID.indexOf(pagingZones[i].speakers[k].id);
+            if(isItInYetThatsWhatSheSaid == -1) {
+              speakers.push(pagingZones[i].speakers[k]);
+              speakersJustID.push(pagingZones[i].speakers[k].id);
+            } else {
+              speakers[isItInYetThatsWhatSheSaid].pagingZone = pagingZones[i].speakers[k].pagingZone;
+            }
+          }
+        } 
+        pagingZoneListbox.innerHTML = innerHTMLString;
+
+        var targetListbox = document.getElementById(&quot;targetListbox&quot;);
+
+        callingInnerHTMLString += &quot;&lt;paper-item center-justified flex&gt;&lt;font style=\&quot;text-align: center; width: 100%;\&quot;&gt;&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+        callingInnerHTMLString += &quot;&lt;paper-item center-justified flex class=\&quot;pagingZoneStyle\&quot;&gt;&lt;font style=\&quot;text-align: center; width: 100%; font-weight: bold;\&quot;&gt;Named Speakers:&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+        callingInnerHTMLString += &quot;&lt;paper-item center-justified flex class=\&quot;pagingZoneStyle\&quot; onclick=\&quot;updateViewForSelectedSpeakers(this)\&quot;&gt;&lt;font style=\&quot;text-align: center; width: 100%;\&quot;&gt;Dummy name&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+
+
+
+        callingInnerHTMLString += &quot;&lt;paper-item center-justified flex&gt;&lt;font style=\&quot;text-align: center; width: 100%;\&quot;&gt;&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+        callingInnerHTMLString += &quot;&lt;paper-item center-justified flex class=\&quot;pagingZoneStyle\&quot;&gt;&lt;font style=\&quot;text-align: center; width: 100%; font-weight: bold;\&quot;&gt;Speakers:&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+
+        //console.log(zones[0].speakers[0]);
+
+        for(var k = 0; k &lt; zones[0].speakers.length; k++) {
+          displayedZones[zones[0].speakers[k].id] = undefined;
+          callingInnerHTMLString += &quot;&lt;paper-item id=\&quot;&quot; + zones[0].speakers[k].id + &quot;\&quot; value=\&quot;&quot; + zones[0].speakers[k].id + &quot;\&quot;  center-justified flex class=\&quot;pagingZoneStyle\&quot; onclick=\&quot;updateViewForSelectedSpeakers(this)\&quot;&gt;&lt;font style=\&quot;text-align: center; width: 100%;\&quot;&gt;Speaker &quot; + zones[0].speakers[k].id + &quot;&lt;/font&gt;&lt;/paper-item&gt;&quot;;
+        }
+
+        var pagingSpeakerHolder = document.querySelector(&quot;#pagingSpeakerHolder&quot;);    
+        pagingSpeakerHolder.innerHTML = callingInnerHTMLString;
+
+        //console.log(this);
+        this.controllers = speakers;
+        this.zones = zones;
+        //console.log(this.$);
+        this.$.information.renderMap();
+        this.$.pagingMap.renderMap();
+        this.$.mapcontroller.renderMap();
+        this.$.zoneMap.renderMap();
+        this.$.zoneMap.renderPagingMap();
+      },
+
+      _showAccountCreation: function() {
+        this.selected = &quot;accountCreation&quot;;
+        this.$.nav.showAccountCreation = false;
+      },
+
+      /**
+       * This function toggles the drawer on the left side of the website.
+       */
+      _toggleDrawer: function() {
+        this.$.panel.togglePanel();
+      },
+      
+      /**
+       * This function closes the drawer on the left side.
+       */
+      _closeDrawer: function() {
+        this.$.panel.closeDrawer();
+      },
+      
+      /**
+       * This function will update the map size, as well as determine the selected map.
+       */
+      refreshMap: function() {
+        switch(this.$.pages.selected) {
+          case &quot;map&quot;:
+          case &quot;pagingMap&quot;:
+          case &quot;information&quot;:
+          case &quot;zoneMap&quot;:
+            var map = this.$.pages.selectedItem.map;
+            //console.log(&quot;THIS IS THE MAP THING THAT YOU ARE LOOKING FOR &quot; + map);
+            if(map !== undefined)
+              map.updateSize();
+            break;
+
+          default:
+            //console.log(&quot;tell someone of higher authority if you see this, like me, lol&quot;);
+        }
+      },
+
+      /**
+       * The keep alive response is a callback for a function that schedules the speaker update querying to check whether they are still functioning or not.
+       */
+      _keepAliveResponse: function(event, data) {
+        //console.log(data.response);
+        if(data.response.status !== this.controllers[data.response.id - 1].status) { 
+          updateMapForError(data.response.id, (this.controllers[data.response.id - 1].status) === 0 ? true : false);
+          this.controllers[data.response.id - 1].status = data.response.status;
+        }
+      },
+
+      /**
+       * This function loads after the webcomponents load and sets some variables up and scheduling a self-executing function that will continuously execute itself every second.
+       */
+      ready: function() {       
+        this.$.systemStatusAjax.generateRequest();
+        this.$.nav.hideBackArrow();
+        this.$.panel.forceNarrow = true;
+
+        controllerUpdateAjax = this.$.controllerUpdateAjax;
+        setUI();
+
+        // this is asynchonous and a better usage that using setInterval
+        (function keepAlive() {
+          controllerUpdateAjax.generateRequest();
+          setTimeout(keepAlive, 1000);
+        })();
+      }
+
+    });
+
+  /**
+   * This function is used to set the UI based on the permission received when the user logs in.
+   */
+  function setUI() {
+    switch(localLevel) {
+      case 0:
+        Polymer.dom(mode).removeChild(pagingButtonRC);
+        Polymer.dom(mode).removeChild(schedulingButton);
+        Polymer.dom(menu).removeChild(averagingButton);
+        Polymer.dom(menu).removeChild(accountCreation);
+        Polymer.dom(menu).removeChild(mapForZone);
+        Polymer.dom(menu).removeChild(mapForPaging);
+        // Just let it fall through
+
+      case 1:
+        Polymer.dom(mode).removeChild(targetButton);
+        Polymer.dom(mode).removeChild(equalizerButton);
+        break;
+
+      default:
+        //console.log(&quot;lel&quot;);
+    }
+  }
+  
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

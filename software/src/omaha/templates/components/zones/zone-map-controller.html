@@ -158,6 +158,9 @@
   var info = [];
   var totalInfo = [];
 
+  /**
+   * This function controls the escape key that is used to clear the selection.
+   */
   document.onkeydown = function(evt) {
     evt = evt || window.event;
     if (evt.keyCode == 27) {
@@ -169,7 +172,9 @@
     }
   };
 
-
+  /**
+   * The showPaging function changes the zone container to paging zones instead of masking zones.
+   */
   function showPaging() {
     document.querySelector("#pagingZoneMenu").style.visibility = "visible";
     document.querySelector("#pagingZoneContainer").style.visibility = "visible";
@@ -180,6 +185,9 @@
     pagingMap.updateSize();
   }
 
+  /**
+   * The showMasking function changes the zone container to masking zones instead of paging zones.
+   */
   function showMasking() {
     document.querySelector("#pagingZoneMenu").style.visibility = "hidden";
     document.querySelector("#pagingZoneContainer").style.visibility = "hidden";
@@ -215,6 +223,9 @@
         }
       },
 
+      /**
+       * This function is tied to the 'create' button in the dialog box.
+       */
       _acceptPressed: function(e) {
         this.$.zoneDialog.toggle();
         this.$.toast.show();
@@ -254,6 +265,9 @@
         this.overlay.setPosition(undefined);
       },
 
+      /**
+       * RenderMap takes the mapcontroller and adds overlays, sets up the colors, places the icons, sets the event functions, and the general UI of the map.
+       */
       renderMap: function() {
         //console.log(this);
         var mapController = this;
@@ -433,6 +447,9 @@
         });
       },
 
+      /**
+       * RenderPagingMap is the paging version of Rendermap. It takes the mapcontroller and adds overlays, sets up the colors, places the icons, sets the event functions, and the general UI of the map.
+       */
       renderPagingMap: function() {
         //console.log(this);
         var mapController = this;

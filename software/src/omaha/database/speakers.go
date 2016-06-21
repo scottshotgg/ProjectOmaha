@@ -2134,6 +2134,7 @@ func populateSpeakerTable() {
 		log.Fatal(err)
 	}
 
+	// This is a self executing, anonymous, deferred function. This means the function is declared is not a named entity and is only valid for this scope, it executes itself, but it waits until the return is signaled, but before the return is exectured, to run.
 	defer func(speakerStmt, zoneStmt *sql.Stmt, pagingZoneStmt *sql.Stmt) {
 		insertSpeakerStmt = speakerStmt
 		addSpeakerToZonesStmt = zoneStmt
@@ -2165,6 +2166,7 @@ func populateZoneTable() {
 	getSpeakerLocations is a private function that parses the speaker locations file and returns a list of speakerLocations
 */
 func getSpeakerLocations() []speakerLocation {
+	// Read this file that has all the speaker locations from the Python script.
 	rawJSON, _ := ioutil.ReadFile(util.GetOmahaPath() + "/templates/css/speakerLocations.txt")
 	speakerLocs := &speakerLocationsJSON{}
 	json.Unmarshal(rawJSON, speakerLocs)

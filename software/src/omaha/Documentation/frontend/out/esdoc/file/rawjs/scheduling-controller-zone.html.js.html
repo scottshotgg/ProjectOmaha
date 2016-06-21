@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">rawjs/scheduling-controller-zone.html.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">rawjs/scheduling-controller-zone.html.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+	var timingDataArrayZone = [];
+	var schedulingModeZone;
+	var speakerForScheduling;
+	var ssZone;
+
+	var day = new Date().getDay();
+
+	var myChart_timingZone; 
+
+	var canvas_timingZone = document.getElementById(&quot;timingChartZone&quot;);
+	var chart_width_scalar_timing = .8;
+	var chart_height_scalar_timing = .52;
+
+	function drawBasicZone() {
+		ssZone.schedulingSelectorZone.selected = &quot;basic&quot;;
+
+		var localWidthZone = $(window).width() * .20;
+		var localHeightZone = $(window).height() * .5;
+		
+		document.getElementById(&quot;card-contentZone&quot;).style.width = localWidthZone + &quot;px&quot;;
+		document.getElementById(&quot;card-contentZone&quot;).style.height = localHeightZone + &quot;px&quot;;
+
+		//console.log(speaker);
+
+
+	  loadDayOutsideZone();
+	}
+
+	function drawAdvancedZone() {
+		canvas_timingZone = document.getElementById(&quot;timingChartZone&quot;);
+		//console.log(canvas_timingZone);
+		ssZone.schedulingSelectorZone.selected = &quot;advanced&quot;;
+
+	  var localWidthZone = $(window).width() * .82;
+		var localHeightZone = ($(window).height() + 36) * .62;
+
+		document.getElementById(&quot;card-contentZone&quot;).style.width = localWidthZone + &quot;px&quot;;
+		document.getElementById(&quot;card-contentZone&quot;).style.height = localHeightZone + &quot;px&quot;;
+
+	  canvas_timingZone = document.getElementById(&quot;timingChartZone&quot;);
+	  canvas_timingZone.width = $(window).width() * chart_width_scalar_timing;
+	  canvas_timingZone.height = $(window).height() * chart_height_scalar_timing;
+
+	  timingDataArrayZone = zones[0].Schedule[ssZone.dayListboxZone.selected].slice(4, 28);
+
+	  $(document.getElementsByClassName(&quot;timesZone&quot;)).each(function(i) {
+	    this.value = timingDataArrayZone[i];
+	  });
+
+	  var timingData = {
+	    labels: timingLabels,
+	    datasets: [{
+	      fillColor: &quot;rgba(63, 81, 181, 0.25)&quot;,
+	      strokeColor: &quot;#3f51b5&quot;,
+	      pointColor: &quot;#fff&quot;,
+	      pointStrokeColor: &quot;#3f51b5&quot;,  
+	      data: timingDataArrayZone
+	    }]
+	  };
+
+	  //console.log(timingDataArrayZone);
+
+
+	  loadDayOutsideZone();
+	}
+
+	$(window).resize(function() {
+		if(schedulingModeZone.selected == &quot;advanced&quot;) {
+	    redrawTimingOnInputZone()
+	 	}
+
+	});
+
+	var timingLabels = [&quot;00:00&quot;, &quot;01:00&quot;, &quot;02:00&quot;, &quot;03:00&quot;, &quot;04:00&quot;, &quot;05:00&quot;, &quot;06:00&quot;, &quot;07:00&quot;, &quot;08:00&quot;, &quot;09:00&quot;, &quot;10:00&quot;, &quot;11:00&quot;, &quot;12:00&quot;, &quot;13:00&quot;, &quot;14:00&quot;, &quot;15:00&quot;, &quot;16:00&quot;, &quot;17:00&quot;, &quot;18:00&quot;, &quot;19:00&quot;, &quot;20:00&quot;, &quot;21:00&quot;, &quot;22:00&quot;, &quot;23:00&quot;, &quot;24:00&quot;];
+
+	var timingData = {
+	  labels: timingLabels,
+	  datasets: [{
+	    fillColor: &quot;rgba(63, 81, 181, 0.25)&quot;,
+	    strokeColor: &quot;#3f51b5&quot;,
+	    pointColor: &quot;#fff&quot;,
+	    pointStrokeColor: &quot;#3f51b5&quot;,  
+	    data: timingDataArrayZone
+	  }]
+	};
+
+	var timingLineAttributes = {
+	  scaleOverride: true,
+	  scaleSteps: 10,   
+		scaleLabel: &quot;&lt;%= value + \&quot;%\&quot; %&gt;&quot;,
+	  scaleStartValue: 0,
+	  scaleStepWidth: 10,
+	  scaleShowLabels: true,
+	  scaleFontSize: 12,
+	};
+
+
+	var timingResizeLineAttributes = {
+	  animation: false,
+	  scaleOverride: true,
+	  scaleSteps: 10,
+		scaleLabel: &quot;&lt;%= value + \&quot;%\&quot; %&gt;&quot;,
+	  scaleStartValue: 0,
+	  scaleStepWidth: 10,
+	  scaleShowLabels: true,
+	  scaleFontSize: 12,
+	};
+
+	var timingRedrawLineAttributes = {
+	  showTooltips: true,
+	  scaleOverride: true,
+	  scaleSteps: 10,
+		scaleLabel: &quot;&lt;%= value + \&quot;%\&quot; %&gt;&quot;,
+	  scaleStartValue: 0,
+	  scaleStepWidth: 10,
+	  scaleShowLabels: true,
+	  scaleFontSize: 12,
+	};
+
+	Polymer({
+	    is: &apos;scheduling-controller-zone&apos;,
+
+	    behaviors: [
+	      Polymer.NeonAnimatableBehavior
+	    ],
+
+	    properties: {
+
+	      speaker: {
+	        type: Object
+	      },
+
+	    	animationConfig: {
+	        value: function() {
+	          return {
+	            &apos;entry&apos;: {
+	                name: &apos;fade-in-animation&apos;,
+	                node: this
+	              },
+	            &apos;exit&apos;: {
+	              name: &apos;slide-left-animation&apos;,
+	              node: this
+	            }
+	          }
+	        }
+	      }
+	    },
+
+	    loadDayZone: loadDayOutsideZone,
+
+	    scheduleTimeZone: function() {
+
+	    	//console.log(this.$.intervalListboxZone.selected);
+
+	      var scheduleTimeAjaxZone = document.querySelector(&quot;#scheduleTimeAjaxZone&quot;);
+
+	      if(schedulingModeZone.selected == &quot;advanced&quot;) {
+			    var timesZone = document.getElementsByClassName(&quot;timesZone&quot;);
+					var timesArrayZone = [];
+					for (var i = 0; i &lt; timesZone.length; i++) {
+						var timesParse = parseInt(times[i].value);
+
+						if(isNaN(timesParse)) {
+							return;
+						}
+						timesArrayZone.push(timesParse);
+					}
+
+					scheduleTimeAjaxZone.body = {
+						&quot;zone&quot; 			: speaker.zone.zoneID,
+						&quot;mode&quot;			: 1,
+						&quot;start&quot;			: -1,
+						&quot;end&quot;				: -1,
+						&quot;day&quot; 			: parseInt(this.$.dayListboxZone.selected),
+						&quot;interval&quot;	: 60,
+						&quot;times&quot; 		:	timesArrayZone
+					};
+
+					scheduleTimeAjaxZone.generateRequest();
+	      } else if(schedulingModeZone.selected == &quot;basic&quot;) {
+	      	var upTime = this.$.upTimeListBoxZone.selected;
+	      	var downTime = this.$.downTimeListBoxZone.selected;
+	      	//console.log(&quot;this is the interval&quot;, this.$.interval);
+
+	      	var timesArrayZone = [];
+	      	rampUpLevel = this.$.rampUpLevelListboxZone.selected
+	      	rampDownLevel = this.$.rampDownLevelListboxZone.selected
+	      	var i = 0;
+	      	for(i = 0; i &lt; upTime; i++) {
+	      		timesArrayZone.push(rampDownLevel * 10);
+	      	}	
+	      	for(i; i &lt; downTime; i++) {
+	      		timesArrayZone.push(rampUpLevel * 10);
+	      	}
+	      	for(i; i &lt; 24; i++) {
+	      		timesArrayZone.push(rampDownLevel * 10);
+	      	}
+
+					scheduleTimeAjaxZone.body = {
+						&quot;zone&quot; 			: speaker.zone.zoneID, 
+						&quot;mode&quot;			: 0,
+						&quot;start&quot;			: parseInt(this.$.upTimeListBoxZone.selected),
+						&quot;end&quot;				: parseInt(this.$.downTimeListBoxZone.selected),
+						&quot;day&quot; 			: parseInt(this.$.dayListboxZone.selected),
+						&quot;interval&quot;	: parseInt(this.$.intervalListboxZone.selected),
+						&quot;times&quot; 		:	timesArrayZone
+					};
+
+					scheduleTimeAjaxZone.generateRequest();
+
+	      	//console.log(timesArrayZone);
+	      }
+		  },
+
+	  	redrawTimingOnInputZone: redrawTimingOnInputZone,
+
+	  	_logResponse: function(event, data) {
+	  		//console.log(data.response);
+	  	},
+
+	    ready: function() {
+	    	//console.log(&quot;THIS IS THE DAY&quot;, day);
+	    	this.$.dayListboxZone.selected = day;
+	    	//console.log(this.$.dayListboxZone.selected);
+	    	schedulingModeZone = this.$.schedulingSelectorZone; 
+	    	//console.log(&quot;i have read the selected value&quot;, schedulingModeZone); 	
+	    	//console.log(schedulingModeZone);
+	    	//console.log(&quot;im the ready selected  &quot;, this.$);
+
+				//console.log(this.zone);
+				ssZone = this.$;
+
+	    }
+
+	  });
+
+	function loadDayOutsideZone() {
+		//console.log(ss);
+
+		var selectedDay = ssZone.dayListboxZone.selected;
+		//console.log(&quot;day&quot; + selectedDay);
+		//console.log(ssZone.schedulingSelectorZone.selected);
+		if(ssZone.schedulingSelectorZone.selected == &quot;basic&quot;) {
+			if(zones[speaker.zone.zoneID - 1].Schedule[selectedDay][2] != -1 || zones[speaker.zone.zoneID - 1].Schedule[selectedDay][3] != -1) {
+				ssZone.upTimeListBoxZone.selected = zones[speaker.zone.zoneID - 1].Schedule[selectedDay][2];
+				ssZone.downTimeListBoxZone.selected = zones[speaker.zone.zoneID - 1].Schedule[selectedDay][3];
+
+				ssZone.rampUpLevelListboxZone.selected = zones[speaker.zone.zoneID - 1].Schedule[selectedDay][zones[speaker.zone.zoneID - 1].Schedule[selectedDay][2] + 4] / 10;
+				ssZone.rampDownLevelListboxZone.selected = zones[speaker.zone.zoneID - 1].Schedule[selectedDay][zones[speaker.zone.zoneID - 1].Schedule[selectedDay][3] + 4] / 10;
+				ssZone.intervalListboxZone.selected = zones[speaker.zone.zoneID - 1].Schedule[selectedDay][1];
+			} else {
+				ssZone.upTimeListBoxZone.selected = -1;
+				ssZone.downTimeListBoxZone.selected = -1;
+				ssZone.rampUpLevelListboxZone.selected = -1;
+				ssZone.rampDownLevelListboxZone.selected = -1;
+				ssZone.intervalListboxZone.selected = -1;
+			}
+		} else if(ssZone.schedulingSelectorZone.selected == &quot;advanced&quot;) {
+			timingDataArrayZone = zones[speaker.zone.zoneID - 1].Schedule[selectedDay].slice(4, 29);
+			var times = document.getElementsByClassName(&quot;timesZone&quot;);
+
+			for(var x = 0; x &lt; timingDataArrayZone.length; x++) {
+				times[x].value = timingDataArrayZone[x];
+				times[x + 1].value = timingDataArrayZone[0];
+			}
+			redrawTimingOnInputZone()
+
+			//console.log(timingDataArrayZone);
+		} else {
+			alert(&quot;i hava make a break&quot;);
+		}
+	}
+
+
+	function redrawTimingZone(drawingData, drawingLineAttributes) {
+		//console.log(&quot;I got here&quot;);
+		$($(canvas_timingZone).parent()).prepend(&quot;&lt;canvas id=\&quot;timingChartZone\&quot; style=\&quot;margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\&quot; class=\&quot;chartClass\&quot;&gt;&lt;/canvas&gt;&quot;);
+
+		//console.log(&quot;now im here&quot;);
+
+	  canvas_timingZone.remove();		
+
+	  var localWidthZone = $(window).width() * .82;
+		var localHeightZone = ($(window).height() + 36) * .62;
+
+		document.getElementById(&quot;card-contentZone&quot;).style.width = localWidthZone + &quot;px&quot;;
+		document.getElementById(&quot;card-contentZone&quot;).style.height = localHeightZone + &quot;px&quot;;
+
+	  canvas_timingZone = document.getElementById(&quot;timingChartZone&quot;);
+	  canvas_timingZone.width = $(window).width() * chart_width_scalar_timing;
+	  canvas_timingZone.height = $(window).height() * chart_height_scalar_timing;
+
+	  //console.log(&quot;i think im here&quot;);
+
+	  //console.log(timingDataArrayZone);
+
+	  myChart_timingZone = new Chart(canvas_timingZone.getContext(&quot;2d&quot;)).Line(drawingData, drawingLineAttributes);
+
+	  //console.log(&quot;and now im here...&quot;);
+	}
+
+	function redrawTimingOnInputZone() {
+	  var errorAdjustToastZone = document.getElementById(&quot;errorAdjustToastZone&quot;);
+	  var strokeColor = &quot;#3f51b5&quot;;
+	  var pointStrokeColor = &quot;#3f51b5&quot;;
+	  var fillColor = &quot;rgba(63, 81, 181, .25)&quot;;
+
+	  //console.log(&quot;redrawTimingOnInputZone&quot;);
+
+	  $(document.getElementsByClassName(&quot;timesZone&quot;)).each(function(i) {
+	  	//console.log(i, this.value);
+
+	    if(this.value &gt; -1 &amp;&amp; this.value &lt; 101 &amp;&amp; this.value !== &quot;&quot;) {
+	    	//console.log(&quot;in the bigger One&quot;);
+	      timingDataArrayZone[i] = parseInt(this.value);
+	    } else {
+	    	//console.log(&quot;not in the bigger one&quot;);
+	      timingDataArrayZone[i] = null;
+	      
+	      // Set the error colors
+	      strokeColor = &quot;#F33F31&quot;;
+	      pointStrokeColor = &quot;#F33F31&quot;;
+	      fillColor = &quot;rgba(243, 63, 49, .25)&quot;;
+
+	      if(isNaN(this.value)) {
+	        errorAdjustToastZone.text = &quot;Invalid entry for &quot; + timingLabels[i] + &quot;Hz: Only numerical values are accepted&quot;;
+	        errorAdjustToastZone.show();
+	      } else if (this.value === &quot;&quot;) {
+
+	      } else {
+	        errorAdjustToastZone.text = &quot;Invalid entry for &quot; + timingLabels[i] + &quot;Hz: Accepted range of values is -20 to 80&quot;;
+	        errorAdjustToastZone.show();
+	      }
+	    }
+	  });
+
+	  var timingRedrawData = {
+	    labels: timingLabels,
+	    datasets: [{
+	      fillColor: fillColor,
+	      strokeColor: strokeColor,
+	      pointColor: &quot;#fff&quot;,
+	      pointStrokeColor: pointStrokeColor,  
+	      data: timingDataArrayZone,
+	      }]
+	  };
+
+	  redrawTimingZone(timingRedrawData, timingRedrawLineAttributes);
+	}
+
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

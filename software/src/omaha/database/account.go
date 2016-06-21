@@ -39,6 +39,7 @@ func LoginAccount(username, password string) (string, error) {
 
 	var userID int
 
+	// Take the username that was submitted and find the UID for that user.
 	err = DB.QueryRow(`
 		SELECT uid
 		FROM account
@@ -46,6 +47,7 @@ func LoginAccount(username, password string) (string, error) {
 	
 	log.Println(userID)
 
+	// Create an account session based off the UID and the session hash.
 	_, err = DB.Exec(`
 		INSERT INTO accountSession
 		(sessionKey, userID)
@@ -67,7 +69,7 @@ func GetLevelOfAccount(username string) int {
 	var level = 0
 	err := DB.QueryRow(`SELECT level FROM account WHERE username=?`, username).Scan(&level)
 	if(err != nil) {
-		log.Println("we got le error on GetLevelOfAccount")
+		log.Println("error getting level of account in GetLevelOfAccount")
 	}
 
 	log.Println(level)
@@ -88,10 +90,9 @@ func GetSpeakerForAccount(username string) int {
 			WHERE username=?)
 			`, username).Scan(&speakerID)
 	if(err != nil) {
-		log.Println("we got le error on GetSpeakerForAccount")
+		log.Println("error getting speaker from account in GetSpeakerForAccount")
 	}
 
-	log.Println("this is the speaker", speakerID)
 	return speakerID
 }
 
@@ -109,10 +110,8 @@ func GetZoneForAccount(username string) int {
 			WHERE username=?)
 			`, username).Scan(&zoneID)
 	if(err != nil) {
-		log.Println("we got le error on GetZoneForAccount")
+		log.Println("error getting zone from account in GetZoneForAccount")
 	}
-
-	log.Println("this is the zone", zoneID)
 
 	return zoneID
 }
@@ -123,6 +122,7 @@ func GetZoneForAccount(username string) int {
 func CreateAccount(level int, username string, password string, name string, email string, phone string, speakerID int, zoneID int) error {
 	hashByte, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hash := string(hashByte)
+	// Insert the values provided into the account table
 	_, err := DB.Exec(`INSERT INTO account 
 		(level, username, name, email, phone, hash)
 		VALUES (?, ?, ?, ?, ?, ?)
@@ -132,12 +132,14 @@ func CreateAccount(level int, username string, password string, name string, ema
 
 	var uid int
 
+	// Get the UID
 	DB.QueryRow(`
 		SELECT uid 
 		FROM account
 		where username=? 
 		`, username).Scan(&uid)
 
+	// If the speaker is provided, use the UID to link the account to a speaker
 	if(speakerID > 0) {
 		_, err := DB.Exec(`
 			INSERT INTO AccountToSpeakers 
@@ -150,6 +152,7 @@ func CreateAccount(level int, username string, password string, name string, ema
 		}
 	}
 
+	// If the zone is provided, use the UID to link the account to a zone
 	if(zoneID > 0) {
 		_, err := DB.Exec(`
 			INSERT INTO AccountToMaskingZones 
@@ -277,6 +280,8 @@ func createAccountToPagingZonesTable() {
 */
 func IsSessionHashValid(hash string) bool {
 	var count int
+	// Ideally this would have a time that it would expire at and you would check that time, but this has not been implemented yet so sessions are infinite.
+	// Along with this time, the browser would need to put something like "...; expires=Tue, 21 Jun, 2016 12:00:00 UTC;" into the cookie that would correlate with the backend session time.
 	err := DB.QueryRow(`
 		SELECT count(1) from accountSession where sessionKey = ?;
 		`, hash).Scan(&count)
@@ -302,7 +307,7 @@ func AuthenticatePermissionFromHash(hash string) int {
 			WHERE sessionkey=?)
 		`, hash).Scan(&permission)
 	if(err != nil) {
-		log.Println("we got le error bro")
+		log.Println("error getting account hash in AuthenticatePermissionFromHash")
 	}
 	log.Println(permission)
 	return permission
@@ -324,7 +329,7 @@ func AuthenticateSpeakerFromHash(hash string) int {
 		`, hash).Scan(&speaker)
 
 	if(err != nil) {
-		log.Println("got an error retrieving speaker")
+		log.Println("error retrieving speaker in AuthenticateSpeakerFromHash")
 	}
 
 	log.Println(speaker)
@@ -347,7 +352,7 @@ func AuthenticateZoneFromHash(hash string) int {
 		`, hash).Scan(&zone)
 
 	if(err != nil) {
-		log.Println("got an error retrieving zone")
+		log.Println("error retrieving zone in AuthenticateZoneFromHash")
 	}
 
 	log.Println(zone)

@@ -328,6 +328,10 @@
 	var chart_width_scalar_timing = .8;
 	var chart_height_scalar_timing = .52;
 
+	/**
+	 * This function is the zone version of drawBasic.
+ 	 * This function is used to draw the basic scheduling card.
+	 */
 	function drawBasicZone() {
 		ssZone.schedulingSelectorZone.selected = "basic";
 
@@ -343,6 +347,10 @@
 	  loadDayOutsideZone();
 	}
 
+	/**
+	 * This function is the zone version of drawAdvanced.
+	 * This function is used to draw the advanced scheduling card.
+	 */
 	function drawAdvancedZone() {
 		canvas_timingZone = document.getElementById("timingChartZone");
 		//console.log(canvas_timingZone);
@@ -465,6 +473,10 @@
 
 	    loadDayZone: loadDayOutsideZone,
 
+	    /**
+	     * This function is the zone version of scheduleTime.
+       * ScheduleTime is used to apply a new timing schedule to a speaker. 
+	     */
 	    scheduleTimeZone: function() {
 
 	    	//console.log(this.$.intervalListboxZone.selected);
@@ -551,6 +563,10 @@
 
 	  });
 
+	/**
+	 * This is the zone version of the loadDayOutside function.
+ 	 * This function is used to load the selectors with the correct values for that day.
+	 */
 	function loadDayOutsideZone() {
 		//console.log(ss);
 
@@ -588,7 +604,10 @@
 		}
 	}
 
-
+	/**
+	 * This is the zone version of redrawTiming.
+	 * This function is used to redraw the graph.
+	 */
 	function redrawTimingZone(drawingData, drawingLineAttributes) {
 		//console.log("I got here");
 		$($(canvas_timingZone).parent()).prepend("<canvas id=\"timingChartZone\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
@@ -616,6 +635,10 @@
 	  //console.log("and now im here...");
 	}
 
+	/**
+	 * This is the zone version of redrawTimingOnInput.
+   * This function is fired on input into the text box. It validates the data that is input and changes the graph to red if something is detected as invalid.
+	 */
 	function redrawTimingOnInputZone() {
 	  var errorAdjustToastZone = document.getElementById("errorAdjustToastZone");
 	  var strokeColor = "#3f51b5";

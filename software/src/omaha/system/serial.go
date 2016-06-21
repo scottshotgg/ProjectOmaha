@@ -18,29 +18,47 @@ type ControllerRequest struct {
 	ResultChan chan interface{}
 }
 
-
+/*
+	The startup process looks for speakers on the chains.
+*/
 func StartUpProcess(wg *sync.WaitGroup) {
 	status := GetSystemStatus()
   done := make(chan bool)
+  // set finding = true because we don't want the system to start until we have signaled that we have left the initial finding stage
 	status.SetFinding(true)
   go func() {
       var x int8 = 0
       chain := 0
+      // for every second, send out a keepAlive and see what you get
       for {
           second := time.After(1 * time.Second)
           select {
               case <- second:
                   found := KeepAlive(x)
+                  
+                  /*******
+                  This is for debugging purposes only
+                  vv
+                  ********/
 
                   if(x == 5) {
                       wg.Done()
                       done <- true
                   }
 
+                  /*******
+                  ^^
+                  This is for debugging purposes only
+                  ********/
+
+                  // if we got something back, append it to its respective chain
                   if(found != 0) {
+                      log.Println("Found a speaker")
                       chains = append(chains, x - 1)
-                      if(chain == 3) {
+                      x++
+                      if(chain == 4) {
                           wg.Done()
+                          // when the chain is equal to 4 and we have already 
 													status.SetFinding(false)
                           done <- true
                       } else {
@@ -49,8 +67,7 @@ func StartUpProcess(wg *sync.WaitGroup) {
                           x = 0
                       }
                   } else {
-                      log.Println("Found a speaker")
-                      x++
+                  	
                   }
 
               case <- done:
@@ -60,6 +77,9 @@ func StartUpProcess(wg *sync.WaitGroup) {
   }() 
 }
 
+/*
+	This is essentially a getChainByID function that serves to resolve which chain we need to send on to contact the speaker that we want to talk to.
+*/
 func resolveChain(id int8) {
 	transceiver := 0
 	switch {
@@ -83,6 +103,9 @@ func resolveChain(id int8) {
 
 }
 
+/*
+	HandleControllerMessages is called from main.go, this handlers the sending of the controller messages using a channel.
+*/
 func HandleControllerMessages() {
 	for {
 		req := <-MessageChan
@@ -114,6 +137,9 @@ func getMessageHeader(id, size int8) []byte {
 	return header
 }
 
+/*
+	HandleControllerMessages uses this to send data to the current port. This function SHOULD not use this function raw. Insert something into the channel and the handler will take care of it.
+*/
 func (status *SystemStatus) SendData(data byte) {
 	log.Printf("port.Write: %v\n", data)
 	_, err := status.Port.Write([]byte{data})
@@ -123,6 +149,9 @@ func (status *SystemStatus) SendData(data byte) {
 	}
 }
 
+/*
+	This is used to read data from the current port. This function may be used raw, but it needs to be wrapped in a timeout because it is a blocking function.
+*/
 func (status *SystemStatus) ReadData(buffer []byte) bool {
 
 	buffer[0] = 0x01
@@ -138,6 +167,9 @@ func (status *SystemStatus) ReadData(buffer []byte) bool {
 	return true
 }
 
+/*
+	This function sets up the ports
+*/
 func (status *SystemStatus) InitializePort() {
 	// osx: /dev/cu.uart-34FF466E37414555
 	portMap = append(portMap, &serial.Config{Name: "/dev/ttyUSB0", Baud: 9600, ReadTimeout: time.Second})
@@ -148,12 +180,15 @@ func (status *SystemStatus) InitializePort() {
 	SwitchTransceiver(0)
 }
 
+/*
+	This function switches the transiever based on the number sent to it. The resolver uses this function to change the chain that the handler is talking to.
+*/
 func SwitchTransceiver(id int) {
 	status := GetSystemStatus()
 
 	s, err := serial.OpenPort(portMap[id])                                                    
-	if err != nil {                                                                 
-		log.Fatal(err)
+	if err != nil {                                                               
+		log.Println(err)
 	}
 
 	log.Println("Hello " + portMap[id].Name)

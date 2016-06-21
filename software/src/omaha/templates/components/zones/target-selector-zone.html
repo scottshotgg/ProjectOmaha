@@ -206,12 +206,14 @@
       }
     },
       
-
       _setInternalTargetZone: function(dataArrayZoneString) {
         this.internalTargetZone = dataArrayZoneString;
         //console.log("_setInternalTargetZone" + dataArrayZoneString);
       },
       
+      /**
+       * This function is fired when the 'apply target' button is clicked. It checks the inputs by validating the values. 
+       */
       _setTargetClickedZone: function() {
         //console.log("i was just clicked");
         var checkIntZone = 0;
@@ -274,6 +276,9 @@
         //console.log(data.response);
       },
 
+      /**
+       * This function is pressed when the user clicks accept on the dialog box.
+       */
       _acceptPressed: function(event) {
         var name = this.$.popupInput.value.valueOf().replace("\n", "").replace("\t", "");
         var ifvar = 0;
@@ -332,6 +337,9 @@
         }
       },
 
+      /**
+       * This function dismisses the dialog box and resets the selected target.
+       */
       _cancelPressed: function(event) {
         this.$.targetListbox.selected = -1;
         //console.log(lastSelected);
@@ -341,6 +349,9 @@
         'targetListbox.iron-select': '_presetSelectionChanged'
       },
       
+      /**
+       * When the user selects a preset, this function updates the target graph.
+       */
       _presetSelectionChanged: function(event) {
         var selected = this.$.targetListbox.selected.valueOf().toLowerCase().replace("\n", "");
 
@@ -436,6 +447,9 @@
     myChartZone = new Chart(canvasZone.getContext("2d")).Line(dataZone, resizeLineAttributesZone);
   });
 
+  /**
+   * This function is used to redraw the target for the zone.
+   */
   function redrawZone(drawingData, drawingLineAttributes) {
     $($(canvasZone).parent()).prepend("<canvas id=\"targetChartZone\" style=\"margin-left: calc(.02 * 100vh); margin-right: calc(.02 * 100vh); margin-top: calc(.02 * 100vh);\" class=\"chartClass\"></canvas>");
     canvasZone.remove();
@@ -448,6 +462,9 @@
 
   }
 
+  /**
+   * This function is used to redraw the target when the user types a value into the textbox.
+   */
   function redrawOnInputZone() {
     //console.log("I am being called: redrawOnInputZone");
     var errorAdjustToast = document.getElementById("errorAdjustToast");

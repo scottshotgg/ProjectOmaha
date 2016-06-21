@@ -148,11 +148,17 @@
         }
       },
 
+      /**
+       * This function is used to update the internal value.
+       */
       _setInternalVolume: function(volume) {
         this.internalVolume = volume;
         //console.log("_setInternalVolume");
       },
       
+      /**
+       * This function updates the speaker thresholds and volume information by sending off the threshold information after validating it. After that it updates the internal volume level. 
+       */
       _setVolumeClicked: function() {
         if(zoneFlag == 0) {
           if(localLevelForVolumeSelector > 0) {
@@ -223,6 +229,9 @@
         }
       },
       
+      /**
+       * This function decrements the overall volume.
+       */
       decrementVolume: function() {
         if(localLevelForVolumeSelector < 1) {
           return;
@@ -239,6 +248,9 @@
         }, 500);
       },
       
+      /**
+       * This function increments the overall volume.
+       */
       incrementVolume: function() {
         if(localLevelForVolumeSelector < 1) {
           return;
@@ -255,6 +267,9 @@
         }, 500);
       },
       
+      /**
+       * This function decrements the music volume.
+       */
       decrementMusicVolume: function() {
         if(this.internalMusicVolume - 1 < LowerThreshold[0] && localLevelForVolumeSelector < 1) {
           return;
@@ -271,6 +286,9 @@
         }, 500);
       },
       
+      /**
+       * This function increments the music volume.
+       */
       incrementMusicVolume: function() {
         if(this.internalMusicVolume + 1 > UpperThreshold[0] && localLevelForVolumeSelector < 1) {
           return;
@@ -287,6 +305,9 @@
         }, 500);
       },
       
+      /**
+       * This function decrements the paging volume.
+       */
       decrementPagingVolume: function() {
         if(this.internalPagingVolume - 1 < LowerThreshold[1] && localLevelForVolumeSelector < 1) {
           return;
@@ -303,6 +324,9 @@
         }, 500);
       },
       
+      /**
+       * This function increments the paging volume.
+       */
       incrementPagingVolume: function() {
         if(this.internalPagingVolume + 1 > UpperThreshold[1] && localLevelForVolumeSelector < 1) {
           return;
@@ -319,6 +343,9 @@
         }, 500);
       },
       
+      /**
+       * This function decrements the masking volume.
+       */
       decrementMaskingVolume: function() {
         if(this.internalMaskingVolume - 1 < LowerThreshold[2] && localLevelForVolumeSelector < 1) {
           return;
@@ -335,6 +362,9 @@
         }, 500);
       },
       
+      /**
+       * This function increments the masking volume.
+       */
       incrementMaskingVolume: function() {
         if(this.internalMaskingVolume + 1 > UpperThreshold[2] && localLevelForVolumeSelector < 1) {
           return;
@@ -351,6 +381,9 @@
         }, 500);
       },
       
+      /**
+       * This function resets all the knobs.
+       */
       resetKnob: function(elem) {
         elem.prevTimeout = 0;
         elem.$.volume2._resetKnob();
@@ -363,6 +396,9 @@
         //console.log(data.response);
       },
 
+      /**
+       * On ready this function will determine if the thresholds should be disabled of not due to the permisison level.
+       */
       ready: function() {
         //console.log(speakerid);
         //console.log(this, "\n", this.$, "\n", this.$.speakerId);

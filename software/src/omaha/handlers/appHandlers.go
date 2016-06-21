@@ -83,13 +83,10 @@ func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 		var speakerID = database.GetSpeakerForAccount(loginRequest.Username)
 		var zoneID = database.GetZoneForAccount(loginRequest.Username)
 
-		log.Println("This is ths level that you are looking for ", level)
 		if err != nil {
 			w.Write(getGenericErrorResponse(err.Error()))
 			return
 		}
-
-		println("this is the hash that you are looking for", hash)
 
 		response := &loginPostResponse{hash, level, speakerID, zoneID}
 		var responseObj []byte

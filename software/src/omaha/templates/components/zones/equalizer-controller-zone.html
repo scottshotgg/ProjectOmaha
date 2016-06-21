@@ -283,7 +283,11 @@
   var equalizerModeZone;
   var typeFoundZone = 0;
 
-
+  /**
+   * This is the zone version of getValues.
+   * GetValues is used to get the type of equalizer that is currently selected.
+   * @returns {Number} typeFoundZone is an integer that represents the type of equalizer for the zone.
+   */
   function getValuesZone() {
     switch (equalizerModeZone.selected) {
       case "masking": 
@@ -326,6 +330,10 @@
   }
   //console.log(iirConstantsZone);
 
+  /**
+   * This is the zone version of the showEqualizerSwitchDialog function.
+   * This function is used to show the switching dialog that notifies the user of the implications of their changes when switching equalizers.
+   */
   function showEqualizerSwitchDialogZone(mode) {
     //console.log(mode);
     switch(mode) {
@@ -346,6 +354,10 @@
     //console.log("i got here zone");
   }
 
+  /**
+   * This is the zone version of the modeChanged function.
+   * This function is used for changing the equalizer mode. It also takes care of some UI switching as well, such as hiding and showing the appropriate menus for the equalizers.
+   */
   function modeChangedZone(mode) {
 
     switch(mode) {
@@ -402,12 +414,15 @@
         }
       },
 
-
       _setInternalEqualizerZone: function(iirConstantsStringZone) {
         this.internalEqualizer = iirConstantsStringZone;
         //console.log("_setInternalEqualizerZone " + iirConstantsStringZone);
       },
       
+      /**
+       * This is the zone version of the _setEqualizerClicked function.
+       * This function sets the equalizer value and is the function that is fired when the user presses the 'set equalizer' button. This function validates the bands to make sure that correct values are being submitted.
+       */
       _setEqualizerClickedZone: function() {
 
         //console.log("equalizer clicked zoneFlag", zoneFlag);
@@ -468,6 +483,9 @@
         //console.log(event, data);
       },
 
+      /**
+       * This function is used when the the user adds a preset and clicks the 'add' button on the assisting dialog.
+       */
       _acceptPressedZone: function(event) {
         var name = this.$.popupInputZone.value.valueOf().replace("\n", "").replace("\t", "");
         var ifvar = 0;
@@ -531,11 +549,17 @@
         }
       },
 
+      /**
+       * This function dismisses the dialog and resets the selected preset.
+       */
       _cancelPressedZone: function(event) {
         this.$.equalizerListboxZone.selected = -1;
         //console.log(lastSelectedZone);
       },
 
+      /**
+       * This function is used when the the user accepts the implications of their selection using the 'switch' button on the dialog.
+       */
       _switchPressedZone: function(event) {
         this.$.changeEQModeAjaxZone.body = {
           "zone":  speaker.zone.zoneID,
@@ -549,6 +573,9 @@
         //console.log(lastEQModeZone);
       },
 
+     /**
+       * This function is used when the user decided against switching equalizers and clicks the cancel button on the switch dialog.
+       */
       _cancelSwitchPressedZone: function(event) {
         switch(lastEQModeZone) {
           case "masking":
@@ -577,7 +604,10 @@
       listeners: {
         'equalizerListboxZone.iron-select': '_presetSelectionChangedZone'
       },
-      
+
+      /**
+       * PresetSelectionChanged is fired when the user selects a new preset that is then used to set the equalizer to the corresponding values.
+       */
       _presetSelectionChangedZone: function(event) {
         //console.log(this.speakerId);
         //console.log(this.speaker);
@@ -635,6 +665,9 @@
         //console.log("gi");
       },
 
+      /**
+       * On ready, the function takes the equalizer constants and sets the internal equalizer and assigns the toasts to global values so that they are accessible outside the selectors scope.
+       */
       ready: function() {
         //console.log("this.$", this.$);
         this.internalEqualizer = this.iirConstantsStringZone;
@@ -647,6 +680,9 @@
       //console.log("gi");
     }
 
+    /**
+     * InputChanged is used when the user types a value into the text box for the slider. This function will validate that the value entered is completely numeric (ie, integer or float) and is between 10 and -40.
+     */
     function inputChangedZone() {
         var error = false;
       $(document.getElementsByClassName("levelZone")).each(function(i) {

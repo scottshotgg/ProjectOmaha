@@ -116,16 +116,22 @@
         }
       },
 
+      /**
+       * setInternalPaging sets the value of the internal variable so that it can track itself.
+       */
       _setInternalPaging: function(paging) {
         this.internalFadeTime = paging;
         //console.log("_setInternalPaging");
       },
       
+      /**
+       * This function sets the internal paging value to a string concatenation of the fade time, fade level, and paging volume.
+       * When this is fired it updates the server of the new values.
+       */
       _setPagingClicked: function() {
         if(zoneFlag == 0) {
           this.paging = this.internalFadeTime + " " + this.internalFadeLevel + " " + this.internalPagingVolume;
           this.$.toast.show();
-          //console.log("_setPagingClicked");
         } else {
           this.$.updatePagingValuesZone.body = {
             "zone": speaker.zone.zoneID,
