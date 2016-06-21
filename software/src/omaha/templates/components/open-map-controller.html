@@ -236,12 +236,13 @@
         //console.log("i have applied the selected value", schedulingSelector.selected, schedulingSelector);
 
         //console.log(this.$$);
+        // zone was removed for the first product
         if(a.speaker.name !== "") {
-          var tooltipInformation = "<b id=\"name\">" + a.speaker.name + "</b><br><b id=\"speaker\">Speaker ID: " + a.speaker.id + "</b><br><b id=\"zone\">Zone ID: " + a.speaker.zoneID + "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
+          var tooltipInformation = "<b id=\"name\">" + a.speaker.name + "</b><br><b id=\"speaker\">Speaker ID: " + a.speaker.id + /*"</b><br><b id=\"zone\">Zone ID: " + a.speaker.zoneID +*/ "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
           //console.log("i am here");
         } else {
           //console.log("i am not here");
-          var tooltipInformation = "<b id=\"speaker\">Speaker ID: " + a.speaker.id + "</b><br><b id=\"zone\">Zone ID: " + a.speaker.zone.zoneID + "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
+          var tooltipInformation = "<b id=\"speaker\">Speaker ID: " + a.speaker.id + /*"</b><br><b id=\"zone\">Zone ID: " + a.speaker.zone.zoneID +*/ "</b><br><b id=\"volume\">Volume: " + a.speaker.VolumeLevel[0] + "</b>";
         }
         document.getElementById("tooltipInformation").innerHTML = tooltipInformation;
 

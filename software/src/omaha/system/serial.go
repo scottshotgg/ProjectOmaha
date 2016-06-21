@@ -185,13 +185,18 @@ func (status *SystemStatus) InitializePort() {
 */
 func SwitchTransceiver(id int) {
 	status := GetSystemStatus()
+	lastTrans := status.Port
+	log.Println(lastTrans)
 
 	s, err := serial.OpenPort(portMap[id])                                                    
 	if err != nil {                                                               
 		log.Println(err)
+	} else {
+		status.Port = s	
 	}
 
 	log.Println("Hello " + portMap[id].Name)
 
-	status.Port = s	
 }
+
+
