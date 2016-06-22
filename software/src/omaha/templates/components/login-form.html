@@ -53,10 +53,7 @@
         <div style="width: 25%; position: absolute; top: -10px; left: 315px;">
           <paper-dropdown-menu label="Controller">
             <paper-listbox id="controllerListBox" class="dropdown-content" attr-for-selected="value" selected="{{selection}}" value="0">
-              <paper-item id="1" value="192.168.1.101">1 (192.168.1.101)</paper-item>
-              <paper-item id="2" value="192.168.1.102">2 (192.168.1.102)</paper-item>
-              <paper-item id="3" value="192.168.1.103">3 (192.168.1.103)</paper-item>
-              <paper-item id="4" value="127.0.0.1">4 (192.168.1.104)</paper-item>
+              <paper-item id="addController" value="addController">Add Controller</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
         </div> 
@@ -80,8 +77,43 @@
         content-type="application/json"
         handle-as="json"
         on-response="_handleLogin"
-        debounce-duration="300"></iron-ajax>
+        debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax
+        id="addController"
+        url="/addController/"
+        method="POST"
+        content-type="application/json"
+        handle-as="json"
+        on-response="_addControllerResponse"
+        debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax
+        id="loadControllers"
+        url="/loadControllers/"
+        method="GET"
+        content-type="application/json"
+        handle-as="json"
+        on-response="_loadControllerResponse"
+        debounce-duration="300">
+    </iron-ajax>
+
     <paper-toast id="toast"><span>{{err}}</span></paper-toast>
+
+    <paper-dialog id="dialog" heading="this is a title" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal="true">
+      <h1 style="text-align: center;">Add Controller</h1>
+      <div style="text-align: center;">Enter the IP address and name of the controller below</div>
+      <div class="message">{{err}}</div>
+      <paper-input id="ipa" label="" placeholder="Enter new controller IP address" text-align="center"></paper-input>
+      <paper-input id="name" label="" placeholder="Enter new controller name" text-align="center"></paper-input>
+      <div class="buttons">
+        <paper-button ondialog-confirm on-click="_acceptPressed">Add</paper-button>
+        <paper-button dialog-dismiss on-click="_cancelPressed">Cancel</paper-button>
+      </div>
+    </paper-dialog>
+
   </template>
   <script>
     var ss;
@@ -107,14 +139,42 @@
       },
 
       _changeController: function(event) {
-        window.location="http://" + this.$.controllerListBox.selected + ":8080";
-        var timerID = setInterval(
-          function() {
-            document.getElementById("message").innerHTML = "Controller from that address is not responding";
-            cancelInterval(timerID);
-        }, 5000)
+        if(this.$.controllerListBox.selected == "addController") {
+          this.$.dialog.toggle();
+        } else {
+          window.location="http://" + this.$.controllerListBox.selected + ":8080";
+          var timerID = setInterval(
+            function() {
+              document.getElementById("message").innerHTML = "Controller from that address is not responding";
+              cancelInterval(timerID);
+          }, 5000)
+        }
       },
 
+      _acceptPressed: function(event) {
+        console.log("added new controller");
+
+        this.$.addController.body = {
+          ip: this.$.ipa.value,
+          name: this.$.name.value
+        }
+        console.log(this.$.addController.body);
+        this.$.addController.generateRequest();
+
+        this.$.dialog.toggle();
+
+        temp = document.createElement("paper-item");
+        temp.setAttribute("value", this.$.ipa.value);
+        temp.setAttribute("id", this.$.name.value);
+        temp.innerHTML = this.$.name.value + " (" + this.$.ipa.value + ")";
+        Polymer.dom(this.$.controllerListBox).appendChild(temp);
+
+        this.$.controllerListBox.selected = -1;
+      },
+
+      _addControllerResponse: function(event, data) {
+        console.log(data.response);
+      },
       /**
        * The handlelogin function is a callback for the submit function that is fired on response. The function stores the level, speakerid, and zoneid in localStorage so that it can be retrieved by other classes. The function recieves as session hash and assigns it as a session cookie.
        */
@@ -137,7 +197,26 @@
           this.$.toast.show();
         }
       },
+
+      _loadControllerResponse: function(event, data) {
+        console.log(data.response);
+
+        var controllerids = data.response.Controllerids;
+        var ips = data.response.Ips;
+        var names = data.response.Names;
+
+        for(var x = 0; x < controllerids.length; x++) {
+          temp = document.createElement("paper-item");
+          temp.setAttribute("value", ips[x]);
+          temp.setAttribute("id", names[x]);
+          temp.innerHTML = names[x] + " (" + ips[x] + ")";
+          Polymer.dom(this.$.controllerListBox).appendChild(temp);
+        }
+
+      },
+
       ready: function() {
+        this.$.loadControllers.generateRequest();
       }
     });
   </script>

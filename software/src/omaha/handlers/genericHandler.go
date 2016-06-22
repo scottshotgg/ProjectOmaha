@@ -39,13 +39,20 @@ func getGenericErrorResponse(err string) []byte {
 	ServeHTTP is the function that starts the server.
 */
 func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	log.Println(req, w)
+	log.Println(req.RequestURI)
+
 	sessionCookie, _ := req.Cookie("session")
 	host, _, _ := net.SplitHostPort(req.RemoteAddr)
+	uri := req.RequestURI
+	log.Println(host)
 	/*
 		If we're at the same IP address as the server, the host should be ::1 (ipv6 localhost)
 	*/
 	switch {
 		case host == "::1":		// this currently only works on chrome for some reason
+		case host == "127.0.0.1":
+		case uri == "/loadControllers/":
 			/*
 				The request is coming from the server. Let it through by default.
 			*/

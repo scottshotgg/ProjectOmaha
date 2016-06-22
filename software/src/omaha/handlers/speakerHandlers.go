@@ -107,6 +107,17 @@ type zoneData struct {
 	Speakers[] 	int8		`json:["speakers"]`
 }
 
+type addController struct {
+	IP		string		`json:"ip"`
+	Name 	string		`json:"name"`
+}
+
+type controllerResponse struct {
+	Controllerids[]		int			`json:["controllerids"]`
+	Ips[]							string	`json:["ips"]`
+	Names[]						string	`json:["names"]`
+}
+
 type speakerAttributes struct {
 	Volume    			string 		`json:"volume"`
 	Threshold				string		`json:"threshold"`
@@ -1371,6 +1382,42 @@ func ThresholdHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Write(getGenericSuccessResponse())
 }
+
+func AddController(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	status := system.GetSystemStatus()
+	controllerInformation := &addController{}
+	err := json.NewDecoder(r.Body).Decode(controllerInformation)
+	log.Println(controllerInformation);
+
+	if err != nil {
+		if status.IsDebug() {
+			log.Printf("AddTargetHandler json decoding error: %s\n", err)
+		}
+		log.Println(err)
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	}
+
+	database.InsertController(controllerInformation.IP, controllerInformation.Name)
+	log.Println("inserterino")
+	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
+}
+
+func LoadControllers(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
+	//status := system.GetSystemStatus()
+	log.Println("we are here")
+	controllerIDs, ips, names := database.RetrieveControllers()
+
+	LoadControllersResponse := &controllerResponse{
+		Controllerids: controllerIDs,
+		Ips: ips,
+		Names: names}
+
+	response, _ := json.Marshal(LoadControllersResponse)
+
+	w.Write(response)
+}
+
 
 // use this when creating a new handler. It will give you a skeleton of one so that you can craft more
 // Example handler

@@ -11,6 +11,9 @@ func InitializeHandlers() {
 	http.HandleFunc("/login/", LoginPostHandler)
 	http.HandleFunc("/", LoginPageHandler)
 
+	http.Handle("/addController/", GenericHandler{POST: AddController})
+	http.Handle("/loadControllers/", GenericHandler{GET: LoadControllers})
+
 	http.Handle("/user/", GenericHandler{POST: AccountCreationHandler})
 
 	http.Handle("/app/", GenericHandler{GET: AppHandler})

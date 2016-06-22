@@ -59,6 +59,9 @@ func InitDB() {
 			prepareStatements()
 			populateZoneTable()
 			populateSpeakerTable()
+
+			CreateControllerTable()
+
 		case err != nil:
 			log.Fatal(err)
 	}

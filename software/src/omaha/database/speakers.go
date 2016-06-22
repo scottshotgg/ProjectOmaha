@@ -349,6 +349,21 @@ func createSchedulingTable() {
 	}
 }
 
+func CreateControllerTable() {
+	_, err := DB.Exec(`
+		CREATE TABLE Controllers (
+			controllerID INTEGER PRIMARY KEY AUTOINCREMENT,
+			ip varchar(20),
+			name varchar(20)
+		)
+	`)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created scheduling table")
+	}
+}
+
 /*
 	GetAllSpeakers gets all speakers from the database and returns them as a slice of ControllerStatus objects.
 */
@@ -1999,6 +2014,46 @@ func CreateZone(speakers []int8, name string) error {
 		log.Println("I am le running: ", speakers[i], ztsError)
 	}
 	return nil
+}
+
+func InsertController(ip string, name string) error {
+	_, ziError := DB.Exec(`INSERT INTO Controllers (ip, name) VALUES (?, ?)`, ip, name)
+
+	log.Println(ziError)
+	return ziError
+}
+
+func RetrieveControllers() ([]int, []string, []string) {
+	var cids[] 	int
+	var ips[]		string
+	var names[]	string
+
+	rows, err := DB.Query(`SELECT * FROM Controllers`)
+	
+	var cid 	int
+	var ip		string
+	var name 	string
+
+	for rows.Next() {
+		err = rows.Scan(&cid, &ip, &name)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		cids = append(cids, cid)
+		ips = append(ips, ip)
+		names = append(names, name)
+		
+		log.Println(cids, ips, names)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+			
+	log.Println(cids, ips, names)
+	return cids, ips, names
 }
 
 /*

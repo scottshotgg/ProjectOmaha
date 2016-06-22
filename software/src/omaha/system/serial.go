@@ -7,6 +7,8 @@ import (
 	"time"
   "sync"
   "net"
+  "strings"
+  "strconv"
 )
 
 var MessageChan chan *ControllerRequest = make(chan *ControllerRequest, 100)
@@ -19,21 +21,42 @@ type ControllerRequest struct {
 	ResultChan chan interface{}
 }
 
+/*
+	This function is reserved for searching for the controllers on the router to see who is there.
+	Ideally, after we found these, we would pop them all into the paper dropdown on the log in screen so that you could see what controllers you can connect to.
+*/
 func ControllerSearch() {
-	addr := net.UDPAddr {
-		Port: 8080,
-		IP:		net.ParseIP("127.0.0.1"),
-	}
 	//for {
 		ifaces, err := net.InterfaceAddrs()
 		log.Println(ifaces, err)
-		conn, err := net.DialUDP("udp", nil, &addr)
 
-		if(err != nil) {
+		var localIPAddress = ""
+
+		var x = 0
+		for x = 0; x < len(ifaces); x++ {
+			ipAndPort := strings.Split(ifaces[x].String(), "/")
+
+			if(ipAndPort[0] != "127.0.0.1" && !strings.Contains(ipAndPort[0], ":")) {
+				log.Println(ipAndPort[0])
+				localIPAddress = ipAndPort[0]
+			}
+		}
+		
+		// Split the 4 byte IP address into pieces, preserving the . seperator
+		// Then rejoin the first three pieces by nothing to get:
+		// xxx.yyy.zzz.
+		// Example:
+		// 	"192.168.1.100" ---> array ["192.", "168.", "1.", "100"] ---> "192.168.1."
+		ipBase := strings.Join(strings.SplitAfter(localIPAddress, ".")[:3], "")
+		log.Println(ipBase)
+
+		//conn, err := net.DialUDP("udp", nil, &addr)
+
+		/*if(err != nil) {
 			return
 		} else {		
 			log.Println(conn, err)
-
+*/
 			
 			/*err := conn.SetDeadline(time.Now().Add(1 * time.Second))
 			log.Println(err)
@@ -42,24 +65,38 @@ func ControllerSearch() {
 			b, err := conn.WriteToUDP([]byte{'a'}, &addr)
 			log.Println(b, err)
 			*/
-			ServerAddr,err := net.ResolveUDPAddr("udp","127.0.0.1:8080")
-			log.Println(ServerAddr, err)
-			ServerConn, err := net.ListenUDP("udp", ServerAddr)
-			log.Println(ServerConn, err)
-			err = ServerConn.SetReadDeadline(time.Now().Add(2 * time.Second))
-			log.Println(err)
+		
+			for x := 1; x < 255; x++ {
+				ipAddr := ipBase + strconv.Itoa(x)
 
-			b, err := ServerConn.WriteToUDP([]byte{'a'}, &addr)
-			log.Println(b, err)
+				addr := net.UDPAddr {
+					Port: 8080,
+					IP:		net.ParseIP(ipAddr),
+				}
 
-			var buf [1024]byte
-			rlen, remote, err := ServerConn.ReadFromUDP(buf[:])
+				_, err = net.DialUDP("udp", nil, &addr)
 
-			log.Println(rlen, remote, err, buf)
+				log.Println(ipAddr)
 
-			b, err = conn.WriteToUDP([]byte{'a'}, &addr)
-			log.Println(b, err)
-		}
+				ServerAddr,err := net.ResolveUDPAddr("udp", ":8080")
+				log.Println(ServerAddr, err)
+				ServerConn, err := net.ListenUDP("udp", ServerAddr)
+				log.Println(ServerConn, err)
+				conn, err := net.DialUDP("udp", nil, &addr)
+				err = conn.SetReadDeadline(time.Now().Add(5000000 * time.Nanosecond))
+				log.Println(err)
+
+				b, err := ServerConn.WriteToUDP([]byte{'a'}, &addr)
+				log.Println(b, err)
+
+				var buf [1024]byte
+				rlen, remote, err := conn.ReadFromUDP(buf[:])
+				ServerConn.Close()
+				conn.Close()
+				log.Println(rlen, remote, err, buf)
+			}
+
+		//}
 	//}
 }
 

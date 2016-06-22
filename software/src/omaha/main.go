@@ -8,7 +8,7 @@ import (
 	"omaha/database"
 	"omaha/handlers"
 	"omaha/system"
-    "sync"
+    //"sync"
 )
 
 /*
@@ -105,7 +105,7 @@ func main() {
 
 	handlers.InitializeHandlers()
 
-    go system.ControllerSearch()
+    //go system.ControllerSearch()
 
     /*if(*debug == false) {
         var wg sync.WaitGroup
