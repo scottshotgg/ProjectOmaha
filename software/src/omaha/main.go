@@ -96,14 +96,16 @@ func main() {
         amountOfControllers = *controllerAmount
     }
 
-	if !(*debug) {
+	/*if !(*debug) {
 		status := system.GetSystemStatus()
 		defer status.Port.Close()
-	}
+	}*/
 
 	log.Println(SystemStatus, amountOfControllers)
 
 	handlers.InitializeHandlers()
+
+    go system.ControllerSearch()
 
     if(*debug == false) {
         var wg sync.WaitGroup

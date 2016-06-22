@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
   "sync"
+  "net"
 )
 
 var MessageChan chan *ControllerRequest = make(chan *ControllerRequest, 100)
@@ -16,6 +17,50 @@ type ControllerRequest struct {
 	Data       []byte
 	OnWrite    func() interface{}
 	ResultChan chan interface{}
+}
+
+func ControllerSearch() {
+	addr := net.UDPAddr {
+		Port: 8080,
+		IP:		net.ParseIP("127.0.0.1"),
+	}
+	//for {
+		ifaces, err := net.InterfaceAddrs()
+		log.Println(ifaces, err)
+		conn, err := net.DialUDP("udp", nil, &addr)
+
+		if(err != nil) {
+			return
+		} else {		
+			log.Println(conn, err)
+
+			
+			/*err := conn.SetDeadline(time.Now().Add(1 * time.Second))
+			log.Println(err)
+
+
+			b, err := conn.WriteToUDP([]byte{'a'}, &addr)
+			log.Println(b, err)
+			*/
+			ServerAddr,err := net.ResolveUDPAddr("udp","127.0.0.1:8080")
+			log.Println(ServerAddr, err)
+			ServerConn, err := net.ListenUDP("udp", ServerAddr)
+			log.Println(ServerConn, err)
+			err = ServerConn.SetReadDeadline(time.Now().Add(2 * time.Second))
+			log.Println(err)
+
+			b, err := ServerConn.WriteToUDP([]byte{'a'}, &addr)
+			log.Println(b, err)
+
+			var buf [1024]byte
+			rlen, remote, err := ServerConn.ReadFromUDP(buf[:])
+
+			log.Println(rlen, remote, err, buf)
+
+			b, err = conn.WriteToUDP([]byte{'a'}, &addr)
+			log.Println(b, err)
+		}
+	//}
 }
 
 /*
@@ -112,9 +157,9 @@ func HandleControllerMessages() {
 		status := GetSystemStatus()
 
 		if !status.IsDebug() {
-			if !status.IsFinding() {
+			/*if !status.IsFinding() {
 				resolveChain(int8(req.Data[0]))
-			}
+			}*/
 			_, err := status.Port.Write(req.Data)
 
 			if err != nil {
