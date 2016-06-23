@@ -116,41 +116,40 @@ func StartUpProcess(wg *sync.WaitGroup) {
           second := time.After(1 * time.Second)
           select {
               case <- second:
-                  found := KeepAlive(x)
-                  
-                  /*******
-                  This is for debugging purposes only
-                  vv
-                  ********/
+                found := KeepAlive(x)
+                
+                /*******
+                This is for debugging purposes only
+                vv
+                ********/
 
-                  if(x == 5) {
-                      wg.Done()
-                      done <- true
-                  }
+                if(x == 5) {
+                    wg.Done()
+                    done <- true
+                }
 
-                  /*******
-                  ^^
-                  This is for debugging purposes only
-                  ********/
+                /*******
+                ^^
+                This is for debugging purposes only
+                ********/
 
-                  // if we got something back, append it to its respective chain
-                  if(found != 0) {
-                      log.Println("Found a speaker")
-                      chains = append(chains, x - 1)
-                      x++
-                      if(chain == 4) {
-                          wg.Done()
-                          // when the chain is equal to 4 and we have already 
-													status.SetFinding(false)
-                          done <- true
-                      } else {
-                          chain++
-                          SwitchTransceiver(chain)  
-                          x = 0
-                      }
-                  } else {
-                  	
-                  }
+                // if we got something back, append it to its respective chain
+                if(found == 0) {
+                    log.Println("Found a speaker")
+                    chains = append(chains, x - 1)
+                    x++
+                } else {
+	              	if(chain == 3) {
+	                  wg.Done()
+	                  // when the chain is equal to 4 and we have already 
+										status.SetFinding(false)
+	                  done <- true
+		              } else {
+		                  chain++
+		                  SwitchTransceiver(chain)  
+		                  x = 0
+		              }
+                }
 
               case <- done:
                   return
@@ -194,9 +193,9 @@ func HandleControllerMessages() {
 		status := GetSystemStatus()
 
 		if !status.IsDebug() {
-			/*if !status.IsFinding() {
+			if !status.IsFinding() {
 				resolveChain(int8(req.Data[0]))
-			}*/
+			}
 			_, err := status.Port.Write(req.Data)
 
 			if err != nil {

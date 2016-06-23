@@ -54,7 +54,7 @@ func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		case host == "127.0.0.1":
 		case uri == "/loadControllers/":
 			/*
-				The request is coming from the server. Let it through by default.
+				The request is coming from the server or is a loadController request at the login state request. Let it through by default.
 			*/
 		case sessionCookie == nil || !database.IsSessionHashValid(sessionCookie.Value):
 			log.Println("this is the hash thing", database.IsSessionHashValid(sessionCookie.Value))

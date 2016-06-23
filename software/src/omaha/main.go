@@ -107,12 +107,12 @@ func main() {
 
     //go system.ControllerSearch()
 
-    /*if(*debug == false) {
+    if(*debug == false) {
         var wg sync.WaitGroup
         wg.Add(1)
         system.StartUpProcess(&wg)
         wg.Wait()
-    }*/
+    }
 
     // Start the keep alive sequence
 	log.Println("Starting KeepAlive sequence")
