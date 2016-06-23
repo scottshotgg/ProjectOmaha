@@ -8,7 +8,7 @@ import (
 	"omaha/database"
 	"omaha/handlers"
 	"omaha/system"
-    //"sync"
+    "sync"
 )
 
 /*

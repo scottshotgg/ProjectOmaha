@@ -141,7 +141,6 @@ func StartUpProcess(wg *sync.WaitGroup) {
                 } else {
 	              	if(chain == 3) {
 	                  wg.Done()
-	                  // when the chain is equal to 4 and we have already 
 										status.SetFinding(false)
 	                  done <- true
 		              } else {
@@ -194,6 +193,7 @@ func HandleControllerMessages() {
 
 		if !status.IsDebug() {
 			if !status.IsFinding() {
+				log.Println("resolving chain....")
 				resolveChain(int8(req.Data[0]))
 			}
 			_, err := status.Port.Write(req.Data)
