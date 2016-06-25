@@ -8,7 +8,7 @@ import (
 	"omaha/database"
 	"omaha/handlers"
 	"omaha/system"
-    "sync"
+    //"sync"
 )
 
 /*
@@ -92,6 +92,7 @@ func main() {
 	defer database.DB.Close()
 
     SystemStatus, amountOfControllers, controllers := system.InitializeSystemStatus(*debug)
+    log.Println(controllers)
     if(!*debug) {
         amountOfControllers = *controllerAmount
     }
@@ -107,16 +108,17 @@ func main() {
 
     //go system.ControllerSearch()
 
-    if(*debug == false) {
+    /*if(*debug == false) {
         var wg sync.WaitGroup
         wg.Add(1)
         system.StartUpProcess(&wg)
         wg.Wait()
-    }
+    }*/
 
     // Start the keep alive sequence
-	log.Println("Starting KeepAlive sequence")
-	startKeepAlive(amountOfControllers, controllers)
+	//log.Println("Starting KeepAlive sequence")
+    // This will not be using on the first version
+	//startKeepAlive(amountOfControllers, controllers)
 
 	log.Println("Starting server")
 	err := http.ListenAndServe(":8080", nil)

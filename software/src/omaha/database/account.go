@@ -61,6 +61,20 @@ func LoginAccount(username, password string) (string, error) {
 	return sessionHash, nil
 }
 
+func LogoutAccount(hash string) (error) {
+	// Take the username that was submitted and find the UID for that user.
+	_, err := DB.Exec(`
+		DELETE
+		FROM accountSession
+		WHERE sessionKey=?`, hash)
+	
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
+}
+
 /*
 	GetLevelOfAccount retrieves the level of an account based on the username of an account and returns the level of the account in the form of an integer
 	Return values: 0, 1, 2 

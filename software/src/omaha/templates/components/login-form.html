@@ -142,7 +142,7 @@
         if(this.$.controllerListBox.selected == "addController") {
           this.$.dialog.toggle();
         } else {
-          window.location="http://" + this.$.controllerListBox.selected + ":8080";
+          window.location = "http://" + this.$.controllerListBox.selected + ":8080";
           var timerID = setInterval(
             function() {
               document.getElementById("message").innerHTML = "Controller from that address is not responding";
@@ -176,16 +176,23 @@
         console.log(data.response);
       },
       /**
-       * The handlelogin function is a callback for the submit function that is fired on response. The function stores the level, speakerid, and zoneid in localStorage so that it can be retrieved by other classes. The function recieves as session hash and assigns it as a session cookie.
+       * The handlelogin function is a callback for the submit function that is fired on response. The function stores the level, speakerid, and zoneid in localStorage so that it can be retrieved by other classes. The function recieves as session hash and assigns it as a session cookie. During this time it also makes the expiration date of the cookie 36 hours from the time it was created.
        */
       _handleLogin: function(event, data, x) {
+        var d = new Date();
+        d.setYear(d.getYear() - 20);
+        document.cookie = "name=" + sessionCookie + "expires=" + d.toUTCString();
+
         console.log(data.response);
         localStorage.setItem('level', data.response.level);
         localStorage.setItem('speakerid', data.response.speakerid);
         localStorage.setItem('zoneid', data.response.zoneid);
         if(data.response.hash !== undefined) {
           var sessionCookie = data.response.hash;
-          document.cookie = "session=" + sessionCookie + ";";
+          /*var d = new Date();
+          d.setHours(d.getHours() + 36);
+          document.cookie = "name=" + sessionCookie + "; session=" + sessionCookie + "; expires=" + d.toUTCString() + ";";*/
+          document.cookie = "name=" + sessionCookie + "; session=" + sessionCookie + ";";
           document.location.href = "/app/"
         } else if (data.response.success){
           document.location.href = "/app/"

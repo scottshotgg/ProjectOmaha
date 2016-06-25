@@ -15,6 +15,10 @@ type loginPostRequest struct {
 	Password  string  `json:"password"`
 }
 
+type logoutPostRequest struct {
+	Hash  string  `json:"hash"`
+}
+
 type loginPostResponse struct {
 	Hash  		string  `json:"hash"`
 	Level 		int			`json:"level"`
@@ -95,6 +99,30 @@ func LoginPostHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 		w.Write(responseObj)
+	}
+}
+
+func LogoutPostHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("LOGOUT")
+
+	logoutRequest := &logoutPostRequest{}
+	err := json.NewDecoder(r.Body).Decode(logoutRequest)
+	log.Println(*logoutRequest)
+	if err != nil {
+		w.Write(getGenericErrorResponse(err.Error()))
+		return
+	} else {
+		err := database.LogoutAccount(logoutRequest.Hash)
+
+		if err != nil {
+			w.Write(getGenericErrorResponse(err.Error()))
+			return
+		}
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Write(getGenericSuccessResponse())
 	}
 }
 

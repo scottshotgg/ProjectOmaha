@@ -192,10 +192,10 @@ func HandleControllerMessages() {
 		status := GetSystemStatus()
 
 		if !status.IsDebug() {
-			if !status.IsFinding() {
+			/*if !status.IsFinding() {
 				log.Println("resolving chain....")
 				resolveChain(int8(req.Data[0]))
-			}
+			}*/
 			_, err := status.Port.Write(req.Data)
 
 			if err != nil {

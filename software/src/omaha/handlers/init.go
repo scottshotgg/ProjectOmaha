@@ -9,6 +9,7 @@ import (
 */
 func InitializeHandlers() {
 	http.HandleFunc("/login/", LoginPostHandler)
+	http.HandleFunc("/logout/", LogoutPostHandler)
 	http.HandleFunc("/", LoginPageHandler)
 
 	http.Handle("/addController/", GenericHandler{POST: AddController})

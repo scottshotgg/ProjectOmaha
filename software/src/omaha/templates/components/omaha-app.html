@@ -616,14 +616,20 @@
         Polymer.dom(mode).removeChild(pagingButtonRC);
         Polymer.dom(mode).removeChild(schedulingButton);
         Polymer.dom(menu).removeChild(averagingButton);
+        Polymer.dom(mode).removeChild(pagingButtonRCZone);
+        Polymer.dom(mode).removeChild(schedulingButtonZone);
+        Polymer.dom(menu).removeChild(averagingButtonZone);
+
         Polymer.dom(menu).removeChild(accountCreation);
-        Polymer.dom(menu).removeChild(mapForZone);
-        Polymer.dom(menu).removeChild(mapForPaging);
+        //Polymer.dom(menu).removeChild(mapForZone);
+        //Polymer.dom(menu).removeChild(mapForPaging);
         // Just let it fall through
 
       case 1:
         Polymer.dom(mode).removeChild(targetButton);
         Polymer.dom(mode).removeChild(equalizerButton);
+        Polymer.dom(mode).removeChild(targetButtonZone);
+        Polymer.dom(mode).removeChild(equalizerButtonZone);
         break;
 
       default:

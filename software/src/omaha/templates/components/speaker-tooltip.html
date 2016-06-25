@@ -37,22 +37,19 @@
       <br>
       <b id="volume"></b>
     </div>
+    
     <div>
       <paper-button on-click="_selectSpeaker">speaker</paper-button>
     </div>
-    <!--
     
-    zone was removed for the first product
-
     <div id="zoneSelectionButton">
       <paper-button on-click="_selectZone">zone</paper-button>
     </div>
-    -->
-    <!--
+    
     <div id="allZoneSelectionButton">
       <paper-button on-click="_selectAllZone">all zone</paper-button>
     </div>
-    -->
+    
   </template>
   <script>
 
@@ -81,10 +78,10 @@
     });
 
     $(document).ready(function() {
-      if(parseInt(localStorage.getItem("level")) == 0) {
+      /*if(parseInt(localStorage.getItem("level")) == 0) {
           document.getElementById("zoneSelectionButton").innerHTML = "";
           document.getElementById("allZoneSelectionButton").innerHTML = "";
-      }
+      }*/
   });
   </script>
 </dom-module>
