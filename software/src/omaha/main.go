@@ -89,6 +89,7 @@ func main() {
 
     // init the DB and defer closing it until the end of the program
 	database.InitDB()
+    log.Println("init db")
 	defer database.DB.Close()
 
     SystemStatus, amountOfControllers, controllers := system.InitializeSystemStatus(*debug)

@@ -71,6 +71,10 @@
         }
       },
 
+      adjustSizeZone: function() {
+        adjustSizeZone();
+      },
+
       _initializeStatus: function(speaker) {
         this.speakerId = speaker.id;
         speakerid = speaker.id;

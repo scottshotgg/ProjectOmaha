@@ -1,7 +1,7 @@
 
-var timingDataArray = [];
-var defaultWidth = 0;
-var defaultHeight = 0;
+	var timingDataArray = [];
+	var defaultWidth = 0;
+	var defaultHeight = 0;
 
 	var schedulingMode;
 	var speakerForScheduling;

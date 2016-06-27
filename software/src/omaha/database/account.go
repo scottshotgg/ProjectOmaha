@@ -302,7 +302,13 @@ func IsSessionHashValid(hash string) bool {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return count == 1
+
+	log.Println(count)
+	if count == 1 {
+		return true
+	} else {
+		return false
+	}
 }
 
 /*

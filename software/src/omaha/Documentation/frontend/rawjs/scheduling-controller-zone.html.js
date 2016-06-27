@@ -3,6 +3,8 @@
 	var schedulingModeZone;
 	var speakerForScheduling;
 	var ssZone;
+	var defaultWidth = 0;
+	var defaultHeight = 0;
 
 	var day = new Date().getDay();
 
@@ -11,6 +13,19 @@
 	var canvas_timingZone = document.getElementById("timingChartZone");
 	var chart_width_scalar_timing = .8;
 	var chart_height_scalar_timing = .52;
+
+  /**
+   * This is the zone version of the function saveDefault 
+   * This function is used to save the initially rendered size of the card.
+   */
+ 	function saveDefaultZone() {
+ 		if(defaultWidth == 0) {
+ 			defaultWidth = document.getElementById("card-contentZone").offsetWidth;
+ 		}
+ 		if(defaultHeight == 0) {
+ 			defaultHeight = document.getElementById("card-contentZone").offsetHeight;
+ 		}
+ 	}
 
 	/**
 	 * This function is the zone version of drawBasic.
@@ -77,8 +92,26 @@
 		if(schedulingModeZone.selected == "advanced") {
 	    redrawTimingOnInputZone()
 	 	}
+	 	//adjustSizeZone();
 
 	});
+
+  /**
+   * This function is the zone version of adjustSize.
+   * This function is used the adjust the size of the card when being resized.
+   */
+  function adjustSizeZone() {	
+  	var localWidth = $(window).width() * .2;
+  	var localHeight = $(window).height() * .5;
+
+  	if(schedulingModeZone.selected == "basic") {  
+  		document.getElementById("card-content").style.height = localHeight + "px";
+  		saveDefaultZone();
+	   	var basic_container = document.getElementById("basic_containerZone");
+	   	var card = document.getElementById("card");
+	   	basic_container.style.marginLeft = (Math.abs(card.offsetWidth - basic_container.offsetWidth) / 2) - 28 + "px";
+  	}
+  }
 
 	var timingLabels = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"];
 

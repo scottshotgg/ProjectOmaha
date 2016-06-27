@@ -471,7 +471,7 @@
        * The keep alive response is a callback for a function that schedules the speaker update querying to check whether they are still functioning or not.
        */
       _keepAliveResponse: function(event, data) {
-        //console.log(data.response);
+        console.log(data.response);
         if(data.response.status !== this.controllers[data.response.id - 1].status) { 
           updateMapForError(data.response.id, (this.controllers[data.response.id - 1].status) === 0 ? true : false);
           this.controllers[data.response.id - 1].status = data.response.status;
@@ -481,7 +481,16 @@
       /**
        * This function loads after the webcomponents load and sets some variables up and scheduling a self-executing function that will continuously execute itself every second.
        */
-      ready: function() {       
+      ready: function() {      
+        console.log(document.cookie);
+        console.log(this.$.systemStatusAjax.body)
+        
+        this.$.systemStatusAjax.body = {
+          "hash": document.cookie.slice(5, 35)
+        };
+        
+        this.$.systemStatusAjax.withCredentials = true;
+        console.log(this.$.systemStatusAjax.body);
         this.$.systemStatusAjax.generateRequest();
         this.$.nav.hideBackArrow();
         this.$.panel.forceNarrow = true;
@@ -490,10 +499,10 @@
         setUI();
 
         // this is asynchonous and a better usage that using setInterval
-        (function keepAlive() {
+        /*(function keepAlive() {
           controllerUpdateAjax.generateRequest();
           setTimeout(keepAlive, 1000);
-        })();
+        })();*/
       }
 
     });
@@ -507,14 +516,20 @@
         Polymer.dom(mode).removeChild(pagingButtonRC);
         Polymer.dom(mode).removeChild(schedulingButton);
         Polymer.dom(menu).removeChild(averagingButton);
+        Polymer.dom(mode).removeChild(pagingButtonRCZone);
+        Polymer.dom(mode).removeChild(schedulingButtonZone);
+        Polymer.dom(menu).removeChild(averagingButtonZone);
+
         Polymer.dom(menu).removeChild(accountCreation);
-        Polymer.dom(menu).removeChild(mapForZone);
-        Polymer.dom(menu).removeChild(mapForPaging);
+        //Polymer.dom(menu).removeChild(mapForZone);
+        //Polymer.dom(menu).removeChild(mapForPaging);
         // Just let it fall through
 
       case 1:
         Polymer.dom(mode).removeChild(targetButton);
         Polymer.dom(mode).removeChild(equalizerButton);
+        Polymer.dom(mode).removeChild(targetButtonZone);
+        Polymer.dom(mode).removeChild(equalizerButtonZone);
         break;
 
       default:

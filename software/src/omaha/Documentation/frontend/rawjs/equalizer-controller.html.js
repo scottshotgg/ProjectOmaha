@@ -300,17 +300,24 @@
       _cancelSwitchPressed: function(event) {
         switch(lastEQMode) {
           case "masking":
-            musicMenu.style.visibility = "hidden";
             equalizerMenu.style.visibility = "visible";
+            musicMenu.style.visibility = "hidden";
+            pagingMenu.style.visibility = "hidden";
             break;
 
           case "music":
-            musicMenu.style.visibility = "visible";
             equalizerMenu.style.visibility = "hidden";
+            musicMenu.style.visibility = "visible";
+            pagingMenu.style.visibility = "hidden";
+            break;
+
+          case "paging":
+            equalizerMenu.style.visibility = "hidden";
+            musicMenu.style.visibility = "hidden";
+            pagingMenu.style.visibility = "visible";
             break;
 
           default:
-            //console.log("fuck me");
         }
         this.$.equalizerSelector.selected = lastEQMode;
       },

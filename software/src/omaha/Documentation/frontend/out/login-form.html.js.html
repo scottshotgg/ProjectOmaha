@@ -26,8 +26,13 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>    Polymer({
+            <pre class="prettyprint source linenums"><code>    var ss;
+    Polymer({
       is: 'login-form',
+
+      listeners: {
+        'controllerListBox.iron-select': '_changeController'
+      },
 
       /**
        * Submit takes the text fields in the login screen and sends them off to the server for validation.
@@ -43,8 +48,45 @@
         this.$.loginAjax.generateRequest();
       },
 
+      _changeController: function(event) {
+        if(this.$.controllerListBox.selected == "addController") {
+          this.$.dialog.toggle();
+        } else {
+          window.location = "http://" + this.$.controllerListBox.selected + ":8080";
+          var timerID = setInterval(
+            function() {
+              document.getElementById("message").innerHTML = "Controller from that address is not responding";
+              cancelInterval(timerID);
+          }, 5000)
+        }
+      },
+
+      _acceptPressed: function(event) {
+        console.log("added new controller");
+
+        this.$.addController.body = {
+          ip: this.$.ipa.value,
+          name: this.$.name.value
+        }
+        console.log(this.$.addController.body);
+        this.$.addController.generateRequest();
+
+        this.$.dialog.toggle();
+
+        temp = document.createElement("paper-item");
+        temp.setAttribute("value", this.$.ipa.value);
+        temp.setAttribute("id", this.$.name.value);
+        temp.innerHTML = this.$.name.value + " (" + this.$.ipa.value + ")";
+        Polymer.dom(this.$.controllerListBox).appendChild(temp);
+
+        this.$.controllerListBox.selected = -1;
+      },
+
+      _addControllerResponse: function(event, data) {
+        console.log(data.response);
+      },
       /**
-       * The handlelogin function is a callback for the submit function that is fired on response. The function stores the level, speakerid, and zoneid in localStorage so that it can be retrieved by other classes. The function recieves as session hash and assigns it as a session cookie.
+       * The handlelogin function is a callback for the submit function that is fired on response. The function stores the level, speakerid, and zoneid in localStorage so that it can be retrieved by other classes. The function recieves as session hash and assigns it as a session cookie. During this time it also makes the expiration date of the cookie 36 hours from the time it was created.
        */
       _handleLogin: function(event, data, x) {
         console.log(data.response);
@@ -53,15 +95,49 @@
         localStorage.setItem('zoneid', data.response.zoneid);
         if(data.response.hash !== undefined) {
           var sessionCookie = data.response.hash;
-          document.cookie = "session=" + sessionCookie + ";";
-          document.location.href = "/app/"
+          console.log(sessionCookie)
+          /*var d = new Date();
+          d.setHours(d.getHours() + 36);
+          document.cookie = "name=" + sessionCookie + "; session=" + sessionCookie + "; expires=" + d.toUTCString() + ";";*/
+
+          document.cookie = "path=/";
+          document.cookie = "session=" + sessionCookie;
+          console.log(window.location);
+          console.log(document.cookie);
+          //document.location.href = "/app/"
+          window.location = "http://" + window.location.hostname + ":8080/app/";
         } else if (data.response.success){
-          document.location.href = "/app/"
+          console.log(data.response.hash);
+          //document.location.href = "/app/"
+          //window.location = "http://" + window.location.hostname + ":8080/app/";
         } else {
           console.log(data.response);
+          console.log(this);
           this.err = data.response.err;
+          console.log(typeof data.response.err);
           this.$.toast.show();
         }
+      },
+
+      _loadControllerResponse: function(event, data) {
+        console.log(data.response);
+
+        var controllerids = data.response.Controllerids;
+        var ips = data.response.Ips;
+        var names = data.response.Names;
+
+        for(var x = 0; x &lt; controllerids.length; x++) {
+          temp = document.createElement("paper-item");
+          temp.setAttribute("value", ips[x]);
+          temp.setAttribute("id", names[x]);
+          temp.innerHTML = names[x] + " (" + ips[x] + ")";
+          Polymer.dom(this.$.controllerListBox).appendChild(temp);
+        }
+
+      },
+
+      ready: function() {
+        this.$.loadControllers.generateRequest();
       }
     });
 </code></pre>
@@ -74,13 +150,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#_acceptPressed">_acceptPressed</a></li><li><a href="global.html#_acceptPressedZone">_acceptPressedZone</a></li><li><a href="global.html#_cancelPressed">_cancelPressed</a></li><li><a href="global.html#_cancelPressedZone">_cancelPressedZone</a></li><li><a href="global.html#_cancelSwitchPressed">_cancelSwitchPressed</a></li><li><a href="global.html#_cancelSwitchPressedZone">_cancelSwitchPressedZone</a></li><li><a href="global.html#_closeDrawer">_closeDrawer</a></li><li><a href="global.html#_equalizerUpdate">_equalizerUpdate</a></li><li><a href="global.html#_handleLogin">_handleLogin</a></li><li><a href="global.html#_initializeStatus">_initializeStatus</a></li><li><a href="global.html#_keepAliveResponse">_keepAliveResponse</a></li><li><a href="global.html#_logResponse">_logResponse</a></li><li><a href="global.html#_pagingUpdate">_pagingUpdate</a></li><li><a href="global.html#_presetSelectionChanged">_presetSelectionChanged</a></li><li><a href="global.html#_presetSelectionChangedZone">_presetSelectionChangedZone</a></li><li><a href="global.html#_selectionChanged">_selectionChanged</a></li><li><a href="global.html#_selectSpeaker">_selectSpeaker</a></li><li><a href="global.html#_selectZone">_selectZone</a></li><li><a href="global.html#_setEqualizerClicked">_setEqualizerClicked</a></li><li><a href="global.html#_setEqualizerClickedZone">_setEqualizerClickedZone</a></li><li><a href="global.html#_setInternalEqualizer">_setInternalEqualizer</a></li><li><a href="global.html#_setInternalPaging">_setInternalPaging</a></li><li><a href="global.html#_setInternalTarget">_setInternalTarget</a></li><li><a href="global.html#_setInternalVolume">_setInternalVolume</a></li><li><a href="global.html#_setPagingClicked">_setPagingClicked</a></li><li><a href="global.html#_setTargetClicked">_setTargetClicked</a></li><li><a href="global.html#_setTargetClickedZone">_setTargetClickedZone</a></li><li><a href="global.html#_setVolumeClicked">_setVolumeClicked</a></li><li><a href="global.html#_showMap">_showMap</a></li><li><a href="global.html#_speakerSelected">_speakerSelected</a></li><li><a href="global.html#_submit">_submit</a></li><li><a href="global.html#_switchPressed">_switchPressed</a></li><li><a href="global.html#_switchPressedZone">_switchPressedZone</a></li><li><a href="global.html#_targetUpdate">_targetUpdate</a></li><li><a href="global.html#_toggleDrawer">_toggleDrawer</a></li><li><a href="global.html#_volumeUpdate">_volumeUpdate</a></li><li><a href="global.html#_zoneSelected">_zoneSelected</a></li><li><a href="global.html#adjustSize">adjustSize</a></li><li><a href="global.html#decrementEffectiveness">decrementEffectiveness</a></li><li><a href="global.html#decrementMaskingVolume">decrementMaskingVolume</a></li><li><a href="global.html#decrementMusicVolume">decrementMusicVolume</a></li><li><a href="global.html#decrementPagingVolume">decrementPagingVolume</a></li><li><a href="global.html#decrementPleasantnesss">decrementPleasantnesss</a></li><li><a href="global.html#decrementVolume">decrementVolume</a></li><li><a href="global.html#drawAdvanced">drawAdvanced</a></li><li><a href="global.html#drawAdvancedZone">drawAdvancedZone</a></li><li><a href="global.html#drawBasic">drawBasic</a></li><li><a href="global.html#drawBasicZone">drawBasicZone</a></li><li><a href="global.html#findZoneIndex">findZoneIndex</a></li><li><a href="global.html#getValues">getValues</a></li><li><a href="global.html#getValuesZone">getValuesZone</a></li><li><a href="global.html#incrementEffectiveness">incrementEffectiveness</a></li><li><a href="global.html#incrementMaskingVolume">incrementMaskingVolume</a></li><li><a href="global.html#incrementMusicVolume">incrementMusicVolume</a></li><li><a href="global.html#incrementPagingVolume">incrementPagingVolume</a></li><li><a href="global.html#incrementPleasantnesss">incrementPleasantnesss</a></li><li><a href="global.html#incrementVolume">incrementVolume</a></li><li><a href="global.html#inputChanged">inputChanged</a></li><li><a href="global.html#inputChangedZone">inputChangedZone</a></li><li><a href="global.html#loadDayOutside">loadDayOutside</a></li><li><a href="global.html#loadDayOutsideZone">loadDayOutsideZone</a></li><li><a href="global.html#merge">merge</a></li><li><a href="global.html#mergeSort">mergeSort</a></li><li><a href="global.html#modeChanged">modeChanged</a></li><li><a href="global.html#modeChangedZone">modeChangedZone</a></li><li><a href="global.html#pulsateCircle">pulsateCircle</a></li><li><a href="global.html#ready">ready</a></li><li><a href="global.html#redraw">redraw</a></li><li><a href="global.html#redrawOnInput">redrawOnInput</a></li><li><a href="global.html#redrawOnInputZone">redrawOnInputZone</a></li><li><a href="global.html#redrawTiming">redrawTiming</a></li><li><a href="global.html#redrawTimingOnInput">redrawTimingOnInput</a></li><li><a href="global.html#redrawTimingOnInputZone">redrawTimingOnInputZone</a></li><li><a href="global.html#redrawTimingZone">redrawTimingZone</a></li><li><a href="global.html#redrawZone">redrawZone</a></li><li><a href="global.html#refreshMap">refreshMap</a></li><li><a href="global.html#renderMap">renderMap</a></li><li><a href="global.html#renderPagingMap">renderPagingMap</a></li><li><a href="global.html#resetKnob">resetKnob</a></li><li><a href="global.html#saveDefault">saveDefault</a></li><li><a href="global.html#scheduleTime">scheduleTime</a></li><li><a href="global.html#scheduleTimeZone">scheduleTimeZone</a></li><li><a href="global.html#setUI">setUI</a></li><li><a href="global.html#showEqualizerSwitchDialog">showEqualizerSwitchDialog</a></li><li><a href="global.html#showEqualizerSwitchDialogZone">showEqualizerSwitchDialogZone</a></li><li><a href="global.html#showMasking">showMasking</a></li><li><a href="global.html#showPaging">showPaging</a></li><li><a href="global.html#updateMapForError">updateMapForError</a></li><li><a href="global.html#updateViewForSelectedSpeakers">updateViewForSelectedSpeakers</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#_acceptPressed">_acceptPressed</a></li><li><a href="global.html#_acceptPressedZone">_acceptPressedZone</a></li><li><a href="global.html#_cancelPressed">_cancelPressed</a></li><li><a href="global.html#_cancelPressedZone">_cancelPressedZone</a></li><li><a href="global.html#_cancelSwitchPressed">_cancelSwitchPressed</a></li><li><a href="global.html#_cancelSwitchPressedZone">_cancelSwitchPressedZone</a></li><li><a href="global.html#_closeDrawer">_closeDrawer</a></li><li><a href="global.html#_equalizerUpdate">_equalizerUpdate</a></li><li><a href="global.html#_handleLogin">_handleLogin</a></li><li><a href="global.html#_initializeStatus">_initializeStatus</a></li><li><a href="global.html#_keepAliveResponse">_keepAliveResponse</a></li><li><a href="global.html#_logResponse">_logResponse</a></li><li><a href="global.html#_pagingUpdate">_pagingUpdate</a></li><li><a href="global.html#_presetSelectionChanged">_presetSelectionChanged</a></li><li><a href="global.html#_presetSelectionChangedZone">_presetSelectionChangedZone</a></li><li><a href="global.html#_selectionChanged">_selectionChanged</a></li><li><a href="global.html#_selectSpeaker">_selectSpeaker</a></li><li><a href="global.html#_selectZone">_selectZone</a></li><li><a href="global.html#_setEqualizerClicked">_setEqualizerClicked</a></li><li><a href="global.html#_setEqualizerClickedZone">_setEqualizerClickedZone</a></li><li><a href="global.html#_setInternalEqualizer">_setInternalEqualizer</a></li><li><a href="global.html#_setInternalPaging">_setInternalPaging</a></li><li><a href="global.html#_setInternalTarget">_setInternalTarget</a></li><li><a href="global.html#_setInternalVolume">_setInternalVolume</a></li><li><a href="global.html#_setPagingClicked">_setPagingClicked</a></li><li><a href="global.html#_setTargetClicked">_setTargetClicked</a></li><li><a href="global.html#_setTargetClickedZone">_setTargetClickedZone</a></li><li><a href="global.html#_setVolumeClicked">_setVolumeClicked</a></li><li><a href="global.html#_showMap">_showMap</a></li><li><a href="global.html#_speakerSelected">_speakerSelected</a></li><li><a href="global.html#_submit">_submit</a></li><li><a href="global.html#_switchPressed">_switchPressed</a></li><li><a href="global.html#_switchPressedZone">_switchPressedZone</a></li><li><a href="global.html#_targetUpdate">_targetUpdate</a></li><li><a href="global.html#_toggleDrawer">_toggleDrawer</a></li><li><a href="global.html#_volumeUpdate">_volumeUpdate</a></li><li><a href="global.html#_zoneSelected">_zoneSelected</a></li><li><a href="global.html#adjustSize">adjustSize</a></li><li><a href="global.html#adjustSizeZone">adjustSizeZone</a></li><li><a href="global.html#decrementEffectiveness">decrementEffectiveness</a></li><li><a href="global.html#decrementMaskingVolume">decrementMaskingVolume</a></li><li><a href="global.html#decrementMusicVolume">decrementMusicVolume</a></li><li><a href="global.html#decrementPagingVolume">decrementPagingVolume</a></li><li><a href="global.html#decrementPleasantnesss">decrementPleasantnesss</a></li><li><a href="global.html#decrementVolume">decrementVolume</a></li><li><a href="global.html#drawAdvanced">drawAdvanced</a></li><li><a href="global.html#drawAdvancedZone">drawAdvancedZone</a></li><li><a href="global.html#drawBasic">drawBasic</a></li><li><a href="global.html#drawBasicZone">drawBasicZone</a></li><li><a href="global.html#findZoneIndex">findZoneIndex</a></li><li><a href="global.html#getValues">getValues</a></li><li><a href="global.html#getValuesZone">getValuesZone</a></li><li><a href="global.html#incrementEffectiveness">incrementEffectiveness</a></li><li><a href="global.html#incrementMaskingVolume">incrementMaskingVolume</a></li><li><a href="global.html#incrementMusicVolume">incrementMusicVolume</a></li><li><a href="global.html#incrementPagingVolume">incrementPagingVolume</a></li><li><a href="global.html#incrementPleasantnesss">incrementPleasantnesss</a></li><li><a href="global.html#incrementVolume">incrementVolume</a></li><li><a href="global.html#inputChanged">inputChanged</a></li><li><a href="global.html#inputChangedZone">inputChangedZone</a></li><li><a href="global.html#loadDayOutside">loadDayOutside</a></li><li><a href="global.html#loadDayOutsideZone">loadDayOutsideZone</a></li><li><a href="global.html#merge">merge</a></li><li><a href="global.html#mergeSort">mergeSort</a></li><li><a href="global.html#modeChanged">modeChanged</a></li><li><a href="global.html#modeChangedZone">modeChangedZone</a></li><li><a href="global.html#pulsateCircle">pulsateCircle</a></li><li><a href="global.html#ready">ready</a></li><li><a href="global.html#redraw">redraw</a></li><li><a href="global.html#redrawOnInput">redrawOnInput</a></li><li><a href="global.html#redrawOnInputZone">redrawOnInputZone</a></li><li><a href="global.html#redrawTiming">redrawTiming</a></li><li><a href="global.html#redrawTimingOnInput">redrawTimingOnInput</a></li><li><a href="global.html#redrawTimingOnInputZone">redrawTimingOnInputZone</a></li><li><a href="global.html#redrawTimingZone">redrawTimingZone</a></li><li><a href="global.html#redrawZone">redrawZone</a></li><li><a href="global.html#refreshMap">refreshMap</a></li><li><a href="global.html#renderMap">renderMap</a></li><li><a href="global.html#renderPagingMap">renderPagingMap</a></li><li><a href="global.html#resetKnob">resetKnob</a></li><li><a href="global.html#saveDefault">saveDefault</a></li><li><a href="global.html#saveDefaultZone">saveDefaultZone</a></li><li><a href="global.html#scheduleTime">scheduleTime</a></li><li><a href="global.html#scheduleTimeZone">scheduleTimeZone</a></li><li><a href="global.html#setUI">setUI</a></li><li><a href="global.html#showEqualizerSwitchDialog">showEqualizerSwitchDialog</a></li><li><a href="global.html#showEqualizerSwitchDialogZone">showEqualizerSwitchDialogZone</a></li><li><a href="global.html#showMasking">showMasking</a></li><li><a href="global.html#showPaging">showPaging</a></li><li><a href="global.html#updateMapForError">updateMapForError</a></li><li><a href="global.html#updateViewForSelectedSpeakers">updateViewForSelectedSpeakers</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Jun 17 2016 17:12:26 GMT-0500 (CDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jun 27 2016 15:38:28 GMT-0500 (CDT)
 </footer>
 
 <script> prettyPrint(); </script>

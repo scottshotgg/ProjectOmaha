@@ -24,8 +24,8 @@
     });
 
     $(document).ready(function() {
-      if(parseInt(localStorage.getItem("level")) == 0) {
+      /*if(parseInt(localStorage.getItem("level")) == 0) {
           document.getElementById("zoneSelectionButton").innerHTML = "";
           document.getElementById("allZoneSelectionButton").innerHTML = "";
-      }
+      }*/
   });

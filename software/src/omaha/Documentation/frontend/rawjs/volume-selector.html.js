@@ -57,6 +57,7 @@
           }
 
           this.volume = this.internalVolume + " " + this.internalMusicVolume + " " + this.internalPagingVolume + " " + this.internalSoundMaskingVolume;
+          this.$.toast.text = "Volume set to " + this.$.volume2.value + ", " + this.$.volume3.value + ", " + this.$.volume4.value + ", " + this.$.volume5.value;
           this.$.toast.show();
           //console.log("_setVolumeClicked");
         } else {
@@ -94,6 +95,8 @@
             };
             this.$.updateVolumesZone.generateRequest();
           }
+          console.log("Volume set to ", this.$.volume2.value, this.$.volume3.value, this.$.volume4.value, this.$.volume5.value);
+          this.$.toast.text = "Volume set to " + this.$.volume2.value + ", " + this.$.volume3.value + ", " + this.$.volume4.value + ", " + this.$.volume5.value;
           this.$.toast.show();
           //console.log("_setVolumeClicked");
         }

@@ -23,6 +23,7 @@ func InitDB() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println(err)
 
 	var name string
 	err = DB.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='account';").Scan(&name)

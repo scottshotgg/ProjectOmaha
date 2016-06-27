@@ -22,7 +22,7 @@ func InitializeHandlers() {
 	http.Handle("/demo/start/", GenericHandler{PUT: SpeakerPutHandler})
 	http.Handle("/demo/stop/", GenericHandler{PUT: SpeakerPutHandler})
 
-	http.Handle("/system/", GenericHandler{GET: SystemStatusHandler})
+	http.Handle("/system/", GenericHandler{PUT: SystemStatusHandler})
 	http.Handle("/system/controllerUpdate/", GenericHandler{GET: ControllerUpdateHandler})
 
 	// Speaker handlers

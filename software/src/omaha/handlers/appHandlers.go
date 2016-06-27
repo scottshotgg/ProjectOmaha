@@ -41,6 +41,7 @@ type accountCreationRequest struct {
 	AppHandler servers as the handler for the app.html page which sets everything up and is considered the starting page of the website.
 */
 func AppHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("i am here")
 	omahaDir := util.GetOmahaPath()
 	templatePath := fmt.Sprintf("%s/templates/app.html", omahaDir)
 	t, err := template.ParseFiles(templatePath)
@@ -59,6 +60,7 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
 func redirectToLoginHandler(w http.ResponseWriter, r *http.Request) {
 	omahaDir := util.GetOmahaPath()
 	templatePath := fmt.Sprintf("%s/templates/loginFromRedirect.html", omahaDir)
+	//templatePath := fmt.Sprintf("%s/templates/login.html", omahaDir)
 	t, err := template.ParseFiles(templatePath)
 	if err != nil {
 		log.Printf("Error parsing template at %s\n", templatePath)
