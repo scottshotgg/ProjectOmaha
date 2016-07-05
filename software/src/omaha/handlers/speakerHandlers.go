@@ -1,3 +1,6 @@
+/*
+	The handlers package includes the systems backend handlers that are used to serve requests that are submitted by the client. It includes many structs and functions to supports these features as well.
+ */
 package handlers
 
 import (
@@ -1383,6 +1386,9 @@ func ThresholdHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(getGenericSuccessResponse())
 }
 
+/*
+	AddController is used to handle the add controller call on the login screen that is needed to link the controllers.
+*/
 func AddController(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
 	status := system.GetSystemStatus()
 	controllerInformation := &addController{}
@@ -1403,6 +1409,9 @@ func AddController(w http.ResponseWriter, r *http.Request) {		// could merge thi
 	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
+/*
+	LoadControllers is used when the login screen calls to see which controllers have been added and adds them to the drop down so that the user can select the desired controller.
+*/
 func LoadControllers(w http.ResponseWriter, r *http.Request) {		// could merge this with AddPresetHandler
 	//status := system.GetSystemStatus()
 	log.Println("we are here")

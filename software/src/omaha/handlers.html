@@ -19,7 +19,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "./handlers"</code></dd>
+			<dd><code>import "../../handlers"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -35,7 +35,10 @@
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+The handlers package includes the systems backend handlers that are used to serve requests that are submitted by the client. It includes many structs and functions to supports these features as well.
+</p>
+
 			</div>
 		</div>
 		
@@ -57,6 +60,9 @@
 			
 				
 				<dd><a href="#AccountCreationHandler">func AccountCreationHandler(w http.ResponseWriter, r *http.Request)</a></dd>
+			
+				
+				<dd><a href="#AddController">func AddController(w http.ResponseWriter, r *http.Request)</a></dd>
 			
 				
 				<dd><a href="#AddPresetHandler">func AddPresetHandler(w http.ResponseWriter, r *http.Request)</a></dd>
@@ -95,10 +101,16 @@
 				<dd><a href="#InitializeHandlers">func InitializeHandlers()</a></dd>
 			
 				
+				<dd><a href="#LoadControllers">func LoadControllers(w http.ResponseWriter, r *http.Request)</a></dd>
+			
+				
 				<dd><a href="#LoginPageHandler">func LoginPageHandler(w http.ResponseWriter, r *http.Request)</a></dd>
 			
 				
 				<dd><a href="#LoginPostHandler">func LoginPostHandler(w http.ResponseWriter, r *http.Request)</a></dd>
+			
+				
+				<dd><a href="#LogoutPostHandler">func LogoutPostHandler(w http.ResponseWriter, r *http.Request)</a></dd>
 			
 				
 				<dd><a href="#PagingRequestHandler">func PagingRequestHandler(w http.ResponseWriter, r *http.Request)</a></dd>
@@ -238,7 +250,7 @@
 		
 			
 			
-			<h2 id="AccountCreationHandler">func <a href="/src/target/appHandlers.go?s=3557:3624#L113">AccountCreationHandler</a></h2>
+			<h2 id="AccountCreationHandler">func <a href="/src/target/appHandlers.go?s=4100:4167#L140">AccountCreationHandler</a></h2>
 			<pre>func AccountCreationHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 AccountCreationHandler is used to create an account.
@@ -250,7 +262,19 @@ AccountCreationHandler is used to create an account.
 		
 			
 			
-			<h2 id="AddPresetHandler">func <a href="/src/target/speakerHandlers.go?s=48923:48984#L1266">AddPresetHandler</a></h2>
+			<h2 id="AddController">func <a href="/src/target/speakerHandlers.go?s=48372:48430#L1382">AddController</a></h2>
+			<pre>func AddController(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
+			<p>
+AddController is used to handle the add controller call on the login screen that is needed to link the controllers.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="AddPresetHandler">func <a href="/src/target/speakerHandlers.go?s=41011:41072#L1137">AddPresetHandler</a></h2>
 			<pre>func AddPresetHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 AddPresetHandler is used to add a preset to the database for the specified speaker.
@@ -262,7 +286,7 @@ AddPresetHandler is used to add a preset to the database for the specified speak
 		
 			
 			
-			<h2 id="AddPresetHandlerZone">func <a href="/src/target/speakerHandlers.go?s=19668:19733#L522">AddPresetHandlerZone</a></h2>
+			<h2 id="AddPresetHandlerZone">func <a href="/src/target/speakerHandlers.go?s=19151:19216#L534">AddPresetHandlerZone</a></h2>
 			<pre>func AddPresetHandlerZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 AddPresetHandlerZone: This is the zone version of the AddPresteHandler. As such, it updates the speaker target for all targets within the specified zone.
@@ -274,7 +298,7 @@ AddPresetHandlerZone: This is the zone version of the AddPresteHandler. As such,
 		
 			
 			
-			<h2 id="AddTargetHandler">func <a href="/src/target/speakerHandlers.go?s=50057:50118#L1300">AddTargetHandler</a></h2>
+			<h2 id="AddTargetHandler">func <a href="/src/target/speakerHandlers.go?s=42145:42206#L1171">AddTargetHandler</a></h2>
 			<pre>func AddTargetHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 AddTargetHandler adds a target for the specified speaker.
@@ -286,7 +310,7 @@ AddTargetHandler adds a target for the specified speaker.
 		
 			
 			
-			<h2 id="AddTargetHandlerZone">func <a href="/src/target/speakerHandlers.go?s=23944:24009#L619">AddTargetHandlerZone</a></h2>
+			<h2 id="AddTargetHandlerZone">func <a href="/src/target/speakerHandlers.go?s=23399:23464#L630">AddTargetHandlerZone</a></h2>
 			<pre>func AddTargetHandlerZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 AddTargetHandlerZone: This is the zone version of the AddTargetHandler function. As such, this function adds a target in the database for an entire zone.
@@ -298,7 +322,7 @@ AddTargetHandlerZone: This is the zone version of the AddTargetHandler function.
 		
 			
 			
-			<h2 id="AppHandler">func <a href="/src/target/appHandlers.go?s=833:888#L29">AppHandler</a></h2>
+			<h2 id="AppHandler">func <a href="/src/target/appHandlers.go?s=897:952#L33">AppHandler</a></h2>
 			<pre>func AppHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 AppHandler servers as the handler for the app.html page which sets everything up and is considered the starting page of the website.
@@ -310,7 +334,7 @@ AppHandler servers as the handler for the app.html page which sets everything up
 		
 			
 			
-			<h2 id="ChangeEQMode">func <a href="/src/target/speakerHandlers.go?s=54367:54424#L1456">ChangeEQMode</a></h2>
+			<h2 id="ChangeEQMode">func <a href="/src/target/speakerHandlers.go?s=45731:45788#L1301">ChangeEQMode</a></h2>
 			<pre>func ChangeEQMode(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 ChangeEQMode is used for changing the EQ mode of the specified speaker
@@ -322,7 +346,7 @@ ChangeEQMode is used for changing the EQ mode of the specified speaker
 		
 			
 			
-			<h2 id="ChangeEQModeZone">func <a href="/src/target/speakerHandlers.go?s=28409:28470#L727">ChangeEQModeZone</a></h2>
+			<h2 id="ChangeEQModeZone">func <a href="/src/target/speakerHandlers.go?s=25560:25621#L687">ChangeEQModeZone</a></h2>
 			<pre>func ChangeEQModeZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 ChangeEQModeZone: This is the zone version of the function ChangeEQMode. As such, this function changes the EQ mode for each speaker within the specified zone.
@@ -334,7 +358,7 @@ ChangeEQModeZone: This is the zone version of the function ChangeEQMode. As such
 		
 			
 			
-			<h2 id="ControllerUpdateHandler">func <a href="/src/target/speakerHandlers.go?s=51750:51818#L1353">ControllerUpdateHandler</a></h2>
+			<h2 id="ControllerUpdateHandler">func <a href="/src/target/speakerHandlers.go?s=43833:43901#L1223">ControllerUpdateHandler</a></h2>
 			<pre>func ControllerUpdateHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 ControllerUpdateHandler is used for handling the KeepAlive requests that the webpage sends out.
@@ -346,7 +370,7 @@ ControllerUpdateHandler is used for handling the KeepAlive requests that the web
 		
 			
 			
-			<h2 id="CreatePagingZoneHandler">func <a href="/src/target/speakerHandlers.go?s=53610:53678#L1427">CreatePagingZoneHandler</a></h2>
+			<h2 id="CreatePagingZoneHandler">func <a href="/src/target/speakerHandlers.go?s=44974:45042#L1272">CreatePagingZoneHandler</a></h2>
 			<pre>func CreatePagingZoneHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 CreatePagingZoneHandler is the paging version of the CreateZoneHandler and is used for paging zone creation.
@@ -358,7 +382,7 @@ CreatePagingZoneHandler is the paging version of the CreateZoneHandler and is us
 		
 			
 			
-			<h2 id="CreateZoneHandler">func <a href="/src/target/speakerHandlers.go?s=52912:52974#L1398">CreateZoneHandler</a></h2>
+			<h2 id="CreateZoneHandler">func <a href="/src/target/speakerHandlers.go?s=44276:44338#L1243">CreateZoneHandler</a></h2>
 			<pre>func CreateZoneHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 CreateZoneHandler is used for handling zone creation.
@@ -394,7 +418,19 @@ InitializeHandlers is used to initialize the large amount of handlers that the s
 		
 			
 			
-			<h2 id="LoginPageHandler">func <a href="/src/target/appHandlers.go?s=3110:3171#L97">LoginPageHandler</a></h2>
+			<h2 id="LoadControllers">func <a href="/src/target/speakerHandlers.go?s=49255:49315#L1405">LoadControllers</a></h2>
+			<pre>func LoadControllers(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
+			<p>
+LoadControllers is used when the login screen calls to see which controllers have been added and adds them to the drop down so that the user can select the desired controller.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="LoginPageHandler">func <a href="/src/target/appHandlers.go?s=3653:3714#L124">LoginPageHandler</a></h2>
 			<pre>func LoginPageHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 LoginPageHandler handles the login page that you see when you go to the app.
@@ -406,7 +442,7 @@ LoginPageHandler handles the login page that you see when you go to the app.
 		
 			
 			
-			<h2 id="LoginPostHandler">func <a href="/src/target/appHandlers.go?s=2038:2099#L61">LoginPostHandler</a></h2>
+			<h2 id="LoginPostHandler">func <a href="/src/target/appHandlers.go?s=2196:2257#L67">LoginPostHandler</a></h2>
 			<pre>func LoginPostHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 LoginPostHandler is a handler that takes care of the logging in. It takes the username and password and determine whether that account exists first and then if it does it determins the access level and the speaker and zone IDs.
@@ -418,7 +454,16 @@ LoginPostHandler is a handler that takes care of the logging in. It takes the us
 		
 			
 			
-			<h2 id="PagingRequestHandler">func <a href="/src/target/speakerHandlers.go?s=50899:50964#L1322">PagingRequestHandler</a></h2>
+			<h2 id="LogoutPostHandler">func <a href="/src/target/appHandlers.go?s=3054:3116#L97">LogoutPostHandler</a></h2>
+			<pre>func LogoutPostHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PagingRequestHandler">func <a href="/src/target/speakerHandlers.go?s=42987:43052#L1193">PagingRequestHandler</a></h2>
 			<pre>func PagingRequestHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 PagingRequestHandler is not used currently, but is reserved for connecting the paging system and making calls.
@@ -430,7 +475,7 @@ PagingRequestHandler is not used currently, but is reserved for connecting the p
 		
 			
 			
-			<h2 id="ScheduleTime">func <a href="/src/target/speakerHandlers.go?s=55101:55158#L1480">ScheduleTime</a></h2>
+			<h2 id="ScheduleTime">func <a href="/src/target/speakerHandlers.go?s=46465:46522#L1325">ScheduleTime</a></h2>
 			<pre>func ScheduleTime(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 ScheduleTime is used for updating the schedule for the specified speaker.
@@ -442,7 +487,7 @@ ScheduleTime is used for updating the schedule for the specified speaker.
 		
 			
 			
-			<h2 id="ScheduleTimeZone">func <a href="/src/target/speakerHandlers.go?s=25007:25068#L644">ScheduleTimeZone</a></h2>
+			<h2 id="ScheduleTimeZone">func <a href="/src/target/speakerHandlers.go?s=24368:24429#L655">ScheduleTimeZone</a></h2>
 			<pre>func ScheduleTimeZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 ScheduleTimeZone: This is the zone version of the function ScheduleTime. As such, it saves the schedule for the specified zone.
@@ -454,7 +499,7 @@ ScheduleTimeZone: This is the zone version of the function ScheduleTime. As such
 		
 			
 			
-			<h2 id="SpeakerGetHandler">func <a href="/src/target/speakerHandlers.go?s=43741:43803#L1170">SpeakerGetHandler</a></h2>
+			<h2 id="SpeakerGetHandler">func <a href="/src/target/speakerHandlers.go?s=36066:36128#L1046">SpeakerGetHandler</a></h2>
 			<pre>func SpeakerGetHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 SpeakerGetHandler is used when the server recieves a GET request, which is mostly for the processing the speaker requests. This is done so by filling the response JSON struct.
@@ -466,7 +511,7 @@ SpeakerGetHandler is used when the server recieves a GET request, which is mostl
 		
 			
 			
-			<h2 id="SpeakerPutHandler">func <a href="/src/target/speakerHandlers.go?s=42154:42216#L1119">SpeakerPutHandler</a></h2>
+			<h2 id="SpeakerPutHandler">func <a href="/src/target/speakerHandlers.go?s=34479:34541#L995">SpeakerPutHandler</a></h2>
 			<pre>func SpeakerPutHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 SpeakerPutHandler is used when the server recieves a PUT request and then updates speaker attribtues according to the request and how the SpeakerUpdateHandlers map is defined.
@@ -490,7 +535,7 @@ SystemStatusHandler is used when sending the entire system status to the website
 		
 			
 			
-			<h2 id="ThresholdHandler">func <a href="/src/target/speakerHandlers.go?s=55859:55920#L1507">ThresholdHandler</a></h2>
+			<h2 id="ThresholdHandler">func <a href="/src/target/speakerHandlers.go?s=47223:47284#L1352">ThresholdHandler</a></h2>
 			<pre>func ThresholdHandler(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 ThresholdHandler is used for updating the volume thresholds for the specified speaker.
@@ -502,7 +547,7 @@ ThresholdHandler is used for updating the volume thresholds for the specified sp
 		
 			
 			
-			<h2 id="ThresholdHandlerZone">func <a href="/src/target/speakerHandlers.go?s=8551:8616#L256">ThresholdHandlerZone</a></h2>
+			<h2 id="ThresholdHandlerZone">func <a href="/src/target/speakerHandlers.go?s=9285:9350#L273">ThresholdHandlerZone</a></h2>
 			<pre>func ThresholdHandlerZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 ThresholdHandlerZone: This is the zone version of the ThresholdHandler function. As such, this sets the volume thresholds for an entire zone.
@@ -514,7 +559,7 @@ ThresholdHandlerZone: This is the zone version of the ThresholdHandler function.
 		
 			
 			
-			<h2 id="UpdateAveragingZone">func <a href="/src/target/speakerHandlers.go?s=10599:10663#L293">UpdateAveragingZone</a></h2>
+			<h2 id="UpdateAveragingZone">func <a href="/src/target/speakerHandlers.go?s=11412:11476#L310">UpdateAveragingZone</a></h2>
 			<pre>func UpdateAveragingZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 UpdateAveragingZone: This is the zone version of the UpdateAveraging function. As such, it updates the averaging, which consists of the effectiveness and pleseantness of the speaker.
@@ -526,7 +571,7 @@ UpdateAveragingZone: This is the zone version of the UpdateAveraging function. A
 		
 			
 			
-			<h2 id="UpdatePagingValuesZone">func <a href="/src/target/speakerHandlers.go?s=21578:21645#L568">UpdatePagingValuesZone</a></h2>
+			<h2 id="UpdatePagingValuesZone">func <a href="/src/target/speakerHandlers.go?s=21115:21182#L581">UpdatePagingValuesZone</a></h2>
 			<pre>func UpdatePagingValuesZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 UpdatePagingValuesZone: This is the zone version of the UpdatePagingValues table. As such, it updates the paging values for the entire specified entire zone.
@@ -538,7 +583,7 @@ UpdatePagingValuesZone: This is the zone version of the UpdatePagingValues table
 		
 			
 			
-			<h2 id="UpdateSpeakerEqualizerZone">func <a href="/src/target/speakerHandlers.go?s=14553:14624#L387">UpdateSpeakerEqualizerZone</a></h2>
+			<h2 id="UpdateSpeakerEqualizerZone">func <a href="/src/target/speakerHandlers.go?s=15431:15502#L410">UpdateSpeakerEqualizerZone</a></h2>
 			<pre>func UpdateSpeakerEqualizerZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 UpdateSpeakerEqualizerZone: This is the zone version of the UpdateSpeakerEqualizer function. As such, it updates the speaker equalizer of all speakers within the specified zone.
@@ -550,7 +595,7 @@ UpdateSpeakerEqualizerZone: This is the zone version of the UpdateSpeakerEqualiz
 		
 			
 			
-			<h2 id="UpdateSpeakerTargetZone">func <a href="/src/target/speakerHandlers.go?s=12203:12271#L327">UpdateSpeakerTargetZone</a></h2>
+			<h2 id="UpdateSpeakerTargetZone">func <a href="/src/target/speakerHandlers.go?s=13016:13084#L344">UpdateSpeakerTargetZone</a></h2>
 			<pre>func UpdateSpeakerTargetZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 UpdateSpeakerTargetZone: This is the zone version of the UpdateSpeakerTarget function. As such, this function updates the speaker target for all speaker within the specified zone.
@@ -562,7 +607,7 @@ UpdateSpeakerTargetZone: This is the zone version of the UpdateSpeakerTarget fun
 		
 			
 			
-			<h2 id="UpdateVolumesZone">func <a href="/src/target/speakerHandlers.go?s=5989:6051#L202">UpdateVolumesZone</a></h2>
+			<h2 id="UpdateVolumesZone">func <a href="/src/target/speakerHandlers.go?s=6572:6634#L217">UpdateVolumesZone</a></h2>
 			<pre>func UpdateVolumesZone(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 			<p>
 UpdateVolumesZone: This is the zone version of the UpdateVolumes function. As such, this function updates the volumes for the specified zones.
@@ -607,7 +652,7 @@ ZonePostHandler is used to handle the zone creation.
 
 			
 				
-				<h3 id="GenericHandler.ServeHTTP">func (GenericHandler) <a href="/src/target/genericHandler.go?s=892:970#L31">ServeHTTP</a></h3>
+				<h3 id="GenericHandler.ServeHTTP">func (GenericHandler) <a href="/src/target/genericHandler.go?s=957:1035#L35">ServeHTTP</a></h3>
 				<pre>func (this <a href="#GenericHandler">GenericHandler</a>) ServeHTTP(w <a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#ResponseWriter">ResponseWriter</a>, req *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Request">Request</a>)</pre>
 				<p>
 ServeHTTP is the function that starts the server.

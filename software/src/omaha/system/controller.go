@@ -1,4 +1,5 @@
 /*
+ 	The system package handles the interfacing of the system with the hardware that it supports. It supports the queuing messaging system, as well as the entire protocol that we use for sending messages.
 	The protocol works by sending three bytes to communicate with the controllers/speakers.
 	[0]:	address, 0-254
 	[1]:	command, this is taken from the constants.go file

@@ -1,3 +1,7 @@
+/*
+	The database package deals with the interfacing of the database with the backend. The backend can make abstracted calls which are composed down into SQL queries that are then run on the databse. 
+	THIS SHOULD BE THE ONLY PLACE THAT DIRECT INTERFACING WITH THE DATABASE SHOULD BE DONE.
+*/
 package database
 
 import (

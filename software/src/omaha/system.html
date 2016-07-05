@@ -19,7 +19,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "./system"</code></dd>
+			<dd><code>import "../../system"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -35,12 +35,12 @@
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				<p>
-The protocol works by sending three bytes to communicate with the controllers/speakers.
-[0]:	address, 0-254
-[1]:	command, this is taken from the constants.go file
-[2]: 	data, this is where you would fill in the volume to set it to, or the amount to raise the band
-</p>
+				<pre> 	The system package handles the interfacing of the system with the hardware that it supports. It supports the queuing messaging system, as well as the entire protocol that we use for sending messages.
+	The protocol works by sending three bytes to communicate with the controllers/speakers.
+	[0]:	address, 0-254
+	[1]:	command, this is taken from the constants.go file
+	[2]: 	data, this is where you would fill in the volume to set it to, or the amount to raise the band
+</pre>
 
 			</div>
 		</div>
@@ -273,7 +273,7 @@ Ideally, after we found these, we would pop them all into the paper dropdown on 
 		
 			
 			
-			<h2 id="GetAveragingMode">func <a href="/src/target/controller.go?s=4981:5048#L201">GetAveragingMode</a></h2>
+			<h2 id="GetAveragingMode">func <a href="/src/target/controller.go?s=5183:5250#L202">GetAveragingMode</a></h2>
 			<pre>func GetAveragingMode(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 GetAveragingMode is used to query the specified speaker for its averaging mode.
@@ -285,7 +285,7 @@ GetAveragingMode is used to query the specified speaker for its averaging mode.
 		
 			
 			
-			<h2 id="GetVolumeFromController">func <a href="/src/target/controller.go?s=2038:2113#L74">GetVolumeFromController</a></h2>
+			<h2 id="GetVolumeFromController">func <a href="/src/target/controller.go?s=2240:2315#L75">GetVolumeFromController</a></h2>
 			<pre>func GetVolumeFromController(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) (<a href="/pkg/builtin/#int8">int8</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 GetVolumeFromController is used to query the controller for its current volume variable should the controller ever need it.
@@ -309,7 +309,7 @@ HandleControllerMessages is called from main.go, this handlers the sending of th
 		
 			
 			
-			<h2 id="KeepAlive">func <a href="/src/target/controller.go?s=468:504#L9">KeepAlive</a></h2>
+			<h2 id="KeepAlive">func <a href="/src/target/controller.go?s=670:706#L10">KeepAlive</a></h2>
 			<pre>func KeepAlive(ID <a href="/pkg/builtin/#int8">int8</a>) (error <a href="/pkg/builtin/#int8">int8</a>)</pre>
 			<p>
 KeepAlive is a function that is used by the scheduler in main.go to send a KeepAlive command to the speakers.
@@ -321,7 +321,7 @@ KeepAlive is a function that is used by the scheduler in main.go to send a KeepA
 		
 			
 			
-			<h2 id="SendPagingRequest">func <a href="/src/target/controller.go?s=6456:6495#L263">SendPagingRequest</a></h2>
+			<h2 id="SendPagingRequest">func <a href="/src/target/controller.go?s=6658:6697#L264">SendPagingRequest</a></h2>
 			<pre>func SendPagingRequest(ID <a href="/pkg/builtin/#int8">int8</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 SendPagingRequest is a reserved / unimplemented function that will be used to tell the speaker that a paging signal is coming in and to prepare for that.
@@ -333,7 +333,7 @@ SendPagingRequest is a reserved / unimplemented function that will be used to te
 		
 			
 			
-			<h2 id="SetAveragingMode">func <a href="/src/target/controller.go?s=3882:3953#L153">SetAveragingMode</a></h2>
+			<h2 id="SetAveragingMode">func <a href="/src/target/controller.go?s=4084:4155#L154">SetAveragingMode</a></h2>
 			<pre>func SetAveragingMode(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>, mode <a href="/pkg/builtin/#int8">int8</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 SetAveragingMode sets the averaging mode of the speaker, which consists of effectiveness and pleasantness.
@@ -345,7 +345,7 @@ SetAveragingMode sets the averaging mode of the speaker, which consists of effec
 		
 			
 			
-			<h2 id="SetEQMode">func <a href="/src/target/controller.go?s=5964:6011#L244">SetEQMode</a></h2>
+			<h2 id="SetEQMode">func <a href="/src/target/controller.go?s=6166:6213#L245">SetEQMode</a></h2>
 			<pre>func SetEQMode(ID <a href="/pkg/builtin/#int8">int8</a>, mode <a href="/pkg/builtin/#int8">int8</a>) (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SetEQMode is used to change the EQ mode on the speaker to music, paging, or back to masking.
@@ -357,7 +357,7 @@ SetEQMode is used to change the EQ mode on the speaker to music, paging, or back
 		
 			
 			
-			<h2 id="SetEqualizerConstant">func <a href="/src/target/controller.go?s=5318:5426#L220">SetEqualizerConstant</a></h2>
+			<h2 id="SetEqualizerConstant">func <a href="/src/target/controller.go?s=5520:5628#L221">SetEqualizerConstant</a></h2>
 			<pre>func SetEqualizerConstant(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>, level <a href="/pkg/builtin/#int8">int8</a>, band <a href="/pkg/builtin/#int8">int8</a>, decimal <a href="/pkg/builtin/#bool">bool</a>) (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SetEqualizerConstant is used to send one equalizer constant for the specified band to a speaker.
@@ -369,7 +369,7 @@ SetEqualizerConstant is used to send one equalizer constant for the specified ba
 		
 			
 			
-			<h2 id="SetMusicVolume">func <a href="/src/target/controller.go?s=2328:2386#L89">SetMusicVolume</a></h2>
+			<h2 id="SetMusicVolume">func <a href="/src/target/controller.go?s=2530:2588#L90">SetMusicVolume</a></h2>
 			<pre>func SetMusicVolume(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 SetMusicVolume is used to set the music volume on the speaker.
@@ -381,7 +381,7 @@ SetMusicVolume is used to set the music volume on the speaker.
 		
 			
 			
-			<h2 id="SetPaging">func <a href="/src/target/controller.go?s=2824:2894#L110">SetPaging</a></h2>
+			<h2 id="SetPaging">func <a href="/src/target/controller.go?s=3026:3096#L111">SetPaging</a></h2>
 			<pre>func SetPaging(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>, pagingData <a href="/pkg/builtin/#int8">int8</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 SetPaging is used to send the paging constants to the speaker.
@@ -393,7 +393,7 @@ SetPaging is used to send the paging constants to the speaker.
 		
 			
 			
-			<h2 id="SetSoundMaskingVolume">func <a href="/src/target/controller.go?s=3319:3384#L132">SetSoundMaskingVolume</a></h2>
+			<h2 id="SetSoundMaskingVolume">func <a href="/src/target/controller.go?s=3521:3586#L133">SetSoundMaskingVolume</a></h2>
 			<pre>func SetSoundMaskingVolume(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 SetSoundMaskingVolume sets how loud the speaker should be playing noise.
@@ -405,7 +405,7 @@ SetSoundMaskingVolume sets how loud the speaker should be playing noise.
 		
 			
 			
-			<h2 id="SetVolume">func <a href="/src/target/controller.go?s=1386:1439#L52">SetVolume</a></h2>
+			<h2 id="SetVolume">func <a href="/src/target/controller.go?s=1588:1641#L53">SetVolume</a></h2>
 			<pre>func SetVolume(this *<a href="/pkg/omaha/database/">database</a>.<a href="/pkg/omaha/database/#ControllerStatus">ControllerStatus</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 SetVolume is used to send the set volume command to the specified speaker.
@@ -549,7 +549,7 @@ This is used to read data from the current port. This function may be used raw, 
 				
 			
 				
-				<h3 id="SystemStatus.ResetFIFO">func (*SystemStatus) <a href="/src/target/controller.go?s=4404:4456#L174">ResetFIFO</a></h3>
+				<h3 id="SystemStatus.ResetFIFO">func (*SystemStatus) <a href="/src/target/controller.go?s=4606:4658#L175">ResetFIFO</a></h3>
 				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) ResetFIFO() (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 ResetFIFO is being reserved if need be, but will most likely not be used and isn&#39;t used right now.
@@ -560,7 +560,7 @@ ResetFIFO is being reserved if need be, but will most likely not be used and isn
 				
 			
 				
-				<h3 id="SystemStatus.ResetMicrocontroller">func (*SystemStatus) <a href="/src/target/controller.go?s=4705:4768#L185">ResetMicrocontroller</a></h3>
+				<h3 id="SystemStatus.ResetMicrocontroller">func (*SystemStatus) <a href="/src/target/controller.go?s=4907:4970#L186">ResetMicrocontroller</a></h3>
 				<pre>func (status *<a href="#SystemStatus">SystemStatus</a>) ResetMicrocontroller() (<a href="/pkg/builtin/#int">int</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 ResetMicrocontroller is being reserved if we need it. This will most likely come to fruition when we get into doing more complicated diagnostics and on the fly automated debugging.

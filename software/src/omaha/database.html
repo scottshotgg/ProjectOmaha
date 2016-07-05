@@ -19,7 +19,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "./database"</code></dd>
+			<dd><code>import "../../database"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -38,6 +38,10 @@
 				<p>
 Account.go focuses on the account aspects of the software system; verifying logins, who can access which speakers and zones, account access levels, as well as creating accounts.
 It also contains the authentication routines used. Currently there is not way to delete an account of change an account after making one.
+</p>
+<p>
+The database package deals with the interfacing of the database with the backend. The backend can make abstracted calls which are composed down into SQL queries that are then run on the databse.
+THIS SHOULD BE THE ONLY PLACE THAT DIRECT INTERFACING WITH THE DATABASE SHOULD BE DONE.
 </p>
 
 			</div>
@@ -90,6 +94,9 @@ It also contains the authentication routines used. Currently there is not way to
 				<dd><a href="#CreateAccount">func CreateAccount(level int, username string, password string, name string, email string, phone string, speakerID int, zoneID int) error</a></dd>
 			
 				
+				<dd><a href="#CreateControllerTable">func CreateControllerTable()</a></dd>
+			
+				
 				<dd><a href="#CreatePagingZone">func CreatePagingZone(speakers []int8, name string) error</a></dd>
 			
 				
@@ -117,10 +124,19 @@ It also contains the authentication routines used. Currently there is not way to
 				<dd><a href="#InitDB">func InitDB()</a></dd>
 			
 				
+				<dd><a href="#InsertController">func InsertController(ip string, name string) error</a></dd>
+			
+				
 				<dd><a href="#IsSessionHashValid">func IsSessionHashValid(hash string) bool</a></dd>
 			
 				
 				<dd><a href="#LoginAccount">func LoginAccount(username, password string) (string, error)</a></dd>
+			
+				
+				<dd><a href="#LogoutAccount">func LogoutAccount(hash string) error</a></dd>
+			
+				
+				<dd><a href="#RetrieveControllers">func RetrieveControllers() ([]int, []string, []string)</a></dd>
 			
 				
 				<dd><a href="#SaveAveraging">func SaveAveraging(speaker *ControllerStatus)</a></dd>
@@ -293,7 +309,7 @@ It also contains the authentication routines used. Currently there is not way to
 		
 			
 			
-			<h2 id="AddPagingZone">func <a href="/src/target/zones.go?s=10300:10331#L532">AddPagingZone</a></h2>
+			<h2 id="AddPagingZone">func <a href="/src/target/zones.go?s=10306:10337#L532">AddPagingZone</a></h2>
 			<pre>func AddPagingZone(name <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 AddPagingZone adds a paging zone to the database with the specified name.
@@ -317,7 +333,7 @@ AddZone adds a zone to the database with the specified name.
 		
 			
 			
-			<h2 id="AuthenticatePermissionFromHash">func <a href="/src/target/account.go?s=7345:7397#L283">AuthenticatePermissionFromHash</a></h2>
+			<h2 id="AuthenticatePermissionFromHash">func <a href="/src/target/account.go?s=8331:8383#L308">AuthenticatePermissionFromHash</a></h2>
 			<pre>func AuthenticatePermissionFromHash(hash <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 AuthenticatePermissionFromHash takes a session hash string uses a nested select statment to retrieve the account access level based on the submitted hash by
@@ -330,7 +346,7 @@ using the accountSession table to acquire a userID from the hash and then using 
 		
 			
 			
-			<h2 id="AuthenticateSpeakerFromHash">func <a href="/src/target/account.go?s=8022:8071#L305">AuthenticateSpeakerFromHash</a></h2>
+			<h2 id="AuthenticateSpeakerFromHash">func <a href="/src/target/account.go?s=9049:9098#L330">AuthenticateSpeakerFromHash</a></h2>
 			<pre>func AuthenticateSpeakerFromHash(hash <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 AuthenticateSpeakerFromHash takes a session hash string and uses a nested select statment to retrieve the account access level based on the submitted hash by
@@ -343,7 +359,7 @@ using the accountSeession table to acquire a userID from the hash and then using
 		
 			
 			
-			<h2 id="AuthenticateZoneFromHash">func <a href="/src/target/account.go?s=8685:8731#L328">AuthenticateZoneFromHash</a></h2>
+			<h2 id="AuthenticateZoneFromHash">func <a href="/src/target/account.go?s=9736:9782#L353">AuthenticateZoneFromHash</a></h2>
 			<pre>func AuthenticateZoneFromHash(hash <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 AuthenticateZonesFromHash taks a session hash string and uses a nested select statment to retrieve the account access level based on the submitted hash by
@@ -356,7 +372,7 @@ using the accountSession table to acquire a userID from the hash and then using 
 		
 			
 			
-			<h2 id="ChangeEQMode">func <a href="/src/target/speakers.go?s=43454:43502#L1899">ChangeEQMode</a></h2>
+			<h2 id="ChangeEQMode">func <a href="/src/target/speakers.go?s=44017:44065#L1918">ChangeEQMode</a></h2>
 			<pre>func ChangeEQMode(speaker <a href="/pkg/builtin/#int8">int8</a>, mode <a href="/pkg/builtin/#int8">int8</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 ChangeEQMode changes the EQ mode for the specified speaker.
@@ -368,7 +384,7 @@ ChangeEQMode changes the EQ mode for the specified speaker.
 		
 			
 			
-			<h2 id="ChangeEQModeZone">func <a href="/src/target/speakers.go?s=43812:43861#L1912">ChangeEQModeZone</a></h2>
+			<h2 id="ChangeEQModeZone">func <a href="/src/target/speakers.go?s=44375:44424#L1931">ChangeEQModeZone</a></h2>
 			<pre>func ChangeEQModeZone(zone <a href="/pkg/builtin/#int8">int8</a>, mode <a href="/pkg/builtin/#int8">int8</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 ChangeEQModeZone: This is the zone version of the ChangeEQMode function. As such, it changes the EQ Mode for the entire zone.
@@ -380,7 +396,7 @@ ChangeEQModeZone: This is the zone version of the ChangeEQMode function. As such
 		
 			
 			
-			<h2 id="ChangeSchedulingMode">func <a href="/src/target/speakers.go?s=44108:44163#L1925">ChangeSchedulingMode</a></h2>
+			<h2 id="ChangeSchedulingMode">func <a href="/src/target/speakers.go?s=44671:44726#L1944">ChangeSchedulingMode</a></h2>
 			<pre>func ChangeSchedulingMode(speaker <a href="/pkg/builtin/#int8">int8</a>, mode <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 ChangeSchedulingMode changes the scheduling mode of respective speaker.
@@ -392,7 +408,7 @@ ChangeSchedulingMode changes the scheduling mode of respective speaker.
 		
 			
 			
-			<h2 id="ChangeSchedulingModeZone">func <a href="/src/target/speakers.go?s=44497:44553#L1938">ChangeSchedulingModeZone</a></h2>
+			<h2 id="ChangeSchedulingModeZone">func <a href="/src/target/speakers.go?s=45060:45116#L1957">ChangeSchedulingModeZone</a></h2>
 			<pre>func ChangeSchedulingModeZone(zone <a href="/pkg/builtin/#int8">int8</a>, mode <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 ChangeSchedulingModeZone: This is the zone version of the ChangeSchedulingMode function. As such, it changes the scheduling mode of the entire zone.
@@ -404,7 +420,7 @@ ChangeSchedulingModeZone: This is the zone version of the ChangeSchedulingMode f
 		
 			
 			
-			<h2 id="CreateAccount">func <a href="/src/target/account.go?s=2971:3108#L113">CreateAccount</a></h2>
+			<h2 id="CreateAccount">func <a href="/src/target/account.go?s=3338:3475#L126">CreateAccount</a></h2>
 			<pre>func CreateAccount(level <a href="/pkg/builtin/#int">int</a>, username <a href="/pkg/builtin/#string">string</a>, password <a href="/pkg/builtin/#string">string</a>, name <a href="/pkg/builtin/#string">string</a>, email <a href="/pkg/builtin/#string">string</a>, phone <a href="/pkg/builtin/#string">string</a>, speakerID <a href="/pkg/builtin/#int">int</a>, zoneID <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 CreateAccount inserts a row in the account table with the given configuration.
@@ -416,7 +432,16 @@ CreateAccount inserts a row in the account table with the given configuration.
 		
 			
 			
-			<h2 id="CreatePagingZone">func <a href="/src/target/speakers.go?s=44842:44899#L1951">CreatePagingZone</a></h2>
+			<h2 id="CreateControllerTable">func <a href="/src/target/speakers.go?s=6408:6436#L346">CreateControllerTable</a></h2>
+			<pre>func CreateControllerTable()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="CreatePagingZone">func <a href="/src/target/speakers.go?s=45405:45462#L1970">CreatePagingZone</a></h2>
 			<pre>func CreatePagingZone(speakers []<a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 CreatePagingZone creates a zone within the paging zone. This is not a masking zone. This is not a zone function.
@@ -428,7 +453,7 @@ CreatePagingZone creates a zone within the paging zone. This is not a masking zo
 		
 			
 			
-			<h2 id="CreateZone">func <a href="/src/target/speakers.go?s=45549:45600#L1974">CreateZone</a></h2>
+			<h2 id="CreateZone">func <a href="/src/target/speakers.go?s=46112:46163#L1993">CreateZone</a></h2>
 			<pre>func CreateZone(speakers []<a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 CreateZone is used for creating a zone. This is not a zone function.
@@ -440,7 +465,7 @@ CreateZone is used for creating a zone. This is not a zone function.
 		
 			
 			
-			<h2 id="GetAllPagingZones">func <a href="/src/target/zones.go?s=14352:14384#L678">GetAllPagingZones</a></h2>
+			<h2 id="GetAllPagingZones">func <a href="/src/target/zones.go?s=14358:14390#L678">GetAllPagingZones</a></h2>
 			<pre>func GetAllPagingZones() []*<a href="#Zone">Zone</a></pre>
 			<p>
 GetAllPagingZones is the paging version of the GetAllZones function. This function returns all of the paging zones from the database.
@@ -452,7 +477,7 @@ GetAllPagingZones is the paging version of the GetAllZones function. This functi
 		
 			
 			
-			<h2 id="GetAllSpeakers">func <a href="/src/target/speakers.go?s=6231:6272#L345">GetAllSpeakers</a></h2>
+			<h2 id="GetAllSpeakers">func <a href="/src/target/speakers.go?s=6794:6835#L364">GetAllSpeakers</a></h2>
 			<pre>func GetAllSpeakers() []*<a href="#ControllerStatus">ControllerStatus</a></pre>
 			<p>
 GetAllSpeakers gets all speakers from the database and returns them as a slice of ControllerStatus objects.
@@ -464,7 +489,7 @@ GetAllSpeakers gets all speakers from the database and returns them as a slice o
 		
 			
 			
-			<h2 id="GetAllZones">func <a href="/src/target/zones.go?s=14024:14050#L665">GetAllZones</a></h2>
+			<h2 id="GetAllZones">func <a href="/src/target/zones.go?s=14030:14056#L665">GetAllZones</a></h2>
 			<pre>func GetAllZones() []*<a href="#Zone">Zone</a></pre>
 			<p>
 GetAllZones returns every zone that is in the database.
@@ -476,7 +501,7 @@ GetAllZones returns every zone that is in the database.
 		
 			
 			
-			<h2 id="GetLevelOfAccount">func <a href="/src/target/account.go?s=1645:1688#L56">GetLevelOfAccount</a></h2>
+			<h2 id="GetLevelOfAccount">func <a href="/src/target/account.go?s=2051:2094#L72">GetLevelOfAccount</a></h2>
 			<pre>func GetLevelOfAccount(username <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 GetLevelOfAccount retrieves the level of an account based on the username of an account and returns the level of the account in the form of an integer
@@ -489,7 +514,7 @@ Return values: 0, 1, 2
 		
 			
 			
-			<h2 id="GetSpeakerForAccount">func <a href="/src/target/account.go?s=2024:2070#L70">GetSpeakerForAccount</a></h2>
+			<h2 id="GetSpeakerForAccount">func <a href="/src/target/account.go?s=2445:2491#L86">GetSpeakerForAccount</a></h2>
 			<pre>func GetSpeakerForAccount(username <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 GetSpeakerForAccount checks which speaker it has access to and returns the speaker ID that it has access to.
@@ -501,7 +526,7 @@ GetSpeakerForAccount checks which speaker it has access to and returns the speak
 		
 			
 			
-			<h2 id="GetZoneForAccount">func <a href="/src/target/account.go?s=2522:2565#L91">GetZoneForAccount</a></h2>
+			<h2 id="GetZoneForAccount">func <a href="/src/target/account.go?s=2915:2958#L106">GetZoneForAccount</a></h2>
 			<pre>func GetZoneForAccount(username <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 GetZoneForAccount checks which zones the account has access to and return the zone ID that it has access to.
@@ -522,7 +547,16 @@ GetZoneForAccount checks which zones the account has access to and return the zo
 		
 			
 			
-			<h2 id="IsSessionHashValid">func <a href="/src/target/account.go?s=6806:6847#L268">IsSessionHashValid</a></h2>
+			<h2 id="InsertController">func <a href="/src/target/speakers.go?s=46713:46764#L2013">InsertController</a></h2>
+			<pre>func InsertController(ip <a href="/pkg/builtin/#string">string</a>, name <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="IsSessionHashValid">func <a href="/src/target/account.go?s=7391:7432#L285">IsSessionHashValid</a></h2>
 			<pre>func IsSessionHashValid(hash <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 IsSessionHashValid checks if the given hash is present in the database.
@@ -548,7 +582,25 @@ If the information is correct, a new session hash is returned.
 		
 			
 			
-			<h2 id="SaveAveraging">func <a href="/src/target/speakers.go?s=40358:40403#L1794">SaveAveraging</a></h2>
+			<h2 id="LogoutAccount">func <a href="/src/target/account.go?s=1605:1644#L54">LogoutAccount</a></h2>
+			<pre>func LogoutAccount(hash <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="RetrieveControllers">func <a href="/src/target/speakers.go?s=46894:46948#L2020">RetrieveControllers</a></h2>
+			<pre>func RetrieveControllers() ([]<a href="/pkg/builtin/#int">int</a>, []<a href="/pkg/builtin/#string">string</a>, []<a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SaveAveraging">func <a href="/src/target/speakers.go?s=40921:40966#L1813">SaveAveraging</a></h2>
 			<pre>func SaveAveraging(speaker *<a href="#ControllerStatus">ControllerStatus</a>)</pre>
 			<p>
 SaveAveraging saves the effectiveness and pleasantness values to the databae by updating the effectiveness and pleasantness values in the database for the respective speaker.
@@ -560,7 +612,7 @@ SaveAveraging saves the effectiveness and pleasantness values to the databae by 
 		
 			
 			
-			<h2 id="SaveAveragingZone">func <a href="/src/target/speakers.go?s=40861:40895#L1811">SaveAveragingZone</a></h2>
+			<h2 id="SaveAveragingZone">func <a href="/src/target/speakers.go?s=41424:41458#L1830">SaveAveragingZone</a></h2>
 			<pre>func SaveAveragingZone(zone *<a href="#Zone">Zone</a>)</pre>
 			<p>
 SaveAveragingZone: This is the zone version of the SaveAveraging function. As such, it updates the effectiveness and pleasantness values for the respective zone in the zone table of the database.
@@ -572,7 +624,7 @@ SaveAveragingZone: This is the zone version of the SaveAveraging function. As su
 		
 			
 			
-			<h2 id="SaveBand">func <a href="/src/target/speakers.go?s=41251:41334#L1828">SaveBand</a></h2>
+			<h2 id="SaveBand">func <a href="/src/target/speakers.go?s=41814:41897#L1847">SaveBand</a></h2>
 			<pre>func SaveBand(speaker *<a href="#ControllerStatus">ControllerStatus</a>, band <a href="/pkg/builtin/#int">int</a>, level <a href="/pkg/builtin/#float64">float64</a>, typeOfPreset <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 SaveBand saves the specified band by inserting the band into the database for the specified speaker.
@@ -584,7 +636,7 @@ SaveBand saves the specified band by inserting the band into the database for th
 		
 			
 			
-			<h2 id="SaveBandZone">func <a href="/src/target/speakers.go?s=42180:42252#L1854">SaveBandZone</a></h2>
+			<h2 id="SaveBandZone">func <a href="/src/target/speakers.go?s=42743:42815#L1873">SaveBandZone</a></h2>
 			<pre>func SaveBandZone(zone *<a href="#Zone">Zone</a>, band <a href="/pkg/builtin/#int">int</a>, level <a href="/pkg/builtin/#float64">float64</a>, typeOfPreset <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 SaveBandZone: This is the zone version of the SaveBand function. As such, it saves the band for the entire zone.
@@ -596,7 +648,7 @@ SaveBandZone: This is the zone version of the SaveBand function. As such, it sav
 		
 			
 			
-			<h2 id="SaveFade">func <a href="/src/target/speakers.go?s=39433:39473#L1760">SaveFade</a></h2>
+			<h2 id="SaveFade">func <a href="/src/target/speakers.go?s=39996:40036#L1779">SaveFade</a></h2>
 			<pre>func SaveFade(speaker *<a href="#ControllerStatus">ControllerStatus</a>)</pre>
 			<p>
 SaveFade saves the fade time and fade level to the database by updating the two fade values in the database for the respective speaker.
@@ -608,7 +660,7 @@ SaveFade saves the fade time and fade level to the database by updating the two 
 		
 			
 			
-			<h2 id="SaveFadeZone">func <a href="/src/target/speakers.go?s=39913:39942#L1777">SaveFadeZone</a></h2>
+			<h2 id="SaveFadeZone">func <a href="/src/target/speakers.go?s=40476:40505#L1796">SaveFadeZone</a></h2>
 			<pre>func SaveFadeZone(zone *<a href="#Zone">Zone</a>)</pre>
 			<p>
 SaveFadeZone: This is the zone version of the SaveFade function. As such, is saves the fade values to the database by updating the two fade values in the database for the respective zone.
@@ -620,7 +672,7 @@ SaveFadeZone: This is the zone version of the SaveFade function. As such, is sav
 		
 			
 			
-			<h2 id="SaveMusicPreset">func <a href="/src/target/speakers.go?s=29086:29155#L1568">SaveMusicPreset</a></h2>
+			<h2 id="SaveMusicPreset">func <a href="/src/target/speakers.go?s=29649:29718#L1587">SaveMusicPreset</a></h2>
 			<pre>func SaveMusicPreset(speakerId <a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>, constants []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SaveMusicPreset saves the music preset of the specified speaker by inserting the speakerID along with the constants to save into the MusicEqualizerPresets table.
@@ -632,7 +684,7 @@ SaveMusicPreset saves the music preset of the specified speaker by inserting the
 		
 			
 			
-			<h2 id="SaveMusicPresetZone">func <a href="/src/target/speakers.go?s=33272:33342#L1629">SaveMusicPresetZone</a></h2>
+			<h2 id="SaveMusicPresetZone">func <a href="/src/target/speakers.go?s=33835:33905#L1648">SaveMusicPresetZone</a></h2>
 			<pre>func SaveMusicPresetZone(zoneid <a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>, constants []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SaveMusicPresetZone: This is the zone version of the SaveMusicPreset function. As such, it saves the music preset of the specified zone by inserting the speakerID and the constants to save into the MusicEqualizerPresetsZone table.
@@ -644,7 +696,7 @@ SaveMusicPresetZone: This is the zone version of the SaveMusicPreset function. A
 		
 			
 			
-			<h2 id="SavePagingPreset">func <a href="/src/target/speakers.go?s=29935:30005#L1580">SavePagingPreset</a></h2>
+			<h2 id="SavePagingPreset">func <a href="/src/target/speakers.go?s=30498:30568#L1599">SavePagingPreset</a></h2>
 			<pre>func SavePagingPreset(speakerId <a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>, constants []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SavePagingPreset saves the paging preset of the specified speaker by inserting the speakerID along with the constants to save into the PagingEqualizerPresets table.
@@ -656,7 +708,7 @@ SavePagingPreset saves the paging preset of the specified speaker by inserting t
 		
 			
 			
-			<h2 id="SavePagingPresetZone">func <a href="/src/target/speakers.go?s=34202:34273#L1641">SavePagingPresetZone</a></h2>
+			<h2 id="SavePagingPresetZone">func <a href="/src/target/speakers.go?s=34765:34836#L1660">SavePagingPresetZone</a></h2>
 			<pre>func SavePagingPresetZone(zoneid <a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>, constants []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SavePagingPresetZone: This is the zone version of the SavePagingPreset function. As such, it saves the paging preset of the specified zone by inserting the speakerID and the constants to save into the PagingEqualizerPresetsZone table.
@@ -668,7 +720,7 @@ SavePagingPresetZone: This is the zone version of the SavePagingPreset function.
 		
 			
 			
-			<h2 id="SavePreset">func <a href="/src/target/speakers.go?s=28255:28319#L1556">SavePreset</a></h2>
+			<h2 id="SavePreset">func <a href="/src/target/speakers.go?s=28818:28882#L1575">SavePreset</a></h2>
 			<pre>func SavePreset(speakerId <a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>, constants []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SavePreset saves the preset of the specified speaker by inserting the speakerID along with the constants to save into the EqualizerPresets table.
@@ -680,7 +732,7 @@ SavePreset saves the preset of the specified speaker by inserting the speakerID 
 		
 			
 			
-			<h2 id="SavePresetZone">func <a href="/src/target/speakers.go?s=32361:32426#L1617">SavePresetZone</a></h2>
+			<h2 id="SavePresetZone">func <a href="/src/target/speakers.go?s=32924:32989#L1636">SavePresetZone</a></h2>
 			<pre>func SavePresetZone(zoneid <a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>, constants []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SavePresetZone: This is the zone version of the SavePreset function. As such, it saves the preset of the specified zone by inserting the speakerID and the constants to save into the EqualizerPresetsZone table.
@@ -692,7 +744,7 @@ SavePresetZone: This is the zone version of the SavePreset function. As such, it
 		
 			
 			
-			<h2 id="SaveTarget">func <a href="/src/target/speakers.go?s=31487:31551#L1605">SaveTarget</a></h2>
+			<h2 id="SaveTarget">func <a href="/src/target/speakers.go?s=32050:32114#L1624">SaveTarget</a></h2>
 			<pre>func SaveTarget(speakerId <a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>, constants []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SaveTarget saves the Target of the specified speaker by inserting the speakerID along with the constants to save into the Targets table.
@@ -704,7 +756,7 @@ SaveTarget saves the Target of the specified speaker by inserting the speakerID 
 		
 			
 			
-			<h2 id="SaveTargetZone">func <a href="/src/target/speakers.go?s=35939:36004#L1665">SaveTargetZone</a></h2>
+			<h2 id="SaveTargetZone">func <a href="/src/target/speakers.go?s=36502:36567#L1684">SaveTargetZone</a></h2>
 			<pre>func SaveTargetZone(zoneid <a href="/pkg/builtin/#int8">int8</a>, name <a href="/pkg/builtin/#string">string</a>, constants []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SaveTargetZone: This is the zone version of the SaveTarget function. As such, it saves the targets of the specificed zone by inserting the speakerID and the constants to save into the TargetsZone table.
@@ -716,7 +768,7 @@ SaveTargetZone: This is the zone version of the SaveTarget function. As such, it
 		
 			
 			
-			<h2 id="SaveVolume">func <a href="/src/target/speakers.go?s=36784:36826#L1678">SaveVolume</a></h2>
+			<h2 id="SaveVolume">func <a href="/src/target/speakers.go?s=37347:37389#L1697">SaveVolume</a></h2>
 			<pre>func SaveVolume(speaker *<a href="#ControllerStatus">ControllerStatus</a>)</pre>
 			<p>
 SaveVolume saves the volume for the specified speakerID to the database by updating the four volume values into the database in the speaker table for the respective speaker.
@@ -728,7 +780,7 @@ SaveVolume saves the volume for the specified speakerID to the database by updat
 		
 			
 			
-			<h2 id="SaveVolumeZone">func <a href="/src/target/speakers.go?s=37435:37466#L1698">SaveVolumeZone</a></h2>
+			<h2 id="SaveVolumeZone">func <a href="/src/target/speakers.go?s=37998:38029#L1717">SaveVolumeZone</a></h2>
 			<pre>func SaveVolumeZone(zone *<a href="#Zone">Zone</a>)</pre>
 			<p>
 SaveVolumeZone: This is the zone version of the SaveVolume function. As such, it saves the volume for the specified zoneID to the database by updating the four volume values into the database in the zone table for the respective zone.
@@ -740,7 +792,7 @@ SaveVolumeZone: This is the zone version of the SaveVolume function. As such, it
 		
 			
 			
-			<h2 id="SetSpeakerToZoneByID">func <a href="/src/target/zones.go?s=13716:13781#L651">SetSpeakerToZoneByID</a></h2>
+			<h2 id="SetSpeakerToZoneByID">func <a href="/src/target/zones.go?s=13722:13787#L651">SetSpeakerToZoneByID</a></h2>
 			<pre>func SetSpeakerToZoneByID(speaker *<a href="#ControllerStatus">ControllerStatus</a>, zoneID <a href="/pkg/builtin/#int8">int8</a>)</pre>
 			<p>
 SetSpeakerToZoneByID moves the given speaker to the zone with the given name.
@@ -752,7 +804,7 @@ SetSpeakerToZoneByID moves the given speaker to the zone with the given name.
 		
 			
 			
-			<h2 id="SetSpeakerToZoneByName">func <a href="/src/target/zones.go?s=13481:13552#L643">SetSpeakerToZoneByName</a></h2>
+			<h2 id="SetSpeakerToZoneByName">func <a href="/src/target/zones.go?s=13487:13558#L643">SetSpeakerToZoneByName</a></h2>
 			<pre>func SetSpeakerToZoneByName(speaker *<a href="#ControllerStatus">ControllerStatus</a>, zoneName <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SetSpeakerToZoneByName moves the given speaker to the zone with the given name.
@@ -764,7 +816,7 @@ SetSpeakerToZoneByName moves the given speaker to the zone with the given name.
 		
 			
 			
-			<h2 id="UpdateSchedule">func <a href="/src/target/speakers.go?s=26371:26464#L1502">UpdateSchedule</a></h2>
+			<h2 id="UpdateSchedule">func <a href="/src/target/speakers.go?s=26934:27027#L1521">UpdateSchedule</a></h2>
 			<pre>func UpdateSchedule(speakerid <a href="/pkg/builtin/#int8">int8</a>, day <a href="/pkg/builtin/#int">int</a>, interval <a href="/pkg/builtin/#int">int</a>, start <a href="/pkg/builtin/#int">int</a>, end <a href="/pkg/builtin/#int">int</a>, times [24]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 UpdateSchedule updates the speaker schedule for a the specified speakerID.
@@ -776,7 +828,7 @@ UpdateSchedule updates the speaker schedule for a the specified speakerID.
 		
 			
 			
-			<h2 id="UpdateScheduleZone">func <a href="/src/target/speakers.go?s=27311:27405#L1529">UpdateScheduleZone</a></h2>
+			<h2 id="UpdateScheduleZone">func <a href="/src/target/speakers.go?s=27874:27968#L1548">UpdateScheduleZone</a></h2>
 			<pre>func UpdateScheduleZone(zoneid <a href="/pkg/builtin/#int8">int8</a>, day <a href="/pkg/builtin/#int">int</a>, interval <a href="/pkg/builtin/#int">int</a>, start <a href="/pkg/builtin/#int">int</a>, end <a href="/pkg/builtin/#int">int</a>, times [24]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 UpdateScheduleZone: This is the zone version of UpdateSchedule. As such, it updates the schedule of a zone instead of just a speaker.
@@ -788,7 +840,7 @@ UpdateScheduleZone: This is the zone version of UpdateSchedule. As such, it upda
 		
 			
 			
-			<h2 id="UpdateStatus">func <a href="/src/target/speakers.go?s=26054:26093#L1484">UpdateStatus</a></h2>
+			<h2 id="UpdateStatus">func <a href="/src/target/speakers.go?s=26617:26656#L1503">UpdateStatus</a></h2>
 			<pre>func UpdateStatus(ID <a href="/pkg/builtin/#int8">int8</a>, status <a href="/pkg/builtin/#int8">int8</a>)</pre>
 			<p>
 UpdateStatus updates the status of the speaker with the specified speakerID.
@@ -801,7 +853,7 @@ This is used to reflect whether or not the speaker has been determined to be ali
 		
 			
 			
-			<h2 id="UpdateThreshold">func <a href="/src/target/speakers.go?s=37971:38101#L1718">UpdateThreshold</a></h2>
+			<h2 id="UpdateThreshold">func <a href="/src/target/speakers.go?s=38534:38664#L1737">UpdateThreshold</a></h2>
 			<pre>func UpdateThreshold(speaker <a href="/pkg/builtin/#int8">int8</a>, musicMin <a href="/pkg/builtin/#int8">int8</a>, musicMax <a href="/pkg/builtin/#int8">int8</a>, pagingMin <a href="/pkg/builtin/#int8">int8</a>, pagingMax <a href="/pkg/builtin/#int8">int8</a>, maskingMin <a href="/pkg/builtin/#int8">int8</a>, maskingMax <a href="/pkg/builtin/#int8">int8</a>)</pre>
 			<p>
 UpdateThreshold updates the threshold for the volume value in the database by updating the values in the speaker table for the respective speaker.
@@ -813,7 +865,7 @@ UpdateThreshold updates the threshold for the volume value in the database by up
 		
 			
 			
-			<h2 id="UpdateThresholdZone">func <a href="/src/target/speakers.go?s=38753:38884#L1739">UpdateThresholdZone</a></h2>
+			<h2 id="UpdateThresholdZone">func <a href="/src/target/speakers.go?s=39316:39447#L1758">UpdateThresholdZone</a></h2>
 			<pre>func UpdateThresholdZone(zone <a href="/pkg/builtin/#int8">int8</a>, musicMin <a href="/pkg/builtin/#int8">int8</a>, musicMax <a href="/pkg/builtin/#int8">int8</a>, pagingMin <a href="/pkg/builtin/#int8">int8</a>, pagingMax <a href="/pkg/builtin/#int8">int8</a>, maskingMin <a href="/pkg/builtin/#int8">int8</a>, maskingMax <a href="/pkg/builtin/#int8">int8</a>)</pre>
 			<p>
 UpdateThresholdZone: This is the zone version of the UpdateThreshold function. As such, it saves the threshold values to the database by updating the threshold values into the databse in the zone table for the respective zone.
@@ -903,7 +955,7 @@ ControllerStatus is a software abstraction of the speakers so the software can t
 
 			
 				
-				<h3 id="GetSpeaker">func <a href="/src/target/speakers.go?s=12873:12922#L729">GetSpeaker</a></h3>
+				<h3 id="GetSpeaker">func <a href="/src/target/speakers.go?s=13436:13485#L748">GetSpeaker</a></h3>
 				<pre>func GetSpeaker(speakerID <a href="/pkg/builtin/#int8">int8</a>) *<a href="#ControllerStatus">ControllerStatus</a></pre>
 				<p>
 GetSpeaker retrieves all current speaker information for the specified speakerID and returns it as a pointer to a ControllerStatus object.
@@ -968,7 +1020,7 @@ Zone is the zone version of the ControllerStatus struct and as such it is used t
 
 			
 				
-				<h3 id="GetPagingZone">func <a href="/src/target/zones.go?s=30016:30053#L1554">GetPagingZone</a></h3>
+				<h3 id="GetPagingZone">func <a href="/src/target/zones.go?s=30022:30059#L1554">GetPagingZone</a></h3>
 				<pre>func GetPagingZone(zoneID <a href="/pkg/builtin/#int8">int8</a>) *<a href="#Zone">Zone</a></pre>
 				<p>
 GetZone gets the Zone with the specified ID from the database.
@@ -978,7 +1030,7 @@ GetZone gets the Zone with the specified ID from the database.
 				
 			
 				
-				<h3 id="GetZone">func <a href="/src/target/zones.go?s=16924:16955#L800">GetZone</a></h3>
+				<h3 id="GetZone">func <a href="/src/target/zones.go?s=16930:16961#L800">GetZone</a></h3>
 				<pre>func GetZone(zoneID <a href="/pkg/builtin/#int8">int8</a>) *<a href="#Zone">Zone</a></pre>
 				<p>
 GetZone gets the Zone with the specified ID and its current information from the database.
