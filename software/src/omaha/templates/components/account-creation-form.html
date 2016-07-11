@@ -61,7 +61,8 @@
       <div>
         <paper-input style="float: left;" id="username" name="username" label="Username" required></paper-input>
         <paper-input style="float: right;" id="password" name="password" label="Password" type="password" required></paper-input>
-      <div>
+      </div>
+      <!--
       <br><br><br><br><br>
       <div>
         <paper-input id="name" name="name" label="Full Name"></paper-input>
@@ -70,6 +71,7 @@
         <paper-input style="float: left;" id="email" name="email" label="Email"></paper-input>
         <paper-input style="float: right;" id="phone" name="phone" label="Phone"></paper-input>
       </div>    
+      -->
       <br><br><br><br><br>
       <div>
         <paper-input style="float: left;" id="speakerid" name="speakerid" label="SpeakerID"></paper-input>
@@ -124,13 +126,24 @@
         } else {
           hash = document.cookie.split('; ');
 
-          this.$.loginAjax.body = {
+          /*this.$.loginAjax.body = {
             level:      parseInt(localStorage.getItem("level")) - 1,
             username:   this.$.username.value,
             password:   this.$.password.value,
             name:       this.$.name.value,
             email:      this.$.email.value,
             phone:      this.$.phone.value,
+            speakerid:  parseInt(this.$.speakerid.value), 
+            zoneid:     parseInt(this.$.zoneid.value)
+          }*/
+
+          this.$.loginAjax.body = {
+            level:      parseInt(localStorage.getItem("level")) - 1,
+            username:   this.$.username.value,
+            password:   this.$.password.value,
+            name:       "",
+            email:      "",
+            phone:      "",
             speakerid:  parseInt(this.$.speakerid.value), 
             zoneid:     parseInt(this.$.zoneid.value)
           }
