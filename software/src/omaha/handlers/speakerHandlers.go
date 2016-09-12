@@ -248,27 +248,27 @@ func UpdateVolumesZone(w http.ResponseWriter, r *http.Request) {
 			log.Println(zone.Speakers[x].VolumeLevel)
 
 			// the VolumeLevel[0-3] is because the volume levels that were received from the server were put into an array
-			if(volumesZoneRequest.Volume != zone.Speakers[x].VolumeLevel[0]) {
+			//if(volumesZoneRequest.Volume != zone.Speakers[x].VolumeLevel[0]) {
 				zone.Speakers[x].VolumeLevel[0] = volumesZoneRequest.Volume
 				zone.VolumeLevel[0] = volumesZoneRequest.Volume
 				system.SetVolume(zone.Speakers[x])
 				// will have to do a SetVolumeZone maybe 	
-			}
-			if(volumesZoneRequest.Music != zone.Speakers[x].VolumeLevel[1]) {
+			//}
+			//if(volumesZoneRequest.Music != zone.Speakers[x].VolumeLevel[1]) {
 				zone.Speakers[x].VolumeLevel[1] = volumesZoneRequest.Music
 				zone.VolumeLevel[1] = volumesZoneRequest.Music
 				system.SetMusicVolume(zone.Speakers[x])
-			}
-			if(volumesZoneRequest.Paging != zone.Speakers[x].VolumeLevel[2]) {
+			//}
+			//if(volumesZoneRequest.Paging != zone.Speakers[x].VolumeLevel[2]) {
 				zone.Speakers[x].VolumeLevel[2] = volumesZoneRequest.Paging
 				zone.VolumeLevel[2] = volumesZoneRequest.Paging
 				system.SetPaging(zone.Speakers[x], volumesZoneRequest.Paging)		// 0 means volume adjustment
-			}
-			if(volumesZoneRequest.Masking != zone.Speakers[x].VolumeLevel[3]) {
+			//}
+			//if(volumesZoneRequest.Masking != zone.Speakers[x].VolumeLevel[3]) {
 				zone.Speakers[x].VolumeLevel[3] = volumesZoneRequest.Masking
 				zone.VolumeLevel[3] = volumesZoneRequest.Masking
 				system.SetSoundMaskingVolume(zone.Speakers[x])		// 0 means volume adjustment
-			}
+			//}
 			//if(l != 0) {
 			defer database.SaveVolume(zone.Speakers[x])		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
 			defer database.SaveVolumeZone(zone)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
@@ -753,22 +753,22 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 		
 		log.Println(speaker.VolumeLevel)
 
-		if(volumeArray[0] != speaker.VolumeLevel[0]) {
+		//if(volumeArray[0] != speaker.VolumeLevel[0]) {
 			speaker.VolumeLevel[0] = volumeArray[0]
 			system.SetVolume(speaker) 	
-		}
-		if(volumeArray[1] != speaker.VolumeLevel[1]) {
+		//}
+		//if(volumeArray[1] != speaker.VolumeLevel[1]) {
 			speaker.VolumeLevel[1] = volumeArray[1]
 			system.SetMusicVolume(speaker)
-		}
-		if(volumeArray[2] != speaker.VolumeLevel[2]) {
+		//}
+		//if(volumeArray[2] != speaker.VolumeLevel[2]) {
 			speaker.VolumeLevel[2] = volumeArray[2]
 			system.SetPaging(speaker, volumeArray[2])
-		}
-		if(volumeArray[3] != speaker.VolumeLevel[3]) {
+		//}
+		//if(volumeArray[3] != speaker.VolumeLevel[3]) {
 			speaker.VolumeLevel[3] = volumeArray[3]
 			system.SetSoundMaskingVolume(speaker)
-		}
+		//}
 		
 		defer database.SaveVolume(speaker)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
 
