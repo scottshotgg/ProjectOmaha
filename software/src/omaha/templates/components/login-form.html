@@ -1,5 +1,5 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="/bower_components/iron-form/iron-form.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
@@ -216,12 +216,14 @@
         var ips = data.response.Ips;
         var names = data.response.Names;
 
-        for(var x = 0; x < controllerids.length; x++) {
-          temp = document.createElement("paper-item");
-          temp.setAttribute("value", ips[x]);
-          temp.setAttribute("id", names[x]);
-          temp.innerHTML = names[x] + " (" + ips[x] + ")";
-          Polymer.dom(this.$.controllerListBox).appendChild(temp);
+        if (controllerids != null) {
+          for(var x = 0; x < controllerids.length; x++) {
+            temp = document.createElement("paper-item");
+            temp.setAttribute("value", ips[x]);
+            temp.setAttribute("id", names[x]);
+            temp.innerHTML = names[x] + " (" + ips[x] + ")";
+            Polymer.dom(this.$.controllerListBox).appendChild(temp);
+          }
         }
 
       },
