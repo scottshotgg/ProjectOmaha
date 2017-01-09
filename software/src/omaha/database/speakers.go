@@ -1705,7 +1705,8 @@ func SaveTargetZone(zoneid int8, name string, constants []string) {
 	SaveVolume saves the volume for the specified speakerID to the database by updating the four volume values into the database in the speaker table for the respective speaker.
 */
 func SaveVolume(speaker *ControllerStatus) {
-	log.Println("SaveVolume: I am firing")
+	//log.Println("SaveVolume: I am firing")
+	
 	_, err := DB.Exec(`
 		UPDATE speaker
 		SET
@@ -1718,14 +1719,15 @@ func SaveVolume(speaker *ControllerStatus) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(speaker)
+	//log.Println(speaker)
+	
 }
 
 /*
 	SaveVolumeZone: This is the zone version of the SaveVolume function. As such, it saves the volume for the specified zoneID to the database by updating the four volume values into the database in the zone table for the respective zone.
 */
 func SaveVolumeZone(zone *Zone) {
-	log.Println("SaveVolumeZone: I am firing")
+	//log.Println("SaveVolumeZone: I am firing")
 	_, err := DB.Exec(`
 		UPDATE zone
 		SET
@@ -1738,14 +1740,14 @@ func SaveVolumeZone(zone *Zone) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(zone)
+	//log.Println(zone)
 }
 
 /*
 	UpdateThreshold updates the threshold for the volume value in the database by updating the values in the speaker table for the respective speaker.
 */
 func UpdateThreshold(speaker int8, musicMin int8, musicMax int8, pagingMin int8, pagingMax int8, maskingMin int8, maskingMax int8) {
-	log.Println("UpdateThreshold: I am firing", speaker)
+	//log.Println("UpdateThreshold: I am firing", speaker)
 	_, err := DB.Exec(`
 		UPDATE speaker
 		SET 
@@ -1760,10 +1762,11 @@ func UpdateThreshold(speaker int8, musicMin int8, musicMax int8, pagingMin int8,
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("UpdateThreshold")
 }
 
 /*
-	UpdateThresholdZone: This is the zone version of the UpdateThreshold function. As such, it saves the threshold values to the database by updating the threshold values into the databse in the zone table for the respective zone.
+	UpdateThresholdZone: This is the zone version of the UpdateThreshold function. It updates the threshold values in the database in the zone table for the respective zone.
 */
 func UpdateThresholdZone(zone int8, musicMin int8, musicMax int8, pagingMin int8, pagingMax int8, maskingMin int8, maskingMax int8) {
 	log.Println("UpdateThreshold: I am firing", zone)
@@ -1781,6 +1784,7 @@ func UpdateThresholdZone(zone int8, musicMin int8, musicMax int8, pagingMin int8
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("UpdateThresholdZone")
 }
 
 /*

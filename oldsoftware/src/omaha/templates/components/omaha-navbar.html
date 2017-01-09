@@ -1,0 +1,106 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-drawer-panel/paper-drawer-panel.html">
+
+<dom-module id="omaha-navbar">
+  <template>
+    <style>
+      :host{
+
+        --paper-input-container-input-color: white;
+        --paper-input-container-underline: {
+          background-color: white;
+        }
+        --paper-icon-button: {
+          margin-right: 20px;
+        }
+      }
+
+    </style>
+
+    <paper-toolbar>
+      <paper-icon-button on-click="_toggleDrawerPressed" icon="menu"></paper-icon-button>
+      <paper-icon-button on-click="_backPressed" id="back" icon="arrow-back"></paper-icon-button>
+
+      <div class="title">Project Omaha</div>
+      <paper-button id="logout" on-click="_logout" style="float: right;">Logout</paper-button>
+    </paper-toolbar>
+
+    <iron-ajax
+        id="logoutAjax"
+        url="/logout/"
+        method="POST"
+        content-type="application/json"
+        handle-as="json"
+        debounce-duration="300">
+    </iron-ajax>
+  </template>
+  <script>
+    Polymer({
+      is: 'omaha-navbar',
+
+      properties: {
+        selected: {
+          type: Number,
+          notify: true
+        }
+      },
+
+      _toggleDrawerPressed: function() {
+        this.fire('toggledrawer', {});
+      },
+
+      _createAccountPressed: function() {
+        this.fire('showaccountcreation', {})
+        this.showBackArrow();
+      },
+
+      _backPressed: function() {
+        this.fire('backpressed', {});
+        this.hideBackArrow();
+      },
+
+      _logout: function() {
+        if(document.cookie.includes("expires")) {
+          this.$.logoutAjax.body = {
+            //"hash": document.cookie.slice(8, document.cookie.length)
+            "hash": document.cookie.split('; ')[2].slice(8, 38)
+          };
+        } else {
+          this.$.logoutAjax.body = {
+            //"hash": document.cookie.slice(8, document.cookie.length)
+            "hash": document.cookie.split('; ')[1].slice(8, 38)
+          };
+        }
+
+        this.$.logoutAjax.generateRequest();
+
+        /*var d = new Date();
+        d.setYear(d.getYear() - 20);
+        document.cookie = "name=" + sessionCookie + "; expires=" + d.toUTCString() + ";";
+        */
+        document.cookie = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
+        //document.cookie = -1;
+        console.log(document.cookie);
+        window.location = "http://" + window.location.hostname + ":8080";
+      },
+
+      showBackArrow: function() {
+        this.$.back.icon = "arrow-back";
+        this.$.back.disabled = false;
+      },
+
+      hideBackArrow: function() {
+        this.$.back.icon = "none";
+        this.$.back.disabled = true;
+      }
+    });
+  </script>
+</dom-module>

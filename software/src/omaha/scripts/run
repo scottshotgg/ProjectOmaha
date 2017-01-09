@@ -5,4 +5,4 @@ export PYTHON2_PACKAGES_PATH=/usr/local/lib/python2.7/site-packages
 echo "Running analysis on map"
 python $SOFTWARE_DIR/src/omaha/processImage.py $SOFTWARE_DIR/src/omaha/templates/css/map.png $SOFTWARE_DIR/src/omaha/templates/css/speakerLocations.txt
 echo "Finished analyzing map"
-go run $SOFTWARE_DIR/src/omaha/main.go "$@"
+go run $SOFTWARE_DIR/src/omaha/main/main.go "$@"

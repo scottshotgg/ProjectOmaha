@@ -34,6 +34,7 @@ func (status *SystemStatus) IsFinding() bool {
 	SetFinding sets the finding variable when finding start and when it stops. This is used in main.go when starting the process to find the speakers.
 */
 func (status *SystemStatus) SetFinding(finding bool) {
+	log.Println("finding set")
 	status.finding = finding
 }
 

@@ -8,7 +8,7 @@ import (
 	"omaha/database"
 	"omaha/handlers"
 	"omaha/system"
-    "sync"
+    //"sync"
 )
 
 /*
@@ -67,6 +67,8 @@ func startKeepAlive(amountOfControllers int, controllers []*database.ControllerS
     This is the main function. This is where it all starts. Main is responsible for parsing the command line flags, spawning threads to do different tasks, initializing the DB, and initializing the handlers, and starting the keelAlive. 
 */
 func main() {
+	log.Println("starting main function in golang")
+
 	var controllerAmount = flag.Int("c", -1, "help me!!!")  
     var debug = flag.Bool("d", false, "help me!!!")
 	flag.Parse()
@@ -91,14 +93,14 @@ func main() {
 	log.Println(SystemStatus, amountOfControllers)
 
 	handlers.InitializeHandlers()
-
-    if(*debug == false) {
+	
+    /*if(*debug == false) {
         var wg sync.WaitGroup
         wg.Add(1)
         system.StartUpProcess(&wg)
         wg.Wait()
-    }
-
+    }*/
+	
 	log.Println("Starting KeepAlive sequence")
 	startKeepAlive(amountOfControllers, controllers)
 

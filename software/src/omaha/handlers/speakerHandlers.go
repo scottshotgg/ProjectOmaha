@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"math"
 	//"time"
+	"sync"
 )
 
 /*
@@ -221,6 +222,9 @@ var speakerUpdateHandlers = map[string]func(*speakerAttributes, *database.Contro
 	"target":			updateSpeakerTarget,
 }
 
+
+var dbmutex = &sync.Mutex{}
+
 /*
 	UpdateVolumesZone: This is the zone version of the UpdateVolumes function. As such, this function updates the volumes for the specified zones.
 */
@@ -240,7 +244,10 @@ func UpdateVolumesZone(w http.ResponseWriter, r *http.Request) {
 
 	zone := database.GetZone(volumesZoneRequest.Zone)
 
-	// for all the speakers in the zone
+	dbmutex.Lock()
+
+	// for all the speakers in the zone	
+	database.SaveVolumeZone(zone)
 	for x := range zone.Speakers {
 		if volumesZoneRequest.Volume >= 0 && volumesZoneRequest.Volume <= 100 && volumesZoneRequest.Music >= 0 && volumesZoneRequest.Music <= 100 && volumesZoneRequest.Paging >= 0 && volumesZoneRequest.Paging <= 100 && volumesZoneRequest.Masking >= 0 && volumesZoneRequest.Masking <= 100 {
 			//log.Printf("Telling speaker %d to set volume to %d\n", speaker.ID, attr.Volume)
@@ -270,11 +277,12 @@ func UpdateVolumesZone(w http.ResponseWriter, r *http.Request) {
 				system.SetSoundMaskingVolume(zone.Speakers[x])		// 0 means volume adjustment
 			//}
 			//if(l != 0) {
-			defer database.SaveVolume(zone.Speakers[x])		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
-			defer database.SaveVolumeZone(zone)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
+			database.SaveVolume(zone.Speakers[x])		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
+			//defer database.SaveVolumeZone(zone)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
 		}
 		w.Write(getGenericSuccessResponse())
 	}
+    	dbmutex.Unlock()
 }
 
 /*
@@ -300,6 +308,9 @@ func ThresholdHandlerZone(w http.ResponseWriter, r *http.Request) {		// could me
 	log.Println(session.Value)
 	log.Println(thresholdZoneData.Zone)
 
+	
+	dbmutex.Lock()
+
 	// if you have permission to perform this action. This is the backend part of the security. The frontend is also "secured" but people could easily manipulate the data on that side.
 	if(int(thresholdZoneData.Zone) == database.AuthenticateZoneFromHash(session.Value) || database.AuthenticatePermissionFromHash(session.Value) > 0) {
 		zone := database.GetZone(thresholdZoneData.Zone)
@@ -309,6 +320,8 @@ func ThresholdHandlerZone(w http.ResponseWriter, r *http.Request) {		// could me
 		} 
 		database.UpdateThresholdZone(zone.ZoneID, thresholdZoneData.LowerMusicThreshold, thresholdZoneData.UpperMusicThreshold, thresholdZoneData.LowerPagingThreshold,	thresholdZoneData.UpperPagingThreshold,	thresholdZoneData.LowerMaskingThreshold, thresholdZoneData.UpperMaskingThreshold)
 	}
+
+	dbmutex.Unlock()
 	// else don't write anything to let anyone that is trying to intrude know whether they are failing or not
 
 	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
@@ -331,6 +344,9 @@ func UpdateAveragingZone(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+
+	dbmutex.Lock()
+
 	if averagingZoneRequest.Effectiveness > 0 && averagingZoneRequest.Effectiveness < 11 && averagingZoneRequest.Pleasantness > 0 && averagingZoneRequest.Pleasantness < 11 {	
 		zone := database.GetZone(averagingZoneRequest.Zone)
 		for x := range zone.Speakers {
@@ -344,6 +360,8 @@ func UpdateAveragingZone(w http.ResponseWriter, r *http.Request) {
 		}
 		database.SaveAveragingZone(zone)
 	}
+
+	dbmutex.Unlock()
 
 	w.Write(getGenericSuccessResponse())
 }
@@ -378,6 +396,9 @@ func UpdateSpeakerTargetZone(w http.ResponseWriter, r *http.Request) {		// could
 	var k = 0
 
 	// while we are still in range of the constants
+	// 
+	dbmutex.Lock()
+
 	for _, i := range constants {
 		// try to parse a float value
 		floatParse, err := strconv.ParseFloat(i, 64)
@@ -411,6 +432,9 @@ func UpdateSpeakerTargetZone(w http.ResponseWriter, r *http.Request) {		// could
 		k++
 
 	}
+
+	dbmutex.Unlock()
+
 	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
@@ -446,6 +470,8 @@ func UpdateSpeakerEqualizerZone(w http.ResponseWriter, r *http.Request) {
 	switch(equalizerZoneRequest.Mode) {
 		case 0: {
 			zone := database.GetZone(equalizerZoneRequest.Zone)
+
+			dbmutex.Lock()
 			for  i := 0; i < len(constants); i++ {
 				for j := range zone.Speakers {
 					speaker := database.GetSpeaker(zone.Speakers[j].ID)
@@ -469,6 +495,8 @@ func UpdateSpeakerEqualizerZone(w http.ResponseWriter, r *http.Request) {
 					}
 				}
 			}
+
+		dbmutex.Unlock()
 			k++
 
 			break;
@@ -477,6 +505,8 @@ func UpdateSpeakerEqualizerZone(w http.ResponseWriter, r *http.Request) {
 		// case 1 is a music equalizer
 		case 1: {
 			zone := database.GetZone(equalizerZoneRequest.Zone)
+
+			dbmutex.Lock()
 			for  i := 0; i < len(constants); i++ {
 				for j := range zone.Speakers {
 					speaker := database.GetSpeaker(zone.Speakers[j].ID)
@@ -499,12 +529,17 @@ func UpdateSpeakerEqualizerZone(w http.ResponseWriter, r *http.Request) {
 				k++
 			}
 
+			dbmutex.Unlock()
+
 			break;
 		}
 
 		// case 2 is a paging equalizer
 		case 2: {
 			zone := database.GetZone(equalizerZoneRequest.Zone)
+
+			dbmutex.Lock()
+
 			for  i := 0; i < len(constants); i++ {
 				for j := range zone.Speakers {
 					speaker := database.GetSpeaker(zone.Speakers[j].ID)
@@ -527,6 +562,8 @@ func UpdateSpeakerEqualizerZone(w http.ResponseWriter, r *http.Request) {
 				}
 				k++
 			}
+
+			dbmutex.Unlock()
 
 			break;
 		}
@@ -562,22 +599,32 @@ func AddPresetHandlerZone(w http.ResponseWriter, r *http.Request) {
 	switch addPresetRequestZone.Type {
 		case 0:
 			zone := database.GetZone(addPresetRequestZone.Zone)
+
+			dbmutex.Lock()
 			for x := range zone.Speakers {
 				database.SavePreset(zone.Speakers[x].ID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
 			}
 			database.SavePresetZone(zone.ZoneID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+			dbmutex.Unlock()
+
 		case 1:
 			zone := database.GetZone(addPresetRequestZone.Zone)
+			
+			dbmutex.Lock()
 			for x := range zone.Speakers {
 				database.SaveMusicPreset(zone.Speakers[x].ID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
 			}
 			database.SaveMusicPresetZone(zone.ZoneID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+			dbmutex.Unlock()
+
 		case 2:		
 			zone := database.GetZone(addPresetRequestZone.Zone)
+			dbmutex.Lock()
 			for x := range zone.Speakers {
 				database.SavePagingPreset(zone.Speakers[x].ID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
 			}
 			database.SavePagingPresetZone(zone.ZoneID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+			dbmutex.Unlock()
 		default: 
 			log.Println("AddPresetHandler MESSED UP SOMEHOW")
 	}
@@ -604,6 +651,9 @@ func UpdatePagingValuesZone(w http.ResponseWriter, r *http.Request) {
 
 	if updatePagingValuesRequest.FadeTime > -1 && updatePagingValuesRequest.FadeTime < 101 && updatePagingValuesRequest.FadeLevel > -1 && updatePagingValuesRequest.FadeLevel < 101 && updatePagingValuesRequest.PagingVolume > -1 && updatePagingValuesRequest.PagingVolume < 101 {	
 		zone := database.GetZone(updatePagingValuesRequest.Zone)
+		
+
+		dbmutex.Lock()
 		for x := range zone.Speakers {
 			if(updatePagingValuesRequest.FadeTime != zone.Speakers[x].PagingLevel[0]) {
 					zone.Speakers[x].PagingLevel[0] = updatePagingValuesRequest.FadeTime
@@ -627,6 +677,8 @@ func UpdatePagingValuesZone(w http.ResponseWriter, r *http.Request) {
 		zone.VolumeLevel[2] = updatePagingValuesRequest.PagingVolume
 		database.SaveFadeZone(zone)
 		database.SaveVolumeZone(zone)
+		dbmutex.Unlock()
+
 	} else {
 		return
 	}
@@ -651,10 +703,13 @@ func AddTargetHandlerZone(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	zone := database.GetZone(addPresetRequestZone.Zone)
+
+	dbmutex.Lock()
 	for x := range zone.Speakers {
 		database.SaveTarget(zone.Speakers[x].ID, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
 	}
 	database.SaveTargetZone(addPresetRequestZone.Zone, addPresetRequestZone.Name, strings.Fields(addPresetRequestZone.Constants))
+	dbmutex.Unlock()
 
 	w.Write(getGenericSuccessResponse())
 }
@@ -678,13 +733,15 @@ func ScheduleTimeZone(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(timeGivenZone)
 	zone := database.GetZone(timeGivenZone.Zone)
+
+	dbmutex.Lock()
 	for x := range zone.Speakers {
 		database.UpdateSchedule(zone.Speakers[x].ID, timeGivenZone.Day, timeGivenZone.Interval, timeGivenZone.Start, timeGivenZone.End, timeGivenZone.Times)
 		err = database.ChangeSchedulingMode(zone.Speakers[x].ID, timeGivenZone.Mode)
   }
-
 	database.UpdateScheduleZone(zone.ZoneID, timeGivenZone.Day, timeGivenZone.Interval, timeGivenZone.Start, timeGivenZone.End, timeGivenZone.Times)
  	err = database.ChangeSchedulingModeZone(zone.ZoneID, timeGivenZone.Mode)
+	dbmutex.Unlock()
 
 	log.Println("THIS IS THE TIME GIVEN", timeGivenZone)
 
@@ -710,11 +767,13 @@ func ChangeEQModeZone(w http.ResponseWriter, r *http.Request) {		// could merge 
 
 	zone := database.GetZone(changeEQModeZoneRequest.Zone)
 
+	dbmutex.Lock()
 	for j := range zone.Speakers {
 		err = database.ChangeEQMode(zone.Speakers[j].ID, changeEQModeZoneRequest.Mode)
 		_, err = system.SetEQMode(zone.Speakers[j].ID, changeEQModeZoneRequest.Mode)
 	}
 	err = database.ChangeEQModeZone(zone.ZoneID, changeEQModeZoneRequest.Mode)
+	dbmutex.Unlock()
 	// this should tell the controller to send out the packets for the music constants
 	// should also call to change the status in the database to music mode
 
@@ -770,7 +829,9 @@ func updateSpeakerVolume(attr *speakerAttributes, speaker *database.ControllerSt
 			system.SetSoundMaskingVolume(speaker)
 		//}
 		
-		defer database.SaveVolume(speaker)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
+		dbmutex.Lock()
+		database.SaveVolume(speaker)		// this may pose a security hole issue with injection, try incrementer mode or function by function if fails
+		dbmutex.Unlock()
 
 	} else {
 		return errors.New("Invalid volume")
@@ -788,7 +849,9 @@ func updateSpeakerAveragingMode(attr *speakerAttributes, speaker *database.Contr
 		system.SetAveragingMode(speaker, attr.Effectiveness + attr.Pleasantness)
 		speaker.Effectiveness = attr.Effectiveness 
 		speaker.Pleasantness = attr.Pleasantness
+		dbmutex.Lock()
 		database.SaveAveraging(speaker)
+		dbmutex.Unlock()
 	} else {
 		return errors.New("Invalid averaging mode")
 	}
@@ -815,6 +878,7 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 
 	switch(speaker.EqualizerMode) {
 		case 0: {
+			dbmutex.Lock()
 			for  i := 0; i < len(constants); i++ {
 				floatParse, err := strconv.ParseFloat(constants[i], 64)
 				if err != nil {
@@ -839,11 +903,13 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 				}
 				k++
 			}
+			dbmutex.Lock()
 
 			break;
 		}
 
 		case 1: {
+			dbmutex.Lock()
 			for  i := 0; i < len(constants); i++ {
 				floatParse, err := strconv.ParseFloat(constants[i], 64)
 				if err != nil {
@@ -866,11 +932,13 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 				}
 				k++
 			}
+			dbmutex.Unlock()
 
 			break;
 		}
 
 		case 2: {
+			dbmutex.Lock()
 			for  i := 0; i < len(constants); i++ {
 				floatParse, err := strconv.ParseFloat(constants[i], 64)
 				if err != nil {
@@ -891,6 +959,7 @@ func updateSpeakerEqualizer(attr *speakerAttributes, speaker *database.Controlle
 				}
 				k++
 			}
+			dbmutex.Unlock()
 
 			break;
 		}
@@ -919,6 +988,7 @@ func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerSt
 	}
 
 	var k = 0
+	dbmutex.Lock()
 	for _, i := range constants {
 		floatParse, err := strconv.ParseFloat(i, 64)
 		if err != nil {
@@ -935,6 +1005,7 @@ func updateSpeakerTarget(attr *speakerAttributes, speaker *database.ControllerSt
 		}
 			k++
 	}
+	dbmutex.Unlock()
 
 	log.Printf("Telling speaker %d to change target to %s", speaker.ID, constants)
 
@@ -969,17 +1040,23 @@ func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerSt
 		if(pagingArray[0] != speaker.PagingLevel[0]) {
 			speaker.PagingLevel[0] = pagingArray[0]
 			system.SetPaging(speaker, pagingArray[0] + 101) 	// offset tells the mcu to set fade time	
+			dbmutex.Lock()
 			database.SaveFade(speaker)
+			dbmutex.Unlock()
 		}
 		if(pagingArray[1] != speaker.PagingLevel[1] && pagingArray[1] != 0) {
 			speaker.PagingLevel[1] = pagingArray[1]
 			system.SetPaging(speaker, pagingArray[1])
+			dbmutex.Lock()
 			database.SaveFade(speaker)
+			dbmutex.Unlock()
 		}
 		if(pagingArray[2] != speaker.VolumeLevel[2]) {
 			speaker.VolumeLevel[2] = pagingArray[2]
 			system.SetPaging(speaker, pagingArray[2])
+			dbmutex.Lock()
 			database.SaveVolume(speaker)
+			dbmutex.Unlock()
 		}
 
 		log.Println(pagingArray)
@@ -995,7 +1072,9 @@ func updateSpeakerPaging(attr *speakerAttributes, speaker *database.ControllerSt
 	updateSpeakerZoneID is a private function that is used when reassigning a speaker to another zone.
 */
 func updateSpeakerZoneID(attr *speakerAttributes, speaker *database.ControllerStatus) error {
+	dbmutex.Lock()
 	database.SetSpeakerToZoneByID(speaker, attr.ZoneID)
+	dbmutex.Unlock()
 	return nil
 }
 
@@ -1163,11 +1242,17 @@ func AddPresetHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch addPresetRequest.Type {
 		case 0:
+			dbmutex.Lock()
 			database.SavePreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+			dbmutex.Unlock()
 		case 1:
+			dbmutex.Lock()
 			database.SaveMusicPreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+			dbmutex.Unlock()
 		case 2:
+			dbmutex.Lock()
 			database.SavePagingPreset(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+			dbmutex.Unlock()
 		default: 
 			log.Println("AddPresetHandler MESSED UP SOMEHOW")
 	}
@@ -1193,7 +1278,9 @@ func AddTargetHandler(w http.ResponseWriter, r *http.Request) {		// could merge 
 	}
 
 	log.Println(addPresetRequest)
+	dbmutex.Lock()
 	database.SaveTarget(addPresetRequest.Speaker, addPresetRequest.Name, strings.Fields(addPresetRequest.Constants))
+	dbmutex.Unlock()
 	w.Write(getGenericSuccessResponse()) // this needs to be adapted to take into account the error from the database
 }
 
@@ -1266,7 +1353,9 @@ func CreateZoneHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	dbmutex.Lock()
 	err = database.CreateZone(createZone.Speakers, createZone.ZoneName)
+	dbmutex.Unlock()
 	
 	if err != nil {
 		w.Write(getGenericErrorResponse(err.Error()))
@@ -1295,8 +1384,10 @@ func CreatePagingZoneHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	dbmutex.Lock()
 	err = database.CreatePagingZone(createZone.Speakers, createZone.ZoneName)
-	
+	dbmutex.Unlock()
+
 	if err != nil {
 		w.Write(getGenericErrorResponse(err.Error()))
 		return
@@ -1322,8 +1413,10 @@ func ChangeEQMode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	dbmutex.Lock()
 	err = database.ChangeEQMode(changeEQModeRequest.Speaker, changeEQModeRequest.Mode)
 	_, err = system.SetEQMode(changeEQModeRequest.Speaker, changeEQModeRequest.Mode)
+	dbmutex.Unlock()
 
 	log.Println("I got you packet dude, sendin one back", changeEQModeRequest)
 	w.Write(getGenericSuccessResponse())
@@ -1348,8 +1441,10 @@ func ScheduleTime(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(timeGiven)
 
+	dbmutex.Lock()
 	database.UpdateSchedule(timeGiven.Speaker, timeGiven.Day, timeGiven.Interval, timeGiven.Start, timeGiven.End, timeGiven.Times)
 	err = database.ChangeSchedulingMode(timeGiven.Speaker, timeGiven.Mode)
+	dbmutex.Unlock()
 
 	log.Println("THIS IS THE TIME GIVEN", timeGiven)
 
@@ -1379,9 +1474,12 @@ func ThresholdHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println(session.Value)
 	log.Println(thresholdData.Speaker)
 
+
+	dbmutex.Lock()
 	if(int(thresholdData.Speaker) == database.AuthenticateSpeakerFromHash(session.Value) || database.AuthenticatePermissionFromHash(session.Value) > 0) {
 		database.UpdateThreshold(thresholdData.Speaker, thresholdData.LowerMusicThreshold, thresholdData.UpperMusicThreshold, thresholdData.LowerPagingThreshold,	thresholdData.UpperPagingThreshold,	thresholdData.LowerMaskingThreshold, thresholdData.UpperMaskingThreshold)
 	}
+	dbmutex.Unlock()
 
 	w.Write(getGenericSuccessResponse())
 }

@@ -1,0 +1,268 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Slider - Vertical slider</title>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="/css/styles.css">
+	<script>
+
+
+
+
+	// look at this shit dawg
+	// http://stackoverflow.com/questions/12379202/jquery-ui-slider-value-on-slider
+
+
+	/*$(function() {
+		$( "#slider-vertical" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount" ).val( ui.value );
+			}
+		});
+		$( "#amount" ).val( $( "#slider-vertical" ).slider( "value" ) );
+	});
+
+	$(function() {
+		$( "#slider-vertical2" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount2" ).val( ui.value );
+			}
+		});
+		$( "#amount2" ).val( $( "#slider-vertical2" ).slider( "value" ) );
+	});
+
+	$(function() {
+		$( "#slider-vertical3" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount3" ).val( ui.value );
+			}
+		});
+		$( "#amount3" ).val( $( "#slider-vertical3" ).slider( "value" ) );
+	});
+
+	$(function() {
+		$( "#slider-vertical4" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount4" ).val( ui.value );
+			}
+		});
+		$( "#amount4" ).val( $( "#slider-vertical4" ).slider( "value" ) );
+	});
+
+	$(function() {
+		$( "#slider-vertical5" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount5" ).val( ui.value );
+			}
+		});
+		$( "#amount5" ).val( $( "#slider-vertical5" ).slider( "value" ) );
+	});
+
+	$(function() {
+		$( "#slider-vertical6" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount6" ).val( ui.value );
+			}
+		});
+		$( "#amount6" ).val( $( "#slider-vertical6" ).slider( "value" ) );
+	});
+	$(function() {
+		$( "#slider-vertical7" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount7" ).val( ui.value );
+			}
+		});
+		$( "#amount7" ).val( $( "#slider-vertical7" ).slider( "value" ) );
+	});
+
+	$(function() {
+		$( "#slider-vertical8" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount8" ).val( ui.value );
+			}
+		});
+		$( "#amount8").val( $( "#slider-vertical8" ).slider( "value" ) );
+	});
+
+	$(function() {
+		$( "#slider-vertical9" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount9" ).val( ui.value );
+			}
+		});
+		$( "#amount9" ).val( $( "#slider-vertical9" ).slider( "value" ) );
+	});
+
+	$(function() {
+		$( "#slider-vertical10" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount10" ).val( ui.value );
+			}
+		});
+		$( "#amount10" ).val( $( "#slider-vertical10" ).slider( "value" ) );
+	});
+
+	$(function() {
+		$( "#slider-vertical11" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#amount11" ).val( ui.value );
+			}
+		});
+		$( "#amount11" ).val( $( "#slider-vertical11" ).slider( "value" ) );
+	});
+*/
+	$(function() {
+		$( ".custom > .custom_slider" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 20,
+			value: 10,
+			slide: function( event, ui) {
+				var inputs = document.getElementsByClassName("custom");
+
+				//console.log(inputs[2].className);
+				//console.log(inputs);
+				//for (i in inputs) {
+
+					//console.log($(inputs[i]).find(".ui-slider-range-min").prop("clientHeight"));
+
+					//console.log("inputs: " + $(inputs[i]));
+
+					//var clientHeight = $(inputs[i]).find(".ui-slider-range-min").prop("clientHeight");
+
+					//$(inputs[i]).find("input").val(clientHeight[i]);
+
+					//console.log(ui);
+
+					/*$( "#text1").val($(inputs[0]).find(".ui-slider-range-min").prop("clientHeight")/10);
+					$( "#text2").val($(inputs[1]).find(".ui-slider-range-min").prop("clientHeight")/10);
+					$( "#text3").val($(inputs[2]).find(".ui-slider-range-min").prop("clientHeight")/10);*/
+				//}
+				//console.log(clientHeights);
+
+				//console.log(inputs);
+
+				console.log($(inputs[0]).find(".ui-slider-handle").value);
+
+				$( "#text1" ).val( $(inputs[0]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text2" ).val( $(inputs[1]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text3" ).val( $(inputs[2]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text4" ).val( $(inputs[3]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text5" ).val( $(inputs[4]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text6" ).val( $(inputs[5]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text7" ).val( $(inputs[6]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text8" ).val( $(inputs[7]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text9" ).val( $(inputs[8]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text10" ).val( $(inputs[9]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text11" ).val( $(inputs[10]).find(".ui-slider-range-min").prop("clientHeight")/10);
+				$( "#text12" ).val( $(inputs[11]).find(".ui-slider-range-min").prop("clientHeight")/10);
+			}
+		});
+		$( "#text1" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text2" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text3" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text4" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text5" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text6" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text7" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text8" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text9" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text10" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text11" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+		$( "#text12" ).val( $( ".custom > .custom_slider" ).slider( "value" ) );
+	});
+	</script>
+</head>
+<body>
+<header id="header">
+<nav class="top">
+
+<div id="square" >
+
+</div>
+
+
+</nav>
+</header>
+
+
+
+<div id="custom_container">
+<div class="custom 1"> <input id="text1"/> <div class="custom_slider"></div></div>
+<div class="custom 2"> <input id="text2"/> <div class="custom_slider"></div></div>
+<div class="custom 3"> <input id="text3"/> <div class="custom_slider"></div></div>
+<div class="custom 4"> <input id="text4"/> <div class="custom_slider"></div></div>
+<div class="custom 5"> <input id="text5"/> <div class="custom_slider"></div></div>
+<div class="custom 6"> <input id="text6"/> <div class="custom_slider"></div></div>
+<div class="custom 7"> <input id="text7"/> <div class="custom_slider"></div></div>
+<div class="custom 8"> <input id="text8"/> <div class="custom_slider"></div></div>
+<div class="custom 9"> <input id="text9"/> <div class="custom_slider"></div></div>
+<div class="custom 10"> <input id="text10"/> <div class="custom_slider"></div></div>
+<div class="custom 11"> <input id="text11"/> <div class="custom_slider"></div></div>
+<div class="custom 12"> <input id="text12"/> <div class="custom_slider"></div></div>
+</div>
+
+
+
+</body>
+</html>
