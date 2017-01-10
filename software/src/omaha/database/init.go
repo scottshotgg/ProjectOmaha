@@ -25,6 +25,9 @@ func InitDB() {
 	}
 	log.Println(err)
 
+	// Set max database connections
+	DB.SetMaxOpenConns(1)
+
 	var name string
 	err = DB.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='account';").Scan(&name)
 	switch {
