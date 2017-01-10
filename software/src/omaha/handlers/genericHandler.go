@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"omaha/database"
+	"sync"
 )
 
 type GenericHandler struct {
@@ -82,13 +83,20 @@ func (this GenericHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	/*
 		Generic stuff goes here
 	*/
-		
+	var dbmutex = &sync.Mutex{}
+	
 	if req.Method == "GET" && this.GET != nil {
+		dbmutex.Lock()
 		this.GET(w, req)
+		dbmutex.Unlock()
 	} else if req.Method == "POST" && this.POST != nil {
+		dbmutex.Lock()
 		this.POST(w, req)
+		dbmutex.Unlock()
 	} else if req.Method == "PUT" && this.PUT != nil {
+		dbmutex.Lock()
 		this.PUT(w, req)
+		dbmutex.Unlock()
 	} else {
 		http.Error(w, "GenericHandler error", http.StatusInternalServerError)
 		log.Fatalf("No handler specified for the request %s", req)
