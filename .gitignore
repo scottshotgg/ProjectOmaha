@@ -19,3 +19,6 @@ bin/
 
 # DB file
 #software/src/omaha/omaha.db
+
+software/src/github.com
+software/src/golang.org

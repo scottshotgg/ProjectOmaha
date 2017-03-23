@@ -272,13 +272,20 @@ func SetEQMode(ID int8, mode int8) (int, error) {
 	SendPagingRequest is a reserved / unimplemented function that will be used to tell the speaker that a paging signal is coming in and to prepare for that.
 */
 func SendPagingRequest(ID int8) (error) {
-	if status.debug {
-		return nil
-	}
 
 	data := getMessageHeader(ID, 3)
 	data[1] = Commands.SetPaging
-	data[2] = 0
+	data[2] = byte(0)
+
+	log.Println("PagingRequest packet contents: ", data)
+
+	req := &ControllerRequest{ Data: data, OnWrite: func() interface{} {
+		if status.IsDebug() {
+			log.Println("Set paging mode to ",  data)
+		}
+		return nil
+	}}
+	MessageChan <- req
 
 	return nil
 }
